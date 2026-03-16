@@ -1,0 +1,48 @@
+aid: canonical
+url: >-
+  https://raw.githubusercontent.com/api-evangelist/canonical/refs/heads/main/apis.yml
+name: Canonical
+tags:
+  - Linux
+  - Ubuntu
+  - Cloud
+  - Open Source
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+access: 3rd-Party
+created: '2026-03-16'
+modified: '2026-03-16'
+position: Consumer
+description: >-
+  Canonical is the company behind Ubuntu, the world's most popular open source
+  operating system for cloud, servers, desktops, and IoT. Canonical provides
+  APIs for managing Ubuntu systems, cloud services, and related infrastructure.
+apis:
+  - aid: canonical:ubuntu-pro-api
+    name: Ubuntu Pro API
+    tags:
+      - Linux
+      - Ubuntu
+      - Cloud
+    humanURL: https://documentation.ubuntu.com/pro/en/latest/
+    properties:
+      - url: https://documentation.ubuntu.com/pro/en/latest/
+        type: Documentation
+    description: >-
+      The Ubuntu Pro API provides access to Ubuntu Pro services including
+      security patching, compliance, and support.
+common:
+  - type: Website
+    url: https://canonical.com/
+  - type: Portal
+    url: https://ubuntu.com/
+  - type: Documentation
+    url: https://documentation.ubuntu.com/
+  - type: Privacy Policy
+    url: https://ubuntu.com/legal/data-privacy
+  - type: Terms of Service
+    url: https://ubuntu.com/legal/terms
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
+specificationVersion: '0.19'
