@@ -3,10 +3,10 @@ url: >-
   https://raw.githubusercontent.com/api-evangelist/canonical/refs/heads/main/apis.yml
 name: Canonical
 tags:
-  - Linux
-  - Ubuntu
   - Cloud
+  - Linux
   - Open Source
+  - Ubuntu
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
@@ -21,9 +21,9 @@ apis:
   - aid: canonical:ubuntu-pro-api
     name: Ubuntu Pro API
     tags:
+      - Cloud
       - Linux
       - Ubuntu
-      - Cloud
     humanURL: https://documentation.ubuntu.com/pro/en/latest/
     properties:
       - url: https://documentation.ubuntu.com/pro/en/latest/
