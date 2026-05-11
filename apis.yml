@@ -230,6 +230,17 @@ common:
     url: https://ubuntu.com/legal/data-privacy
   - type: TermsOfService
     url: https://ubuntu.com/legal/terms
+  - type: Integrations
+    url: https://canonical.com/partners
+integrations:
+  - name: Desktop Desktop, laptops and workstations
+  - name: Channel/reseller Partners on every continent
+  - name: IoT devices Robots, edge, development boards
+  - name: IHV/OEM Data centres
+  - name: ISVs Independent Software Vendors
+  - name: GSIs Global Systems Integrators
+  - name: Silicon CPUs, boards and SoCs
+  - name: Become a partner
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
