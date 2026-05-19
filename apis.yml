@@ -210,6 +210,8 @@ apis:
       - type: Portal
         url: https://ubuntu.com/landscape
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/canonical
   - type: Website
     url: https://canonical.com/
   - type: UbuntuWebsite
