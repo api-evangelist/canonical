@@ -1,0 +1,256 @@
+openapi: 3.1.0
+info:
+  title: Canonical Snap Store Device API
+  description: |
+    Public Snap Store Device API (api.snapcraft.io) used by snap clients to
+    discover snaps, fetch metadata, refresh installed snaps, search the
+    store, and download assertions. Endpoints come from the publicly
+    documented snap store reference (https://api.snapcraft.io/docs/).
+
+    Most endpoints are open / unauthenticated. Authenticated endpoints under
+    /api/v1/snaps/auth/ use Ubuntu One macaroons and require the
+    Snap-Device-Series header.
+
+    This specification is a best-effort, hand-authored representation. The
+    Charmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local
+    REST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,
+    and Landscape APIs are not modeled here — see apis.yml for those
+    surfaces and their respective Canonical documentation.
+  version: "v2"
+  contact:
+    name: Canonical / Snapcraft
+    url: https://api.snapcraft.io/docs/
+servers:
+  - url: https://api.snapcraft.io
+paths:
+  /v2/snaps/info/{name}:
+    parameters:
+      - { $ref: '#/components/parameters/DeviceSeries' }
+      - in: path
+        name: name
+        required: true
+        schema: { type: string }
+        description: Snap name.
+    get:
+      summary: Get snap information
+      description: Returns information about a snap including channels, tracks, revisions, and assertions.
+      parameters:
+        - in: query
+          name: fields
+          schema: { type: string }
+          description: Comma-separated list of fields to return.
+        - in: query
+          name: architecture
+          schema: { type: string }
+        - in: header
+          name: Snap-Device-Architecture
+          schema: { type: string }
+      responses:
+        '200':
+          description: Snap info document.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SnapInfo' }
+        '404': { description: Snap not found. }
+  /v2/snaps/find:
+    parameters:
+      - { $ref: '#/components/parameters/DeviceSeries' }
+    get:
+      summary: Find snaps
+      description: Search snaps by name, keyword, or filter.
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+          description: Free-text search query.
+        - in: query
+          name: name
+          schema: { type: string }
+        - in: query
+          name: category
+          schema: { type: string }
+        - in: query
+          name: fields
+          schema: { type: string }
+        - in: query
+          name: confinement
+          schema:
+            type: string
+            enum: [strict, classic, devmode]
+      responses:
+        '200':
+          description: Find results.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FindResults' }
+  /v2/snaps/refresh:
+    parameters:
+      - { $ref: '#/components/parameters/DeviceSeries' }
+    post:
+      summary: Refresh snaps
+      description: |
+        Determine which snaps need to be refreshed and return refresh actions.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RefreshRequest' }
+      responses:
+        '200':
+          description: Refresh response.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RefreshResponse' }
+  /v2/assertions/{type}/{primaryKey}:
+    parameters:
+      - in: path
+        name: type
+        required: true
+        schema:
+          type: string
+          enum: [snap-declaration, snap-revision, account, account-key, validation-set]
+      - in: path
+        name: primaryKey
+        required: true
+        schema: { type: string }
+    get:
+      summary: Fetch an assertion
+      description: Retrieve a signed assertion document by type and primary key.
+      responses:
+        '200':
+          description: Signed assertion document (application/x.ubuntu.assertion).
+          content:
+            application/x.ubuntu.assertion:
+              schema: { type: string }
+  /api/v1/search:
+    get:
+      summary: Search (legacy v1)
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+        - in: query
+          name: section
+          schema: { type: string }
+        - in: query
+          name: fields
+          schema: { type: string }
+        - { $ref: '#/components/parameters/DeviceSeries' }
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/search:
+    get:
+      summary: Snaps search (legacy v1)
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+        - { $ref: '#/components/parameters/DeviceSeries' }
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/names:
+    get:
+      summary: List snap names (autocomplete; legacy v1)
+      parameters:
+        - { $ref: '#/components/parameters/DeviceSeries' }
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/sections:
+    get:
+      summary: List store sections (legacy v1)
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/auth/nonces:
+    post:
+      summary: Request a device nonce
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/auth/sessions:
+    post:
+      summary: Create a device session
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/auth/devices:
+    post:
+      summary: Register a device
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+  /api/v1/snaps/auth/request-id:
+    post:
+      summary: Get an authentication request id
+      responses:
+        '200': { $ref: '#/components/responses/Generic' }
+components:
+  parameters:
+    DeviceSeries:
+      in: header
+      name: Snap-Device-Series
+      required: true
+      schema: { type: string, default: '16' }
+      description: Snap device series; required by the Device API.
+  schemas:
+    SnapInfo:
+      type: object
+      properties:
+        name: { type: string }
+        snap-id: { type: string }
+        channel-map:
+          type: array
+          items: { type: object, additionalProperties: true }
+        snap:
+          type: object
+          additionalProperties: true
+      additionalProperties: true
+    FindResults:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              snap-id: { type: string }
+              snap:
+                type: object
+                additionalProperties: true
+            additionalProperties: true
+    RefreshRequest:
+      type: object
+      properties:
+        context:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              action:
+                type: string
+                enum: [refresh, install, download]
+              instance-key: { type: string }
+              snap-id: { type: string }
+              name: { type: string }
+              channel: { type: string }
+              revision: { type: integer }
+            additionalProperties: true
+      additionalProperties: true
+    RefreshResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items: { type: object, additionalProperties: true }
+      additionalProperties: true
+    Generic:
+      type: object
+      additionalProperties: true
+  responses:
+    Generic:
+      description: Generic JSON response.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Generic' }
