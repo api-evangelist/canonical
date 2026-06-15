@@ -1,0 +1,269 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Canonical Snap Store Device API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Get snap information",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/v2/snaps/info/:name",
+        "headers": [
+          {
+            "name": "Snap-Device-Series",
+            "value": ""
+          },
+          {
+            "name": "Snap-Device-Architecture",
+            "value": ""
+          }
+        ],
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Snap name."
+          },
+          {
+            "name": "fields",
+            "value": "",
+            "type": "query",
+            "description": "Comma-separated list of fields to return."
+          },
+          {
+            "name": "architecture",
+            "value": "",
+            "type": "query"
+          }
+        ]
+      },
+      "docs": "Returns information about a snap including channels, tracks, revisions, and assertions."
+    },
+    {
+      "info": {
+        "name": "Find snaps",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/v2/snaps/find",
+        "headers": [
+          {
+            "name": "Snap-Device-Series",
+            "value": ""
+          }
+        ],
+        "params": [
+          {
+            "name": "q",
+            "value": "",
+            "type": "query",
+            "description": "Free-text search query."
+          },
+          {
+            "name": "name",
+            "value": "",
+            "type": "query"
+          },
+          {
+            "name": "category",
+            "value": "",
+            "type": "query"
+          },
+          {
+            "name": "fields",
+            "value": "",
+            "type": "query"
+          },
+          {
+            "name": "confinement",
+            "value": "",
+            "type": "query"
+          }
+        ]
+      },
+      "docs": "Search snaps by name, keyword, or filter."
+    },
+    {
+      "info": {
+        "name": "Refresh snaps",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://api.snapcraft.io/v2/snaps/refresh",
+        "headers": [
+          {
+            "name": "Snap-Device-Series",
+            "value": ""
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Determine which snaps need to be refreshed and return refresh actions.\n"
+    },
+    {
+      "info": {
+        "name": "Fetch an assertion",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/v2/assertions/:type/:primaryKey",
+        "params": [
+          {
+            "name": "type",
+            "value": "",
+            "type": "path"
+          },
+          {
+            "name": "primaryKey",
+            "value": "",
+            "type": "path"
+          }
+        ]
+      },
+      "docs": "Retrieve a signed assertion document by type and primary key."
+    },
+    {
+      "info": {
+        "name": "Search (legacy v1)",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/api/v1/search",
+        "headers": [
+          {
+            "name": "Snap-Device-Series",
+            "value": ""
+          }
+        ],
+        "params": [
+          {
+            "name": "q",
+            "value": "",
+            "type": "query"
+          },
+          {
+            "name": "section",
+            "value": "",
+            "type": "query"
+          },
+          {
+            "name": "fields",
+            "value": "",
+            "type": "query"
+          }
+        ]
+      },
+      "docs": "Search (legacy v1)"
+    },
+    {
+      "info": {
+        "name": "Snaps search (legacy v1)",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/api/v1/snaps/search",
+        "headers": [
+          {
+            "name": "Snap-Device-Series",
+            "value": ""
+          }
+        ],
+        "params": [
+          {
+            "name": "q",
+            "value": "",
+            "type": "query"
+          }
+        ]
+      },
+      "docs": "Snaps search (legacy v1)"
+    },
+    {
+      "info": {
+        "name": "List snap names (autocomplete; legacy v1)",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/api/v1/snaps/names",
+        "headers": [
+          {
+            "name": "Snap-Device-Series",
+            "value": ""
+          }
+        ]
+      },
+      "docs": "List snap names (autocomplete; legacy v1)"
+    },
+    {
+      "info": {
+        "name": "List store sections (legacy v1)",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://api.snapcraft.io/api/v1/snaps/sections"
+      },
+      "docs": "List store sections (legacy v1)"
+    },
+    {
+      "info": {
+        "name": "Request a device nonce",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://api.snapcraft.io/api/v1/snaps/auth/nonces"
+      },
+      "docs": "Request a device nonce"
+    },
+    {
+      "info": {
+        "name": "Create a device session",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://api.snapcraft.io/api/v1/snaps/auth/sessions"
+      },
+      "docs": "Create a device session"
+    },
+    {
+      "info": {
+        "name": "Register a device",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://api.snapcraft.io/api/v1/snaps/auth/devices"
+      },
+      "docs": "Register a device"
+    },
+    {
+      "info": {
+        "name": "Get an authentication request id",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://api.snapcraft.io/api/v1/snaps/auth/request-id"
+      },
+      "docs": "Get an authentication request id"
+    }
+  ],
+  "bundled": true
+}

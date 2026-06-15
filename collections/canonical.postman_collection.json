@@ -1,0 +1,1234 @@
+{
+  "item": [
+    {
+      "id": "9ab2b7e7-8584-4e67-a834-2e0cf7a7c19c",
+      "name": "Get snap information",
+      "request": {
+        "name": "Get snap information",
+        "description": {
+          "content": "Returns information about a snap including channels, tracks, revisions, and assertions.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v2",
+            "snaps",
+            "info",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "fields",
+              "value": "<string>",
+              "description": "Comma-separated list of fields to return."
+            },
+            {
+              "disabled": false,
+              "key": "architecture",
+              "value": "<string>"
+            }
+          ],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Snap name."
+            }
+          ]
+        },
+        "header": [
+          {
+            "disabled": false,
+            "key": "Snap-Device-Architecture",
+            "value": "<string>",
+            "description": ""
+          },
+          {
+            "disabled": false,
+            "description": "(Required) Snap device series; required by the Device API.",
+            "key": "Snap-Device-Series",
+            "value": "16"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "0a9d7514-012e-4ce3-b565-85c762a688b7",
+          "name": "Snap info document.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v2",
+                "snaps",
+                "info",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "fields",
+                  "value": "<string>"
+                },
+                {
+                  "key": "architecture",
+                  "value": "<string>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Snap name."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "key": "Snap-Device-Architecture",
+                "value": "<string>",
+                "description": ""
+              },
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"name\": \"string\",\n  \"snap-id\": \"string\",\n  \"channel-map\": [\n    {\n      \"key_0\": 8444,\n      \"key_1\": true,\n      \"key_2\": true,\n      \"key_3\": 1782.5794209114943,\n      \"key_4\": \"string\"\n    },\n    {\n      \"key_0\": 6477.630101946051,\n      \"key_1\": true,\n      \"key_2\": false\n    }\n  ],\n  \"snap\": {\n    \"key_0\": 6088.59410552295,\n    \"key_1\": false,\n    \"key_2\": false\n  },\n  \"key_0\": 4863\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        },
+        {
+          "id": "90ab2edd-9a33-4e03-8d8f-9841f13b9bc0",
+          "name": "Snap not found.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v2",
+                "snaps",
+                "info",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "fields",
+                  "value": "<string>"
+                },
+                {
+                  "key": "architecture",
+                  "value": "<string>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Snap name."
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "key": "Snap-Device-Architecture",
+                "value": "<string>",
+                "description": ""
+              },
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "4af8d3bc-d821-4a3e-9579-e6de1b71b9e6",
+      "name": "Find snaps",
+      "request": {
+        "name": "Find snaps",
+        "description": {
+          "content": "Search snaps by name, keyword, or filter.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v2",
+            "snaps",
+            "find"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "q",
+              "value": "<string>",
+              "description": "Free-text search query."
+            },
+            {
+              "disabled": false,
+              "key": "name",
+              "value": "<string>"
+            },
+            {
+              "disabled": false,
+              "key": "category",
+              "value": "<string>"
+            },
+            {
+              "disabled": false,
+              "key": "fields",
+              "value": "<string>"
+            },
+            {
+              "disabled": false,
+              "key": "confinement",
+              "value": "<string>"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "disabled": false,
+            "description": "(Required) Snap device series; required by the Device API.",
+            "key": "Snap-Device-Series",
+            "value": "16"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "7e89b330-8d8e-421b-ae8e-e7328226ab66",
+          "name": "Find results.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v2",
+                "snaps",
+                "find"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "<string>"
+                },
+                {
+                  "key": "name",
+                  "value": "<string>"
+                },
+                {
+                  "key": "category",
+                  "value": "<string>"
+                },
+                {
+                  "key": "fields",
+                  "value": "<string>"
+                },
+                {
+                  "key": "confinement",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"results\": [\n    {\n      \"name\": \"string\",\n      \"snap-id\": \"string\",\n      \"snap\": {\n        \"key_0\": \"string\"\n      },\n      \"key_0\": 3232,\n      \"key_1\": 1559.8269558787426,\n      \"key_2\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"snap-id\": \"string\",\n      \"snap\": {\n        \"key_0\": \"string\",\n        \"key_1\": 9051.40801747665,\n        \"key_2\": 8943.901906908468\n      }\n    }\n  ]\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "8d926fa5-d932-4e17-965a-2be54a1ee79d",
+      "name": "Refresh snaps",
+      "request": {
+        "name": "Refresh snaps",
+        "description": {
+          "content": "Determine which snaps need to be refreshed and return refresh actions.\n",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v2",
+            "snaps",
+            "refresh"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "disabled": false,
+            "description": "(Required) Snap device series; required by the Device API.",
+            "key": "Snap-Device-Series",
+            "value": "16"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"context\": [\n    {\n      \"key_0\": true,\n      \"key_1\": 4828\n    },\n    {\n      \"key_0\": false,\n      \"key_1\": 2972,\n      \"key_2\": 2543.2034976258155\n    }\n  ],\n  \"actions\": [\n    {\n      \"action\": \"<string>\",\n      \"instance-key\": \"<string>\",\n      \"snap-id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"channel\": \"<string>\",\n      \"revision\": \"<integer>\"\n    },\n    {\n      \"action\": \"<string>\",\n      \"instance-key\": \"<string>\",\n      \"snap-id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"channel\": \"<string>\",\n      \"revision\": \"<integer>\"\n    }\n  ],\n  \"key_0\": 8303\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "edc63a11-35e4-4121-85cd-8bcc1c5eaa8d",
+          "name": "Refresh response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v2",
+                "snaps",
+                "refresh"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": [\n    {\n      \"key_0\": 1836.8643954367735\n    },\n    {\n      \"key_0\": 912\n    }\n  ],\n  \"actions\": [\n    {\n      \"action\": \"<string>\",\n      \"instance-key\": \"<string>\",\n      \"snap-id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"channel\": \"<string>\",\n      \"revision\": \"<integer>\",\n      \"key_0\": 966.496121092576\n    },\n    {\n      \"action\": \"<string>\",\n      \"instance-key\": \"<string>\",\n      \"snap-id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"channel\": \"<string>\",\n      \"revision\": \"<integer>\",\n      \"key_0\": 7769\n    }\n  ],\n  \"key_0\": 8051\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"results\": [\n    {\n      \"key_0\": 1875\n    },\n    {\n      \"key_0\": false,\n      \"key_1\": 8382.254307717132\n    }\n  ],\n  \"key_0\": false\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "fc61eee9-fd9b-483a-b2e5-962bdb319af9",
+      "name": "Fetch an assertion",
+      "request": {
+        "name": "Fetch an assertion",
+        "description": {
+          "content": "Retrieve a signed assertion document by type and primary key.",
+          "type": "text/plain"
+        },
+        "url": {
+          "path": [
+            "v2",
+            "assertions",
+            ":type",
+            ":primaryKey"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "type",
+              "description": "(Required) "
+            },
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "primaryKey",
+              "description": "(Required) "
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/x.ubuntu.assertion"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "3bc4a61e-96de-4522-a8ac-068121ae6558",
+          "name": "Signed assertion document (application/x.ubuntu.assertion).",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "v2",
+                "assertions",
+                ":type",
+                ":primaryKey"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "type",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "primaryKey",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/x.ubuntu.assertion"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x.ubuntu.assertion"
+            }
+          ],
+          "body": "string",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "14e79422-36e4-44a3-99bb-ca2c100eb799",
+      "name": "Search (legacy v1)",
+      "request": {
+        "name": "Search (legacy v1)",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "search"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "q",
+              "value": "<string>"
+            },
+            {
+              "disabled": false,
+              "key": "section",
+              "value": "<string>"
+            },
+            {
+              "disabled": false,
+              "key": "fields",
+              "value": "<string>"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "disabled": false,
+            "description": "(Required) Snap device series; required by the Device API.",
+            "key": "Snap-Device-Series",
+            "value": "16"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "c5463c8d-968f-409a-9fc7-f93423fe96b1",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "<string>"
+                },
+                {
+                  "key": "section",
+                  "value": "<string>"
+                },
+                {
+                  "key": "fields",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "91caaff2-deb4-4605-a22d-87ec4a9a7160",
+      "name": "Snaps search (legacy v1)",
+      "request": {
+        "name": "Snaps search (legacy v1)",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "search"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [
+            {
+              "disabled": false,
+              "key": "q",
+              "value": "<string>"
+            }
+          ],
+          "variable": []
+        },
+        "header": [
+          {
+            "disabled": false,
+            "description": "(Required) Snap device series; required by the Device API.",
+            "key": "Snap-Device-Series",
+            "value": "16"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "cc2da931-4d5e-4b28-a947-43f7d3978311",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "11639858-f63f-4050-933d-d86a3b009780",
+      "name": "List snap names (autocomplete; legacy v1)",
+      "request": {
+        "name": "List snap names (autocomplete; legacy v1)",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "names"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "disabled": false,
+            "description": "(Required) Snap device series; required by the Device API.",
+            "key": "Snap-Device-Series",
+            "value": "16"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "801d1b08-447c-4117-8ab5-9294e630f7ae",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "names"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "21cdb7e0-b5bc-4da5-a2d6-afeb585bd95a",
+      "name": "List store sections (legacy v1)",
+      "request": {
+        "name": "List store sections (legacy v1)",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "sections"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "282d8579-cb93-4dbf-9a5b-689f7a0e4369",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "sections"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "2a4dda92-aa30-42c6-89b8-d3043763e824",
+      "name": "Request a device nonce",
+      "request": {
+        "name": "Request a device nonce",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "auth",
+            "nonces"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "8204d2bb-c6c9-40cc-9c0d-cf4793fa0323",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "auth",
+                "nonces"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "fcfb8486-a7b3-4ab7-95f6-f8fba3334288",
+      "name": "Create a device session",
+      "request": {
+        "name": "Create a device session",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "auth",
+            "sessions"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "ef7a8008-60ea-40ca-ba31-6ca9d673c0f3",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "auth",
+                "sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "34231af8-8ea3-4204-9a67-6eb87291d3c6",
+      "name": "Register a device",
+      "request": {
+        "name": "Register a device",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "auth",
+            "devices"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "acccb6c1-d865-4b26-a75c-e416944b6f46",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "auth",
+                "devices"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "f97edbd7-65f6-4251-a933-53a5d4d46ac2",
+      "name": "Get an authentication request id",
+      "request": {
+        "name": "Get an authentication request id",
+        "description": {},
+        "url": {
+          "path": [
+            "api",
+            "v1",
+            "snaps",
+            "auth",
+            "request-id"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "146acd74-abab-4711-8b02-cd58dc12ba99",
+          "name": "Generic JSON response.",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "snaps",
+                "auth",
+                "request-id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key_0\": false,\n  \"key_1\": 7347\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snapcraft.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "157608cc-6314-46c9-afc1-2842b600198f",
+    "name": "Canonical Snap Store Device API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public Snap Store Device API (api.snapcraft.io) used by snap clients to\ndiscover snaps, fetch metadata, refresh installed snaps, search the\nstore, and download assertions. Endpoints come from the publicly\ndocumented snap store reference (https://api.snapcraft.io/docs/).\n\nMost endpoints are open / unauthenticated. Authenticated endpoints under\n/api/v1/snaps/auth/ use Ubuntu One macaroons and require the\nSnap-Device-Series header.\n\nThis specification is a best-effort, hand-authored representation. The\nCharmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local\nREST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,\nand Landscape APIs are not modeled here — see apis.yml for those\nsurfaces and their respective Canonical documentation.\n\n\nContact Support:\n Name: Canonical / Snapcraft",
+      "type": "text/plain"
+    }
+  }
+}
