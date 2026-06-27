@@ -166,7 +166,7 @@ apis:
         url: https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
       - type: Reference
         url: https://help.launchpad.net/API
-      - type: ClientLibrary
+      - type: SDKs
         url: https://launchpadlib.readthedocs.io/en/latest/introduction.html
       - type: Portal
         url: https://api.launchpad.net/
