@@ -210,6 +210,8 @@ apis:
       - type: Portal
         url: https://ubuntu.com/landscape
 common:
+  - type: AgenticAccess
+    url: agentic-access/canonical-agentic-access.yml
   - type: DomainSecurity
     url: security/canonical-domain-security.yml
   - type: LinkedIn
