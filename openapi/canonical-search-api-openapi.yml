@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: Canonical Snap Store Device Assertions Search API
+  description: 'Public Snap Store Device API (api.snapcraft.io) used by snap clients to
+
+    discover snaps, fetch metadata, refresh installed snaps, search the
+
+    store, and download assertions. Endpoints come from the publicly
+
+    documented snap store reference (https://api.snapcraft.io/docs/).
+
+
+    Most endpoints are open / unauthenticated. Authenticated endpoints under
+
+    /api/v1/snaps/auth/ use Ubuntu One macaroons and require the
+
+    Snap-Device-Series header.
+
+
+    This specification is a best-effort, hand-authored representation. The
+
+    Charmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local
+
+    REST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,
+
+    and Landscape APIs are not modeled here — see apis.yml for those
+
+    surfaces and their respective Canonical documentation.
+
+    '
+  version: v2
+  contact:
+    name: Canonical / Snapcraft
+    url: https://api.snapcraft.io/docs/
+servers:
+- url: https://api.snapcraft.io
+tags:
+- name: Search
+paths:
+  /api/v1/search:
+    get:
+      summary: Search (legacy v1)
+      parameters:
+      - in: query
+        name: q
+        schema:
+          type: string
+      - in: query
+        name: section
+        schema:
+          type: string
+      - in: query
+        name: fields
+        schema:
+          type: string
+      - $ref: '#/components/parameters/DeviceSeries'
+      responses:
+        '200':
+          $ref: '#/components/responses/Generic'
+      tags:
+      - Search
+components:
+  responses:
+    Generic:
+      description: Generic JSON response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Generic'
+  schemas:
+    Generic:
+      type: object
+      additionalProperties: true
+  parameters:
+    DeviceSeries:
+      in: header
+      name: Snap-Device-Series
+      required: true
+      schema:
+        type: string
+        default: '16'
+      description: Snap device series; required by the Device API.

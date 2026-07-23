@@ -1,0 +1,69 @@
+openapi: 3.1.0
+info:
+  title: Canonical Snap Store Device Assertions API
+  description: 'Public Snap Store Device API (api.snapcraft.io) used by snap clients to
+
+    discover snaps, fetch metadata, refresh installed snaps, search the
+
+    store, and download assertions. Endpoints come from the publicly
+
+    documented snap store reference (https://api.snapcraft.io/docs/).
+
+
+    Most endpoints are open / unauthenticated. Authenticated endpoints under
+
+    /api/v1/snaps/auth/ use Ubuntu One macaroons and require the
+
+    Snap-Device-Series header.
+
+
+    This specification is a best-effort, hand-authored representation. The
+
+    Charmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local
+
+    REST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,
+
+    and Landscape APIs are not modeled here — see apis.yml for those
+
+    surfaces and their respective Canonical documentation.
+
+    '
+  version: v2
+  contact:
+    name: Canonical / Snapcraft
+    url: https://api.snapcraft.io/docs/
+servers:
+- url: https://api.snapcraft.io
+tags:
+- name: Assertions
+paths:
+  /v2/assertions/{type}/{primaryKey}:
+    parameters:
+    - in: path
+      name: type
+      required: true
+      schema:
+        type: string
+        enum:
+        - snap-declaration
+        - snap-revision
+        - account
+        - account-key
+        - validation-set
+    - in: path
+      name: primaryKey
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Fetch an assertion
+      description: Retrieve a signed assertion document by type and primary key.
+      responses:
+        '200':
+          description: Signed assertion document (application/x.ubuntu.assertion).
+          content:
+            application/x.ubuntu.assertion:
+              schema:
+                type: string
+      tags:
+      - Assertions
