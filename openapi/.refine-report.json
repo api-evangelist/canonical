@@ -1,0 +1,18 @@
+{
+  "provider": "canonical",
+  "sources": [
+    "canonical-assertions-api-openapi.yml",
+    "canonical-search-api-openapi.yml",
+    "canonical-snaps-api-openapi.yml"
+  ],
+  "outputs": [
+    "canonical-assertions-api-openapi.yml",
+    "canonical-search-api-openapi.yml",
+    "canonical-snaps-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
