@@ -29,7 +29,7 @@ access: Open
 created: '2026-03-16'
 modified: '2026-04-23'
 position: Provider
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 description: >-
   Canonical is the company behind Ubuntu, the world's most popular open
   source operating system for cloud, servers, desktops, IoT, and Kubernetes.
