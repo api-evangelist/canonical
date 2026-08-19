@@ -1,0 +1,138 @@
+{
+  "item": [
+    {
+      "id": "5d9775f8-e0ec-4064-9fbe-312b6bf0427b",
+      "name": "Assertions",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "04418ec9-108a-41c5-86fa-5a0757d4d8e1",
+          "name": "Fetch an assertion",
+          "request": {
+            "name": "Fetch an assertion",
+            "description": {
+              "content": "Retrieve a signed assertion document by type and primary key.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "assertions",
+                ":type",
+                ":primaryKey"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "type",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "primaryKey",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/x.ubuntu.assertion"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8b05a6f1-f109-43de-8b69-d85da7122d43",
+              "name": "Signed assertion document (application/x.ubuntu.assertion).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "assertions",
+                    ":type",
+                    ":primaryKey"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "type",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "primaryKey",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/x.ubuntu.assertion"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/x.ubuntu.assertion"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snapcraft.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8bfd1783-6688-430e-82a4-d78bf03bd22d",
+    "name": "Canonical Snap Store Device Assertions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public Snap Store Device API (api.snapcraft.io) used by snap clients to\ndiscover snaps, fetch metadata, refresh installed snaps, search the\nstore, and download assertions. Endpoints come from the publicly\ndocumented snap store reference (https://api.snapcraft.io/docs/).\n\nMost endpoints are open / unauthenticated. Authenticated endpoints under\n/api/v1/snaps/auth/ use Ubuntu One macaroons and require the\nSnap-Device-Series header.\n\nThis specification is a best-effort, hand-authored representation. The\nCharmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local\nREST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,\nand Landscape APIs are not modeled here — see apis.yml for those\nsurfaces and their respective Canonical documentation.\n\n\nContact Support:\n Name: Canonical / Snapcraft",
+      "type": "text/plain"
+    }
+  }
+}

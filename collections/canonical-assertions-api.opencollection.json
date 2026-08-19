@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Canonical Snap Store Device Assertions API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Assertions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Fetch an assertion",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.snapcraft.io/v2/assertions/:type/:primaryKey",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "primaryKey",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a signed assertion document by type and primary key."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

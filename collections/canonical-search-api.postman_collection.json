@@ -1,0 +1,144 @@
+{
+  "item": [
+    {
+      "id": "28e35d2d-15b0-401b-8baa-c8d2ebc270d5",
+      "name": "Search",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c2f5095b-a82a-4719-afe3-16e5a9e5617b",
+          "name": "Search (legacy v1)",
+          "request": {
+            "name": "Search (legacy v1)",
+            "description": {},
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "search"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "q",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "section",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "fields",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Snap device series; required by the Device API.",
+                "key": "Snap-Device-Series",
+                "value": "16"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8c991d0f-fb77-4ec2-9422-5318bc03aa19",
+              "name": "Generic JSON response.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "search"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "section",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fields",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "(Required) Snap device series; required by the Device API.",
+                    "key": "Snap-Device-Series",
+                    "value": "16"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": 6252\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.snapcraft.io",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "239e7d31-864a-42f6-8d62-f4e3fcdd21dd",
+    "name": "Canonical Snap Store Device Assertions Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public Snap Store Device API (api.snapcraft.io) used by snap clients to\ndiscover snaps, fetch metadata, refresh installed snaps, search the\nstore, and download assertions. Endpoints come from the publicly\ndocumented snap store reference (https://api.snapcraft.io/docs/).\n\nMost endpoints are open / unauthenticated. Authenticated endpoints under\n/api/v1/snaps/auth/ use Ubuntu One macaroons and require the\nSnap-Device-Series header.\n\nThis specification is a best-effort, hand-authored representation. The\nCharmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local\nREST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,\nand Landscape APIs are not modeled here — see apis.yml for those\nsurfaces and their respective Canonical documentation.\n\n\nContact Support:\n Name: Canonical / Snapcraft",
+      "type": "text/plain"
+    }
+  }
+}
