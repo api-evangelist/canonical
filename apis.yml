@@ -19,6 +19,15 @@ type: Index
 tags:
   - Cloud
   - Linux
+  - Open-Source
+  - Ubuntu
+  - Containers
+  - Bare Metal
+  - Charms
+  - Identity
+tags_raw:
+  - Cloud
+  - Linux
   - Open Source
   - Ubuntu
   - Containers
@@ -140,6 +149,10 @@ apis:
   humanURL: https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
   baseURL: https://api.launchpad.net/
   tags:
+  - Authentication
+  - Open-Source
+  - Project Hosting
+  tags_raw:
   - OAuth
   - Open Source
   - Project Hosting
