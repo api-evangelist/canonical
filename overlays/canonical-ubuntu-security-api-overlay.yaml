@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay — Ubuntu Security API
+  version: 1.0.0
+extends: ../openapi/canonical-ubuntu-security-api-openapi.json
+x-generated: '2026-09-05'
+x-method: generated
+x-source: openapi/canonical-ubuntu-security-api-openapi.json
+actions:
+- target: $.info
+  update:
+    x-api-evangelist:
+      provider: Canonical
+      providerId: canonical
+      harvested: '2026-09-05'
+      harvested_from: https://ubuntu.com/security/api/spec.json
+      catalog: https://apis.io/provider/canonical
+      note: Harvested verbatim from the URL above; this overlay carries API Evangelist enrichment only
+        and never mutates the source document.
+- target: $.info
+  update:
+    x-api-evangelist-contact:
+      note: The source document declares no info.contact. Canonical routes API questions through the product
+        documentation and https://discourse.ubuntu.com/.
+- target: $
+  update:
+    x-api-evangelist-servers-note: 'The source document declares no servers[]/host. Documented base: https://ubuntu.com'
+- target: $
+  update:
+    x-api-evangelist-spec-version-note: This contract is Swagger 2.0. Consumers on modern tooling may
+      need a conversion step; the operation set is complete as published.

@@ -1,0 +1,56 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  Generated from openapi/canonical-lxd-rest-api-openapi.yml,
+  openapi/canonical-snapd-rest-api-openapi.yml and
+  openapi/canonical-ubuntu-security-api-openapi.json, plus
+  conventions/canonical-conventions.yml. Every operationId referenced in these skills was verified
+  present in the named spec.
+provider: Canonical
+providerId: canonical
+description: >-
+  Packaged agent skills for the three Canonical API surfaces an agent is most likely to be asked to
+  operate: LXD (infrastructure provisioning), snapd (package lifecycle on a host), and the Ubuntu
+  Security API (CVE and USN lookup). Canonical publishes no skills of its own and no AGENTS.md was
+  found in the canonical GitHub organization, so these are generated, not harvested.
+skills:
+  - name: canonical-lxd-provision-instance
+    file: canonical-lxd-provision-instance.md
+    api: canonical:lxd-rest-api
+    spec: openapi/canonical-lxd-rest-api-openapi.yml
+    operations: 12
+    covers:
+      - capability discovery via api_extensions
+      - project scoping
+      - asynchronous operation model and the operation status codes
+      - ETag/If-Match conditional updates
+      - snapshot-before-change and the restore path
+      - cancelling an in-flight operation
+    risk: high — creates, mutates and destroys infrastructure
+  - name: canonical-snapd-manage-snap
+    file: canonical-snapd-manage-snap.md
+    api: canonical:snapd-rest-api
+    spec: openapi/canonical-snapd-rest-api-openapi.yml
+    operations: 9
+    covers:
+      - unix socket peer authentication
+      - the change model and how to abort a change
+      - revert to a previous revision, bounded by refresh.retain
+      - the 31-day automatic snapshot window on removal, and how purge destroys it
+      - branching on the enumerated error `kind`
+    risk: high — installs, removes and reverts software on a host
+  - name: canonical-ubuntu-security-cve-lookup
+    file: canonical-ubuntu-security-cve-lookup.md
+    api: canonical:ubuntu-security-api
+    spec: openapi/canonical-ubuntu-security-api-openapi.json
+    operations: 6
+    covers:
+      - open unauthenticated access
+      - CVE and USN lookup and search
+      - release support status as the precondition for reading "fixed"
+      - the deliberately flattened notices payloads and the compat paths
+      - the 60-second cache-control floor in place of a rate limit
+    risk: low — read-only, unauthenticated
+counts:
+  skills: 3
+  operations_referenced: 27

@@ -48,7 +48,7 @@ tags_raw:
   - Identity
 access: Open
 created: '2026-03-16'
-modified: '2026-04-23'
+modified: '2026-09-05'
 position: Producing
 specificationVersion: '0.23'
 description: >-
@@ -110,6 +110,10 @@ apis:
   - System
   - Snaps
   properties:
+  - type: OpenAPI
+    url: openapi/canonical-snapd-rest-api-openapi.yml
+  - type: AgentSkill
+    url: skills/canonical-snapd-manage-snap.md
   - type: Documentation
     url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
   - type: HowTo
@@ -175,6 +179,8 @@ apis:
     url: https://help.launchpad.net/API
   - type: SDKs
     url: https://launchpadlib.readthedocs.io/en/latest/introduction.html
+  - type: Webhooks
+    url: asyncapi/canonical-launchpad-webhooks.yml
   - type: Portal
     url: https://api.launchpad.net/
 - aid: canonical:ubuntu-pro-api
@@ -209,8 +215,16 @@ apis:
   - Patch Management
   - Fleet
   properties:
+  - type: OpenAPI
+    url: openapi/canonical-landscape-debarchive-api-openapi.yml
+  - type: Overlay
+    url: overlays/canonical-landscape-debarchive-provider-overlay.yaml
   - type: Documentation
     url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
   - type: Portal
     url: https://ubuntu.com/landscape
 - aid: canonical:canonical-assertions-api
@@ -224,9 +238,9 @@ apis:
   - type: OpenAPI
     url: openapi/canonical-assertions-api-openapi.yml
   - type: Documentation
-    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
-  - type: Reference
-    url: https://linuxcontainers.org/lxd/rest-api/
+    url: https://api.snapcraft.io/docs/
+  - type: HowTo
+    url: https://snapcraft.io/docs/using-the-api
 - aid: canonical:canonical-search-api
   name: Canonical Search API
   description: The Search API from Canonical — 1 operation(s) for search.
@@ -238,9 +252,9 @@ apis:
   - type: OpenAPI
     url: openapi/canonical-search-api-openapi.yml
   - type: Documentation
-    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
-  - type: Reference
-    url: https://linuxcontainers.org/lxd/rest-api/
+    url: https://api.snapcraft.io/docs/
+  - type: HowTo
+    url: https://snapcraft.io/docs/using-the-api
 - aid: canonical:canonical-snaps-api
   name: Canonical Snaps API
   description: The Snaps API from Canonical — 10 operation(s) for snaps.
@@ -252,10 +266,248 @@ apis:
   - type: OpenAPI
     url: openapi/canonical-snaps-api-openapi.yml
   - type: Documentation
+    url: https://api.snapcraft.io/docs/
+  - type: HowTo
+    url: https://snapcraft.io/docs/using-the-api
+- aid: canonical:lxd-rest-api
+  name: LXD REST API
+  description: >-
+    The REST API used by every LXD client. LXD is Canonical's system container and virtual machine
+    manager; the API is available over a local unix+http socket and over remote https, authenticated
+    by TLS client certificate, OIDC identity, or unix group membership for local users. Canonical
+    publishes the full contract as a Swagger 2.0 document with 169 paths, 333 operations and 236
+    schema definitions — the largest and most complete API contract in the Canonical portfolio.
+    Capability discovery is through the api_extensions[] array on GET /1.0 rather than a path version
+    bump; the path has been /1.0 since 2016.
+  humanURL: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  baseURL: https://<lxd-host>:8443
+  tags:
+  - Containers
+  - Virtualization
+  - Infrastructure
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-lxd-rest-api-openapi.yml
+  - type: Overlay
+    url: overlays/canonical-lxd-rest-api-overlay.yaml
+  - type: AgentSkill
+    url: skills/canonical-lxd-provision-instance.md
+  - type: Documentation
     url: https://documentation.ubuntu.com/lxd/latest/rest-api/
-  - type: Reference
-    url: https://linuxcontainers.org/lxd/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+- aid: canonical:ubuntu-security-api
+  name: Ubuntu Security API
+  description: >-
+    An open, unauthenticated API over Canonical's vulnerability data — Ubuntu Security Notices (USNs),
+    CVE records with CVSS3 scoring, and per-release support status. Canonical publishes a Swagger 2.0
+    contract for it at https://ubuntu.com/security/api/spec.json and a Swagger UI at
+    /security/api/docs. It is the most agent-friendly surface Canonical operates: read-only, needs no
+    credential, and answers the question "is my Ubuntu package affected by this CVE?" directly.
+  humanURL: https://ubuntu.com/security/api/docs
+  baseURL: https://ubuntu.com
+  tags:
+  - Security
+  - CVE
+  - Vulnerability
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-ubuntu-security-api-openapi.json
+  - type: Overlay
+    url: overlays/canonical-ubuntu-security-api-overlay.yaml
+  - type: AgentSkill
+    url: skills/canonical-ubuntu-security-cve-lookup.md
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+- aid: canonical:pebble-api
+  name: Pebble API
+  description: >-
+    Pebble is Canonical's lightweight service manager, used inside snaps, ROCKs and Kubernetes charm
+    workloads. It exposes a local REST API over a unix socket for managing services, layers, checks,
+    files, exec sessions and notices. Canonical publishes an OpenAPI 3.1.0 contract for it.
+  humanURL: https://documentation.ubuntu.com/pebble/
+  tags:
+  - Service Management
+  - Containers
+  - Init
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-pebble-api-openapi.yml
+  - type: Overlay
+    url: overlays/canonical-pebble-api-overlay.yaml
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+- aid: canonical:testflinger-api
+  name: Testflinger API
+  description: >-
+    Testflinger is Canonical's hardware test-orchestration service. Its REST API accepts test jobs
+    against named device queues, reports job status and results, serves build artifacts, and exposes
+    agent and queue inventory. The OpenAPI 3.0.3 contract is served live from the production host.
+  humanURL: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  baseURL: https://testflinger.canonical.com
+  tags:
+  - Testing
+  - Hardware
+  - CI
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-testflinger-api-openapi.json
+  - type: Overlay
+    url: overlays/canonical-testflinger-api-overlay.yaml
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+- aid: canonical:hardware-api
+  name: Ubuntu Hardware API (hwapi)
+  description: >-
+    The Ubuntu hardware certification API. Given a machine's hardware identifiers it reports whether
+    that configuration is certified for Ubuntu and on which releases. Serves its own OpenAPI 3.1.0
+    contract at https://hw.ubuntu.com/openapi.json.
+  humanURL: https://hw.ubuntu.com/docs
+  baseURL: https://hw.ubuntu.com
+  tags:
+  - Hardware
+  - Certification
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-hardware-api-openapi.json
+  - type: Overlay
+    url: overlays/canonical-hardware-api-overlay.yaml
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+- aid: canonical:identity-platform-api
+  name: Canonical Identity Platform API
+  description: >-
+    The API of Canonical's Identity Platform — an OIDC/OAuth 2.0 identity provider built on Ory and
+    delivered as a Juju charm bundle. Covers identities, clients, schemas, providers, roles, groups,
+    rules and entitlements. Canonical publishes an OpenAPI 3.0.3 contract with 45 paths and 79
+    operations, plus a gRPC-gateway swagger form in the same repository.
+  humanURL: https://github.com/canonical/identity-platform-api
+  tags:
+  - Identity
+  - OIDC
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-identity-platform-api-openapi.yml
+  - type: Overlay
+    url: overlays/canonical-identity-platform-api-overlay.yaml
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+- aid: canonical:test-observer-api
+  name: Test Observer API
+  description: >-
+    Test Observer is Canonical's dashboard for tracking test execution across Ubuntu artefacts —
+    snaps, debs, charms and images — through their release stages. The backend publishes an OpenAPI
+    3.1.0 contract with 64 paths and 91 operations covering artefacts, builds, test executions,
+    results, environments and reviews.
+  humanURL: https://test-observer.canonical.com/
+  baseURL: https://test-observer-api.canonical.com
+  tags:
+  - Testing
+  - Quality
+  - CI
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-test-observer-api-openapi.json
+  - type: Overlay
+    url: overlays/canonical-test-observer-api-overlay.yaml
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+- aid: canonical:anbox-cloud-ams-api
+  name: Anbox Cloud AMS API
+  description: >-
+    The external REST API of the Anbox Management Service (AMS), the control plane of Canonical's
+    Anbox Cloud product for running Android at scale. Covers applications, images, instances, nodes,
+    addons, containers and configuration across 46 paths and 72 operations. AMS is built on the LXD
+    codebase and inherits its response envelope and asynchronous operation model.
+  humanURL: https://documentation.ubuntu.com/anbox-cloud/
+  tags:
+  - Android
+  - Cloud
+  - Streaming
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-anbox-cloud-ams-api-openapi.json
+  - type: Overlay
+    url: overlays/canonical-anbox-cloud-ams-api-overlay.yaml
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+- aid: canonical:anbox-stream-gateway-api
+  name: Anbox Stream Gateway API
+  description: >-
+    The Anbox Cloud streaming control API — creates and manages streaming sessions between clients
+    and Android instances, plus the accounts, applications and configuration behind them. Canonical
+    publishes a Swagger 2.0 contract with 11 paths and 14 operations, and it is the one Anbox
+    contract that names a Canonical contact in info.contact.
+  humanURL: https://documentation.ubuntu.com/anbox-cloud/
+  tags:
+  - Android
+  - Streaming
+  - Cloud
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-anbox-stream-gateway-api-openapi.json
+  - type: Overlay
+    url: overlays/canonical-anbox-stream-gateway-api-overlay.yaml
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+- aid: canonical:cos-registration-server-api
+  name: COS Registration Server API
+  description: >-
+    Part of the Canonical Observability Stack for robotics and edge fleets. The registration server
+    API registers devices and manages their per-application configuration — Grafana dashboards,
+    Foxglove layouts and Bag files — across 13 paths and 35 operations, published as OpenAPI 3.0.3.
+  humanURL: https://github.com/canonical/cos-registration-server
+  tags:
+  - Observability
+  - Robotics
+  - Edge
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-cos-registration-server-api-openapi.yml
+  - type: Overlay
+    url: overlays/canonical-cos-registration-server-api-overlay.yaml
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:microceph-api
+  name: MicroCeph REST API
+  description: >-
+    MicroCeph is Canonical's opinionated, snap-delivered Ceph distribution. It publishes a small
+    OpenAPI 3.1.0 contract for its cluster REST surface. Recorded here because it is a real published
+    first-party contract, but it is thin — one path and two operations — and most MicroCeph operation
+    is through the CLI.
+  humanURL: https://canonical-microceph.readthedocs-hosted.com/
+  tags:
+  - Storage
+  - Ceph
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-microceph-api-openapi.yml
+  - type: Overlay
+    url: overlays/canonical-microceph-api-overlay.yaml
+  - type: SourceCode
+    url: https://github.com/canonical/microceph
 common:
+  - type: OAuthScopes
+    url: scopes/canonical-scopes.yml
+  - type: Authentication
+    url: authentication/canonical-authentication.yml
   - type: AgenticAccess
     url: agentic-access/canonical-agentic-access.yml
   - type: DomainSecurity
@@ -286,6 +538,72 @@ common:
     url: https://canonical.com/partners
   - url: https://canonical.com/blog/feed/
     type: Blog
+  - type: Packages
+    url: packages/canonical-packages.yml
+  - type: SDKs
+    url: packages/canonical-packages.yml
+  - type: CLI
+    url: cli/canonical-cli.yml
+  - type: Components
+    url: components/canonical-components.yml
+  - type: Conventions
+    url: conventions/canonical-conventions.yml
+  - type: Idempotency
+    url: conventions/canonical-conventions.yml
+  - type: ErrorCatalog
+    url: errors/canonical-problem-types.yml
+  - type: DataModel
+    url: data-model/canonical-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/canonical-lifecycle.yml
+  - type: Deprecation
+    url: lifecycle/canonical-lifecycle.yml
+  - type: StatusPage
+    url: https://status.canonical.com/
+  - type: ChangeLog
+    url: changelog/canonical-changelog.yml
+  - type: Conformance
+    url: conformance/canonical-conformance.yml
+  - type: Compliance
+    url: security/canonical-trust-center.yml
+  - type: TrustCenter
+    url: security/canonical-trust-center.yml
+  - type: Security
+    url: security/canonical-vulnerability-disclosure.yml
+  - type: VulnerabilityDisclosure
+    url: security/canonical-vulnerability-disclosure.yml
+  - type: WellKnown
+    url: well-known/canonical-well-known.yml
+  - type: SecurityTxt
+    url: well-known/canonical-security.txt
+  - type: LLMsTxt
+    url: llms/canonical-llms.txt
+  - type: Webhooks
+    url: asyncapi/canonical-launchpad-webhooks.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Overlay
+    url: overlays/canonical-landscape-debarchive-provider-overlay.yaml
+  - type: Plans
+    url: plans/canonical-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/canonical-rate-limits.yml
+  - type: Pricing
+    url: https://ubuntu.com/pricing/pro
+  - type: SignUp
+    url: https://ubuntu.com/pro/subscribe
+  - type: Login
+    url: https://login.ubuntu.com/
+  - type: Support
+    url: https://ubuntu.com/support
+  - type: PrivacyPolicy
+    url: https://ubuntu.com/legal/data-privacy
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: GettingStarted
+    url: https://ubuntu.com/tutorials
+  - type: GitHubOrganization
+    url: https://github.com/canonical
 integrations:
   - name: Desktop Desktop, laptops and workstations
   - name: Channel/reseller Partners on every continent
@@ -298,3 +616,8 @@ integrations:
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 50
+  pass: local-v3

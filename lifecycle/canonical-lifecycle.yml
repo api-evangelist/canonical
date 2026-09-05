@@ -1,0 +1,110 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://ubuntu.com/about/release-cycle, https://ubuntu.com/security/esm,
+  https://documentation.ubuntu.com/lxd/latest/api-extensions/,
+  https://status.canonical.com/, https://status.snapcraft.io/,
+  https://documentation.ubuntu.com/landscape/reference/release-notes/,
+  https://snapcraft.io/docs/reference/release-notes/
+provider: Canonical
+providerId: canonical
+description: >-
+  Canonical publishes one of the most explicit lifecycle commitments in the industry, but it is a
+  commitment about OPERATING SYSTEM RELEASES rather than about API versions. The distinction matters
+  for an integrator: the Ubuntu release cadence and the LTS/ESM support windows are firm, dated and
+  contractual, while the API contracts themselves (LXD /1.0, snapd /v2, Launchpad /1.0) have no
+  published deprecation policy and are versioned by capability discovery instead.
+versioning:
+  policy: per-product; no single company-wide API versioning policy is published
+  strategies:
+    - api: canonical:lxd-rest-api
+      strategy: frozen path version plus an append-only capability list
+      detail: >-
+        The LXD API has been at /1.0 since the 1.0 release. New capability is added as a named entry
+        in the api_extensions[] array returned by GET /1.0, never as a new path version. Canonical
+        maintains the extension list as public reference documentation; it is currently several
+        hundred entries long. This is a deliberate never-break-the-path posture.
+      evidence: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+    - api: canonical:snapd-rest-api
+      strategy: path version /v2
+    - api: canonical:landscape-api
+      strategy: 'parallel v1 (labelled LEGACY by Canonical) and v2 REST API'
+      evidence: https://documentation.ubuntu.com/landscape/reference/api/
+    - api: canonical:launchpad-api
+      strategy: 'named series — /1.0 (stable), /devel (explicitly unstable, may change without notice)'
+      evidence: https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
+deprecation:
+  policy_published: true
+  policy_scope: >-
+    The published policy covers Ubuntu releases and the packages in them, not API endpoints. Canonical
+    publishes exact end-of-standard-support and end-of-ESM dates per Ubuntu release, and the release
+    cycle page is the single authoritative calendar.
+  policy_url: https://ubuntu.com/about/release-cycle
+  headers:
+    sunset: not used
+    deprecation: not used
+    note: >-
+      No Canonical surface emits RFC 8594 Sunset or Deprecation response headers; live probes on
+      2026-09-05 of api.charmhub.io and ubuntu.com/security returned neither.
+  cadence:
+    interim_releases: every six months, supported for 9 months
+    lts_releases: every two years, with 5 years of standard security maintenance
+    esm: >-
+      "ESM extends the life of LTS releases by providing 10 years of security updates for the 'Main'
+      repository and also adds 10 years of security coverage for the 'Universe' repository. Available
+      through Ubuntu Pro." — quoted from https://ubuntu.com/about/release-cycle, probed 2026-09-05.
+  deprecated_in_contract:
+    count: 0
+    note: >-
+      Zero operations across the thirteen harvested specs carry `deprecated: true`. Canonical
+      deprecates by api_extension supersession and by release EOL, not by marking operations in the
+      contract.
+  legacy_surfaces_named_by_the_vendor:
+    - surface: Landscape legacy API (v1)
+      evidence: https://documentation.ubuntu.com/landscape/reference/api/legacy-api-endpoints/
+      note: Canonical's own navigation labels these endpoints "legacy" and directs new work to the v2 REST API.
+    - surface: landscape-api command-line client
+      evidence: https://documentation.ubuntu.com/landscape/how-to-guides/api/use-the-legacy-api-command-line-client/
+    - surface: python-libmaas
+      evidence: https://pypi.org/project/python-libmaas/
+      note: No release since 2022-08-17; see packages/canonical-packages.yml.
+status_page:
+  published: true
+  pages:
+    - name: Canonical status
+      url: https://status.canonical.com/
+      platform: Site24x7 StatusIQ
+      probed: '2026-09-05'
+      http_status: 200
+    - name: Snap Store status
+      url: https://status.snapcraft.io/
+      platform: Site24x7 StatusIQ
+      probed: '2026-09-05'
+      http_status: 200
+  note: >-
+    Two separate status pages: status.canonical.com covers Canonical services broadly, and
+    status.snapcraft.io covers the Snap Store / Charmhub delivery surfaces that snap clients depend
+    on. Neither publishes a machine-readable status JSON endpoint at a discoverable path.
+sla:
+  published: true
+  note: >-
+    SLAs are attached to the Ubuntu Pro / Canonical support subscription rather than to an API. The
+    published support tiers are weekday and 24/7, priced per machine per year; see
+    plans/canonical-plans-pricing.yml.
+  url: https://ubuntu.com/support
+release_notes:
+  - product: Ubuntu
+    url: https://ubuntu.com/about/release-cycle
+  - product: Landscape
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - product: snapd / Snapcraft
+    url: https://snapcraft.io/docs/reference/release-notes/
+  - product: LXD
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+    note: The api-extensions list doubles as LXD's API change log — each entry is a dated capability addition.
+support_windows:
+  - release_class: Interim
+    standard_support: 9 months
+  - release_class: LTS
+    standard_support: 5 years
+    extended: 10 years with Ubuntu Pro (ESM, Main and Universe)

@@ -1,0 +1,176 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Canonical product documentation — https://documentation.ubuntu.com/lxd/latest/,
+  https://snapcraft.io/docs/, https://documentation.ubuntu.com/juju/,
+  https://canonical.com/maas/docs/api, https://documentation.ubuntu.com/pro-client/en/latest/,
+  https://documentation.ubuntu.com/landscape/ — plus the canonical/ GitHub organization.
+provider: Canonical
+providerId: canonical
+description: >-
+  Canonical ships a first-party CLI in front of nearly every API in its portfolio; in most cases the
+  CLI is the reference client for the REST contract rather than a wrapper over it. Every binary below
+  is published by Canonical and installed from the Ubuntu archive or the Snap Store.
+clis:
+  - name: lxc
+    product: LXD
+    api: canonical:lxd-rest-api
+    docs: https://documentation.ubuntu.com/lxd/latest/reference/manpages/lxc/
+    install:
+      - snap install lxd
+    note: >-
+      The `lxc` client speaks the same REST API documented in
+      openapi/canonical-lxd-rest-api-openapi.yml, over a local unix socket or remote https with a TLS
+      client certificate.
+    command_groups:
+      - group: instances
+        commands: [launch, init, start, stop, restart, delete, list, info, exec, file, console, copy, move, rename, snapshot, restore, publish, pause]
+      - group: images
+        commands: [image list, image copy, image import, image export, image delete, image alias, image info]
+      - group: storage
+        commands: [storage create, storage list, storage volume create, storage volume attach, storage volume snapshot]
+      - group: networks
+        commands: [network create, network list, network attach, network forward, network zone, network acl]
+      - group: projects and clustering
+        commands: [project create, project switch, cluster list, cluster add, cluster evacuate, cluster restore]
+      - group: auth
+        commands: [auth group, auth identity, config trust add, config trust list, remote add, remote list]
+      - group: operations
+        commands: [operation list, operation show, operation delete]
+  - name: snap
+    product: snapd / Snap Store
+    api: canonical:snapd-rest-api
+    docs: https://snapcraft.io/docs/snap-command
+    install:
+      - preinstalled on Ubuntu
+      - apt install snapd
+    note: The `snap` command is a thin client over the snapd REST API on /run/snapd.socket.
+    command_groups:
+      - group: lifecycle
+        commands: [install, refresh, revert, remove, list, info, find, download]
+      - group: channels and releases
+        commands: [switch, refresh --channel, list --all, known]
+      - group: interfaces
+        commands: [connections, connect, disconnect, interface]
+      - group: services
+        commands: [services, start, stop, restart, logs]
+      - group: system
+        commands: [changes, tasks, watch, warnings, whoami, login, logout, set, get, wait]
+  - name: snapcraft
+    product: Snapcraft / Snap Store publishing
+    api: canonical:snap-store-api
+    docs: https://documentation.ubuntu.com/snapcraft/stable/reference/commands/
+    install:
+      - snap install snapcraft --classic
+    command_groups:
+      - group: build
+        commands: [pack, clean, expand-extensions, list-plugins, init]
+      - group: store account
+        commands: [login, logout, whoami, export-login]
+      - group: publish
+        commands: [register, upload, release, close, status, list-revisions, promote]
+      - group: metadata and assets
+        commands: [upload-metadata, set-default-track, list-tracks, edit-validation-sets]
+  - name: charmcraft
+    product: Charmhub
+    api: canonical:charmhub-api
+    docs: https://canonical-charmcraft.readthedocs-hosted.com/stable/reference/commands/
+    install:
+      - snap install charmcraft --classic
+    command_groups:
+      - group: build
+        commands: [init, pack, clean, expand-extensions, analyse]
+      - group: store account
+        commands: [login, logout, whoami]
+      - group: publish
+        commands: [register, upload, release, status, revisions, close, promote]
+      - group: resources and libraries
+        commands: [upload-resource, resources, resource-revisions, create-lib, publish-lib, fetch-lib, list-lib]
+  - name: juju
+    product: Juju
+    api: canonical:juju-api
+    docs: https://documentation.ubuntu.com/juju/latest/reference/juju-cli/
+    install:
+      - snap install juju
+    note: >-
+      `juju` talks to a Juju controller over the websocket API; it is the primary client for that
+      contract, which Canonical documents as facade schemas rather than OpenAPI.
+    command_groups:
+      - group: controllers and models
+        commands: [bootstrap, add-model, switch, destroy-model, controllers, models, register, login]
+      - group: applications
+        commands: [deploy, refresh, remove-application, scale-application, config, integrate, expose, constraints]
+      - group: units and machines
+        commands: [add-unit, remove-unit, add-machine, ssh, scp, exec, debug-hooks]
+      - group: operations
+        commands: [status, run, operations, show-task, show-operation, wait-for]
+      - group: storage and secrets
+        commands: [storage, add-storage, secrets, add-secret, grant-secret]
+  - name: maas
+    product: MAAS
+    api: canonical:maas-api
+    docs: https://canonical.com/maas/docs/api
+    install:
+      - snap install maas
+      - apt install maas-cli
+    note: >-
+      `maas login <profile> <url> <api-key>` fetches the API description from the running region
+      controller and builds the command surface from it, so the CLI is generated from the same
+      description the API serves.
+    command_groups:
+      - group: session
+        commands: [login, logout, list, refresh, apikey]
+      - group: machines
+        commands: [machines read, machines allocate, machine commission, machine deploy, machine release, machine power-on, machine power-off]
+      - group: networking
+        commands: [subnets, fabrics, vlans, spaces, ipranges, dnsresources, discoveries]
+      - group: configuration
+        commands: [maas set-config, maas get-config, boot-sources, tags, zones, resource-pools, users]
+  - name: pro
+    product: Ubuntu Pro Client
+    api: canonical:ubuntu-pro-api
+    docs: https://documentation.ubuntu.com/pro-client/en/latest/references/api/
+    install:
+      - preinstalled on Ubuntu 16.04 LTS and later (ubuntu-advantage-tools)
+    note: >-
+      The Pro Client exposes both a CLI and a machine-readable local API — `pro api <endpoint>`
+      returns a JSON envelope, and `--format json` is available on the main commands.
+    command_groups:
+      - group: subscription
+        commands: [attach, detach, status, refresh, token]
+      - group: services
+        commands: [enable, disable, security-status, fix, list]
+      - group: machine-readable
+        commands: ['api u.pro.status.is_attached.v1', 'api u.pro.packages.updates.v1', 'api u.pro.security.cves.v1', 'api u.pro.attach.token.full_token_info.v1']
+  - name: landscape-api
+    product: Landscape (legacy API)
+    api: canonical:landscape-api
+    docs: https://documentation.ubuntu.com/landscape/how-to-guides/api/use-the-legacy-api-command-line-client/
+    install:
+      - apt install landscape-api
+    note: >-
+      Canonical's own documentation labels this the LEGACY client. New work is directed at the
+      Landscape REST API v2 and at `curl`/HTTP against it.
+    command_groups:
+      - group: computers
+        commands: [get-computers, remove-computers, add-annotation-to-computers, change-computers-access-group]
+      - group: packages and upgrades
+        commands: [get-packages, upgrade-packages, install-packages, remove-packages]
+      - group: scripts and activities
+        commands: [execute-script, get-activities, cancel-activities, approve-activities]
+      - group: repositories
+        commands: [create-repository-profile, list-repository-profiles, sync-mirror, import-gpg-key]
+  - name: testflinger-cli
+    product: Testflinger
+    api: canonical:testflinger-api
+    docs: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+    install:
+      - snap install testflinger-cli
+    command_groups:
+      - group: jobs
+        commands: [submit, status, cancel, results, artifacts, poll, list-queues, show-queue]
+      - group: reservations
+        commands: [reserve, jobs]
+counts:
+  clis: 9
+  first_party: 9

@@ -1,4 +1,11 @@
-openapi: 3.1.0
+openapi: 3.2.0
+x-generated-from: documentation
+x-provenance-note: >-
+  Hand-authored by API Evangelist from the publicly documented Snap Store Device API
+  reference at https://api.snapcraft.io/docs/ — NOT harvested from a Canonical-published
+  machine-readable contract, because Canonical publishes none for api.snapcraft.io. Marked
+  2026-09-05 so this file is never mistaken for a provider artifact. The specs Canonical does
+  publish are the other thirteen documents in openapi/, each harvested verbatim.
 info:
   title: Canonical Snap Store Device Assertions Snaps API
   description: 'Public Snap Store Device API (api.snapcraft.io) used by snap clients to
@@ -204,6 +211,18 @@ paths:
       - Snaps
 components:
   schemas:
+    RefreshResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      additionalProperties: true
+    Generic:
+      type: object
+      additionalProperties: true
     FindResults:
       type: object
       properties:
@@ -220,34 +239,6 @@ components:
                 type: object
                 additionalProperties: true
             additionalProperties: true
-    RefreshResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-      additionalProperties: true
-    SnapInfo:
-      type: object
-      properties:
-        name:
-          type: string
-        snap-id:
-          type: string
-        channel-map:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        snap:
-          type: object
-          additionalProperties: true
-      additionalProperties: true
-    Generic:
-      type: object
-      additionalProperties: true
     RefreshRequest:
       type: object
       properties:
@@ -279,6 +270,29 @@ components:
                 type: integer
             additionalProperties: true
       additionalProperties: true
+    SnapInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        snap-id:
+          type: string
+        channel-map:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        snap:
+          type: object
+          additionalProperties: true
+      additionalProperties: true
+  responses:
+    Generic:
+      description: Generic JSON response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Generic'
   parameters:
     DeviceSeries:
       in: header
@@ -288,10 +302,3 @@ components:
         type: string
         default: '16'
       description: Snap device series; required by the Device API.
-  responses:
-    Generic:
-      description: Generic JSON response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Generic'

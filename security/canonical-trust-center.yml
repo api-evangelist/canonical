@@ -1,0 +1,74 @@
+generated: '2026-09-05'
+method: searched
+source: https://ubuntu.com/security/certifications, https://ubuntu.com/security/fips, https://ubuntu.com/security/cc,
+  https://ubuntu.com/security/esm, https://ubuntu.com/security
+provider: Canonical
+providerId: canonical
+description: 'Canonical does not operate a branded "trust center" portal (trust.canonical.com and canonical.com/trust
+  both 404 on 2026-09-05). What it publishes instead is a security and compliance hub under ubuntu.com/security,
+  and the distinction below is deliberate and load-bearing: some of these are CERTIFICATIONS Canonical
+  holds for its own product, and the rest are compliance regimes Canonical sells tooling to help a CUSTOMER
+  achieve. Conflating the two would credit Canonical with attestations it does not claim.'
+portal:
+  url: https://ubuntu.com/security/certifications
+  http_status: 200
+  probed: '2026-09-05'
+  branded_trust_center: false
+  probed_absent:
+  - url: https://canonical.com/trust
+    http_status: 404
+  - url: https://ubuntu.com/security/trust-center
+    http_status: 404
+certifications_held:
+- name: FIPS 140-2
+  subject: Ubuntu cryptographic modules
+  status: certified
+  evidence: https://ubuntu.com/security/fips
+  quote: '"FIPS 140-2 & 140-3 certified modules are available for Ubuntu."'
+- name: FIPS 140-3
+  subject: Ubuntu 22.04 LTS cryptographic modules
+  status: certified
+  evidence: https://ubuntu.com/security/fips
+  quote: '"FIPS 140-3 is now available for Ubuntu 22.04 LTS."'
+- name: Common Criteria
+  subject: Ubuntu 18.04 LTS and Ubuntu 16.04 LTS
+  status: certified
+  evidence: https://ubuntu.com/security/cc
+  level: EAL2
+  scheme: ISO/IEC 15408; certified through CSEC (the Swedish Certification Body for IT Security), evaluated
+    by atsec Information Security
+  quote: '"Ubuntu 18.04 LTS and 16.04 LTS have both been evaluated to assurance level EAL2 through CSEC
+    — The Swedish Certification Body for IT Security."'
+  note: Both certified releases are now out of standard support; no EAL evaluation is published for 20.04,
+    22.04 or 24.04.
+compliance_enablement:
+  note: Canonical publishes tooling and hardening automation for these regimes. These are NOT Canonical
+    certifications; the page's own wording is that Canonical "helps you comply" or "supports your path
+    towards" them.
+  regimes:
+  - name: DISA-STIG
+    tooling: Ubuntu Security Guide (USG)
+  - name: CIS Benchmarks
+    tooling: Ubuntu Security Guide (USG)
+  - name: FedRAMP
+    note: '"Find security tools to help you achieve FedRAMP Authority To Operate."'
+  - name: PCI-DSS
+  - name: HIPAA
+    note: '"Canonical supports your path towards HIPAA compliance."'
+  - name: NIST 800-53
+  - name: CMMC
+  - name: EU Cyber Resilience Act (CRA)
+    evidence: https://canonical.com/solutions/open-source-security/cyber-resilience-act
+  - name: EU NIS2
+  - name: UK Cyber Essentials
+not_found:
+- name: SOC 2
+  note: No SOC 2 report or attestation is advertised on ubuntu.com/security; ubuntu.com/security/soc-2
+    returned 404 on 2026-09-05.
+- name: ISO 27001
+  note: Not named on the certifications page; ubuntu.com/security/iso-27001 returned 404 on 2026-09-05.
+    Absence of a published page is not proof Canonical lacks the certificate — only that it is not published
+    where a buyer or an agent would look.
+subprocessors_or_dpa:
+  privacy_policy: https://ubuntu.com/legal/data-privacy
+  terms: https://ubuntu.com/legal/terms

@@ -1,0 +1,62 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://documentation.ubuntu.com/lxd/latest/api-extensions/,
+  https://snapcraft.io/docs/reference/release-notes/,
+  https://documentation.ubuntu.com/landscape/reference/release-notes/,
+  https://ubuntu.com/about/release-cycle
+provider: Canonical
+providerId: canonical
+description: >-
+  Canonical publishes change history per product, not per company and not per API. There is no single
+  Canonical API changelog. The most useful one for an API consumer is the LXD api-extensions list,
+  which is genuinely an API change log: every entry is a named, appended capability that a client can
+  test for at runtime on GET /1.0.
+scheme:
+  style: per-product release notes plus, for LXD, a runtime capability list
+  dated: partial
+  note: >-
+    HONEST GAP: the LXD api-extensions page names each capability but does not date the entries, so a
+    consumer cannot tell from the page when an extension shipped — only that it exists in a given
+    build. The Ubuntu release cycle page is the one fully dated surface in the portfolio.
+sources:
+  - product: LXD
+    api: canonical:lxd-rest-api
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+    kind: api-capability-list
+    machine_readable: true
+    machine_readable_note: >-
+      The same list is served as the api_extensions[] array on GET /1.0 of any LXD server, which
+      makes it the only Canonical change history an agent can read at runtime rather than scrape.
+    recent_entries_note: >-
+      Entries are appended, never removed, and the array on a live server IS the changelog for that
+      build. No dates are published against entries.
+  - product: snapd / Snapcraft
+    api: canonical:snapd-rest-api
+    url: https://snapcraft.io/docs/reference/release-notes/
+    kind: release-notes
+    dated: true
+  - product: Landscape
+    api: canonical:landscape-api
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+    kind: release-notes
+    dated: true
+    note: >-
+      Landscape versions track the Ubuntu LTS scheme — 24.04 LTS, 26.04 LTS — and the release notes
+      page carries per-release upgrade guidance.
+  - product: Ubuntu
+    url: https://ubuntu.com/about/release-cycle
+    kind: release-calendar
+    dated: true
+    note: >-
+      The authoritative dated surface. Every Ubuntu release, its release date, its end of standard
+      support and its end of ESM are published on one page.
+  - product: Canonical (company-wide announcements)
+    url: https://canonical.com/blog
+    feed: https://canonical.com/blog/feed/
+    kind: blog
+    dated: true
+gaps:
+  - No per-API changelog for the Snap Store Device API, the Charmhub API, or the Launchpad Web Services API.
+  - No RSS/Atom feed dedicated to API changes on any product.
+  - LXD api-extensions entries carry no dates.

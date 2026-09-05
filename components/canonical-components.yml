@@ -1,0 +1,84 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://vanillaframework.io/docs, https://canonical.github.io/react-components/,
+  https://github.com/canonical/store-components, https://github.com/canonical/maas-react-components,
+  https://github.com/canonical/global-nav, https://github.com/canonical/cookie-policy — versions read
+  from registry.npmjs.org on 2026-09-05.
+provider: Canonical
+providerId: canonical
+description: >-
+  Canonical publishes its front-end design system and the embeddable widgets built on it as public
+  npm packages. These are client-side UI components, distinct from the API SDKs in
+  packages/canonical-packages.yml — they render Canonical surfaces (store listings, global
+  navigation, cookie consent, MAAS console widgets) inside a consumer's own application.
+families:
+  - family: Design system
+    description: The CSS foundation every Canonical web property is built on.
+    components:
+      - name: Vanilla Framework
+        package: vanilla-framework
+        registry: npm
+        version: 4.59.0
+        published: '2026-08-27'
+        docs: https://vanillaframework.io/docs
+        repository: https://github.com/canonical/vanilla-framework
+        type: css-framework
+        distribution: [npm, sass, cdn]
+  - family: React component library
+    description: React bindings for Vanilla, used by MAAS, Landscape, JAAS and the Canonical web team.
+    components:
+      - name: '@canonical/react-components'
+        package: '@canonical/react-components'
+        registry: npm
+        version: 4.10.2
+        published: '2026-08-25'
+        docs: https://canonical.github.io/react-components/
+        repository: https://github.com/canonical/react-components
+        type: react-components
+      - name: '@canonical/maas-react-components'
+        package: '@canonical/maas-react-components'
+        registry: npm
+        version: 2.8.2
+        published: '2026-08-31'
+        repository: https://github.com/canonical/maas-react-components
+        type: react-components
+        note: MAAS-specific composites layered over @canonical/react-components.
+  - family: Store surfaces
+    description: >-
+      Components that render Snap Store and Charmhub listing data — the client-side companion to the
+      Snap Store Device API and the Charmhub API.
+    components:
+      - name: '@canonical/store-components'
+        package: '@canonical/store-components'
+        registry: npm
+        version: 0.56.1
+        published: '2026-09-03'
+        repository: https://github.com/canonical/store-components
+        type: react-components
+        api: canonical:snap-store-api
+  - family: Site-wide embeds
+    description: Drop-in widgets Canonical embeds across ubuntu.com, canonical.com and partner sites.
+    components:
+      - name: '@canonical/global-nav'
+        package: '@canonical/global-nav'
+        registry: npm
+        version: 3.9.0
+        published: '2026-06-16'
+        repository: https://github.com/canonical-web-and-design/global-nav
+        type: embeddable-widget
+        note: Injects the Canonical global navigation bar; loadable as a script tag or an npm import.
+      - name: '@canonical/cookie-policy'
+        package: '@canonical/cookie-policy'
+        registry: npm
+        version: 3.10.0
+        published: '2026-03-06'
+        repository: https://github.com/canonical/cookie-policy
+        type: embeddable-widget
+        note: Cookie consent banner used across Canonical properties.
+loaders:
+  - name: npm
+    note: Every component above is installable from the public npm registry under @canonical/ or vanilla-framework.
+counts:
+  families: 4
+  components: 7

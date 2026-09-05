@@ -1,0 +1,4809 @@
+components:
+    schemas:
+        TenantServiceInviteMemberBody:
+            properties:
+                email:
+                    type: string
+                role:
+                    type: string
+            type: object
+        TenantServiceProvisionUserBody:
+            properties:
+                email:
+                    type: string
+                role:
+                    type: string
+            type: object
+        TenantServiceUpdateTenantBody:
+            properties:
+                tenant:
+                    $ref: '#/components/schemas/tenantTenantInput'
+                update_mask:
+                    type: string
+            type: object
+        TenantServiceUpdateTenantUserBody:
+            properties:
+                role:
+                    type: string
+            type: object
+        apiauthorizationGroup:
+            properties:
+                group_id:
+                    type: string
+            type: object
+        apiauthz_groupsCreateGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apiauthz_groupsGroup'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apiauthz_groupsGetGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apiauthz_groupsGroup'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apiauthz_groupsGroup:
+            properties:
+                created_at:
+                    format: date-time
+                    type: string
+                description:
+                    type: string
+                id:
+                    type: string
+                name:
+                    type: string
+                tenant_id:
+                    type: string
+                type:
+                    type: string
+                updated_at:
+                    format: date-time
+                    type: string
+            type: object
+        apiauthz_groupsListGroupsResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apiauthz_groupsGroup'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apiauthz_groupsRemoveGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apiauthz_groupsUpdateGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apiauthz_groupsGroup'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apigroupsCreateGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apigroupsGroup'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apigroupsGetGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apigroupsGroup'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apigroupsGroup:
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+            type: object
+        apigroupsListGroupsResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apigroupsRemoveGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        apigroupsUpdateGroupResp:
+            type: object
+        apischemasSchema:
+            properties:
+                additional_properties:
+                    type: object
+                id:
+                    type: string
+                schema:
+                    type: object
+            type: object
+        apistatusStatus:
+            properties:
+                buildInfo:
+                    $ref: '#/components/schemas/statusBuildInfo'
+                status:
+                    type: string
+            type: object
+        authenticationMeResp:
+            properties:
+                email:
+                    type: string
+                name:
+                    type: string
+                nonce:
+                    type: string
+                sid:
+                    type: string
+                sub:
+                    type: string
+            type: object
+        authorizationAddAllowedAppToGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authorizationApp:
+            properties:
+                client_id:
+                    type: string
+            type: object
+        authorizationGetAllowedAppsInGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/authorizationApp'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authorizationGetAllowedGroupsForAppResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apiauthorizationGroup'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authorizationRemoveAllowedAppFromGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authorizationRemoveAllowedAppsFromGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authorizationRemoveAllowedGroupsForAppResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authz_groupsAddUserToGroupsResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authz_groupsAddUsersToGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authz_groupsGroupInput:
+            properties:
+                description:
+                    type: string
+                name:
+                    type: string
+                type:
+                    type: string
+            type: object
+        authz_groupsListUserGroupsResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apiauthz_groupsGroup'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authz_groupsListUsersInGroupResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/authz_groupsUser'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authz_groupsRemoveUserFromGroupResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        authz_groupsUser:
+            properties:
+                created_at:
+                    format: date-time
+                    type: string
+                id:
+                    type: string
+                role:
+                    type: string
+                updated_at:
+                    format: date-time
+                    type: string
+            type: object
+        clientsClient:
+            properties:
+                access_token_strategy:
+                    type: string
+                allowed_cors_origins:
+                    items:
+                        type: string
+                    type: array
+                audience:
+                    items:
+                        type: string
+                    type: array
+                authorization_code_grant_access_token_lifespan:
+                    type: string
+                authorization_code_grant_id_token_lifespan:
+                    type: string
+                authorization_code_grant_refresh_token_lifespan:
+                    type: string
+                backchannel_logout_session_required:
+                    type: boolean
+                backchannel_logout_uri:
+                    type: string
+                client_credentials_grant_access_token_lifespan:
+                    type: string
+                client_id:
+                    type: string
+                client_name:
+                    type: string
+                client_secret:
+                    type: string
+                client_secret_expires_at:
+                    format: int64
+                    type: string
+                client_uri:
+                    type: string
+                contacts:
+                    items:
+                        type: string
+                    type: array
+                created_at:
+                    format: date-time
+                    type: string
+                frontchannel_logout_session_required:
+                    type: boolean
+                frontchannel_logout_uri:
+                    type: string
+                grant_types:
+                    items:
+                        type: string
+                    type: array
+                implicit_grant_access_token_lifespan:
+                    type: string
+                implicit_grant_id_token_lifespan:
+                    type: string
+                jwks:
+                    type: object
+                jwks_uri:
+                    type: string
+                jwt_bearer_grant_access_token_lifespan:
+                    type: string
+                logo_uri:
+                    type: string
+                metadata:
+                    type: object
+                owner:
+                    type: string
+                policy_uri:
+                    type: string
+                post_logout_redirect_uris:
+                    items:
+                        type: string
+                    type: array
+                redirect_uris:
+                    items:
+                        type: string
+                    type: array
+                refresh_token_grant_access_token_lifespan:
+                    type: string
+                refresh_token_grant_id_token_lifespan:
+                    type: string
+                refresh_token_grant_refresh_token_lifespan:
+                    type: string
+                registration_access_token:
+                    type: string
+                registration_client_uri:
+                    type: string
+                request_object_signing_alg:
+                    type: string
+                request_uris:
+                    items:
+                        type: string
+                    type: array
+                response_types:
+                    items:
+                        type: string
+                    type: array
+                scope:
+                    type: string
+                sector_identifier_uri:
+                    type: string
+                skip_consent:
+                    type: boolean
+                subject_type:
+                    type: string
+                token_endpoint_auth_method:
+                    type: string
+                token_endpoint_auth_signing_alg:
+                    type: string
+                tos_uri:
+                    type: string
+                updated_at:
+                    format: date-time
+                    type: string
+                userinfo_signed_response_alg:
+                    type: string
+            type: object
+        clientsCreateClientResp:
+            properties:
+                data:
+                    $ref: '#/components/schemas/clientsClient'
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        clientsGetClientResp:
+            properties:
+                data:
+                    $ref: '#/components/schemas/clientsClient'
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        clientsListClientsResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/clientsClient'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        clientsRemoveClientResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        clientsUpdateClientResp:
+            properties:
+                data:
+                    $ref: '#/components/schemas/clientsClient'
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        googlerpcStatus:
+            properties:
+                code:
+                    format: int32
+                    type: integer
+                details:
+                    items:
+                        $ref: '#/components/schemas/protobufAny'
+                    type: array
+                message:
+                    type: string
+            type: object
+        groupsGetGroupIdentitiesResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsGetGroupRolesResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsIdentities:
+            properties:
+                identities:
+                    items:
+                        type: string
+                    type: array
+            type: object
+        groupsListGroupEntitlementsResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsRemoveGroupEntitlementResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsRemoveGroupIdentityResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsRemoveGroupRoleResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsRoles:
+            properties:
+                roles:
+                    items:
+                        type: string
+                    type: array
+            type: object
+        groupsUpdateGroupEntitlementsResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsUpdateGroupIdentitiesResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        groupsUpdateGroupRolesResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        identitiesCreateIdentityBody:
+            properties:
+                additional_properties:
+                    type: object
+                credentials:
+                    type: object
+                metadata_admin:
+                    type: object
+                metadata_public:
+                    type: object
+                recovery_addresses:
+                    items:
+                        $ref: '#/components/schemas/identitiesRecoveryIdentityAddress'
+                    type: array
+                schema_id:
+                    type: string
+                state:
+                    type: string
+                traits:
+                    type: object
+                verifiable_addresses:
+                    items:
+                        $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
+                    type: array
+            type: object
+        identitiesCreateIdentityResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/identitiesIdentity'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        identitiesGetIdentityResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/identitiesIdentity'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        identitiesIdentity:
+            properties:
+                additional_properties:
+                    additionalProperties: {}
+                    type: object
+                created_at:
+                    format: date-time
+                    type: string
+                credentials:
+                    additionalProperties:
+                        $ref: '#/components/schemas/identitiesIdentityCredentials'
+                    type: object
+                id:
+                    type: string
+                metadata_admin:
+                    type: object
+                metadata_public:
+                    type: object
+                organization_id:
+                    $ref: '#/components/schemas/identitiesNullableString'
+                recovery_addresses:
+                    items:
+                        $ref: '#/components/schemas/identitiesRecoveryIdentityAddress'
+                    type: array
+                schema_id:
+                    type: string
+                schema_url:
+                    type: string
+                state:
+                    type: string
+                state_changed_at:
+                    format: date-time
+                    type: string
+                traits:
+                    type: object
+                updated_at:
+                    format: date-time
+                    type: string
+                verifiable_addresses:
+                    items:
+                        $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
+                    type: array
+            type: object
+        identitiesIdentityCredentials:
+            properties:
+                additional_properties:
+                    additionalProperties: {}
+                    type: object
+                config:
+                    additionalProperties: {}
+                    type: object
+                created_at:
+                    format: date-time
+                    type: string
+                identifiers:
+                    items:
+                        type: string
+                    type: array
+                type:
+                    type: string
+                updated_at:
+                    format: date-time
+                    type: string
+                version:
+                    format: int64
+                    type: string
+            type: object
+        identitiesListIdentitiesResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/identitiesIdentity'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        identitiesNullableString:
+            properties:
+                isSet:
+                    type: boolean
+                value:
+                    type: string
+            type: object
+        identitiesRecoveryIdentityAddress:
+            properties:
+                additional_properties:
+                    additionalProperties: {}
+                    type: object
+                created_at:
+                    format: date-time
+                    type: string
+                id:
+                    type: string
+                updated_at:
+                    format: date-time
+                    type: string
+                value:
+                    type: string
+                via:
+                    type: string
+            type: object
+        identitiesRemoveIdentityResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/identitiesIdentity'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        identitiesUpdateIdentityBody:
+            properties:
+                additional_properties:
+                    type: object
+                credentials:
+                    type: object
+                metadata_admin:
+                    type: object
+                metadata_public:
+                    type: object
+                schema_id:
+                    type: string
+                state:
+                    type: string
+                traits:
+                    type: object
+            type: object
+        identitiesUpdateIdentityResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/identitiesIdentity'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        identitiesVerifiableIdentityAddress:
+            properties:
+                additional_properties:
+                    additionalProperties: {}
+                    type: object
+                created_at:
+                    format: date-time
+                    type: string
+                id:
+                    type: string
+                status:
+                    type: string
+                updated_at:
+                    format: date-time
+                    type: string
+                value:
+                    type: string
+                verified:
+                    type: boolean
+                verified_at:
+                    format: date-time
+                    type: string
+                via:
+                    type: string
+            type: object
+        idpsCreateIdpBody:
+            properties:
+                apple_private_key:
+                    type: string
+                apple_private_key_id:
+                    type: string
+                apple_team_id:
+                    type: string
+                auth_url:
+                    type: string
+                client_id:
+                    type: string
+                client_secret:
+                    type: string
+                id:
+                    type: string
+                issuer_url:
+                    type: string
+                label:
+                    type: string
+                mapper_url:
+                    type: string
+                microsoft_tenant:
+                    type: string
+                provider:
+                    type: string
+                requested_claims:
+                    type: string
+                scope:
+                    items:
+                        type: string
+                    type: array
+                subject_source:
+                    type: string
+                token_url:
+                    type: string
+            type: object
+        idpsCreateIdpResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/idpsIdp'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        idpsGetIdpResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/idpsIdp'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        idpsIdp:
+            properties:
+                apple_private_key:
+                    type: string
+                apple_private_key_id:
+                    type: string
+                apple_team_id:
+                    type: string
+                auth_url:
+                    type: string
+                client_id:
+                    type: string
+                client_secret:
+                    type: string
+                id:
+                    type: string
+                issuer_url:
+                    type: string
+                label:
+                    type: string
+                mapper_url:
+                    type: string
+                microsoft_tenant:
+                    type: string
+                provider:
+                    type: string
+                requested_claims:
+                    type: string
+                scope:
+                    items:
+                        type: string
+                    type: array
+                subject_source:
+                    type: string
+                token_url:
+                    type: string
+            type: object
+        idpsListIdpsResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/idpsIdp'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        idpsRemoveIdpResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        idpsUpdateIdpBody:
+            properties:
+                apple_private_key:
+                    type: string
+                apple_private_key_id:
+                    type: string
+                apple_team_id:
+                    type: string
+                auth_url:
+                    type: string
+                client_id:
+                    type: string
+                client_secret:
+                    type: string
+                id:
+                    type: string
+                issuer_url:
+                    type: string
+                label:
+                    type: string
+                mapper_url:
+                    type: string
+                microsoft_tenant:
+                    type: string
+                provider:
+                    type: string
+                requested_claims:
+                    type: string
+                scope:
+                    items:
+                        type: string
+                    type: array
+                subject_source:
+                    type: string
+                token_url:
+                    type: string
+            type: object
+        idpsUpdateIdpResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/idpsIdp'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        protobufAny:
+            additionalProperties: {}
+            description: |-
+                `Any` contains an arbitrary serialized protocol buffer message along with a
+                URL that describes the type of the serialized message.
+
+                Protobuf library provides support to pack/unpack Any values in the form
+                of utility functions or additional generated methods of the Any type.
+
+                Example 1: Pack and unpack a message in C++.
+
+                    Foo foo = ...;
+                    Any any;
+                    any.PackFrom(foo);
+                    ...
+                    if (any.UnpackTo(&foo)) {
+                      ...
+                    }
+
+                Example 2: Pack and unpack a message in Java.
+
+                    Foo foo = ...;
+                    Any any = Any.pack(foo);
+                    ...
+                    if (any.is(Foo.class)) {
+                      foo = any.unpack(Foo.class);
+                    }
+                    // or ...
+                    if (any.isSameTypeAs(Foo.getDefaultInstance())) {
+                      foo = any.unpack(Foo.getDefaultInstance());
+                    }
+
+                 Example 3: Pack and unpack a message in Python.
+
+                    foo = Foo(...)
+                    any = Any()
+                    any.Pack(foo)
+                    ...
+                    if any.Is(Foo.DESCRIPTOR):
+                      any.Unpack(foo)
+                      ...
+
+                 Example 4: Pack and unpack a message in Go
+
+                     foo := &pb.Foo{...}
+                     any, err := anypb.New(foo)
+                     if err != nil {
+                       ...
+                     }
+                     ...
+                     foo := &pb.Foo{}
+                     if err := any.UnmarshalTo(foo); err != nil {
+                       ...
+                     }
+
+                The pack methods provided by protobuf library will by default use
+                'type.googleapis.com/full.type.name' as the type URL and the unpack
+                methods only use the fully qualified type name after the last '/'
+                in the type URL, for example "foo.bar.com/x/y.z" will yield type
+                name "y.z".
+
+                JSON
+                ====
+                The JSON representation of an `Any` value uses the regular
+                representation of the deserialized, embedded message, with an
+                additional field `@type` which contains the type URL. Example:
+
+                    package google.profile;
+                    message Person {
+                      string first_name = 1;
+                      string last_name = 2;
+                    }
+
+                    {
+                      "@type": "type.googleapis.com/google.profile.Person",
+                      "firstName": <string>,
+                      "lastName": <string>
+                    }
+
+                If the embedded message type is well-known and has a custom JSON
+                representation, that representation will be embedded adding a field
+                `value` which holds the custom JSON in addition to the `@type`
+                field. Example (for message [google.protobuf.Duration][]):
+
+                    {
+                      "@type": "type.googleapis.com/google.protobuf.Duration",
+                      "value": "1.212s"
+                    }
+            properties:
+                '@type':
+                    description: |-
+                        A URL/resource name that uniquely identifies the type of the serialized
+                        protocol buffer message. This string must contain at least
+                        one "/" character. The last segment of the URL's path must represent
+                        the fully qualified name of the type (as in
+                        `path/google.protobuf.Duration`). The name should be in a canonical form
+                        (e.g., leading "." is not accepted).
+
+                        In practice, teams usually precompile into the binary all types that they
+                        expect it to use in the context of Any. However, for URLs which use the
+                        scheme `http`, `https`, or no scheme, one can optionally set up a type
+                        server that maps type URLs to message definitions as follows:
+
+                        * If no scheme is provided, `https` is assumed.
+                        * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+                          value in binary format, or produce an error.
+                        * Applications are allowed to cache lookup results based on the
+                          URL, or have them precompiled into a binary to avoid any
+                          lookup. Therefore, binary compatibility needs to be preserved
+                          on changes to types. (Use versioned type names to manage
+                          breaking changes.)
+
+                        Note: this functionality is not currently available in the official
+                        protobuf release, and it is not used for type URLs beginning with
+                        type.googleapis.com. As of May 2023, there are no widely used type server
+                        implementations and no plans to implement one.
+
+                        Schemes other than `http`, `https` (or the empty scheme) might be
+                        used with implementation specific semantics.
+                    type: string
+            type: object
+        protobufNullValue:
+            default: NULL_VALUE
+            description: |-
+                `NullValue` is a singleton enumeration to represent the null value for the
+                `Value` type union.
+
+                The JSON representation for `NullValue` is JSON `null`.
+
+                 - NULL_VALUE: Null value.
+            enum:
+                - NULL_VALUE
+            type: string
+        rolesCreateRoleResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/rolesRole'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesGetRoleGroupsResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesGetRoleResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/rolesRole'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesListRoleEntitlementsResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesListRolesResp:
+            properties:
+                data:
+                    items:
+                        type: string
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesRemoveRoleEntitlementResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesRemoveRoleResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesRole:
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+            type: object
+        rolesUpdateRoleEntitlementsResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        rolesUpdateRoleResp:
+            type: object
+        schemasCreateSchemaResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apischemasSchema'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        schemasDefaultSchema:
+            properties:
+                id:
+                    type: string
+            type: object
+        schemasGetDefaultSchemaResp:
+            properties:
+                data:
+                    $ref: '#/components/schemas/schemasDefaultSchema'
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        schemasGetSchemaResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apischemasSchema'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        schemasListSchemasResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apischemasSchema'
+                    type: array
+                message:
+                    type: string
+                meta:
+                    $ref: '#/components/schemas/typesPagination'
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        schemasRemoveSchemaResp:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        schemasUpdateDefaultSchemaResp:
+            properties:
+                data:
+                    $ref: '#/components/schemas/schemasDefaultSchema'
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        schemasUpdateSchemaResp:
+            properties:
+                data:
+                    items:
+                        $ref: '#/components/schemas/apischemasSchema'
+                    type: array
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        statusBuildInfo:
+            properties:
+                commit_hash:
+                    type: string
+                name:
+                    type: string
+                version:
+                    type: string
+            type: object
+        tenantCreateTenantRequest:
+            properties:
+                name:
+                    type: string
+            type: object
+        tenantCreateTenantResponse:
+            properties:
+                tenant:
+                    $ref: '#/components/schemas/tenantTenant'
+            type: object
+        tenantDeleteTenantResponse:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        tenantInviteMemberResponse:
+            properties:
+                code:
+                    type: string
+                link:
+                    type: string
+                status:
+                    type: string
+            type: object
+        tenantListMyTenantsResponse:
+            properties:
+                tenants:
+                    items:
+                        $ref: '#/components/schemas/tenantTenant'
+                    type: array
+            type: object
+        tenantListTenantUsersResponse:
+            properties:
+                next_page_token:
+                    type: string
+                users:
+                    items:
+                        $ref: '#/components/schemas/tenantTenantUser'
+                    type: array
+            type: object
+        tenantListTenantsResponse:
+            properties:
+                next_page_token:
+                    type: string
+                tenants:
+                    items:
+                        $ref: '#/components/schemas/tenantTenant'
+                    type: array
+            type: object
+        tenantListUserTenantsResponse:
+            properties:
+                tenants:
+                    items:
+                        $ref: '#/components/schemas/tenantTenant'
+                    type: array
+            type: object
+        tenantLookupTenantsResponse:
+            properties:
+                tenants:
+                    items:
+                        $ref: '#/components/schemas/tenantTenant'
+                    type: array
+            type: object
+        tenantProvisionUserResponse:
+            properties:
+                status:
+                    type: string
+            type: object
+        tenantTenant:
+            properties:
+                created_at:
+                    type: string
+                enabled:
+                    type: boolean
+                id:
+                    type: string
+                name:
+                    type: string
+            type: object
+        tenantTenantInput:
+            properties:
+                enabled:
+                    type: boolean
+                name:
+                    type: string
+            type: object
+        tenantTenantUser:
+            properties:
+                email:
+                    type: string
+                role:
+                    type: string
+                user_id:
+                    type: string
+            type: object
+        tenantUpdateTenantResponse:
+            properties:
+                tenant:
+                    $ref: '#/components/schemas/tenantTenant'
+            type: object
+        tenantUpdateTenantUserResponse:
+            properties:
+                user:
+                    $ref: '#/components/schemas/tenantTenantUser'
+            type: object
+        typesErrorResponse:
+            properties:
+                message:
+                    type: string
+                status:
+                    format: int32
+                    type: integer
+            type: object
+        typesPagination:
+            properties:
+                next:
+                    type: string
+                pageToken:
+                    type: string
+                prev:
+                    type: string
+                size:
+                    format: int32
+                    type: integer
+            type: object
+        typesPaginationInput:
+            properties:
+                pageToken:
+                    type: string
+                size:
+                    format: int32
+                    type: integer
+            type: object
+        typesPermission:
+            properties:
+                object:
+                    type: string
+                relation:
+                    type: string
+            type: object
+        typesPermissions:
+            properties:
+                updates:
+                    items:
+                        $ref: '#/components/schemas/typesPermission'
+                    type: array
+            type: object
+    securitySchemes:
+        OAuth2:
+            flows:
+                authorizationCode:
+                    authorizationUrl: https://example.com/oauth/authorize
+                    scopes:
+                        email: ""
+                        openid: ""
+                        profile: ""
+                    tokenUrl: https://example.com/oauth/token
+            type: oauth2
+externalDocs:
+    description: REST API for the Admin UI service
+    url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md
+info:
+    contact:
+        name: Identity Platform API
+        url: https://github.com/canonical/identity-platform-api
+    description: REST API for the Admin UI service
+    license:
+        name: AGPL-3.0
+        url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+    title: Identity Platform API
+    version: "0.1"
+openapi: 3.0.3
+paths:
+    /api/v0/auth:
+        get:
+            operationId: AuthenticationService_Login
+            parameters:
+                - in: query
+                  name: next
+                  schema:
+                    type: string
+            responses:
+                "302":
+                    content:
+                        application/json:
+                            schema: {}
+                    description: |-
+                        Redirects the client to the identity provider's authorization endpoint.
+
+                        The response is a 302 Redirect with a Location header.
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthenticationService
+    /api/v0/auth/callback:
+        get:
+            operationId: AuthenticationService_Callback
+            parameters:
+                - in: query
+                  name: code
+                  schema:
+                    type: string
+                - in: query
+                  name: scope
+                  schema:
+                    type: string
+                - in: query
+                  name: state
+                  schema:
+                    type: string
+            responses:
+                "302":
+                    content:
+                        application/json:
+                            schema: {}
+                    description: |-
+                        This endpoint redirects the client to the original location after authentication.
+
+                        The response is a 302 Redirect with a Location header.
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthenticationService
+    /api/v0/auth/logout:
+        get:
+            operationId: AuthenticationService_Logout
+            parameters:
+                - in: query
+                  name: next
+                  schema:
+                    type: string
+            responses:
+                "302":
+                    content:
+                        application/json:
+                            schema: {}
+                    description: |-
+                        This endpoint logs out the client and redirects to the requested location.
+
+                        The response is a 302 Redirect with a Location header.
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthenticationService
+    /api/v0/auth/me:
+        get:
+            operationId: AuthenticationService_Me
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authenticationMeResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthenticationService
+    /api/v0/authz/apps/{app_id}/groups:
+        delete:
+            operationId: AppAuthorizationService_RemoveAllowedGroupsForApp
+            parameters:
+                - in: path
+                  name: app_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authorizationRemoveAllowedGroupsForAppResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: RemoveAllowedGroupsForApp removes an app from all groups it is allowed in.
+            tags:
+                - AppAuthorizationService
+        get:
+            operationId: AppAuthorizationService_GetAllowedGroupsForApp
+            parameters:
+                - in: path
+                  name: app_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authorizationGetAllowedGroupsForAppResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: GetAllowedGroupsForApp retrieves the list of groups an app is allowed in.
+            tags:
+                - AppAuthorizationService
+    /api/v0/authz/groups:
+        get:
+            operationId: AuthzGroupsService_ListGroups
+            parameters:
+                - in: query
+                  name: pagination.size
+                  schema:
+                    format: int32
+                    type: integer
+                - in: query
+                  name: pagination.pageToken
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apiauthz_groupsListGroupsResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+        post:
+            operationId: AuthzGroupsService_CreateGroup
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/authz_groupsGroupInput'
+                required: true
+                x-originalParamName: group
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apiauthz_groupsCreateGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+    /api/v0/authz/groups/{group_id}/apps:
+        delete:
+            operationId: AppAuthorizationService_RemoveAllowedAppsFromGroup
+            parameters:
+                - in: path
+                  name: group_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authorizationRemoveAllowedAppsFromGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: RemoveAllowedAppsFromGroup removes all apps from the allowed list of a group.
+            tags:
+                - AppAuthorizationService
+        get:
+            operationId: AppAuthorizationService_GetAllowedAppsInGroup
+            parameters:
+                - in: path
+                  name: group_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authorizationGetAllowedAppsInGroupResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: GetAllowedAppsInGroup retrieves the list of apps allowed in a specific group.
+            tags:
+                - AppAuthorizationService
+        post:
+            operationId: AppAuthorizationService_AddAllowedAppToGroup
+            parameters:
+                - in: path
+                  name: group_id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/authorizationApp'
+                required: true
+                x-originalParamName: app
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authorizationAddAllowedAppToGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: AddAllowedAppToGroup adds an app to the allowed list of a group.
+            tags:
+                - AppAuthorizationService
+    /api/v0/authz/groups/{group_id}/apps/{app_id}:
+        delete:
+            operationId: AppAuthorizationService_RemoveAllowedAppFromGroup
+            parameters:
+                - in: path
+                  name: group_id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: app_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authorizationRemoveAllowedAppFromGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: RemoveAllowedAppFromGroup removes a specific app from the allowed list of a group.
+            tags:
+                - AppAuthorizationService
+    /api/v0/authz/groups/{id}:
+        delete:
+            operationId: AuthzGroupsService_RemoveGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apiauthz_groupsRemoveGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+        get:
+            operationId: AuthzGroupsService_GetGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apiauthz_groupsGetGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+        put:
+            operationId: AuthzGroupsService_UpdateGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/authz_groupsGroupInput'
+                required: true
+                x-originalParamName: group
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apiauthz_groupsUpdateGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+    /api/v0/authz/groups/{id}/users:
+        get:
+            operationId: AuthzGroupsService_ListUsersInGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: query
+                  name: pagination.size
+                  schema:
+                    format: int32
+                    type: integer
+                - in: query
+                  name: pagination.pageToken
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authz_groupsListUsersInGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+        post:
+            operationId: AuthzGroupsService_AddUsersToGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            items:
+                                type: string
+                            type: array
+                required: true
+                x-originalParamName: user_ids
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authz_groupsAddUsersToGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+    /api/v0/authz/groups/{id}/users/{user_id}:
+        delete:
+            operationId: AuthzGroupsService_RemoveUserFromGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: user_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authz_groupsRemoveUserFromGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+    /api/v0/authz/users/{id}/groups:
+        get:
+            operationId: AuthzGroupsService_ListUserGroups
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: query
+                  name: pagination.size
+                  schema:
+                    format: int32
+                    type: integer
+                - in: query
+                  name: pagination.pageToken
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authz_groupsListUserGroupsResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+        put:
+            operationId: AuthzGroupsService_AddUserToGroups
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            items:
+                                type: string
+                            type: array
+                required: true
+                x-originalParamName: group_ids
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/authz_groupsAddUserToGroupsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - AuthzGroupsService
+    /api/v0/clients:
+        get:
+            operationId: ClientsService_ListClients
+            parameters:
+                - in: query
+                  name: client_name
+                  schema:
+                    type: string
+                - in: query
+                  name: owner
+                  schema:
+                    type: string
+                - in: query
+                  name: size
+                  schema:
+                    type: string
+                - in: query
+                  name: page_token
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/clientsListClientsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - ClientsService
+        post:
+            operationId: ClientsService_CreateClient
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/clientsClient'
+                required: true
+                x-originalParamName: client
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/clientsCreateClientResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - ClientsService
+    /api/v0/clients/{id}:
+        delete:
+            operationId: ClientsService_RemoveClient
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/clientsRemoveClientResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - ClientsService
+        get:
+            operationId: ClientsService_GetClient
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/clientsGetClientResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - ClientsService
+        put:
+            operationId: ClientsService_UpdateClient
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/clientsClient'
+                required: true
+                x-originalParamName: client
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/clientsUpdateClientResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - ClientsService
+    /api/v0/groups:
+        get:
+            operationId: GroupsService_ListGroups
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apigroupsListGroupsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+        post:
+            operationId: GroupsService_CreateGroup
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/apigroupsGroup'
+                required: true
+                x-originalParamName: group
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apigroupsCreateGroupResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}:
+        delete:
+            operationId: GroupsService_RemoveGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apigroupsRemoveGroupResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+        get:
+            operationId: GroupsService_GetGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apigroupsGetGroupResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+        patch:
+            operationId: GroupsService_UpdateGroup
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/apigroupsGroup'
+                required: true
+                x-originalParamName: group
+            responses:
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "501":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not implemented
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}/entitlements:
+        get:
+            operationId: GroupsService_ListGroupEntitlements
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - description: Base64 encoded pagination info
+                  in: header
+                  name: X-Token-Pagination
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsListGroupEntitlementsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+        patch:
+            operationId: GroupsService_UpdateGroupEntitlements
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/typesPermissions'
+                required: true
+                x-originalParamName: entitlementsPatchReq
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsUpdateGroupEntitlementsResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}/entitlements/{entitlementId}:
+        delete:
+            operationId: GroupsService_RemoveGroupEntitlement
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: entitlementId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsRemoveGroupEntitlementResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}/identities:
+        get:
+            operationId: GroupsService_GetGroupIdentities
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsGetGroupIdentitiesResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+        patch:
+            operationId: GroupsService_UpdateGroupIdentities
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/groupsIdentities'
+                required: true
+                x-originalParamName: identities
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsUpdateGroupIdentitiesResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}/identities/{identityId}:
+        delete:
+            operationId: GroupsService_RemoveGroupIdentity
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: identityId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsRemoveGroupIdentityResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}/roles:
+        get:
+            operationId: GroupsService_GetGroupRoles
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsGetGroupRolesResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+        post:
+            operationId: GroupsService_UpdateGroupRoles
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/groupsRoles'
+                required: true
+                x-originalParamName: roles
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsUpdateGroupRolesResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/groups/{id}/roles/{roleId}:
+        delete:
+            operationId: GroupsService_RemoveGroupRole
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: roleId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/groupsRemoveGroupRoleResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - GroupsService
+    /api/v0/identities:
+        get:
+            operationId: IdentitiesService_ListIdentities
+            parameters:
+                - in: query
+                  name: credID
+                  schema:
+                    type: string
+                - in: query
+                  name: size
+                  schema:
+                    type: string
+                - in: query
+                  name: page_token
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/identitiesListIdentitiesResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdentitiesService
+        post:
+            operationId: IdentitiesService_CreateIdentity
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/identitiesCreateIdentityBody'
+                required: true
+                x-originalParamName: identity
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/identitiesCreateIdentityResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdentitiesService
+    /api/v0/identities/{id}:
+        delete:
+            operationId: IdentitiesService_RemoveIdentity
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/identitiesRemoveIdentityResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdentitiesService
+        get:
+            operationId: IdentitiesService_GetIdentity
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/identitiesGetIdentityResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdentitiesService
+        put:
+            operationId: IdentitiesService_UpdateIdentity
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/identitiesUpdateIdentityBody'
+                required: true
+                x-originalParamName: identity
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/identitiesUpdateIdentityResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdentitiesService
+    /api/v0/idps:
+        get:
+            operationId: IdpsService_ListIdps
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/idpsListIdpsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdpsService
+        post:
+            operationId: IdpsService_CreateIdp
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/idpsCreateIdpBody'
+                required: true
+                x-originalParamName: idp
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/idpsCreateIdpResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdpsService
+    /api/v0/idps/{id}:
+        delete:
+            operationId: IdpsService_RemoveIdp
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/idpsRemoveIdpResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdpsService
+        get:
+            operationId: IdpsService_GetIdp
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/idpsGetIdpResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdpsService
+        patch:
+            operationId: IdpsService_UpdateIdp
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/idpsUpdateIdpBody'
+                required: true
+                x-originalParamName: idp
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/idpsUpdateIdpResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - IdpsService
+    /api/v0/me/tenants:
+        get:
+            operationId: TenantService_ListMyTenants
+            parameters:
+                - in: query
+                  name: enabled
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantListMyTenantsResponse'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: Public Endpoints
+            tags:
+                - TenantService
+    /api/v0/metrics:
+        get:
+            operationId: MetricsService_ListMetrics
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema: {}
+                    description: ""
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - MetricsService
+    /api/v0/roles:
+        get:
+            operationId: RolesService_ListRoles
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesListRolesResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+        post:
+            operationId: RolesService_CreateRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/rolesRole'
+                required: true
+                x-originalParamName: role
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesCreateRoleResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+    /api/v0/roles/{id}:
+        delete:
+            operationId: RolesService_RemoveRole
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesRemoveRoleResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+        get:
+            operationId: RolesService_GetRole
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesGetRoleResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+        patch:
+            operationId: RolesService_UpdateRole
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/rolesRole'
+                required: true
+                x-originalParamName: role
+            responses:
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "501":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not implemented
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+    /api/v0/roles/{id}/entitlements:
+        get:
+            operationId: RolesService_ListRoleEntitlements
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - description: Base64 encoded pagination info
+                  in: header
+                  name: X-Token-Pagination
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesListRoleEntitlementsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+        patch:
+            operationId: RolesService_UpdateRoleEntitlements
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/typesPermissions'
+                required: true
+                x-originalParamName: entitlementsPatchReq
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesUpdateRoleEntitlementsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+    /api/v0/roles/{id}/entitlements/{entitlementId}:
+        delete:
+            operationId: RolesService_RemoveRoleEntitlement
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: entitlementId
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesRemoveRoleEntitlementResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+    /api/v0/roles/{id}/groups:
+        get:
+            operationId: RolesService_GetRoleGroups
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/rolesGetRoleGroupsResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - RolesService
+    /api/v0/schemas:
+        get:
+            operationId: SchemasService_ListSchemas
+            parameters:
+                - in: query
+                  name: size
+                  schema:
+                    type: string
+                - in: query
+                  name: page_token
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasListSchemasResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+        post:
+            operationId: SchemasService_CreateSchema
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/apischemasSchema'
+                required: true
+                x-originalParamName: schema
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasCreateSchemaResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+    /api/v0/schemas/{id}:
+        delete:
+            operationId: SchemasService_RemoveSchema
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasRemoveSchemaResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+        get:
+            operationId: SchemasService_GetSchema
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasGetSchemaResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+        patch:
+            operationId: SchemasService_UpdateSchema
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/apischemasSchema'
+                required: true
+                x-originalParamName: schema
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasUpdateSchemaResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+    /api/v0/schemas/default:
+        get:
+            operationId: SchemasService_GetDefaultSchema
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasGetDefaultSchemaResp'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+        put:
+            operationId: SchemasService_UpdateDefaultSchema
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/schemasDefaultSchema'
+                required: true
+                x-originalParamName: schema
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/schemasUpdateDefaultSchemaResp'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - SchemasService
+    /api/v0/status:
+        get:
+            operationId: StatusService_GetStatus
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/apistatusStatus'
+                    description: ""
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - StatusService
+    /api/v0/tenants:
+        get:
+            operationId: TenantService_ListTenants
+            parameters:
+                - in: query
+                  name: page_token
+                  schema:
+                    type: string
+                - in: query
+                  name: page_size
+                  schema:
+                    format: int32
+                    type: integer
+                - description: If set, only return tenants whose enabled status matches this value.
+                  in: query
+                  name: enabled
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantListTenantsResponse'
+                    description: ""
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: Internal Admin Endpoints
+            tags:
+                - TenantService
+        post:
+            operationId: TenantService_CreateTenant
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/tenantCreateTenantRequest'
+                required: true
+                x-originalParamName: body
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantCreateTenantResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+    /api/v0/tenants/{tenant_id}:
+        delete:
+            operationId: TenantService_DeleteTenant
+            parameters:
+                - in: path
+                  name: tenant_id
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantDeleteTenantResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+        patch:
+            operationId: TenantService_UpdateTenant
+            parameters:
+                - in: path
+                  name: tenant_id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TenantServiceUpdateTenantBody'
+                required: true
+                x-originalParamName: body
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantUpdateTenantResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+    /api/v0/tenants/{tenant_id}/invites:
+        post:
+            operationId: TenantService_InviteMember
+            parameters:
+                - in: path
+                  name: tenant_id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TenantServiceInviteMemberBody'
+                required: true
+                x-originalParamName: body
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantInviteMemberResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+    /api/v0/tenants/{tenant_id}/users:
+        get:
+            operationId: TenantService_ListTenantUsers
+            parameters:
+                - in: path
+                  name: tenant_id
+                  required: true
+                  schema:
+                    type: string
+                - in: query
+                  name: page_token
+                  schema:
+                    type: string
+                - in: query
+                  name: page_size
+                  schema:
+                    format: int32
+                    type: integer
+                - description: Exact match on membership role.
+                  in: query
+                  name: role
+                  schema:
+                    type: string
+                - description: |-
+                    Exact match on user email. Resolved to identity_id in the service layer.
+                    Use identity_id instead when the caller already knows it, to skip the Kratos lookup.
+                  in: query
+                  name: email
+                  schema:
+                    type: string
+                - description: Exact match on Kratos identity ID. Takes precedence over email when both are set.
+                  in: query
+                  name: identity_id
+                  schema:
+                    type: string
+                - description: |-
+                    When true, the response includes email addresses fetched from Kratos.
+                    When false (default), the email field is omitted and the Kratos call is skipped.
+                  in: query
+                  name: include_emails
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantListTenantUsersResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+        post:
+            operationId: TenantService_ProvisionUser
+            parameters:
+                - in: path
+                  name: tenant_id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TenantServiceProvisionUserBody'
+                required: true
+                x-originalParamName: body
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantProvisionUserResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+    /api/v0/tenants/{tenant_id}/users/{user_id}:
+        patch:
+            operationId: TenantService_UpdateTenantUser
+            parameters:
+                - in: path
+                  name: tenant_id
+                  required: true
+                  schema:
+                    type: string
+                - in: path
+                  name: user_id
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TenantServiceUpdateTenantUserBody'
+                required: true
+                x-originalParamName: body
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantUpdateTenantUserResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                "404":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Not found
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+    /api/v0/tenants/lookup:
+        get:
+            description: Internal endpoint. Not intended for public API consumers.
+            operationId: TenantService_LookupTenants
+            parameters:
+                - description: |-
+                    Exactly one of email or identity_id must be provided.
+                    When identity_id is set, the Kratos email-to-identity lookup is skipped.
+                  in: query
+                  name: email
+                  schema:
+                    type: string
+                - in: query
+                  name: identity_id
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantLookupTenantsResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            summary: Lookup tenants (internal)
+            tags:
+                - TenantService
+                - internal
+            x-internal: true
+    /api/v0/users/{user_id}/tenants:
+        get:
+            operationId: TenantService_ListUserTenants
+            parameters:
+                - in: path
+                  name: user_id
+                  required: true
+                  schema:
+                    type: string
+                - description: If set, only return tenants whose enabled status matches this value.
+                  in: query
+                  name: enabled
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/tenantListUserTenantsResponse'
+                    description: ""
+                "400":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Bad request
+                "401":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Unauthorized
+                "403":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Forbidden
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - TenantService
+    /api/v0/version:
+        get:
+            operationId: StatusService_GetVersion
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/statusBuildInfo'
+                    description: ""
+                default:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/typesErrorResponse'
+                    description: Internal server error
+            tags:
+                - StatusService
+tags:
+    - name: AuthenticationService
+    - name: AppAuthorizationService
+    - name: AuthzGroupsService
+    - name: ClientsService
+    - name: GroupsService
+    - name: IdentitiesService
+    - name: IdpsService
+    - name: MetricsService
+    - name: RolesService
+    - name: SchemasService
+    - name: StatusService
+    - name: TenantService

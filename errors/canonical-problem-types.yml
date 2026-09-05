@@ -1,0 +1,192 @@
+generated: '2026-09-05'
+method: derived
+source: openapi/canonical-lxd-rest-api-openapi.yml, openapi/canonical-snapd-rest-api-openapi.yml, openapi/canonical-ubuntu-security-api-openapi.json,
+  openapi/canonical-landscape-debarchive-api-openapi.yml, openapi/canonical-pebble-api-openapi.yml, openapi/canonical-testflinger-api-openapi.json,
+  openapi/canonical-hardware-api-openapi.json, openapi/canonical-identity-platform-api-openapi.yml, openapi/canonical-test-observer-api-openapi.json,
+  openapi/canonical-anbox-cloud-ams-api-openapi.json, openapi/canonical-anbox-stream-gateway-api-openapi.json,
+  openapi/canonical-cos-registration-server-api-openapi.yml, openapi/canonical-microceph-api-openapi.yml
+provider: Canonical
+providerId: canonical
+format: vendor
+rfc9457: false
+description: 'Error catalog derived from every 4xx/5xx response declared across the thirteen first-party
+  Canonical OpenAPI/Swagger documents harvested into openapi/. Canonical does not use application/problem+json
+  anywhere in this corpus: all 334 typed error responses are application/json carrying a product-specific
+  envelope.'
+envelopes:
+- api: LXD REST API
+  shape:
+    type: error
+    error: string, human-readable message
+    error_code: integer, mirrors the HTTP status
+  note: Every LXD response — success or failure — is wrapped in the same envelope with a `type` discriminator
+    of sync, async or error. An async response carries an `operation` URL under /1.0/operations/{id}.
+- api: snapd REST API
+  shape:
+    type: error
+    status-code: integer
+    status: string
+    result: '{message, kind, value}'
+  note: snapd nests the failure under result with a machine-readable `kind` that a client should branch
+    on. The kinds are ENUMERATED in the published contract (ConflictError, SnapNotInstalledError, ConfdbError,
+    NoModelAssertionError, NoSerialAssertionError), which is the strongest machine-readable error typing
+    anywhere in the Canonical corpus.
+  error_kinds:
+  - snap-change-conflict
+  - snap-not-found
+  - snap-not-installed
+  - assertion-not-found
+  - option-not-available
+  - option-not-found
+- api: Hardware API / Test Observer / Testflinger
+  shape:
+    detail: array of {loc, msg, type}
+  note: FastAPI-standard 422 validation envelope.
+- api: Anbox Cloud AMS
+  shape:
+    type: error
+    error: string
+    error_code: integer
+    metadata: object
+  note: Same LXD-derived envelope; AMS is built on the LXD codebase.
+problems:
+- status: 400
+  title: BadRequest
+  occurrences: 345
+  remediation: Malformed request body, unknown query parameter, or a value the server could not parse.
+    Fix the request; do not retry unchanged.
+  declared_in:
+  - Anbox Cloud AMS API
+  - Anbox Stream Gateway API
+  - COS Registration Server API
+  - Identity Platform API
+  - LXD REST API
+  - Ubuntu Security API
+  - snapd REST API
+- status: 401
+  title: Unauthorized
+  occurrences: 83
+  remediation: No credential presented, or the credential was rejected. Re-authenticate — Ubuntu One macaroon
+    for the store surfaces, TLS client certificate or OIDC token for LXD, unix socket peer credentials
+    for snapd.
+  declared_in:
+  - Anbox Cloud AMS API
+  - Anbox Stream Gateway API
+  - Identity Platform API
+  - snapd REST API
+- status: 403
+  title: Forbidden
+  occurrences: 411
+  remediation: Authenticated but not authorized for this object. On LXD this is also returned instead
+    of 404 for objects outside the caller's project, so a 403 does not prove the object exists.
+  declared_in:
+  - Anbox Cloud AMS API
+  - Identity Platform API
+  - LXD REST API
+  - snapd REST API
+- status: 404
+  title: NotFound
+  occurrences: 185
+  remediation: Object does not exist at that path, or the caller cannot see it. Re-read the collection
+    before retrying.
+  declared_in:
+  - Anbox Cloud AMS API
+  - Anbox Stream Gateway API
+  - COS Registration Server API
+  - Identity Platform API
+  - LXD REST API
+  - Testflinger API
+  - Ubuntu Security API
+  - snapd REST API
+- status: 405
+  title: MethodNotAllowed
+  occurrences: 1
+  remediation: Method not supported on this path.
+  declared_in:
+  - snapd REST API
+- status: 409
+  title: ErrorAlreadyExists
+  occurrences: 10
+  remediation: The object already exists (create) or conflicts with current state. Read the existing object
+    rather than retrying the create.
+  declared_in:
+  - Anbox Cloud AMS API
+  - snapd REST API
+- status: 412
+  title: PreconditionFailed
+  occurrences: 54
+  remediation: 'Precondition failed — the resource changed since the caller last read it. LXD uses this
+    for optimistic concurrency on updates: re-read the object and re-apply the change.'
+  declared_in:
+  - LXD REST API
+- status: 413
+  title: null
+  occurrences: 1
+  remediation: Request or response payload too large. The Ubuntu Security API returns this when a notices
+    query would return an oversized payload; narrow the filter and page.
+  declared_in:
+  - Ubuntu Security API
+- status: 422
+  title: Validation Error
+  occurrences: 102
+  remediation: Request was well-formed but failed schema validation. FastAPI-backed Canonical services
+    (Hardware API, Test Observer, Testflinger) return the field-level detail[] array in the body.
+  declared_in:
+  - Hardware API
+  - Test Observer API
+  - Testflinger API
+  - Ubuntu Security API
+- status: 423
+  title: StatusLocked
+  occurrences: 2
+  remediation: Resource is locked by another operation in flight. Poll /1.0/operations until the holding
+    operation completes.
+  declared_in:
+  - LXD REST API
+- status: 4XX
+  title: InternalError
+  occurrences: 7
+  remediation: Vendor-specific class; see the owning specification.
+  declared_in:
+  - snapd REST API
+- status: 500
+  title: InternalServerError
+  occurrences: 361
+  remediation: Server-side failure. Safe to retry idempotent GETs with backoff; do not blind-retry writes
+    without checking the operation list first.
+  declared_in:
+  - Anbox Cloud AMS API
+  - Anbox Stream Gateway API
+  - LXD REST API
+- status: 501
+  title: NotImplemented
+  occurrences: 11
+  remediation: Endpoint recognised but not implemented in this build/driver combination. Check the api_extensions
+    list on the LXD server root before calling.
+  declared_in:
+  - Identity Platform API
+  - LXD REST API
+- status: 502
+  title: Check is not healthy.
+  occurrences: 1
+  remediation: Upstream/health-check failure. On Pebble this means the named check is not healthy.
+  declared_in:
+  - Pebble API
+- status: 503
+  title: The Gateway is not fully started
+  occurrences: 1
+  remediation: Service not fully started or temporarily unavailable. Retry with backoff.
+  declared_in:
+  - Anbox Stream Gateway API
+counts:
+  distinct_status_codes: 15
+  typed_error_responses: 1575
+  specs_analysed: 13
+gaps:
+- Only snapd enumerates its machine-readable error kinds. LXD, AMS and the Landscape Debarchive API return
+  a free-text `error` string with no sub-code enum, so a client cannot branch exhaustively from those
+  contracts alone.
+- No application/problem+json (RFC 9457) anywhere in the corpus — all 334 typed error responses are application/json
+  carrying a product-specific envelope.
+- 'No published cross-product error-code registry: each Canonical product documents its own failures and
+  there is no shared catalog.'

@@ -1,0 +1,142 @@
+generated: '2026-09-05'
+method: searched
+source: https://ubuntu.com/security/certifications, https://ubuntu.com/security/fips, https://ubuntu.com/security/cc,
+  https://documentation.ubuntu.com/lxd/latest/rest-api/, https://documentation.ubuntu.com/launchpad/user/reference/webhooks/,
+  plus derivation from the thirteen first-party specs in openapi/.
+provider: Canonical
+providerId: canonical
+description: Standards and cross-cutting conventions Canonical's published contracts and documentation
+  actually declare. Every entry names the exact evidence. Entries marked conforms:false are recorded because
+  their ABSENCE is a useful measurement, not to pad the list.
+conformance:
+- id: openapi-3
+  name: OpenAPI 3.x
+  conforms: true
+  evidence: Nine of the thirteen harvested first-party specs are OpenAPI 3.0.3 or 3.1.0 — snapd (3.0.3),
+    Landscape Debarchive (3.0.3), Pebble (3.1.0), Testflinger (3.0.3), Hardware API (3.1.0), Identity
+    Platform (3.0.3), Test Observer (3.1.0), COS Registration Server (3.0.3), MicroCeph (3.1.0).
+- id: swagger-2
+  name: Swagger / OpenAPI 2.0
+  conforms: true
+  evidence: Four are still Swagger 2.0 — LXD (the largest contract in the portfolio, 333 operations),
+    Ubuntu Security API, Anbox Cloud AMS, Anbox Stream Gateway.
+  note: 'This is the portfolio''s biggest contract-modernity gap: LXD, the flagship API, is documented
+    in a specification version superseded in 2017.'
+- id: openapi-overlay-1.0.0
+  name: OpenAPI Overlay 1.0.0
+  conforms: true
+  evidence: Canonical itself publishes an Overlay — docs/_static/openapi-overlay.yaml in canonical/landscape-documentation,
+    saved verbatim to overlays/canonical-landscape-debarchive-overlay.yaml. It declares overlay 1.0.0
+    and applies 41 example-adding actions to the generated Debarchive spec at build time. Very few providers
+    in the catalog publish an Overlay at all.
+- id: rfc7232-conditional-requests
+  name: RFC 7232 conditional requests (ETag / If-Match)
+  conforms: true
+  evidence: 'LXD api_extension `etag`: "Add support for the ETag header on all relevant endpoints. This
+    adds the following HTTP header on answers to GET: ETag (SHA-256 of user modifiable content) And adds
+    support for the following HTTP header on PUT requests: If-Match." 54 LXD operations declare a 412
+    Precondition Failed response. https://documentation.ubuntu.com/lxd/latest/api-extensions/'
+- id: rfc9457-problem-details
+  name: RFC 9457 Problem Details
+  conforms: false
+  evidence: Zero of the 334 typed error responses across the thirteen specs use application/problem+json.
+    Each product ships its own envelope; see errors/canonical-problem-types.yml.
+- id: rfc8594-sunset
+  name: RFC 8594 Sunset header
+  conforms: false
+  evidence: No Sunset or Deprecation response header observed on live probes of api.charmhub.io or ubuntu.com/security
+    on 2026-09-05, and none declared in any harvested spec.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence: openapi/canonical-identity-platform-api-openapi.yml declares an oauth2 securityScheme with
+    an authorizationCode flow and the openid, profile and email scopes. LXD supports OIDC bearer identities
+    (/1.0/auth/identities/oidc).
+  note: Partial across the portfolio. The Snap Store and Charmhub use Ubuntu One MACAROONS, not OAuth
+    2; Launchpad uses OAuth 1.0a, not 2.0.
+- id: oauth1
+  name: OAuth 1.0a
+  conforms: true
+  evidence: The Launchpad Web Services API authenticates with OAuth 1.0a; launchpadlib performs the token
+    exchange against login.launchpad.net. https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
+- id: oidc
+  name: OpenID Connect
+  conforms: true
+  evidence: Canonical ships an OIDC identity product (canonical/identity-platform-api, built on Ory) and
+    LXD accepts OIDC identities. No /.well-known/openid-configuration is served on any Canonical public
+    host — the OIDC surface is in software a customer deploys, not on Canonical's own hosts.
+- id: macaroons
+  name: Macaroons (Ubuntu One SSO)
+  conforms: true
+  evidence: The Snap Store Device API and Charmhub API authenticate with Ubuntu One macaroons discharged
+    by login.ubuntu.com / dashboard.snapcraft.io SSO. https://api.charmhub.io/docs/default.html
+- id: rfc9116-security-txt
+  name: RFC 9116 security.txt
+  conforms: partial
+  evidence: Served at https://landscape.canonical.com/.well-known/security.txt (HTTP 200, probed 2026-09-05)
+    with Contact, Expires and Hiring fields. Not served on canonical.com, ubuntu.com, snapcraft.io, charmhub.io,
+    launchpad.net or any API host, and the Expires field (2024-01-01) has lapsed.
+- id: pubsubhubbub-signature
+  name: HMAC body signature (X-Hub-Signature, PubSubHubbub-style)
+  conforms: true
+  evidence: Launchpad webhook deliveries carry an X-Hub-Signature header containing an HMAC-SHA1 of the
+    body with the webhook secret, "as in the PubSubHubbub specification". https://documentation.ubuntu.com/launchpad/user/reference/webhooks/
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: Canonical documents a real event surface (Launchpad webhooks, LXD /1.0/events, snapd /v2/notices)
+    but publishes no AsyncAPI document for any of them. See asyncapi/canonical-launchpad-webhooks.yml.
+- id: json-api
+  name: JSON:API
+  conforms: false
+  evidence: No Canonical contract uses the JSON:API media type or document structure.
+- id: aip-resource-naming
+  name: Google AIP resource-oriented design (resource names, page tokens, custom methods)
+  conforms: true
+  evidence: openapi/canonical-landscape-debarchive-api-openapi.yml is generated with protoc-gen-openapi
+    and follows AIP shapes throughout — resource names like `locals/{uuid}`, `nextPageToken` pagination,
+    and custom methods expressed as `:importPackages`, `:sync`, `:publish`, `:batchGet`. This is the only
+    AIP-shaped surface in the Canonical portfolio.
+domain_standards:
+- id: fips-140
+  name: FIPS 140-2 / FIPS 140-3
+  conforms: true
+  scope: Ubuntu cryptographic modules (product certification, not an API contract)
+  evidence: https://ubuntu.com/security/fips — "FIPS 140-2 & 140-3 certified modules are available for
+    Ubuntu."
+- id: common-criteria-iso-15408
+  name: Common Criteria (ISO/IEC 15408)
+  conforms: true
+  level: EAL2
+  scope: Ubuntu 18.04 LTS and Ubuntu 16.04 LTS
+  evidence: https://ubuntu.com/security/cc — "Ubuntu 18.04 LTS and 16.04 LTS have both been evaluated
+    to assurance level EAL2 through CSEC — The Swedish Certification Body for IT Security."
+- id: cve-mitre
+  name: CVE identifier scheme (MITRE / CVE Program)
+  conforms: true
+  scope: the Ubuntu Security API and the USN/CVE trackers
+  evidence: openapi/canonical-ubuntu-security-api-openapi.json exposes /security/cves.json and /security/cves/{cve_id}.json
+    keyed on CVE identifiers, and /security/notices.json keyed on USN identifiers, with CVSS3 scoring
+    in the response schema. This is a real domain-standard identifier surface, published as a callable
+    contract rather than a web page.
+- id: cvss-v3
+  name: CVSS v3
+  conforms: true
+  evidence: The CVEAPI schema in openapi/canonical-ubuntu-security-api-openapi.json declares a cvss3 numeric
+    property.
+- id: oci-image-spec
+  name: OCI image specification
+  conforms: true
+  scope: Launchpad OCI recipes and Canonical's ROCKs
+  evidence: Launchpad publishes an ocirecipe:build:0.1 webhook event and builds OCI images. https://documentation.ubuntu.com/launchpad/user/reference/webhooks/
+- id: spdx
+  name: SPDX software bill of materials
+  conforms: unknown
+  evidence: Not asserted in any harvested contract; not probed.
+  note: Recorded as unknown rather than false — no measurement was made.
+counts:
+  entries: 15
+  conforms_true: 10
+  conforms_false: 4
+  conforms_partial: 1
+  domain_standards: 6

@@ -1,0 +1,3 @@
+Contact: mailto:security@canonical.com.
+Expires: 2024-01-01T02:59:00.000Z
+Hiring: https://canonical.com/careers/all?search=Security

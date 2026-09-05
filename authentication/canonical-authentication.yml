@@ -1,0 +1,107 @@
+generated: '2026-09-05'
+method: searched
+source: openapi/canonical-identity-platform-api-openapi.yml, openapi/canonical-snapd-rest-api-openapi.yml;
+  upgraded 2026-09-05 by searching the Canonical product auth documentation and by live probing the API
+  hosts
+summary:
+  types:
+  - apiKey
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+  note: There is no single Canonical credential. The derived scheme list below covers only the two specs
+    that declare securitySchemes; the portfolio actually uses five distinct models. The full picture is
+    in profiles[].
+schemes:
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://example.com/oauth/authorize
+    tokenUrl: https://example.com/oauth/token
+    scopes: 3
+  sources:
+  - openapi/canonical-identity-platform-api-openapi.yml
+- name: PeerAuth
+  type: apiKey
+  in: header
+  parameter: X-PEER-CREDENTIALS
+  description: '**Unix Socket Peer Authentication**
+
+
+    Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the
+    operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+    **How It Works:**
+
+
+    1.  The API server listens on a local Unix domain socket.
+
+    2.  When a client connects to this socket, the server can ask the operating system kerne'
+  sources:
+  - openapi/canonical-snapd-rest-api-openapi.yml
+docs:
+- https://documentation.ubuntu.com/lxd/latest/explanation/authentication/
+- https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+- https://api.charmhub.io/docs/default.html
+- https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
+profiles:
+- api: canonical:lxd-rest-api
+  primary: TLS client certificate
+  alternatives:
+  - OIDC bearer token
+  - unix socket group membership (local)
+  - bearer identity tokens
+  note: LXD trusts a client certificate added to /1.0/certificates, or an OIDC identity under /1.0/auth/identities/oidc.
+    Local clients on the unix socket are authorized by group membership. Authorization is then resolved
+    through auth groups and permissions under /1.0/auth/groups.
+  evidence: openapi/canonical-lxd-rest-api-openapi.yml paths /1.0/certificates, /1.0/auth/identities/{tls,oidc,bearer},
+    /1.0/auth/groups
+- api: canonical:snapd-rest-api
+  primary: unix socket peer credentials (SO_PEERCRED)
+  note: Declared in the contract as the PeerAuth scheme. No HTTP token exists; reachability of /run/snapd.socket
+    with the right group membership IS the credential. Snaps get the restricted /run/snapd-snap.socket
+    instead.
+  evidence: openapi/canonical-snapd-rest-api-openapi.yml components.securitySchemes.PeerAuth
+- api: canonical:snap-store-api
+  primary: Ubuntu One macaroon
+  required_headers:
+  - Snap-Device-Series
+  note: The v2 device endpoints require a Snap-Device-Series header on every call, authenticated or not.
+    Publisher operations against dashboard.snapcraft.io use a macaroon discharged by Ubuntu One SSO.
+  evidence: 'live probe 2026-09-05: GET https://api.snapcraft.io/v2/snaps/info/hello returned 400 with
+    {"error-list":[{"code":"bad-argument","message":"Snap-Device-Series header is required."}]}'
+- api: canonical:charmhub-api
+  primary: Charmhub developer token exchanged from an Ubuntu One macaroon
+  note: Macaroons issued by dashboard.snapcraft.io SSO are exchanged for a Charmhub developer token presented
+    in the Authorization header. Read endpoints such as /v2/charms/info/{name} are open.
+  evidence: 'live probe 2026-09-05: GET https://api.charmhub.io/v2/charms/info/postgresql-k8s returned
+    200 unauthenticated'
+- api: canonical:launchpad-api
+  primary: OAuth 1.0a
+  anonymous_access: read-only on public data
+  note: launchpadlib performs the OAuth 1.0a token exchange against login.launchpad.net. This is OAuth
+    1.0a, not 2.0.
+  evidence: https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
+- api: canonical:ubuntu-security-api
+  primary: none
+  note: Fully open and unauthenticated.
+  evidence: 'live probe 2026-09-05: GET https://ubuntu.com/security/releases.json returned 200 with no
+    credential'
+- api: canonical:identity-platform-api
+  primary: OAuth 2.0 authorization code + OIDC
+  scopes:
+  - openid
+  - profile
+  - email
+  note: The authorizationUrl and tokenUrl in the published spec are https://example.com placeholders because
+    this is software a customer deploys; the real URLs are the deployment's own.
+  evidence: openapi/canonical-identity-platform-api-openapi.yml components.securitySchemes.OAuth2
+discovery:
+  openid_configuration: not served on any Canonical public host (16 hosts probed 2026-09-05, all 404)
+  oauth_authorization_server: not served on any Canonical public host (16 hosts probed 2026-09-05, all
+    404)
+  see: well-known/canonical-well-known.yml

@@ -1,0 +1,35 @@
+generated: '2026-09-05'
+method: derived
+source: openapi/canonical-identity-platform-api-openapi.yml
+schemes:
+- name: OAuth2
+  source: openapi/canonical-identity-platform-api-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://example.com/oauth/authorize
+    tokenUrl: https://example.com/oauth/token
+scopes:
+- scope: email
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/canonical-identity-platform-api-openapi.yml
+- scope: openid
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/canonical-identity-platform-api-openapi.yml
+- scope: profile
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/canonical-identity-platform-api-openapi.yml
+note: The only OAuth2 surface in the Canonical portfolio is the Identity Platform API, which is software
+  a customer deploys rather than a Canonical-hosted service; its spec declares the standard OIDC scopes
+  against https://example.com placeholder endpoints. The Snap Store and Charmhub use macaroons and Launchpad
+  uses OAuth 1.0a — neither has a scope reference to search for. No scopes documentation page exists to
+  upgrade this file with; method stays derived.
+docs: null
+searched:
+  date: '2026-09-05'
+  result: no OAuth scope reference page published by Canonical for any product

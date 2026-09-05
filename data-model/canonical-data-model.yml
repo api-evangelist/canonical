@@ -1,0 +1,274 @@
+generated: '2026-09-05'
+method: derived
+source: openapi/canonical-lxd-rest-api-openapi.yml (primary), plus path-collection analysis of openapi/canonical-snapd-rest-api-openapi.yml,
+  openapi/canonical-testflinger-api-openapi.json and openapi/canonical-anbox-cloud-ams-api-openapi.json
+provider: Canonical
+providerId: canonical
+description: Entity-relationship view derived from the $ref graph and path collections of the harvested
+  Canonical contracts. LXD carries the richest model in the corpus — 236 schema definitions across 169
+  paths — and is the shape the Anbox Cloud AMS API inherits, since AMS is built on the LXD codebase.
+domains:
+- domain: LXD
+  api: canonical:lxd-rest-api
+  root: /1.0
+  note: Everything in LXD is namespaced by project (?project=<name>) and scoped by the server root document
+    at /1.0, whose api_extensions[] array is the capability contract a client must read before calling
+    anything optional.
+  entities:
+  - name: Server
+    path: /1.0
+    key: singleton
+    note: Carries api_status, api_version, api_extensions[], auth, environment and config. The api_extensions
+      list is how a client discovers whether an endpoint exists on this build.
+  - name: Project
+    path: /1.0/projects
+    key: name
+    relationships:
+    - kind: has_many
+      target: Instance
+      via: project query parameter
+    - kind: has_many
+      target: Profile
+      via: project query parameter
+    - kind: has_many
+      target: Network
+      via: project query parameter
+    - kind: has_many
+      target: StorageVolume
+      via: project query parameter
+  - name: Instance
+    path: /1.0/instances
+    key: name
+    relationships:
+    - kind: has_one
+      target: InstanceState
+      via: /1.0/instances/{name}/state
+    - kind: has_many
+      target: InstanceSnapshot
+      via: /1.0/instances/{name}/snapshots
+    - kind: has_many
+      target: InstanceBackup
+      via: /1.0/instances/{name}/backups
+    - kind: has_many
+      target: Profile
+      via: profiles[] field
+    - kind: belongs_to
+      target: Image
+      via: source.fingerprint on create
+    - kind: has_many
+      target: InstanceLog
+      via: /1.0/instances/{name}/logs
+  - name: Image
+    path: /1.0/images
+    key: fingerprint
+    relationships:
+    - kind: has_many
+      target: ImageAlias
+      via: /1.0/images/aliases
+    - kind: has_one
+      target: ImageExport
+      via: /1.0/images/{fingerprint}/export
+  - name: Profile
+    path: /1.0/profiles
+    key: name
+    relationships:
+    - kind: has_many
+      target: Instance
+      via: used_by[]
+  - name: Network
+    path: /1.0/networks
+    key: name
+    relationships:
+    - kind: has_many
+      target: NetworkForward
+      via: /1.0/networks/{networkName}/forwards
+    - kind: has_many
+      target: NetworkLoadBalancer
+      via: /1.0/networks/{networkName}/load-balancers
+    - kind: has_one
+      target: NetworkState
+      via: /1.0/networks/{name}/state
+    - kind: has_many
+      target: NetworkPeer
+      via: /1.0/networks/{networkName}/peers
+  - name: NetworkACL
+    path: /1.0/network-acls
+    key: name
+  - name: NetworkZone
+    path: /1.0/network-zones
+    key: name
+    relationships:
+    - kind: has_many
+      target: NetworkZoneRecord
+      via: /1.0/network-zones/{zone}/records
+  - name: StoragePool
+    path: /1.0/storage-pools
+    key: name
+    relationships:
+    - kind: has_many
+      target: StorageVolume
+      via: /1.0/storage-pools/{poolName}/volumes
+    - kind: has_many
+      target: StorageBucket
+      via: /1.0/storage-pools/{poolName}/buckets
+    - kind: has_one
+      target: StoragePoolResources
+      via: /1.0/storage-pools/{name}/resources
+  - name: StorageVolume
+    path: /1.0/storage-pools/{poolName}/volumes
+    key: type/name
+    relationships:
+    - kind: has_many
+      target: StorageVolumeSnapshot
+      via: /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/snapshots
+    - kind: has_many
+      target: StorageVolumeBackup
+      via: /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/backups
+  - name: StorageBucket
+    path: /1.0/storage-pools/{poolName}/buckets
+    key: name
+    relationships:
+    - kind: has_many
+      target: StorageBucketKey
+      via: /1.0/storage-pools/{poolName}/buckets/{bucketName}/keys
+  - name: Operation
+    path: /1.0/operations
+    key: id
+    note: Every asynchronous write in LXD returns an Operation. It is the object a client polls (/wait)
+      and the object a client cancels (DELETE).
+    relationships:
+    - kind: has_one
+      target: OperationWait
+      via: /1.0/operations/{id}/wait
+    - kind: has_one
+      target: OperationWebsocket
+      via: /1.0/operations/{id}/websocket
+  - name: Certificate
+    path: /1.0/certificates
+    key: fingerprint
+    note: The TLS client certificates trusted by this LXD server — the primary identity store for remote
+      API access.
+  - name: AuthGroup
+    path: /1.0/auth/groups
+    key: name
+    relationships:
+    - kind: has_many
+      target: Identity
+      via: identities[]
+    - kind: has_many
+      target: IdentityProviderGroup
+      via: identity_provider_groups[]
+    - kind: has_many
+      target: Permission
+      via: permissions[]
+  - name: Identity
+    path: /1.0/auth/identities
+    key: nameOrIdentifier
+    note: Split by authentication method — tls, oidc and bearer — each with its own sub-collection.
+  - name: ClusterMember
+    path: /1.0/cluster/members
+    key: name
+    relationships:
+    - kind: has_many
+      target: ClusterGroup
+      via: groups[]
+  - name: Warning
+    path: /1.0/warnings
+    key: uuid
+  - name: PlacementGroup
+    path: /1.0/placement-groups
+    key: name
+- domain: snapd
+  api: canonical:snapd-rest-api
+  root: /v2
+  entities:
+  - name: Snap
+    path: /v2/snaps
+    key: name
+    relationships:
+    - kind: has_many
+      target: App
+      via: /v2/apps
+    - kind: has_many
+      target: Connection
+      via: /v2/connections
+    - kind: has_one
+      target: Configuration
+      via: /v2/snaps/{name}/conf
+  - name: Change
+    path: /v2/changes
+    key: id
+    note: The snapd equivalent of an LXD Operation — every asynchronous install/refresh/remove returns
+      a change id to poll.
+  - name: Interface
+    path: /v2/interfaces
+    key: name
+  - name: Assertion
+    path: /v2/assertions
+    key: type/primaryKey
+  - name: Notice
+    path: /v2/notices
+    key: id
+  - name: ValidationSet
+    path: /v2/validation-sets
+    key: account/name
+  - name: System
+    path: /v2/systems
+    key: label
+- domain: Testflinger
+  api: canonical:testflinger-api
+  root: /v1
+  entities:
+  - name: Job
+    path: /v1/job
+    key: job_id
+    relationships:
+    - kind: has_one
+      target: Result
+      via: /v1/result/{job_id}
+    - kind: has_many
+      target: Artifact
+      via: /v1/result/{job_id}/artifact
+    - kind: belongs_to
+      target: Queue
+      via: job_queue field
+  - name: Queue
+    path: /v1/agents/queues
+    key: name
+  - name: Agent
+    path: /v1/agents/data
+    key: agent_name
+graph_stats:
+  lxd_definitions: 236
+  lxd_paths: 169
+  lxd_operations: 333
+  lxd_entities_with_typed_references: 74
+  collections_under_lxd_root:
+  - auth
+  - certificates
+  - cluster
+  - events
+  - images
+  - instances
+  - metadata
+  - metrics
+  - network-acls
+  - network-allocations
+  - network-zones
+  - networks
+  - operations
+  - placement-groups
+  - profiles
+  - projects
+  - replicators
+  - resources
+  - storage-pools
+  - storage-volumes
+  - warnings
+cross_cutting:
+- 'Async-by-default: LXD Operation and snapd Change are the same pattern — a write returns a handle, and
+  the client polls or waits on that handle rather than blocking.'
+- 'Project/tenant scoping: every LXD collection is filtered by the ?project= query parameter; omitting
+  it silently scopes to the "default" project.'
+- 'Recursion instead of expansion: LXD uses ?recursion=1 (and 2) to inline child objects rather than a
+  sparse-fieldset or include[] parameter.'

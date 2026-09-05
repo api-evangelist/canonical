@@ -1,0 +1,275 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  https://documentation.ubuntu.com/lxd/latest/rest-api/,
+  https://documentation.ubuntu.com/lxd/latest/api-extensions/,
+  https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/,
+  https://snapcraft.io/docs/reference/administration/system-options/,
+  https://documentation.ubuntu.com/launchpad/user/reference/webhooks/,
+  plus derivation from the thirteen first-party specs in openapi/.
+provider: Canonical
+providerId: canonical
+description: >-
+  Canonical does not operate one API with one set of conventions. It ships a portfolio of independent
+  open-source products, each with its own contract, and the cross-cutting semantics below are per
+  product. Two patterns do recur across the portfolio and are the things an agent most needs to know:
+  every mutating call on the two largest surfaces (LXD, snapd) is ASYNCHRONOUS and returns a handle to
+  poll, and neither surface has an Idempotency-Key.
+auth_style:
+  summary: >-
+    Five distinct models across the portfolio; there is no single Canonical credential. See
+    authentication/canonical-authentication.yml for the derived scheme list.
+  models:
+    - api: canonical:lxd-rest-api
+      model: TLS client certificate (default), OIDC bearer token, or unix socket group membership for local access
+      evidence: https://documentation.ubuntu.com/lxd/latest/rest-api/
+    - api: canonical:snapd-rest-api
+      model: Unix domain socket peer credentials (SO_PEERCRED) — no HTTP token at all
+      evidence: openapi/canonical-snapd-rest-api-openapi.yml securitySchemes.PeerAuth
+    - api: canonical:snap-store-api
+      model: Ubuntu One macaroon, plus a required Snap-Device-Series header on the v2 device endpoints
+      evidence: 'live probe 2026-09-05: GET https://api.snapcraft.io/v2/snaps/info/hello returned 400 {"error-list":[{"code":"bad-argument","message":"Snap-Device-Series header is required."}]}'
+    - api: canonical:charmhub-api
+      model: Macaroon issued by dashboard.snapcraft.io SSO, exchanged for a Charmhub developer token
+      evidence: https://api.charmhub.io/docs/default.html
+    - api: canonical:launchpad-api
+      model: OAuth 1.0a; anonymous access is permitted and read-only
+      evidence: https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
+    - api: canonical:ubuntu-security-api
+      model: None — fully open, unauthenticated
+      evidence: 'live probe 2026-09-05: GET https://ubuntu.com/security/releases.json returned 200 with no credential'
+idempotency:
+  coverage: partial
+  mechanism: ETag / If-Match conditional writes (RFC 7232), not an idempotency key
+  header: If-Match
+  response_header: ETag
+  retention: not applicable — the ETag is a SHA-256 of the object's user-modifiable content, recomputed per read
+  scope:
+    - server_put
+    - server_patch
+    - instance_metadata_put
+    - instance_metadata_patch
+    - image_put
+    - image_patch
+    - identity_put_tls
+    - identity_patch_tls
+    - identity_put_oidc
+    - identity_patch_oidc
+    - identity_put_bearer
+    - identity_patch_bearer
+    - profile_put
+    - profile_patch
+    - network_put
+    - network_patch
+    - network_acl_put
+    - network_acl_patch
+    - storage_pool_put
+    - storage_pool_patch
+    - storage_pool_volume_type_put
+    - storage_pool_volume_type_patch
+    - project_put
+    - project_patch
+    - certificate_put
+    - certificate_patch
+  scope_note: >-
+    54 PUT/PATCH operations in the LXD contract declare a 412 Precondition Failed response; the list
+    above names the principal ones. LXD documents the mechanism as the `etag` api_extension: "Add
+    support for the ETag header on all relevant endpoints ... adds support for If-Match on PUT
+    requests", which lets a client GET, modify and PUT without a lost-update race.
+  note: >-
+    HONEST LIMIT: there is NO Idempotency-Key header anywhere in the 807 operations across the
+    thirteen harvested Canonical specs — grep for `idempoten` in openapi/ returns nothing. What
+    Canonical publishes is optimistic concurrency on LXD updates, which stops a lost update but does
+    not de-duplicate a retried create. On snapd, replay safety comes from the change model instead:
+    a conflicting operation returns 409 with kind `snap-change-conflict` rather than starting a
+    second change.
+  coverage_basis: >-
+    54 of the 411 mutating operations in the corpus carry the conditional-write guard, all of them in
+    LXD. Zero mutating operations on the Snap Store, Charmhub, Launchpad, Landscape, Testflinger or
+    Anbox surfaces carry any replay protection.
+reversibility:
+  grade: verified
+  summary: >-
+    Canonical's infrastructure products are unusually strong here: the two largest surfaces both make
+    the reversal an explicit first-class operation rather than a support ticket, and snapd publishes a
+    stated retention window for the snapshot a removal leaves behind.
+  surfaces:
+    - api: canonical:lxd-rest-api
+      write: 'any asynchronous mutation (POST/PUT/DELETE returning 202 + an Operation)'
+      reversal: cancel
+      operationId: operation_delete
+      path: /1.0/operations/{id}
+      window: >-
+        While the operation is still running. LXD publishes the operation state machine (100 Operation
+        created, 101 Started, 104 Canceling, 105 Pending, 200 Success, 401 Canceled); once it reaches
+        200 Success there is nothing left to cancel.
+      docs: https://documentation.ubuntu.com/lxd/latest/rest-api/
+      grade: verified
+    - api: canonical:lxd-rest-api
+      write: instance configuration change or in-place update
+      reversal: restore from snapshot
+      operationId: instance_put
+      path: /1.0/instances/{name}
+      note: >-
+        The contract's own summary for instance_put is "Updates the instance configuration or trigger a
+        snapshot restore" — the restore is the same operation as the update.
+      window: >-
+        As long as the snapshot exists. LXD does not impose a vendor window; expiry is the operator's
+        own `snapshots.expiry` setting, so this is an operator-controlled window, not a published one.
+      docs: https://documentation.ubuntu.com/lxd/latest/rest-api/
+      grade: documented
+    - api: canonical:lxd-rest-api
+      write: instance_delete, storage volume delete
+      reversal: restore from backup
+      path: /1.0/instances/{name}/backups, /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/backups
+      window: operator-controlled — backups persist until deleted
+      grade: documented
+    - api: canonical:snapd-rest-api
+      write: 'refresh / install to a new revision (manageSnapByName, action=refresh|install)'
+      reversal: 'revert (manageSnapByName, action=revert, optionally to a named revision)'
+      operationId: manageSnapByName
+      path: /v2/snaps/{name}
+      window: >-
+        Bounded by the `refresh.retain` system option, which "sets how many revisions of a snap are
+        stored on the system". Once a revision has been garbage-collected it can no longer be
+        reverted to.
+      docs: https://snapcraft.io/docs/reference/administration/system-options/
+      grade: verified
+    - api: canonical:snapd-rest-api
+      write: 'remove (manageSnapByName, action=remove)'
+      reversal: restore the automatic snapshot taken at removal
+      path: /v2/snapshots
+      window: >-
+        31 days. Canonical states it plainly: "Automatic snapshot retention time is configured with
+        the snapshots.automatic.retention system option. The default value is 31 days". Passing
+        purge=true on the remove suppresses the snapshot entirely, and setting the option to `no`
+        disables automatic snapshots.
+      docs: https://snapcraft.io/docs/reference/administration/system-options/
+      grade: verified
+    - api: canonical:snapd-rest-api
+      write: any asynchronous change
+      reversal: abort
+      operationId: abortChangeById
+      path: /v2/changes/{id}
+      window: while the change is in progress
+      grade: verified
+  not_reversible:
+    - surface: canonical:snap-store-api / canonical:charmhub-api publishing
+      note: >-
+        A published snap or charm revision cannot be unpublished; the documented remedy is to close or
+        re-release the channel to a previous revision, which changes what consumers receive but does
+        not delete the revision.
+    - surface: canonical:ubuntu-security-api
+      note: Read-only. Reversibility is `na` for this API.
+dry_run_mode:
+  supported: partial
+  note: >-
+    No API-level dry-run parameter exists in the corpus. Canonical's dry-run surface is in the CLIs —
+    `juju deploy --dry-run`, `lxc ... --dry-run` on selected commands, `pro fix --dry-run` — which an
+    agent calling the REST APIs directly cannot use.
+pagination:
+  style: none-uniform
+  by_api:
+    - api: canonical:lxd-rest-api
+      style: recursion + filtering, no cursor or page parameter
+      params: [recursion, filter, project]
+      note: >-
+        "A recursion argument can be passed to a GET query against a collection. The default value is
+        0 which means that collection member URLs are returned. Setting it to 1 will have those URLs
+        be replaced by the object they point to." recursion=2 additionally inlines instance state,
+        snapshots and backups. There is no page/limit/offset: LXD returns whole collections.
+      docs: https://documentation.ubuntu.com/lxd/latest/rest-api/
+    - api: canonical:landscape-debarchive-api
+      style: page token
+      params: [pageSize, pageToken]
+      response_fields: [nextPageToken]
+      note: Google-AIP shaped — the spec is generated with protoc-gen-openapi from protobuf.
+    - api: canonical:ubuntu-security-api
+      style: offset/limit
+      params: [offset, limit]
+    - api: canonical:snapd-rest-api
+      style: none — collections are returned whole
+field_expansion:
+  supported: true
+  by_api:
+    - api: canonical:lxd-rest-api
+      mechanism: recursion=1 / recursion=2
+    - api: canonical:snap-store-api
+      mechanism: '`fields` query parameter, a comma-separated allowlist of the fields to return'
+metadata:
+  supported: true
+  note: >-
+    LXD objects carry a free-form `config` map (string→string) and `description`; snaps carry
+    `snap set` configuration under /v2/snaps/{name}/conf. Launchpad exposes user-set annotations.
+request_id_tracing:
+  supported: true
+  headers: [x-request-id, x-vcs-revision, x-view-name]
+  evidence: >-
+    Live probe 2026-09-05 of https://api.charmhub.io/v2/charms/info/postgresql-k8s and
+    https://ubuntu.com/security/releases.json — both return x-request-id, x-vcs-revision and
+    x-view-name response headers. LXD returns operation ids under /1.0/operations/{id} instead.
+  note: The header is undocumented; it is observed on live responses, not promised in a contract.
+versioning:
+  style: path-prefix, plus a runtime capability list
+  examples:
+    - api: canonical:lxd-rest-api
+      version: /1.0
+      note: >-
+        THE IMPORTANT ONE. LXD has been on /1.0 since 2016 and does not bump the path. Capability
+        discovery is instead the `api_extensions[]` array on GET /1.0 — an append-only list of named
+        extensions (etag, patch, container_full, storage_api_volume_snapshots, …). An agent MUST read
+        api_extensions before calling anything optional; the path version tells it nothing.
+    - api: canonical:snapd-rest-api
+      version: /v2
+    - api: canonical:landscape-api
+      version: '/api/v2 (current) and the v1 legacy API, which Canonical labels LEGACY in its own docs'
+    - api: canonical:launchpad-api
+      version: '/1.0, /devel — the devel series is explicitly unstable'
+error_envelope:
+  shape: per-product, not shared
+  see: errors/canonical-problem-types.yml
+  note: >-
+    LXD wraps every response — success or failure — in {type, status/status_code, metadata|error,
+    error_code}. snapd uses {type, status-code, status, result:{message, kind, value}} with
+    ENUMERATED kinds. No application/problem+json anywhere.
+rate_limit_signaling:
+  headers: none
+  evidence: >-
+    Live probe 2026-09-05 of https://ubuntu.com/security/releases.json and
+    https://api.charmhub.io/v2/charms/info/postgresql-k8s — neither response carries X-RateLimit-*,
+    RateLimit-* or Retry-After.
+  see: rate-limits/canonical-rate-limits.yml
+async_model:
+  note: >-
+    The single most important convention in this portfolio. A write does not complete inline.
+  by_api:
+    - api: canonical:lxd-rest-api
+      pattern: 'POST/PUT/DELETE returns 202 with an Operation URL; poll GET /1.0/operations/{id} or block on GET /1.0/operations/{id}/wait; stream progress over /1.0/operations/{id}/websocket or /1.0/events'
+      status_codes:
+        100: Operation created
+        101: Started
+        102: Stopped
+        103: Running
+        104: Canceling
+        105: Pending
+        106: Starting
+        107: Stopping
+        108: Aborting
+        109: Freezing
+        110: Frozen
+        111: Thawed
+        112: Error
+        113: Ready
+        200: Success
+        400: Failure
+        401: Canceled
+      docs: https://documentation.ubuntu.com/lxd/latest/rest-api/
+    - api: canonical:snapd-rest-api
+      pattern: 'Asynchronous endpoints return a change id; poll GET /v2/changes/{id}, or GET /v2/notices for a long-poll event stream'
+cross_links:
+  errors: errors/canonical-problem-types.yml
+  lifecycle: lifecycle/canonical-lifecycle.yml
+  authentication: authentication/canonical-authentication.yml
+  rate_limits: rate-limits/canonical-rate-limits.yml
+  data_model: data-model/canonical-data-model.yml
+  webhooks: asyncapi/canonical-launchpad-webhooks.yml

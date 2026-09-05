@@ -1,0 +1,27 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay — Hardware API (hwapi)
+  version: 1.0.0
+extends: ../openapi/canonical-hardware-api-openapi.json
+x-generated: '2026-09-05'
+x-method: generated
+x-source: openapi/canonical-hardware-api-openapi.json
+actions:
+- target: $.info
+  update:
+    x-api-evangelist:
+      provider: Canonical
+      providerId: canonical
+      harvested: '2026-09-05'
+      harvested_from: https://hw.ubuntu.com/openapi.json
+      catalog: https://apis.io/provider/canonical
+      note: Harvested verbatim from the URL above; this overlay carries API Evangelist enrichment only
+        and never mutates the source document.
+- target: $.info
+  update:
+    x-api-evangelist-contact:
+      note: The source document declares no info.contact. Canonical routes API questions through the product
+        documentation and https://discourse.ubuntu.com/.
+- target: $
+  update:
+    x-api-evangelist-servers-note: 'The source document declares no servers[]/host. Documented base: https://hw.ubuntu.com'

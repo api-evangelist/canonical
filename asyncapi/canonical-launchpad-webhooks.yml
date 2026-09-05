@@ -1,0 +1,161 @@
+generated: '2026-09-05'
+method: searched
+source: https://documentation.ubuntu.com/launchpad/user/reference/webhooks/
+provider: Canonical
+providerId: canonical
+api: canonical:launchpad-api
+description: >-
+  Launchpad is the one Canonical surface that publishes a documented outbound event catalog.
+  Webhooks are created on a target object (a Git repository, a snap, a charm recipe, a project, an
+  archive) through the Launchpad web UI or the newWebhook API method, and Launchpad POSTs a JSON body
+  to the configured delivery URL when a matching event fires. Canonical publishes no AsyncAPI
+  document for this surface, so this artifact captures the catalog as documented rather than
+  inventing a spec. No AsyncAPI file was written — there is nothing published to harvest.
+spec:
+  asyncapi_published: false
+  note: >-
+    NEVER FABRICATED: no AsyncAPI document exists for Launchpad webhooks. The event names, headers,
+    signature scheme and delivery semantics below are transcribed from Canonical's own reference page.
+transport:
+  protocol: https
+  method: POST
+  content_type: application/json
+  proxy_hosts:
+    - webhooks-proxy.launchpad.net
+    - webhooks-proxy.qastaging.paddev.net
+  note: >-
+    Consumers must allow inbound HTTP/HTTPS from the IP addresses behind
+    webhooks-proxy.launchpad.net. The proxy does not generally reach Canonical's own IP space.
+authentication:
+  scheme: HMAC-SHA1 body signature
+  header: X-Hub-Signature
+  secret: >-
+    Optional per-webhook secret, following the PubSubHubbub specification. Write-only — Launchpad
+    never discloses an existing secret; it can be rotated with the setSecret API method.
+headers:
+  - name: User-Agent
+    value: 'begins with launchpad.net-Webhooks/'
+  - name: Content-Type
+    value: application/json
+  - name: X-Launchpad-Event-Type
+    value: 'the versioned event type, e.g. git:push:0.1'
+  - name: X-Launchpad-Delivery
+    value: unique numeric delivery identifier; sort on this if ordering matters
+  - name: X-Hub-Signature
+    value: HMAC-SHA1 of the body with the webhook secret
+targets:
+  - object: Git repository
+    events: [ci:build:0.1, git:push:0.1, merge-proposal:0.1]
+  - object: Live filesystem
+    events: [livefs:build:0.1]
+  - object: Snap package
+    events: [snap:build:0.1]
+  - object: OCI recipe
+    events: [ocirecipe:build:0.1]
+  - object: Charm recipe
+    events: [charm-recipe:build:0.1]
+  - object: Craft recipe
+    events: [craft-recipe:build:0.1]
+  - object: Project
+    events: [bug:0.1, bug:comment:0.1]
+  - object: Distribution
+    events: [bug:0.1, bug:comment:0.1]
+  - object: Distribution Source Package
+    events: [bug:0.1, bug:comment:0.1]
+  - object: Archive
+    events: [archive:source-package-upload:0.1, archive:binary-package-upload:0.1, archive:binary-build:0.1]
+events:
+  - type: ci:build:0.1
+    name: CI build
+    trigger: When the status of a CI build changes.
+    category: code-hosting
+  - type: git:push:0.1
+    name: Git push
+    trigger: When a Git repository is pushed; includes creating or deleting branches.
+    category: code-hosting
+  - type: merge-proposal:0.1
+    name: Merge proposal
+    trigger: When a merge proposal targeting this branch or repository is created, modified or deleted.
+    category: code-hosting
+    sub_events:
+      - merge-proposal:0.1::create
+      - merge-proposal:0.1::push
+      - merge-proposal:0.1::review
+      - merge-proposal:0.1::edit
+      - merge-proposal:0.1::status-change
+      - merge-proposal:0.1::delete
+    note: >-
+      Subscribe to the parent type OR to specific sub-types, never both. The sub-event payload is
+      identical to the parent's.
+  - type: livefs:build:0.1
+    name: Live filesystem build
+    trigger: When the status of a live filesystem build changes.
+    category: build-recipes
+  - type: snap:build:0.1
+    name: Snap build
+    trigger: When the status of a snap package build changes.
+    category: build-recipes
+  - type: ocirecipe:build:0.1
+    name: OCI recipe build
+    trigger: When the status of an OCI image build changes.
+    category: build-recipes
+  - type: charm-recipe:build:0.1
+    name: Charm recipe build
+    trigger: When the status of a charm recipe build changes.
+    category: build-recipes
+  - type: craft-recipe:build:0.1
+    name: Craft recipe build
+    trigger: When the status of a craft recipe build changes.
+    category: build-recipes
+  - type: bug:0.1
+    name: Bug
+    trigger: When a bug or bug task changes.
+    category: bug-tracking
+  - type: bug:comment:0.1
+    name: Bug Comment
+    trigger: When a comment is added to a bug.
+    category: bug-tracking
+  - type: archive:source-package-upload:0.1
+    name: Source package upload
+    trigger: When the status of a source package upload changes.
+    category: package-publishing
+  - type: archive:binary-package-upload:0.1
+    name: Binary package upload
+    trigger: When the status of a binary package upload changes.
+    category: package-publishing
+  - type: archive:binary-build:0.1
+    name: Binary build
+    trigger: When the status of a binary build changes.
+    category: package-publishing
+  - type: ping
+    name: Ping
+    trigger: >-
+      Manually requested test event. Delivers X-Launchpad-Event-Type: ping with body {"ping": true}
+      and records the attempt under the webhook's recent deliveries.
+    category: testing
+versioning:
+  scheme: >-
+    Event types carry a version suffix (:0.1). Keys may be added to payload dictionaries without a
+    version bump; an incompatible payload change bumps the version so consumers can migrate.
+filtering:
+  git_ref_pattern:
+    applies_to: [ci:build:0.1, 'git:push:0.1', 'merge-proposal:0.1']
+    wildcards:
+      '*': matches zero or more characters
+      '?': matches any single character
+      '[...]': matches any character in the set
+      '[!...]': matches any character not in the set
+    caveat: >-
+      Launchpad does not re-run a CI build for a commit it has already built, so a commit first
+      pushed to a non-matching ref and later pushed to a matching ref may never fire the webhook.
+delivery:
+  ordering: >-
+    Roughly event order, but not guaranteed. Sort on the numeric X-Launchpad-Delivery header when
+    ordering matters.
+  observability: >-
+    Recent deliveries are shown on the webhook's page in the web UI and are queryable through the
+    webhook.deliveries API collection.
+counts:
+  events: 14
+  sub_events: 6
+  target_object_types: 10

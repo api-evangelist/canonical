@@ -1,0 +1,143 @@
+generated: '2026-09-05'
+method: derived
+source: >-
+  Searched first — GitHub org search of `canonical` for MCP servers and mcp.json manifests
+  (2026-09-05), plus probes of canonical.com, ubuntu.com, snapcraft.io, charmhub.io and every API
+  host for /.well-known/ai-plugin.json and /.well-known/agent-card.json. No first-party MCP server
+  exists. The tool list below is DERIVED from operations in openapi/canonical-lxd-rest-api-openapi.yml
+  and openapi/canonical-snapd-rest-api-openapi.yml.
+provider: Canonical
+providerId: canonical
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: searched
+  note: >-
+    Canonical ships NO MCP server for any of its APIs. The four MCP-named repositories in the
+    canonical GitHub organization are snap packagings of OTHER projects' servers
+    (canonical/discourse-mcp-snap, canonical/ros-mcp-server-snap), a Kubernetes operator for
+    DataHub's MCP (canonical/datahub-mcp-k8s-operator), and a CI agent that consumes MCPs
+    (canonical/alchemy). The `.mcp.json` files found in canonical/pragma and elsewhere are
+    client-side editor configuration, not servers. There is no hosted endpoint and no
+    Canonical-published stdio package to install. No endpoint URL is recorded here because none
+    exists — a guessed one would read as a verified agent surface.
+search_evidence:
+  - query: 'GitHub repository search org:canonical mcp'
+    date: '2026-09-05'
+    result: '4 repositories, none of them an MCP server for a Canonical API'
+    repos:
+      - canonical/discourse-mcp-snap
+      - canonical/ros-mcp-server-snap
+      - canonical/datahub-mcp-k8s-operator
+      - canonical/alchemy
+  - query: 'GitHub code search org:canonical filename:mcp.json'
+    date: '2026-09-05'
+    result: '7 hits, all client-side .mcp.json editor configuration'
+  - probe: https://canonical.com/.well-known/ai-plugin.json
+    status: 404
+  - probe: https://ubuntu.com/.well-known/ai-plugin.json
+    status: 404
+agent_readable_surfaces_that_do_exist:
+  - kind: llms.txt
+    url: https://canonical.com/llms.txt
+    status: 200
+    file: ../llms/canonical-llms.txt
+  - kind: llms.txt
+    url: https://ubuntu.com/llms.txt
+    status: 200
+  - kind: llms.txt
+    url: https://documentation.ubuntu.com/llms.txt
+    status: 200
+  - kind: markdown-twin
+    pattern: 'https://canonical.com/<path>?format=md'
+    note: >-
+      Canonical's llms.txt links every page with a ?format=md suffix, so the whole marketing and
+      solutions surface is retrievable as markdown. That is a genuine agent affordance and it is the
+      strongest agent-facing thing Canonical currently ships — but it covers the WEBSITE, not the
+      APIs.
+  - kind: llms.txt
+    url: https://canonical.com/juju/docs/juju-cli/page/llms.txt
+    note: A per-product llms.txt for the Juju CLI reference, linked from the root llms.txt.
+candidate_tools:
+  note: >-
+    DERIVED, NOT SHIPPED. These are the tools an MCP server over Canonical's two richest contracts
+    would expose. Each names the real operationId it would bind to, verified present in the harvested
+    spec. Nothing here is published by Canonical.
+  tools:
+    - name: lxd_list_instances
+      description: List instances in an LXD project, optionally inlining state and snapshots.
+      rest: [instances_get]
+      source: openapi/canonical-lxd-rest-api-openapi.yml
+    - name: lxd_get_instance
+      description: Get one instance by name.
+      rest: [instance_get]
+    - name: lxd_create_instance
+      description: Create an instance from an image. Asynchronous — returns an Operation to poll.
+      rest: [instances_post]
+      consequence: creates infrastructure
+    - name: lxd_update_instance
+      description: Update instance configuration, or restore it from a snapshot.
+      rest: [instance_put]
+      consequence: mutating; guarded by ETag/If-Match
+    - name: lxd_delete_instance
+      description: Delete an instance. Asynchronous.
+      rest: [instance_delete]
+      consequence: destructive; reversible only from a snapshot or backup
+    - name: lxd_change_instance_state
+      description: Start, stop, restart, freeze or unfreeze an instance.
+      rest: [instance_state_put]
+    - name: lxd_snapshot_instance
+      description: Create a snapshot of an instance.
+      rest: [instance_snapshots_post]
+    - name: lxd_list_images
+      description: List images available on the server.
+      rest: [images_get]
+    - name: lxd_get_operation
+      description: Read the state of an asynchronous operation.
+      rest: [operation_get]
+    - name: lxd_wait_operation
+      description: Block until an asynchronous operation completes.
+      rest: [operation_wait_get]
+    - name: lxd_cancel_operation
+      description: Cancel an in-flight operation.
+      rest: [operation_delete]
+      consequence: reversal
+    - name: lxd_server_capabilities
+      description: Read the server root, including the api_extensions[] capability list.
+      rest: [server_get]
+    - name: snapd_list_snaps
+      description: List installed snaps.
+      rest: [listInstalledSnaps]
+      source: openapi/canonical-snapd-rest-api-openapi.yml
+    - name: snapd_get_snap
+      description: Get one installed snap by name.
+      rest: [getInstalledSnapByName]
+    - name: snapd_manage_snap
+      description: Install, refresh, remove, revert, enable, disable, switch, hold or unhold a snap.
+      rest: [manageSnapByName]
+      consequence: mutating; asynchronous, returns a change id
+    - name: snapd_get_change
+      description: Poll an asynchronous snapd change.
+      rest: [getChangeById]
+    - name: snapd_abort_change
+      description: Abort a change in progress.
+      rest: [abortChangeById]
+      consequence: reversal
+    - name: snapd_list_snapshots
+      description: List snapshot sets, including the automatic snapshot taken when a snap is removed.
+      rest: [listSnapshots]
+    - name: ubuntu_security_get_cve
+      description: Look up an Ubuntu CVE record by identifier.
+      rest: ['/security/cves/{cve_id}.json GET']
+      source: openapi/canonical-ubuntu-security-api-openapi.json
+      note: >-
+        The Ubuntu Security API is the single best MCP candidate in the portfolio — open,
+        unauthenticated, read-only, and answering a question agents ask constantly.
+    - name: ubuntu_security_list_notices
+      description: List Ubuntu Security Notices, filterable by release and package.
+      rest: ['/security/notices.json GET']
+recommendation: >-
+  If Canonical shipped one MCP server, the Ubuntu Security API is the surface to start with: it is
+  already public, unauthenticated, read-only and low-risk, and it answers the question ("is my Ubuntu
+  package affected by this CVE?") that agents already ask about Ubuntu more than any other.
