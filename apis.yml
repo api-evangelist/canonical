@@ -37,8 +37,8 @@ tags:
   - Bare Metal
   - Charms
   - Identity
-  - Canonical
 tags_raw:
+  - Canonical
   - Cloud
   - Linux
   - Open Source
@@ -91,6 +91,10 @@ apis:
   humanURL: https://api.charmhub.io/docs/default.html
   baseURL: https://api.charmhub.io
   tags:
+  - Charms
+  - Operator
+  - Kubernetes
+  tags_raw:
   - Charms
   - Operators
   - Kubernetes
@@ -309,6 +313,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Application
+  tags_raw:
   - application
   properties:
   - type: OpenAPI
@@ -367,6 +373,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Application
+  tags_raw:
   - applications
   properties:
   - type: OpenAPI
@@ -425,6 +433,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Application
+  tags_raw:
   - Apps
   properties:
   - type: OpenAPI
@@ -716,6 +726,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Auth Groups
+  tags_raw:
   - auth_groups
   properties:
   - type: OpenAPI
@@ -774,6 +786,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Authentication
+  tags_raw:
   - authentication
   properties:
   - type: OpenAPI
@@ -832,6 +846,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Authentication Required
+  tags_raw:
   - AuthenticationRequired
   properties:
   - type: OpenAPI
@@ -948,6 +964,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Certificates
+  tags_raw:
   - certificates
   properties:
   - type: OpenAPI
@@ -1006,6 +1024,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Certification
+  tags_raw:
   - certification
   properties:
   - type: OpenAPI
@@ -1122,6 +1142,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Checks
+  tags_raw:
   - checks
   properties:
   - type: OpenAPI
@@ -1238,6 +1260,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Cluster
+  tags_raw:
   - cluster
   properties:
   - type: OpenAPI
@@ -1296,6 +1320,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - ClusterGroups
+  tags_raw:
   - cluster-groups
   properties:
   - type: OpenAPI
@@ -1412,6 +1438,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Config
+  tags_raw:
   - config
   properties:
   - type: OpenAPI
@@ -1470,6 +1498,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Containers
+  tags_raw:
   - containers
   properties:
   - type: OpenAPI
@@ -1528,6 +1558,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Devices
+  tags_raw:
   - devices
   properties:
   - type: OpenAPI
@@ -1644,6 +1676,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Environment
+  tags_raw:
   - environments
   properties:
   - type: OpenAPI
@@ -1702,6 +1736,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Event
+  tags_raw:
   - events
   properties:
   - type: OpenAPI
@@ -1760,6 +1796,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Exec
+  tags_raw:
   - exec
   properties:
   - type: OpenAPI
@@ -1934,6 +1972,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - File
+  tags_raw:
   - files
   properties:
   - type: OpenAPI
@@ -2108,6 +2148,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Health
+  tags_raw:
   - health
   properties:
   - type: OpenAPI
@@ -2166,6 +2208,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Identities
+  tags_raw:
   - identities
   properties:
   - type: OpenAPI
@@ -2282,7 +2326,8 @@ apis:
     The identity_provider_groups API from Canonical — 3 operation(s) for identity_provider_groups.
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
-  tags:
+  tags: []
+  tags_raw:
   - identity_provider_groups
   properties:
   - type: OpenAPI
@@ -2399,6 +2444,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Image
+  tags_raw:
   - images
   properties:
   - type: OpenAPI
@@ -2457,6 +2504,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Instances
+  tags_raw:
   - instances
   properties:
   - type: OpenAPI
@@ -2573,6 +2622,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Internal
+  tags_raw:
   - internal
   properties:
   - type: OpenAPI
@@ -2631,6 +2682,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Issues
+  tags_raw:
   - issues
   properties:
   - type: OpenAPI
@@ -2689,6 +2742,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Layers
+  tags_raw:
   - layers
   properties:
   - type: OpenAPI
@@ -2805,6 +2860,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Logs
+  tags_raw:
   - logs
   properties:
   - type: OpenAPI
@@ -2921,6 +2978,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Metrics
+  tags_raw:
   - metrics
   properties:
   - type: OpenAPI
@@ -3095,6 +3154,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Network ACLs
+  tags_raw:
   - network-acls
   properties:
   - type: OpenAPI
@@ -3445,6 +3506,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Network Zones
+  tags_raw:
   - network-zones
   properties:
   - type: OpenAPI
@@ -3503,6 +3566,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Networks
+  tags_raw:
   - networks
   properties:
   - type: OpenAPI
@@ -3561,6 +3626,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Node
+  tags_raw:
   - nodes
   properties:
   - type: OpenAPI
@@ -3619,6 +3686,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Notices
+  tags_raw:
   - notices
   properties:
   - type: OpenAPI
@@ -3677,6 +3746,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Notification
+  tags_raw:
   - notifications
   properties:
   - type: OpenAPI
@@ -3792,7 +3863,8 @@ apis:
   description: The oidc_sessions API from Canonical — 3 operation(s) for oidc_sessions.
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
-  tags:
+  tags: []
+  tags_raw:
   - oidc_sessions
   properties:
   - type: OpenAPI
@@ -3850,7 +3922,8 @@ apis:
   description: The operations API from Canonical — 10 operation(s) for operations.
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
-  tags:
+  tags: []
+  tags_raw:
   - operations
   properties:
   - type: OpenAPI
@@ -3967,6 +4040,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Permissions
+  tags_raw:
   - permissions
   properties:
   - type: OpenAPI
@@ -4025,6 +4100,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Placement Groups
+  tags_raw:
   - placement-groups
   properties:
   - type: OpenAPI
@@ -4083,6 +4160,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Plan
+  tags_raw:
   - plan
   properties:
   - type: OpenAPI
@@ -4141,6 +4220,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Profiles
+  tags_raw:
   - profiles
   properties:
   - type: OpenAPI
@@ -4199,6 +4280,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Project
+  tags_raw:
   - projects
   properties:
   - type: OpenAPI
@@ -4373,6 +4456,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Region
+  tags_raw:
   - region
   properties:
   - type: OpenAPI
@@ -4489,6 +4574,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Reports
+  tags_raw:
   - reports
   properties:
   - type: OpenAPI
@@ -4663,6 +4750,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Schema
+  tags_raw:
   - schema
   properties:
   - type: OpenAPI
@@ -4895,6 +4984,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Servers
+  tags_raw:
   - server
   properties:
   - type: OpenAPI
@@ -4953,6 +5044,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Services
+  tags_raw:
   - service
   properties:
   - type: OpenAPI
@@ -5011,6 +5104,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Services
+  tags_raw:
   - services
   properties:
   - type: OpenAPI
@@ -5069,6 +5164,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Sessions
+  tags_raw:
   - session
   properties:
   - type: OpenAPI
@@ -5127,6 +5224,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Signals
+  tags_raw:
   - signals
   properties:
   - type: OpenAPI
@@ -5185,6 +5284,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Status
+  tags_raw:
   - status
   properties:
   - type: OpenAPI
@@ -5301,6 +5402,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Storage
+  tags_raw:
   - storage
   properties:
   - type: OpenAPI
@@ -5359,6 +5462,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - System Info
+  tags_raw:
   - system info
   properties:
   - type: OpenAPI
@@ -5417,6 +5522,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Task
+  tags_raw:
   - tasks
   properties:
   - type: OpenAPI
@@ -5475,6 +5582,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Team
+  tags_raw:
   - teams
   properties:
   - type: OpenAPI
@@ -5591,6 +5700,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Test Cases
+  tags_raw:
   - test-cases
   properties:
   - type: OpenAPI
@@ -5649,6 +5760,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Test Executions
+  tags_raw:
   - test-executions
   properties:
   - type: OpenAPI
@@ -5765,6 +5878,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Test Plans
+  tags_raw:
   - test-plans
   properties:
   - type: OpenAPI
@@ -5823,6 +5938,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Test Results
+  tags_raw:
   - test-results
   properties:
   - type: OpenAPI
@@ -5881,6 +5998,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
@@ -5939,6 +6058,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - v1
+  tags_raw:
   - V1
   properties:
   - type: OpenAPI
@@ -6055,6 +6176,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Warnings
+  tags_raw:
   - warnings
   properties:
   - type: OpenAPI
@@ -6113,6 +6236,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Addons
+  tags_raw:
   - Add Ons
   properties:
   - type: OpenAPI
@@ -6172,6 +6297,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - AuthenticationService
+  tags_raw:
   - Authentication Service
   properties:
   - type: OpenAPI
