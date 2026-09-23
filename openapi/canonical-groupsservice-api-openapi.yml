@@ -1,0 +1,822 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Groups Service API
+  version: '0.1'
+tags:
+- name: GroupsService
+paths:
+  /api/v0/groups:
+    get:
+      operationId: GroupsService_ListGroups
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apigroupsListGroupsResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service list groups
+      x-summary-source: derived
+    post:
+      operationId: GroupsService_CreateGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/apigroupsGroup'
+        required: true
+        x-originalParamName: group
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apigroupsCreateGroupResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service create group
+      x-summary-source: derived
+  /api/v0/groups/{id}:
+    delete:
+      operationId: GroupsService_RemoveGroup
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apigroupsRemoveGroupResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service remove group
+      x-summary-source: derived
+    get:
+      operationId: GroupsService_GetGroup
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apigroupsGetGroupResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service get group
+      x-summary-source: derived
+    patch:
+      operationId: GroupsService_UpdateGroup
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/apigroupsGroup'
+        required: true
+        x-originalParamName: group
+      responses:
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Not implemented
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service update group
+      x-summary-source: derived
+  /api/v0/groups/{id}/entitlements:
+    get:
+      operationId: GroupsService_ListGroupEntitlements
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: Base64 encoded pagination info
+        in: header
+        name: X-Token-Pagination
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsListGroupEntitlementsResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service list group entitlements
+      x-summary-source: derived
+    patch:
+      operationId: GroupsService_UpdateGroupEntitlements
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/typesPermissions'
+        required: true
+        x-originalParamName: entitlementsPatchReq
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsUpdateGroupEntitlementsResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service update group entitlements
+      x-summary-source: derived
+  /api/v0/groups/{id}/entitlements/{entitlementId}:
+    delete:
+      operationId: GroupsService_RemoveGroupEntitlement
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: entitlementId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsRemoveGroupEntitlementResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service remove group entitlement
+      x-summary-source: derived
+  /api/v0/groups/{id}/identities:
+    get:
+      operationId: GroupsService_GetGroupIdentities
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsGetGroupIdentitiesResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service get group identities
+      x-summary-source: derived
+    patch:
+      operationId: GroupsService_UpdateGroupIdentities
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/groupsIdentities'
+        required: true
+        x-originalParamName: identities
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsUpdateGroupIdentitiesResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service update group identities
+      x-summary-source: derived
+  /api/v0/groups/{id}/identities/{identityId}:
+    delete:
+      operationId: GroupsService_RemoveGroupIdentity
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: identityId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsRemoveGroupIdentityResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service remove group identity
+      x-summary-source: derived
+  /api/v0/groups/{id}/roles:
+    get:
+      operationId: GroupsService_GetGroupRoles
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsGetGroupRolesResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service get group roles
+      x-summary-source: derived
+    post:
+      operationId: GroupsService_UpdateGroupRoles
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/groupsRoles'
+        required: true
+        x-originalParamName: roles
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsUpdateGroupRolesResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service update group roles
+      x-summary-source: derived
+  /api/v0/groups/{id}/roles/{roleId}:
+    delete:
+      operationId: GroupsService_RemoveGroupRole
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: roleId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/groupsRemoveGroupRoleResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - GroupsService
+      summary: Groups service remove group role
+      x-summary-source: derived
+components:
+  schemas:
+    groupsUpdateGroupIdentitiesResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesPermissions:
+      properties:
+        updates:
+          items:
+            $ref: '#/components/schemas/typesPermission'
+          type: array
+      type: object
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsRemoveGroupIdentityResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsRemoveGroupEntitlementResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsIdentities:
+      properties:
+        identities:
+          items:
+            type: string
+          type: array
+      type: object
+    groupsRemoveGroupRoleResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    apigroupsRemoveGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsGetGroupRolesResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsRoles:
+      properties:
+        roles:
+          items:
+            type: string
+          type: array
+      type: object
+    apigroupsListGroupsResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsUpdateGroupRolesResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsUpdateGroupEntitlementsResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    apigroupsGetGroupResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apigroupsGroup'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsListGroupEntitlementsResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    apigroupsCreateGroupResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apigroupsGroup'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesPermission:
+      properties:
+        object:
+          type: string
+        relation:
+          type: string
+      type: object
+    apigroupsGroup:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    groupsGetGroupIdentitiesResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

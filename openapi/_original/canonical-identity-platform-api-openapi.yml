@@ -1,3 +1,5 @@
+# x-archived-from: canonical-identity-platform-api-openapi.yml
+# x-archived-on: 2026-09-16
 components:
     schemas:
         TenantServiceInviteMemberBody:

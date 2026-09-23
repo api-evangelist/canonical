@@ -1,0 +1,124 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Reports API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: Reports
+paths:
+  /v1/reports/test-results:
+    get:
+      tags:
+      - Reports
+      summary: Get Testresults Report
+      description: 'Returns a csv report detailing all artefacts within a given date range. Together
+
+        with their test executions and test results in csv format.'
+      operationId: get_testresults_report_v1_reports_test_results_get
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+          default: '0001-01-01T00:00:00'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Date
+      responses:
+        '200':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_report
+  /v1/reports/test-executions:
+    get:
+      tags:
+      - Reports
+      summary: Get Test Execution Reports
+      description: 'Returns a csv report detailing all test executions within a given date range.
+
+        Together with their artefact and environment details in csv format.'
+      operationId: get_test_execution_reports_v1_reports_test_executions_get
+      parameters:
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+          default: '0001-01-01T00:00:00'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: End Date
+      responses:
+        '200':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_report
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

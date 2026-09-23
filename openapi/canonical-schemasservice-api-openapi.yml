@@ -1,0 +1,446 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Schemas Service API
+  version: '0.1'
+tags:
+- name: SchemasService
+paths:
+  /api/v0/schemas:
+    get:
+      operationId: SchemasService_ListSchemas
+      parameters:
+      - in: query
+        name: size
+        schema:
+          type: string
+      - in: query
+        name: page_token
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasListSchemasResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service list schemas
+      x-summary-source: derived
+    post:
+      operationId: SchemasService_CreateSchema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/apischemasSchema'
+        required: true
+        x-originalParamName: schema
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasCreateSchemaResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service create schema
+      x-summary-source: derived
+  /api/v0/schemas/{id}:
+    delete:
+      operationId: SchemasService_RemoveSchema
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasRemoveSchemaResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service remove schema
+      x-summary-source: derived
+    get:
+      operationId: SchemasService_GetSchema
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasGetSchemaResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service get schema
+      x-summary-source: derived
+    patch:
+      operationId: SchemasService_UpdateSchema
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/apischemasSchema'
+        required: true
+        x-originalParamName: schema
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasUpdateSchemaResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service update schema
+      x-summary-source: derived
+  /api/v0/schemas/default:
+    get:
+      operationId: SchemasService_GetDefaultSchema
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasGetDefaultSchemaResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service get default schema
+      x-summary-source: derived
+    put:
+      operationId: SchemasService_UpdateDefaultSchema
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/schemasDefaultSchema'
+        required: true
+        x-originalParamName: schema
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/schemasUpdateDefaultSchemaResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - SchemasService
+      summary: Schemas service update default schema
+      x-summary-source: derived
+components:
+  schemas:
+    schemasRemoveSchemaResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    schemasDefaultSchema:
+      properties:
+        id:
+          type: string
+      type: object
+    schemasUpdateDefaultSchemaResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/schemasDefaultSchema'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    schemasGetSchemaResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apischemasSchema'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    schemasListSchemasResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apischemasSchema'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    schemasUpdateSchemaResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apischemasSchema'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    schemasCreateSchemaResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apischemasSchema'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    schemasGetDefaultSchemaResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/schemasDefaultSchema'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    apischemasSchema:
+      properties:
+        additional_properties:
+          type: object
+        id:
+          type: string
+        schema:
+          type: object
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

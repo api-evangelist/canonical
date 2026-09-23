@@ -1,0 +1,456 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Artefact Matching Rules API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: artefact-matching-rules
+paths:
+  /v1/artefact-matching-rules:
+    post:
+      tags:
+      - artefact-matching-rules
+      summary: Create Artefact Matching Rule
+      description: Create a new artefact matching rule with at least one team
+      operationId: create_artefact_matching_rule_v1_artefact_matching_rules_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtefactMatchingRuleRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtefactMatchingRuleResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+    get:
+      tags:
+      - artefact-matching-rules
+      summary: Get Artefact Matching Rules
+      description: Get all artefact matching rules, optionally filtered by family
+      operationId: get_artefact_matching_rules_v1_artefact_matching_rules_get
+      parameters:
+      - name: family
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - $ref: '#/components/schemas/FamilyName'
+          - type: 'null'
+          title: Family
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtefactMatchingRuleResponse'
+                title: Response Get Artefact Matching Rules V1 Artefact Matching Rules Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_team
+  /v1/artefact-matching-rules/{rule_id}:
+    get:
+      tags:
+      - artefact-matching-rules
+      summary: Get Artefact Matching Rule
+      description: Get a specific artefact matching rule by ID
+      operationId: get_artefact_matching_rule_v1_artefact_matching_rules__rule_id__get
+      parameters:
+      - name: rule_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Rule Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtefactMatchingRuleResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_team
+    patch:
+      tags:
+      - artefact-matching-rules
+      summary: Update Artefact Matching Rule
+      description: Update an artefact matching rule
+      operationId: update_artefact_matching_rule_v1_artefact_matching_rules__rule_id__patch
+      parameters:
+      - name: rule_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Rule Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtefactMatchingRulePatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtefactMatchingRuleResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+    delete:
+      tags:
+      - artefact-matching-rules
+      summary: Delete Artefact Matching Rule
+      description: Delete an artefact matching rule
+      operationId: delete_artefact_matching_rule_v1_artefact_matching_rules__rule_id__delete
+      parameters:
+      - name: rule_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Rule Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+components:
+  schemas:
+    Permission:
+      type: string
+      enum:
+      - view_user
+      - change_user
+      - view_team
+      - change_team
+      - add_application
+      - change_application
+      - view_application
+      - view_permission
+      - view_issue
+      - change_issue
+      - change_issue_attachment
+      - change_issue_attachment_bulk
+      - change_attachment_rule
+      - change_auto_rerun
+      - view_test
+      - change_test
+      - view_rerun
+      - change_rerun
+      - change_rerun_bulk
+      - view_artefact
+      - change_artefact
+      - view_environment_review
+      - change_environment_review
+      - view_report
+      - view_test_case_reported_issue
+      - change_test_case_reported_issue
+      - view_environment_reported_issue
+      - change_environment_reported_issue
+      - view_notification
+      - change_notification
+      - view_sentry_debug
+      title: Permission
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ArtefactMatchingRuleResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        family:
+          $ref: '#/components/schemas/FamilyName'
+        stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stage
+        track:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Track
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch
+        store:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Store
+        series:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Series
+        os:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Os
+        release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release
+        owner:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+        teams:
+          items:
+            $ref: '#/components/schemas/TeamMinimal'
+          type: array
+          title: Teams
+        grant_permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Grant Permissions
+      type: object
+      required:
+      - id
+      - name
+      - family
+      - stage
+      - track
+      - branch
+      - store
+      - series
+      - os
+      - release
+      - owner
+      - teams
+      - grant_permissions
+      title: ArtefactMatchingRuleResponse
+      description: Artefact matching rule with associated teams
+    ArtefactMatchingRuleRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          default: ''
+        family:
+          $ref: '#/components/schemas/FamilyName'
+        stage:
+          type: string
+          title: Stage
+          default: ''
+        track:
+          type: string
+          title: Track
+          default: ''
+        branch:
+          type: string
+          title: Branch
+          default: ''
+        store:
+          type: string
+          title: Store
+          default: ''
+        series:
+          type: string
+          title: Series
+          default: ''
+        os:
+          type: string
+          title: Os
+          default: ''
+        release:
+          type: string
+          title: Release
+          default: ''
+        owner:
+          type: string
+          title: Owner
+          default: ''
+        grant_permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Grant Permissions
+        team_ids:
+          items:
+            type: integer
+          type: array
+          title: Team Ids
+      type: object
+      required:
+      - family
+      - team_ids
+      title: ArtefactMatchingRuleRequest
+      description: Request to create an artefact matching rule (extends base with team_ids)
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TeamMinimal:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: TeamMinimal
+    ArtefactMatchingRulePatch:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        family:
+          anyOf:
+          - $ref: '#/components/schemas/FamilyName'
+          - type: 'null'
+        stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stage
+        track:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Track
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch
+        store:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Store
+        series:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Series
+        os:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Os
+        release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release
+        owner:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+        team_ids:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Team Ids
+        grant_permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Permission'
+            type: array
+          - type: 'null'
+          title: Grant Permissions
+      type: object
+      title: ArtefactMatchingRulePatch
+      description: Patch request for artefact matching rule

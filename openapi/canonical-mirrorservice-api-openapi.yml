@@ -1,0 +1,508 @@
+openapi: 3.2.0
+info:
+  title: debarchive Mirror Service API
+  version: 0.1.0
+  description: Methods for managing repository mirrors.
+tags:
+- name: MirrorService
+  description: Methods for managing repository mirrors.
+paths:
+  /v1/mirrors:
+    get:
+      tags:
+      - MirrorService
+      description: Returns a list of mirrors.
+      operationId: MirrorService_ListMirrors
+      parameters:
+      - name: pageSize
+        in: query
+        description: "The maximum number of mirrors to return.\n The service may return fewer than this value.\n If unspecified, at most 100 mirrors will be returned.\n The maximum value is 1000; values above 1000 will be treated as 1000."
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: "A page token, received from a previous call.\n Provide this to retrieve the subsequent page.\n\n When paginating, all other request parameters provided must match\n the call that provided the page token."
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: "An expression for filtering the results of the request.\n The fields eligible for filtering are:\n\n   * `display_name`\n\n Some examples of using filters are:\n\n   * `display_name=\"mirror\"`  --> The mirror has the display name \"mirror\".\n   * `display_name=\"mirror*\"` --> The mirror has the prefix \"mirror\" in its display name."
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMirrorsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service list mirrors
+      x-summary-source: derived
+    post:
+      tags:
+      - MirrorService
+      description: 'Creates a new mirror.
+
+        It validates the upstream but does not initiate synchronization.'
+      operationId: MirrorService_CreateMirror
+      parameters:
+      - name: mirrorId
+        in: query
+        description: "The ID to use for the mirror (optional).\n If provided, the full resource name will be `mirrors/{mirror_id}`."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mirror'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service create mirror
+      x-summary-source: derived
+  /v1/mirrors/{mirror}:
+    get:
+      tags:
+      - MirrorService
+      description: Retrieves a mirror by its resource name.
+      operationId: MirrorService_GetMirror
+      parameters:
+      - name: mirror
+        in: path
+        description: The mirror id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service get mirror
+      x-summary-source: derived
+    delete:
+      tags:
+      - MirrorService
+      description: Deletes a mirror.
+      operationId: MirrorService_DeleteMirror
+      parameters:
+      - name: mirror
+        in: path
+        description: The mirror id.
+        required: true
+        schema:
+          type: string
+      - name: force
+        in: query
+        description: If `true`, the mirror will be deleted even if it has other resources attached to it.
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content: {}
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service delete mirror
+      x-summary-source: derived
+    patch:
+      tags:
+      - MirrorService
+      description: Updates the details of a mirror.
+      operationId: MirrorService_UpdateMirror
+      parameters:
+      - name: mirror
+        in: path
+        description: The mirror id.
+        required: true
+        schema:
+          type: string
+      - name: updateMask
+        in: query
+        description: The list of fields to update.
+        schema:
+          type: string
+          format: field-mask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mirror'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service update mirror
+      x-summary-source: derived
+  /v1/mirrors/{mirror}/packages:
+    get:
+      tags:
+      - MirrorService
+      description: Retrieves the list of packages available in a mirror.
+      operationId: MirrorService_ListMirrorPackages
+      parameters:
+      - name: mirror
+        in: path
+        description: The mirror id.
+        required: true
+        schema:
+          type: string
+      - name: pageSize
+        in: query
+        description: "The maximum number of packages to return.\n The service may return fewer than this value.\n If unspecified, at most 100 packages will be returned.\n The maximum value is 1000; values above 1000 will be treated as 1000."
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: "A page token, received from a previous call.\n Provide this to retrieve the subsequent page.\n\n When paginating, all other request parameters provided must match\n the call that provided the page token."
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListMirrorPackagesResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service list mirror packages
+      x-summary-source: derived
+  /v1/mirrors/{mirror}:sync:
+    post:
+      tags:
+      - MirrorService
+      description: Synchronizes a mirror.
+      operationId: MirrorService_SyncMirror
+      parameters:
+      - name: mirror
+        in: path
+        description: The mirror id.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncMirrorRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service sync mirror
+      x-summary-source: derived
+  /v1/mirrors:batchGet:
+    post:
+      tags:
+      - MirrorService
+      description: Retrieves a batch of mirrors based on their name.
+      operationId: MirrorService_BatchGetMirrors
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchGetMirrorsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchGetMirrorsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Mirror service batch get mirrors
+      x-summary-source: derived
+components:
+  schemas:
+    GoogleProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: The type of the serialized message.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+    Mirror:
+      required:
+      - displayName
+      - archiveRoot
+      - distribution
+      - architectures
+      - components
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the mirror.\n Format: \"mirrors/{mirror}\""
+        mirrorId:
+          readOnly: true
+          type: string
+          description: The mirror ID is exposed separately for convenience.
+        status:
+          readOnly: true
+          type: string
+          description: The status of the mirror.
+        lastDownloadDate:
+          readOnly: true
+          type: string
+          description: The timestamp of the last successful download.
+          format: date-time
+        displayName:
+          type: string
+          description: The human-readable name used to reference this mirror.
+        archiveRoot:
+          type: string
+          description: "Root of the debian archive (URL).\n When creating mirrors for repositories that require authentication (such as ESM repos), you\n can include authentication tokens directly in the URL using the HTTP Basic Authentication\n format, e.g.:\n\n https://bearer:<my-esm-token>@esm.ubuntu.com/infra/ubuntu/\n\n Credentials in the URL are securely handled and scrubbed from API responses for security\n purposes."
+        distribution:
+          type: string
+          description: The name of the distribution (subdirectory of `dists`).
+        architectures:
+          type: array
+          items:
+            type: string
+          description: List of architectures to fetch.
+        components:
+          type: array
+          items:
+            type: string
+          description: List of components to fetch.
+        downloadInstaller:
+          type: boolean
+          description: Indicates if installer files should be downloaded.
+        downloadSources:
+          type: boolean
+          description: Indicates if sources files should be downloaded.
+        downloadUdebs:
+          type: boolean
+          description: Indicates if `.udebs` files should be downloaded.
+        filter:
+          type: string
+          description: "Package query applied to the mirror.\n Follows the [Reprepro/Aptly language](https://www.aptly.info/doc/feature/query/)."
+        filterWithDeps:
+          type: boolean
+          description: Indicates if dependencies of matching packages should be included.
+        skipArchitectureCheck:
+          type: boolean
+          description: Indicates if the architecture list verification should be skipped.
+        skipComponentCheck:
+          type: boolean
+          description: Indicates if the component list verification should be skipped.
+        preserveSignatures:
+          type: boolean
+          description: Indicates if the mirror is a signature-preserving mirror.
+        gpgKey:
+          allOf:
+          - $ref: '#/components/schemas/GpgKey'
+          description: Optional GPG key to validate the upstream signature.
+        lastOperation:
+          readOnly: true
+          type: string
+          description: The most recent long-running operation associated with the mirror.
+        mirrorType:
+          enum:
+          - MIRROR_TYPE_UNSPECIFIED
+          - UBUNTU_ARCHIVE
+          - UBUNTU_SNAPSHOTS
+          - UBUNTU_PRO
+          - THIRD_PARTY
+          type: string
+          description: The type of upstream repository being mirrored.
+          format: enum
+      description: A repository mirror configuration and status.
+    GpgKey:
+      required:
+      - armor
+      type: object
+      properties:
+        armor:
+          writeOnly: true
+          type: string
+          description: The GPG key in ASCII armor format.
+        isPrivate:
+          readOnly: true
+          type: boolean
+          description: Indicates if the key holds a private component.
+        fingerprint:
+          readOnly: true
+          type: string
+          description: The fingerprint of the key.
+      description: A GPG key resource.
+    ListMirrorsResponse:
+      type: object
+      properties:
+        mirrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mirror'
+          description: The list of mirrors.
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing mirrors.
+    BatchGetMirrorsResponse:
+      type: object
+      properties:
+        mirrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mirror'
+          description: Mirrors requested.
+        unreachable:
+          type: array
+          items:
+            type: string
+          description: "Unreachable mirrors. Populated when the request opts into\n `return_partial_success` and reading across collections."
+      description: The response message for retrieving a batch of mirrors.
+    ListMirrorPackagesResponse:
+      type: object
+      properties:
+        mirrorPackages:
+          type: array
+          items:
+            type: string
+          description: "The list of package strings.\n Example: [\"snap-http_1.4.0_source\", ...]"
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing packages in a mirror.
+    Operation:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The server-assigned name, which is only unique within the same service that\n originally returns it. If you use the default HTTP mapping, the\n `name` should be a resource name ending with `operations/{unique_id}`."
+        metadata:
+          allOf:
+          - $ref: '#/components/schemas/GoogleProtobufAny'
+          description: "Service-specific metadata associated with the operation.  It typically\n contains progress information and common metadata such as create time.\n Some services might not provide such metadata.  Any method that returns a\n long-running operation should document the metadata type, if any."
+        done:
+          type: boolean
+          description: "If the value is `false`, it means the operation is still in progress.\n If `true`, the operation is completed, and either `error` or `response` is\n available."
+        error:
+          allOf:
+          - $ref: '#/components/schemas/Status'
+          description: The error result of the operation in case of failure or cancellation.
+        response:
+          allOf:
+          - $ref: '#/components/schemas/GoogleProtobufAny'
+          description: "The normal, successful response of the operation.  If the original\n method returns no data on success, such as `Delete`, the response is\n `google.protobuf.Empty`.  If the original method is standard\n `Get`/`Create`/`Update`, the response should be the resource.  For other\n methods, the response should have the type `XxxResponse`, where `Xxx`\n is the original method name.  For example, if the original method name\n is `TakeSnapshot()`, the inferred response type is\n `TakeSnapshotResponse`."
+      description: "This resource represents a long-running operation that is the result of a\n network API call."
+    BatchGetMirrorsRequest:
+      required:
+      - names
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string
+          description: "The names of the mirrors to retrieve.\n A maximum of 100 mirrors can be retrieved in a batch.\n Format: mirrors/{mirror}"
+        returnPartialSuccess:
+          type: boolean
+          description: "Setting this field to `true` will opt the request into returning the\n mirrors that are reachable, and into including the names of those that\n were unreachable in the [BatchGetMirrorsResponse.unreachable] field."
+      description: The request message for retrieving a batch of mirrors.
+    SyncMirrorRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the mirror to sync.\n Format: \"mirrors/{mirror}\""
+        keyrings:
+          type: array
+          items:
+            type: string
+          description: Optional keyring files to use for validation.
+        ignoreChecksums:
+          type: boolean
+          description: Ignore checksum mismatches.
+        ignoreSignatures:
+          type: boolean
+          description: Ignore signature verification failures.
+        forceUpdate:
+          type: boolean
+          description: Force a full update.
+        skipExistingPackages:
+          type: boolean
+          description: Skip downloading packages that already exist.
+      description: The request message for syncing a mirror.
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+          format: int32
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoogleProtobufAny'
+          description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+      description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'

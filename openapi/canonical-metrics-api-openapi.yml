@@ -1,0 +1,139 @@
+openapi: 3.2.0
+info:
+  title: Canonical Metrics API
+  version: '1.0'
+  description: 'Operations tagged metrics across 2 of this provider''s published API definitions: canonical-lxd-rest-api-openapi.yml, canonical-pebble-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Metrics
+paths:
+  /1.0/metrics:
+    get:
+      description: Gets metrics of instances.
+      operationId: metrics_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Metrics
+          content:
+            text/plain:
+              schema:
+                description: Instance metrics
+                type: string
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get metrics
+      tags:
+      - Metrics
+  /v1/metrics:
+    get:
+      summary: Get Pebble metrics
+      description: 'Get Pebble services and health checks metrics in OpenMetrics format.
+
+
+        When used over TCP, this endpoint requires HTTP basic authentication using an identity of type "basic". See Identities for more information.'
+      tags:
+      - Metrics
+      responses:
+        '200':
+          description: Metrics in OpenMetrics format.
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: OpenMetrics format metrics.
+              example: '# HELP pebble_service_start_count Number of times the service has started
+
+                # TYPE pebble_service_start_count counter
+
+                pebble_service_start_count{service="svc1"} 1
+
+
+                # HELP pebble_service_active Whether the service is currently active (1) or not (0)
+
+                # TYPE pebble_service_active gauge
+
+                pebble_service_active{service="svc1"} 1
+
+
+                # HELP pebble_check_up Whether the health check is up (1) or not (0)
+
+                # TYPE pebble_check_up gauge
+
+                pebble_check_up{check="chk1"} 1
+
+
+                # HELP pebble_check_success_count Number of times the check has succeeded
+
+                # TYPE pebble_check_success_count counter
+
+                pebble_check_success_count{check="chk1"} 2
+
+
+                # HELP pebble_check_failure_count Number of times the check has failed
+
+                # TYPE pebble_check_failure_count counter
+
+                pebble_check_failure_count{check="chk1"} 2
+
+                '
+      operationId: getV1Metrics
+      x-operation-id-source: derived
+components:
+  responses:
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+x-refined-from:
+- canonical-lxd-rest-api-openapi.yml
+- canonical-pebble-api-openapi.yml

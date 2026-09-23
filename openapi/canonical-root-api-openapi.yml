@@ -1,0 +1,292 @@
+openapi: 3.2.0
+info:
+  title: Snapd REST Root API
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.txt
+  version: '1.0'
+  description: 'The REST API provides access to snapd''s state and many of its key functions,
+
+    as listed below.
+
+
+    For general information on how to use the API, including how to access it,
+
+    its requests and responses, results fields and error types, see Using the
+
+    REST API.'
+servers:
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
+tags:
+- name: Root
+  description: Requires the user to authenticate with root access.
+paths:
+  /v2/users:
+    get:
+      tags:
+      - Root
+      summary: Get user accounts
+      description: Get information on user accounts on the system.
+      operationId: getUsers
+      security:
+      - PeerAuth: []
+      responses:
+        '200':
+          description: An array of user account information.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags:
+      - Root
+      summary: Manage users
+      description: Create or remove local users on the system.
+      operationId: manageUsers
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - create
+                  - remove
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                sudoer:
+                  type: boolean
+                  default: false
+                  description: Whether the user can escalate to root privileges or not.
+                known:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: A list of objects with the created user details.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    ssh-keys:
+                      type: array
+                      items:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+components:
+  schemas:
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    User:
+      type: object
+      description: Represents a user account on the system.
+      required:
+      - id
+      - email
+      properties:
+        id:
+          type: integer
+          description: 'The unique numeric ID for this user account. This is not related to the
+
+            user''s linux UID.'
+          example: 1
+        username:
+          type: string
+          description: The local username associated with this account.
+          example: local-username
+        email:
+          type: string
+          format: email
+          description: The email address associated with the launchpad account.
+          example: first-name.last-name@example.com
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    MethodNotAllowed:
+      description: The requested method is not allowed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 405
+              status:
+                type: string
+                enum:
+                - Method Not Allowed
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: system user administration via snapd is not allowed on this system
+    Forbidden:
+      description: 'Forbidden. The server understood the request but refuses to authorize it
+
+        because the authenticated user lacks the necessary permissions for the target
+
+        resource.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 403
+              status:
+                type: string
+                enum:
+                - Forbidden
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    enum:
+                    - auth-cancelled
+                  message:
+                    type: string
+                    enum:
+                    - cancelled
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation

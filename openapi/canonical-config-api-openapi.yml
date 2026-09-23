@@ -1,0 +1,483 @@
+openapi: 3.2.0
+info:
+  description: 'The Anbox Management Service (AMS) external REST API is the REST API used by
+
+    all AMS clients. Note that internal endpoints are not included in this
+
+    documentation.
+
+
+    The AMS API is available over both a local unix+http and a remote https API.
+
+    Authentication for local users relies on group membership and access to the
+
+    unix socket. For remote users, the default authentication method is TLS client
+
+    certificates.'
+  title: AMS external REST Config API
+  version: '1.0'
+tags:
+- name: Config
+paths:
+  /1.0/config:
+    get:
+      description: This endpoint shows the current configuration values for the service.
+      tags:
+      - Config
+      summary: Get the current configuration of the service
+      operationId: config_get
+      responses:
+        '200':
+          description: Current config for the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      config:
+                        description: Configuration of the service
+                        type: object
+                        properties:
+                          agent.api.fingerprint:
+                            description: Fingerprint of certificate in the AMS trust store which is trusted when communicating with the stream agent
+                            type: string
+                            default: ''
+                            example: fd42316b32df
+                          agent.api.token:
+                            description: Token to be used for API authentication with stream agent
+                            type: string
+                            default: ''
+                            example: foobar
+                          agent.api.url:
+                            description: URL for stream agent API endpoint
+                            type: string
+                            default: ''
+                            example: https://foo.bar:9001
+                          application.addons:
+                            description: Enable addons globally for applications
+                            type: string
+                            default: ''
+                            example: my-addon
+                          application.auto_publish:
+                            description: Automatically publish the latest version for an application
+                            type: boolean
+                            default: true
+                          application.auto_update:
+                            description: Automatically update the images and applications to the latest versions
+                            type: boolean
+                            default: true
+                          application.default_abi:
+                            description: Set a default support ABI architecture globally
+                            type: string
+                            default: ''
+                            example: arm64-v8a
+                          application.max_published_versions:
+                            description: Set the maximum number of application versions to publish
+                            type: integer
+                            format: int32
+                            default: 3
+                            example: 3
+                          container.apt_mirror:
+                            description: APT mirror to use for downloading dependencies inside the container
+                            type: string
+                            default: ''
+                            example: http://ports.ubuntu.com/ubuntu-ports
+                          container.default_platform:
+                            description: Platform to be forwarded to the container for running audio/video operations
+                            type: string
+                            default: 'null'
+                            enum:
+                            - 'null'
+                            - webrtc
+                            - swrast
+                            example: webrtc
+                          container.features:
+                            description: Enable additional android features
+                            type: string
+                            default: ''
+                            example: enable_virtual_keyboard,foo
+                          container.security_updates:
+                            description: Enable/disable security update for containers
+                            type: boolean
+                            default: true
+                          core.debug_address:
+                            description: Address used to expose debug information on
+                            type: string
+                            default: ''
+                            example: https://127.0.0.1:9090
+                          core.proxy_http:
+                            description: Proxy variables inside container
+                            type: string
+                            default: ''
+                            example: http://my-proxy:8000
+                          core.proxy_https:
+                            description: Proxy variables inside container
+                            type: string
+                            default: ''
+                            example: http://my-proxy:8000
+                          core.proxy_ignore_hosts:
+                            description: Proxy variables inside container
+                            type: string
+                            default: ''
+                            example: localhost,127.0.0.1
+                          core.trust_password:
+                            description: 'Trust password used to add remote clients.
+
+                              AMS does not expose the actual password
+
+                              but only the fact that it is set or not.'
+                            type: string
+                            default: ''
+                            example: sUp3rS3cR3t
+                          cpu.limit_mode:
+                            description: CPU limiting strategies used for a container
+                            type: string
+                            default: scheduler
+                            enum:
+                            - scheduler
+                            - pinning
+                            example: scheduler
+                          gpu.allocation_mode:
+                            description: GPU allocation mode
+                            type: string
+                            default: single
+                            enum:
+                            - all
+                            - single
+                            example: single
+                          gpu.type:
+                            description: GPU type. Can be `none`, `nvidia`, `intel` or `amd`
+                            type: string
+                            default: none
+                            enum:
+                            - none
+                            - nvidia
+                            - amd
+                            - intel
+                            example: none
+                          images.allow_insecure:
+                            description: Allow insecure TLS for accessing image registry
+                            type: boolean
+                            default: false
+                          images.auth:
+                            description: Auth token required to access the image registry
+                            type: string
+                            default: ''
+                            example: user:password
+                          images.update_interval:
+                            description: Interval used to check for image updates
+                            type: string
+                            default: 5m
+                            example: 5m
+                          images.url:
+                            description: Image registry URL
+                            type: string
+                            default: https://images.anbox-cloud.io/stable/
+                            example: https://images.anbox-cloud.io/stable/
+                          images.version_lockstep:
+                            description: Lock latest image version to align with latest AMS version
+                            type: boolean
+                            default: true
+                          instance.apt_mirror:
+                            description: APT mirror to use for downloading dependencies inside the instance
+                            type: string
+                            default: ''
+                            example: http://ports.ubuntu.com/ubuntu-ports
+                          instance.default_platform:
+                            description: Platform to be forwarded to the instance for running audio/video operations
+                            type: string
+                            default: 'null'
+                            enum:
+                            - 'null'
+                            - webrtc
+                            - swrast
+                            example: webrtc
+                          instance.features:
+                            description: Enable additional android features
+                            type: string
+                            default: ''
+                            example: enable_virtual_keyboard,foo
+                          instance.security_updates:
+                            description: Enable/disable security update for instance
+                            type: boolean
+                            default: true
+                          load_balancer.url:
+                            description: Set host URL for AMS to loadbalancer's URL
+                            type: string
+                            default: ''
+                            example: https://load-balanced-ams.com
+                          node.queue_size:
+                            description: Queue size for internal AMS workers
+                            type: integer
+                            format: int32
+                            default: 100
+                            example: 100
+                          node.workers_per_queue:
+                            description: Number of internal workers for AMS
+                            type: integer
+                            format: int32
+                            default: 4
+                            example: 4
+                          registry.filter:
+                            description: Tag filters used for selecting applications when interacting with the registry
+                            type: string
+                            default: ''
+                            example: foo,bar
+                          registry.fingerprint:
+                            description: Fingerprint used to verify the ceritifcate of the application registry
+                            type: string
+                            default: ''
+                            example: my-registry-fingerprint
+                          registry.mode:
+                            description: Mode used to interact with the registry
+                            type: string
+                            default: pull
+                            enum:
+                            - push
+                            - pull
+                            - manual
+                            example: pull
+                          registry.update_interval:
+                            description: Interval used for checking for updates to applications
+                            type: string
+                            default: 1h
+                            example: 1h
+                          registry.url:
+                            description: Application registry URL
+                            type: string
+                            default: ''
+                            example: https://foo.bar/
+                          scheduler.strategy:
+                            description: Container scheduling startegy
+                            type: string
+                            default: spread
+                            enum:
+                            - spread
+                            - binpack
+                            example: spread
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      description: This endpoint updates the configuration items for the service.
+      tags:
+      - Config
+      summary: Update service configuration
+      operationId: config_patch
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigPost'
+        description: Configuration items to change
+components:
+  responses:
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+  schemas:
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    ConfigPost:
+      description: ConfigPost contains the field necessary to set or update a config item
+      type: object
+      properties:
+        name:
+          type: string
+          example: application.auto_publish
+        value:
+          type: string
+          example: 'false'
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync

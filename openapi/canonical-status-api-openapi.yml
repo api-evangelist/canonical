@@ -1,0 +1,151 @@
+openapi: 3.2.0
+info:
+  description: The Anbox Stream Gateway provides federated access to Anbox Cloud regions.
+  title: Anbox Stream Gateway Status API
+  contact:
+    name: Canonical
+    url: https://ubuntu.com/support
+    email: indore@lists.canonical.com
+  license:
+    name: Proprietary
+  version: '1.0'
+servers:
+- url: /1.0/
+tags:
+- name: Status
+paths:
+  /1.0/status:
+    get:
+      description: 'Returns the current status of the Gateway service along with some indicators that
+
+        can be helpful to determine larger issues. The Gateway can be either healthy or unhealthy.
+
+        Please note that a healthy status does not necessarily mean that a deployment is fully working.
+
+        Other issues can affect the Streaming Stack but a healthy status only guarantees that the Gateway itself
+
+        is not experiencing issues that would prevent it from working normally.
+
+        Checking for status can take up to 7 seconds. Note that this is the upper bound, in normal
+
+        circumstances, the timing will be much lower and timings higher than a couple seconds are usually
+
+        indicators or something wrong (network issue, node restarted, etc).'
+      tags:
+      - Status
+      summary: Returns the Gateway service status
+      operationId: handle-get-status
+      responses:
+        '200':
+          description: Only status is present if the request is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.StatusGetResponseAuthenticated'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_gateway.Response'
+        '503':
+          description: The Gateway is not fully started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api_gateway.Response'
+components:
+  schemas:
+    api_gateway.ResponseStatus:
+      type: string
+      enum:
+      - success
+      - failed
+      - unknown
+      x-enum-varnames:
+      - ResponseStatusSuccess
+      - ResponseStatusFailed
+      - ResponseStatusUnknown
+    api.StatusGetResponseAuthenticated:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          $ref: '#/components/schemas/api.StatusGetResponseAuthenticatedData'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api_gateway.ServiceStatus:
+      type: string
+      enum:
+      - healthy
+      - unhealthy
+      x-enum-varnames:
+      - ServiceStatusHealthy
+      - ServiceStatusUnhealthy
+    api_gateway.ResponseType:
+      type: string
+      enum:
+      - sync
+      - async
+      - error
+      x-enum-varnames:
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError
+    api.StatusGetResponseAuthenticatedData:
+      type: object
+      properties:
+        agents:
+          type: integer
+        database_nodes:
+          type: integer
+        status:
+          $ref: '#/components/schemas/api_gateway.ServiceStatus'
+    api_gateway.Response:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync

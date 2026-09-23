@@ -1,0 +1,815 @@
+openapi: 3.2.0
+info:
+  description: 'The Anbox Management Service (AMS) external REST API is the REST API used by
+
+    all AMS clients. Note that internal endpoints are not included in this
+
+    documentation.
+
+
+    The AMS API is available over both a local unix+http and a remote https API.
+
+    Authentication for local users relies on group membership and access to the
+
+    unix socket. For remote users, the default authentication method is TLS client
+
+    certificates.'
+  title: AMS external REST Nodes API
+  version: '1.0'
+tags:
+- name: Nodes
+paths:
+  /1.0/nodes:
+    get:
+      description: This endpoint returns a list of available nodes known to AMS.
+      tags:
+      - Nodes
+      summary: Get a list of nodes
+      operationId: nodes_get
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/nodes/foo\",\n  \"/1.0/nodes/bar\"\n ]"
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      description: 'This endpoint creates a node in AMS which can be a precreated (unmanaged)
+
+        LXD node or a managed node created by AMS bootstrapping LXD.'
+      tags:
+      - Nodes
+      summary: Create a node
+      operationId: node_post
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodesPost'
+        description: AMS Node to create
+  /1.0/nodes/{name}:
+    get:
+      description: 'This endpoint returns information about a node in AMS and its resources from
+
+        the LXD cluster.'
+      tags:
+      - Nodes
+      summary: Get information about a node
+      operationId: node_get
+      parameters:
+      - description: Name of the node to get
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Node'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: This endpoint deletes a node in AMS and its resources from the LXD cluster.
+      tags:
+      - Nodes
+      summary: Delete a node
+      operationId: node_delete
+      parameters:
+      - description: Name of the node to delete
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeDelete'
+        description: Info required to delete the resource
+    patch:
+      description: This endpoint updates a node and its resources in the cluster.
+      tags:
+      - Nodes
+      summary: Update a node
+      operationId: node_patch
+      parameters:
+      - description: Etag of the resource
+        name: Etag
+        in: header
+        schema:
+          type: string
+      - description: Name of the node to delete
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodePatch'
+        description: Info required to update the resource
+  /1.0/nodes?recursion=1:
+    get:
+      description: This endpoint returns a list of available nodes known to AMS.
+      tags:
+      - Nodes
+      summary: Get a list of nodes
+      operationId: nodes_get_recursion1
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Node'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    NodeVPU:
+      description: NodeVPU describes a single independent VPU available on a node
+      type: object
+      properties:
+        allocations:
+          description: Map of current allocations on the VPU
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NodeVPUAllocation'
+        id:
+          description: ID of the VPU
+          type: integer
+          format: uint64
+        model:
+          description: Model name of the VPU
+          type: string
+        numa_node:
+          description: NUMA node the card sits on
+          type: integer
+          format: uint64
+        slots:
+          description: Number of slots available on the VPU
+          type: integer
+          format: int64
+        type:
+          description: 'Type of the VPU. Valid values are: unknown, netint'
+          type: string
+    NodesPost:
+      description: NodesPost describes a request to create a new node on AMS
+      type: object
+      properties:
+        address:
+          description: Internal IP address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        cpu_allocation_rate:
+          description: CPU allocation rate for the node
+          type: number
+          format: float
+          example: 4
+        cpus:
+          description: Number of CPUs on the node
+          type: integer
+          format: int64
+          example: 4
+        gpu_encoder_slots:
+          description: Number of GPU encoder slots to configure on the node
+          type: integer
+          format: int64
+          example: 4
+        gpu_slots:
+          description: Number of GPU slots to configure on the node
+          type: integer
+          format: int64
+          example: 2
+        memory:
+          description: Memory (in GB) of the node
+          type: string
+          example: 8GB
+        memory_allocation_rate:
+          description: Memory allocation rate for the node
+          type: number
+          format: float
+          example: 2
+        name:
+          description: Name of the node
+          type: string
+          example: lxd0
+        network_acl_name:
+          description: Name of the network ACL to create on the LXD node
+          type: string
+          example: ams0
+        network_bridge_mtu:
+          description: MTU for the configured network bridge on LXD
+          type: integer
+          format: int64
+          example: 1500
+        network_name:
+          description: Name of the network bridge to create on the LXD node
+          type: string
+          example: amsbr0
+        network_subnet:
+          description: CIDR of the subnet to configure for the network bridge on LXD
+          type: string
+          format: ipv4
+          example: 10.0.0.0/24
+        public_address:
+          description: Public IP address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        storage_device:
+          description: Storage device to use for configuring LXD storage pools
+          type: string
+          example: /dev/sdb
+        storage_pool:
+          description: Name of the storage pool to use for configuring the LXD node
+          type: string
+          example: default
+        tags:
+          description: Tags to attach to the node
+          type: array
+          items:
+            type: string
+          example:
+          - created_by=anbox
+          - gpu=nvidia
+        trust_password:
+          description: Trust password for the LXD instance
+          type: string
+          example: sUp3rs3cr3t
+        unmanaged:
+          description: Flag used to control if AMS can manage the LXD node
+          type: boolean
+          example: false
+    NodeDelete:
+      description: NodeDelete describes a request used to delete a node
+      type: object
+      properties:
+        force:
+          description: Use this to force deletion of a node from AMS and LXD cluster
+          type: boolean
+          example: true
+        keep_in_cluster:
+          description: Use this to remove the node from the LXD cluster as well
+          type: boolean
+          example: true
+    NodeGPUAllocation:
+      description: NodeGPUAllocation describes a single allocation on a GPU
+      type: object
+      properties:
+        encoder_slots:
+          description: Number of Encoder Slots allocated to the container
+          type: integer
+          format: int64
+          example: 1
+        gpus:
+          description: List of GPU IDs allocated to the container
+          type: array
+          items:
+            type: integer
+            format: uint64
+          example:
+          - 0
+          - 1
+        slots:
+          description: Number of GPU Slots allocated to the container
+          type: integer
+          format: int64
+          example: 1
+    NodeGPU:
+      description: NodeGPU describes a single GPU available on a node
+      type: object
+      properties:
+        allocations:
+          description: Map of current allocations and containers on the GPU
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NodeGPUAllocation'
+        encoder_slots:
+          description: Number of the encoder slots available on the GPU
+          type: integer
+          format: int64
+          example: 20
+        id:
+          description: ID of the GPU configured on the node
+          type: integer
+          format: uint64
+          example: 0
+        numa_node:
+          description: NUMA Node number for the GPU
+          type: integer
+          format: uint64
+          example: 0
+        pci_address:
+          description: PCI Bus Address used by the GPU
+          type: string
+          example: '00:08.0'
+        render_name:
+          description: PCI Bus Address used by the GPU
+          type: string
+          example: D129
+        slots:
+          description: Number of the GPU slots available
+          type: integer
+          format: int64
+          example: 20
+    Node:
+      description: Node describes a single node of the underlying LXD cluster AMS manages
+      type: object
+      properties:
+        address:
+          description: Internal IP address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        architecture:
+          description: CPU architecture of the node
+          type: string
+          example: aarch64
+        cpu_allocation_rate:
+          description: CPU allocation rate for the node
+          type: number
+          format: float
+          example: 4
+        cpus:
+          description: Number of CPUs on the node
+          type: integer
+          format: int64
+          example: 4
+        disk_size:
+          description: Disk size for the node
+          type: string
+          example: 'true'
+        gpu_encoder_slots:
+          description: Number of GPU encoder slots present on the node
+          type: integer
+          format: int64
+          example: 0
+        gpu_slots:
+          description: Number of GPU slots present on the node
+          type: integer
+          format: int64
+          example: 0
+        gpus:
+          description: GPU information for the node
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeGPU'
+        is_master:
+          description: Flag to represent the master node for the AMS cluster
+          type: boolean
+          example: true
+        managed:
+          description: Flag used to control if AMS can manage the LXD node
+          type: boolean
+          example: false
+        memory:
+          description: Memory (in GB) of the LXD node
+          type: string
+          example: 8GB
+        memory_allocation_rate:
+          description: Memory allocation rate for the node
+          type: number
+          format: float
+          example: 2
+        name:
+          description: Name of the node
+          type: string
+          example: lxd0
+        network_bridge_mtu:
+          description: MTU for the configured network bridge on LXD
+          type: integer
+          format: int64
+          example: 1500
+        public_address:
+          description: Public IP address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        status:
+          description: Current status of the node
+          type: string
+          example: online
+        status_code:
+          $ref: '#/components/schemas/NodeStatus'
+        storage_pool:
+          description: Name of the storage pool configured for the node
+          type: string
+          example: default
+        tags:
+          description: Tags attached to the node
+          type: array
+          items:
+            type: string
+          example:
+          - created_by=anbox
+          - gpu=nvidia
+        unscheduable:
+          description: DEPRECATED Flag in favour of `unschedulable` flag
+          type: boolean
+          example: false
+        unschedulable:
+          description: Flag used to see if the node is available to schedule containers
+          type: boolean
+          example: false
+        vpus:
+          description: VPU information for the node
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeVPU'
+    NodeGPUPatch:
+      description: NodeGPUPatch allows changing configuration for individual GPUs
+      type: object
+      properties:
+        encoder_slots:
+          description: Update the number of GPU encoder slots
+          type: integer
+          format: int64
+          example: 4
+        id:
+          description: ID of the GPU configured on the node
+          type: integer
+          format: uint64
+          example: 0
+        slots:
+          description: Update the number of the GPU slots available on the Node
+          type: integer
+          format: int64
+          example: 20
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    NodePatch:
+      description: NodePatch describes a request to update an existing node
+      type: object
+      properties:
+        cpu_allocation_rate:
+          description: Update the CPU allocation rate for the node
+          type: number
+          format: float
+          example: 4
+        cpus:
+          description: Update the number of CPUs for the node
+          type: integer
+          format: int64
+          example: 4
+        gpu_encoder_slots:
+          description: Update the number of GPU encoder slots to configure on the node
+          type: integer
+          format: int64
+          example: 4
+        gpu_slots:
+          description: Update the number of GPU slots to configure on the node
+          type: integer
+          format: int64
+          example: 2
+        gpus:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeGPUPatch'
+        memory:
+          description: Update the memory (in GB) for the node
+          type: string
+          example: 2GB
+        memory_allocation_rate:
+          description: Update the memory allocation rate for the node
+          type: number
+          format: float
+          example: 2
+        public_address:
+          description: Update the public IP Address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        subnet:
+          description: Update the subnet info of the node if the subnet of a node is changed
+          type: string
+          format: ipv4
+          example: 10.0.0.1/24
+        tags:
+          description: Update the tags of the node
+          type: array
+          items:
+            type: string
+          example:
+          - created_by=anbox
+          - gpu=nvidia
+        unscheduable:
+          description: DEPRECATED Flag in favour of `unschedulable` flag
+          type: boolean
+          example: false
+        unschedulable:
+          description: Flag used to remove the node from scheduler and not schedule containers on it
+          type: boolean
+          example: true
+    NodeVPUAllocation:
+      description: NodeVPUAllocation describes a single allocation for a VPU
+      type: object
+      properties:
+        ids:
+          description: VPU IDs the allocation is for
+          type: array
+          items:
+            type: integer
+            format: uint64
+        slots:
+          description: Number of slots used by this allocation
+          type: integer
+          format: int64
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    NodeStatus:
+      description: NodeStatus describes the current status of a node
+      type: integer
+      format: int64
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error

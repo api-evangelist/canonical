@@ -1,0 +1,57 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Metrics Service API
+  version: '0.1'
+tags:
+- name: MetricsService
+paths:
+  /api/v0/metrics:
+    get:
+      operationId: MetricsService_ListMetrics
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - MetricsService
+      summary: Metrics service list metrics
+      x-summary-source: derived
+components:
+  schemas:
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

@@ -1,0 +1,94 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Status Service API
+  version: '0.1'
+tags:
+- name: StatusService
+paths:
+  /api/v0/status:
+    get:
+      operationId: StatusService_GetStatus
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apistatusStatus'
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - StatusService
+      summary: Status service get status
+      x-summary-source: derived
+  /api/v0/version:
+    get:
+      operationId: StatusService_GetVersion
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statusBuildInfo'
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - StatusService
+      summary: Status service get version
+      x-summary-source: derived
+components:
+  schemas:
+    statusBuildInfo:
+      properties:
+        commit_hash:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+      type: object
+    apistatusStatus:
+      properties:
+        buildInfo:
+          $ref: '#/components/schemas/statusBuildInfo'
+        status:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

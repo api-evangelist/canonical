@@ -1,0 +1,1118 @@
+openapi: 3.2.0
+info:
+  description: 'The Anbox Management Service (AMS) external REST API is the REST API used by
+
+    all AMS clients. Note that internal endpoints are not included in this
+
+    documentation.
+
+
+    The AMS API is available over both a local unix+http and a remote https API.
+
+    Authentication for local users relies on group membership and access to the
+
+    unix socket. For remote users, the default authentication method is TLS client
+
+    certificates.'
+  title: AMS external REST Containers API
+  version: '1.0'
+tags:
+- name: Containers
+paths:
+  /1.0/containers:
+    get:
+      description: This endpoint returns a list of container API endpoints.
+      tags:
+      - Containers
+      summary: Get a list of containers
+      operationId: containers_get
+      parameters:
+      - description: Maximum number of containers to provide
+        name: limit
+        in: query
+        schema:
+          type: integer
+      - description: Offset at which to start with listing containers
+        name: offset
+        in: query
+        schema:
+          type: integer
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      - example: cilsreunfpfec9b1ktg0
+        description: Filter containers by id. This is an exact match for the string.
+        name: id
+        in: query
+        schema:
+          type: string
+      - example: ams-cilsreunfpfec9b1ktg0
+        description: Filter containers by name. This is an exact match for the string.
+        name: name
+        in: query
+        schema:
+          type: string
+      - description: Filter containers by type.
+        name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - base
+          - regular
+      - description: Filter containers by status.
+        name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - created
+          - prepared
+          - stopped
+          - running
+          - error
+          - deleted
+      - example: lxd0
+        description: Filter containers by the LXD node name.
+        name: node
+        in: query
+        schema:
+          type: string
+      - example: cilsiomnfpfec9b1kteg
+        description: Filter containers by the application ID. This is an exact match for the string.
+        name: app_id
+        in: query
+        schema:
+          type: string
+      - example: my-app
+        description: Filter containers by the application name. This is an exact match for the string.
+        name: app_name
+        in: query
+        schema:
+          type: string
+      - example: 0
+        description: Filter containers by the application version.
+        name: app_version
+        in: query
+        schema:
+          type: integer
+      - example: cilsiomnfpfec9b1kteg
+        description: Filter containers by the image ID. This is an exact match for the string.
+        name: image_id
+        in: query
+        schema:
+          type: string
+      - example: 0
+        description: Filter containers by the image version.
+        name: image_version
+        in: query
+        schema:
+          type: integer
+      - example: created_by=anbox,foo,bar
+        description: Filter containers by tags.
+        name: tags
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/containers/foo\",\n  \"/1.0/containers/bar\"\n]"
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      description: 'This endpoint creates a new container instance with the provided specification.
+
+        If AMS cannot fullfil the resource requirements for creating the instance,
+
+        the request will fail.'
+      tags:
+      - Containers
+      summary: Create a new container instance
+      operationId: containers_post
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContainersPost'
+        description: Specification of the container to create
+    delete:
+      description: 'This endpoint deletes all specified containers. If the deletion of a single
+
+        container fails, the operation is aborted and an error is returned.'
+      tags:
+      - Containers
+      summary: Delete multiple containers
+      operationId: containers_delete
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContainersDelete'
+        description: List of containers to delete
+  /1.0/containers/{id}:
+    get:
+      description: This endpoint returns information about a specific container instance.
+      tags:
+      - Containers
+      summary: Get information about a specific container instance
+      operationId: container_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Container instance details
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Container'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: 'This endpoint deletes a specific container. The deletion process happens
+
+        asynchronously. The operation progress can be checked via the returned
+
+        operation object.'
+      tags:
+      - Containers
+      summary: Delete a specific container
+      operationId: container_delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContainerDelete'
+        description: Additional details for the delete operation.
+    patch:
+      description: This endpoint allows changing the state of a specific container instance.
+      tags:
+      - Containers
+      summary: Update the state of a specific container instance
+      operationId: container_patch
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContainerPatch'
+  /1.0/containers/{id}/exec:
+    post:
+      description: 'This endpoint is used to run a command in the container. The endpoint returns
+
+        an operation which will contain either 2 or 4 websockets.
+
+        In non-interactive mode, you''ll get one websocket for each of stdin, stdout and stderr.
+
+        In interactive mode, a single bi-directional websocket is used for stdin and stdout/stderr.
+
+
+        An additional "control" socket is always added on top which can be used for out of band
+
+        communication with LXD. This allows sending signals and window sizing information through.'
+      tags:
+      - Containers
+      summary: Execute a command in a container
+      operationId: container_exec_post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContainerExecPost'
+        description: Exec request
+  /1.0/containers/{id}/logs:
+    get:
+      description: 'This endpoint returns a container''s collected log files. If a container has
+
+        been set to status "error" AMS will automatically collect, logs for further
+
+        inspection.'
+      tags:
+      - Containers
+      summary: Get a list of collected log files for the container
+      operationId: container_logs_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Collected log files
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    description: List of collected logs
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n \"/1.0/containers/cilsiomnfpfec9b1kteg/logs/android.log\",\n \"/1.0/containers/cilsiomnfpfec9b1kteg/logs/system.log\"\n]"
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/containers/{id}/logs/{name}:
+    get:
+      description: This endpoint returns the collected log file as a raw file.
+      tags:
+      - Containers
+      summary: Retrieve a specific log file stored for the container
+      operationId: container_logs_specific_get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Name of the log to retrieve
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Raw file
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/containers?recursion=1:
+    get:
+      description: This endpoint returns a list of containers.
+      tags:
+      - Containers
+      summary: Get a list of containers
+      operationId: containers_get_recursion1
+      parameters:
+      - description: Maximum number of containers to provide
+        name: limit
+        in: query
+        schema:
+          type: integer
+      - description: Offset at which to start with listing containers
+        name: offset
+        in: query
+        schema:
+          type: integer
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      - example: cilsreunfpfec9b1ktg0
+        description: Filter containers by id. This is an exact match for the string.
+        name: id
+        in: query
+        schema:
+          type: string
+      - example: ams-cilsreunfpfec9b1ktg0
+        description: Filter containers by name. This is an exact match for the string.
+        name: name
+        in: query
+        schema:
+          type: string
+      - description: Filter containers by type.
+        name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - base
+          - regular
+      - description: Filter containers by status.
+        name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - created
+          - prepared
+          - stopped
+          - running
+          - error
+          - deleted
+      - example: lxd0
+        description: Filter containers by the LXD node name.
+        name: node
+        in: query
+        schema:
+          type: string
+      - example: cilsiomnfpfec9b1kteg
+        description: Filter containers by the application ID. This is an exact match for the string.
+        name: app_id
+        in: query
+        schema:
+          type: string
+      - example: my-app
+        description: Filter containers by the application name. This is an exact match for the string.
+        name: app_name
+        in: query
+        schema:
+          type: string
+      - example: 0
+        description: Filter containers by the application version.
+        name: app_version
+        in: query
+        schema:
+          type: integer
+      - example: cilsiomnfpfec9b1kteg
+        description: Filter containers by the image ID. This is an exact match for the string.
+        name: image_id
+        in: query
+        schema:
+          type: string
+      - example: 0
+        description: Filter containers by the image version.
+        name: image_version
+        in: query
+        schema:
+          type: integer
+      - example: created_by=anbox,foo,bar
+        description: Filter containers by tags.
+        name: tags
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    description: List of containers
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Container'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    NetworkServiceSpec:
+      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+      type: object
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the container a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the container to expose the service correctly.
+
+            Exampe: ssh'
+          type: string
+        port:
+          description: Port is the port the container provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: 'PortEnd is the end of the port range set for a service. If empty, only a
+
+            single port is opened'
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    ContainerStatus:
+      description: ContainerStatus represents the status a container can be in
+      type: integer
+      format: int64
+    ContainerPatch:
+      description: ContainerPatch describes the fields which can be changed for an existing container
+      type: object
+      properties:
+        desired_status:
+          description: Desired status of the container
+          type: string
+    ContainerService:
+      description: 'While NetworkServiceSpec defines what the user requests, ContainerService is what is actually
+
+        opened on the container.'
+      type: object
+      title: ContainerService describes a single service the container exposes to the outside world.
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the container a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the container to expose the service correctly.'
+          type: string
+          example: myservice
+        node_port:
+          description: 'NodePort is the port used on the LXD node to map to the service port
+
+            If left empty the node port is automatically selected.'
+          type: integer
+          format: int64
+          example: 4000
+        node_port_end:
+          description: 'NodePortEnd, if specified, denotes the end of the port range on the node starting
+
+            at NodePort'
+          type: integer
+          format: int64
+          example: 4010
+        port:
+          description: Port is the port the container provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: PortEnd, if specified, denotes the end of the port range starting at Port
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    Container:
+      description: Container represents a single container
+      type: object
+      properties:
+        address:
+          description: Address is the IP address of the container
+          type: string
+          example: 192.168.1.74
+        app_id:
+          description: 'AppID is the ID of the application the container is created from. Empty if the
+
+            container has not been created from an application.'
+          type: string
+          example: cilsiomnfpfec9b1kteg
+        app_name:
+          description: 'AppName is the name of the application the container is created from. Empty if the
+
+            container has not been created from an application.'
+          type: string
+          example: myapp
+        app_version:
+          description: 'AppVersion is the version of the application the container is created from. Empty if the
+
+            container has not been created from an application.'
+          type: integer
+          format: int64
+          example: 0
+        architecture:
+          description: Architecture describes the CPU archtitecture the container is using
+          type: string
+          example: aarch64
+        config:
+          description: Config summarizes the configuration the container uses
+          type: object
+          properties:
+            boot_activity:
+              description: BootActivity specifies the Android activity which is started by default
+              type: string
+              example: com.android.settings/.DevSettings
+            boot_package:
+              description: BootPackage specifies the Android application package name which is started by default
+              type: string
+              example: com.android.settings
+            devmode:
+              description: DevMode specifies if development mode has been turned on for the container
+              type: boolean
+            disable_watchdog:
+              description: DisableWatchdog defines whether the watchdog is disabled
+              type: boolean
+            metrics_server:
+              description: MetricsServer specifies a metrics server the container will use
+              type: string
+              example: 10.0.0.45:8086
+            platform:
+              description: Platform specifies the Anbox platform the container is running with
+              type: string
+              example: webrtc
+        created_at:
+          description: CreatedAt specifies the time at which the container was created
+          type: integer
+          format: int64
+          example: 1689604498
+        error_message:
+          description: ErrorMessage provides an error message when the container status is set to error.
+          type: string
+          example: container failed to boot
+        id:
+          description: ID of the container
+          type: string
+          example: cilsreunfpfec9b1ktg0
+        image_id:
+          description: 'ImageID is the ID of the image the container is created from. Empty if the
+
+            container has not been created from an image.'
+          type: string
+          example: cilshrmnfpfec9b1kte0
+        image_version:
+          description: 'ImageVersion is the version of the image the container is created from. Empty if the
+
+            container has not been created from an image.'
+          type: integer
+          format: int64
+          example: 0
+        name:
+          description: Name of the container. Typically in the format "ams-<ID>".
+          type: string
+          example: ams-cilsreunfpfec9b1ktg0
+        node:
+          description: Node the container is running on
+          type: string
+          example: lxd0
+        public_address:
+          description: 'PublicAddress is the external IP address the container is accessible on (in most
+
+            cases the IP of the node it is running on)'
+          type: string
+          example: 1.2.3.4
+        resources:
+          description: Resources specifies the resources allocated for the container
+          type: object
+          properties:
+            cpus:
+              description: CPUs cores assigned to the container
+              type: integer
+              format: int64
+              example: 2
+            disk-size:
+              description: DiskSize specifies the amount of storage assigned to the container
+              type: string
+              example: 3GB
+            gpu-slots:
+              description: GPUSlots specifies the number of GPU slots the container got allocated
+              type: integer
+              format: int64
+              example: 1
+            memory:
+              description: Memory assigned to the container
+              type: string
+              example: 3GB
+            vpu-slots:
+              description: VPUSlots specifies the number of VPU slots the container
+              type: integer
+              format: int64
+        services:
+          description: Services the container exposes
+          type: array
+          items:
+            $ref: '#/components/schemas/ContainerService'
+        status:
+          description: Status of the container
+          type: string
+          example: running
+        status_code:
+          $ref: '#/components/schemas/ContainerStatus'
+        stored_logs:
+          description: StoredLogs lists log files AMS stores for the container.
+          type: array
+          items:
+            type: string
+          example:
+          - android.log
+          - system.log
+        tags:
+          description: Tags specifies the tags the container has assigned
+          type: array
+          items:
+            type: string
+          example:
+          - foo
+          - bar
+        type:
+          $ref: '#/components/schemas/ContainerType'
+    ContainersPost:
+      description: 'ContainersPost represents the fields required to launch a new container for
+
+        a specific application'
+      type: object
+      properties:
+        addons:
+          description: Addons to enable for the container
+          type: array
+          items:
+            type: string
+          example:
+          - addon0
+          - addon1
+        app_id:
+          description: ID of the application to use. Can be empty if an image ID is specified instead
+          type: string
+          example: cilsiomnfpfec9b1kteg
+        app_version:
+          description: Version of the application to use. If not specified, the latest version is used.
+          type: integer
+          format: int64
+          example: 0
+        config:
+          type: object
+          properties:
+            boot_activity:
+              description: BootActivity specifies the Android activity which is started by default
+              type: string
+              example: com.android.settings/.DevSettings
+            boot_package:
+              description: BootPackage specifies the Android application package name which is started by default
+              type: string
+              example: com.android.settings
+            devmode:
+              description: DevMode specifies if development mode has been turned on for the container
+              type: boolean
+            disable_watchdog:
+              description: DisableWatchdog defines whether the watchdog is disabled
+              type: boolean
+            features:
+              description: Feature flags to enable for the container.
+              type: string
+              example: feature0, feature1
+            metrics_server:
+              description: MetricsServer specifies a metrics server the container will use
+              type: string
+              example: 10.0.0.45:8086
+            platform:
+              description: Platform specifies the Anbox platform the container is running with
+              type: string
+              example: webrtc
+        cpus:
+          description: Number of CPU cores the container should get assigned.
+          type: integer
+          format: int64
+          example: 4
+        disk_size:
+          description: Disk size the container should get allocated in bytes
+          type: integer
+          format: int64
+          example: 3221225472
+        gpu-slots:
+          description: Number of GPU slots the container should get assigned.
+          type: integer
+          format: int64
+          example: 1
+        image_id:
+          description: ID of the image to use. Can be empty if an application ID is specified instead.
+          type: string
+          example: cilshrmnfpfec9b1kte0
+        image_version:
+          description: Version of the image to use. If not specified, the latest version is used.
+          type: integer
+          format: int64
+          example: 0
+        instance_type:
+          description: 'Instance type to use for the container.
+
+            Example a2.3'
+          type: string
+        memory:
+          description: Memory the container should get assigned in bytes.
+          type: integer
+          format: int64
+          example: 3221225472
+        no_start:
+          description: Do not start the container after creation.
+          type: boolean
+        node:
+          description: Node to start the container on. If empty node will be automatically selected.
+          type: string
+          example: lxd0
+        services:
+          description: Services to enable for the container
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkServiceSpec'
+        tags:
+          description: Tags which will be assigned to the container
+          type: array
+          items:
+            type: string
+          example:
+          - tag0
+          - tag1
+        user_data:
+          description: User data to pass to the container.
+          type: string
+          example: '{\"key\":\"value\"}'
+        vpu-slots:
+          description: Number of VPU slots the container should get assigned
+          type: integer
+          format: int64
+          example: 1
+    ContainersDelete:
+      description: ContainersDelete represents a list of containers to delete together
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the containers should be forced
+          type: boolean
+        ids:
+          description: IDs of the containers to delete
+          type: array
+          items:
+            type: string
+          example:
+          - cilsreunfpfec9b1ktg0
+          - cilsreunfpfec9b1ktg1
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    ContainerDelete:
+      description: ContainerDelete describes a request used to delete a container
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the container should be forced
+          type: boolean
+    NetworkProtocol:
+      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
+      type: string
+    ContainerType:
+      description: 'Possible values are: regular, base, unknown'
+      type: string
+      title: ContainerType describes the type of a container.
+    ContainerExecPost:
+      description: ContainerExecPost represents an container execution request
+      type: object
+      properties:
+        command:
+          description: Command inside the container to execute
+          type: array
+          items:
+            type: string
+          example: /bin/ls
+        environment:
+          description: Environment to setup when the command is executed.
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            FOO: bar
+        height:
+          description: Height of the terminal. Only required when `interactive` is set to `true`.
+          type: integer
+          format: int64
+        interactive:
+          description: Whether the command is executed interactively or not
+          type: boolean
+        width:
+          description: Width of the terminal. Only required when `interactive` is set to `true`.
+          type: integer
+          format: int64
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+  responses:
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error

@@ -1,0 +1,442 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Clients Service API
+  version: '0.1'
+tags:
+- name: ClientsService
+paths:
+  /api/v0/clients:
+    get:
+      operationId: ClientsService_ListClients
+      parameters:
+      - in: query
+        name: client_name
+        schema:
+          type: string
+      - in: query
+        name: owner
+        schema:
+          type: string
+      - in: query
+        name: size
+        schema:
+          type: string
+      - in: query
+        name: page_token
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/clientsListClientsResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - ClientsService
+      summary: Clients service list clients
+      x-summary-source: derived
+    post:
+      operationId: ClientsService_CreateClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/clientsClient'
+        required: true
+        x-originalParamName: client
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/clientsCreateClientResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - ClientsService
+      summary: Clients service create client
+      x-summary-source: derived
+  /api/v0/clients/{id}:
+    delete:
+      operationId: ClientsService_RemoveClient
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/clientsRemoveClientResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - ClientsService
+      summary: Clients service remove client
+      x-summary-source: derived
+    get:
+      operationId: ClientsService_GetClient
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/clientsGetClientResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - ClientsService
+      summary: Clients service get client
+      x-summary-source: derived
+    put:
+      operationId: ClientsService_UpdateClient
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/clientsClient'
+        required: true
+        x-originalParamName: client
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/clientsUpdateClientResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - ClientsService
+      summary: Clients service update client
+      x-summary-source: derived
+components:
+  schemas:
+    clientsClient:
+      properties:
+        access_token_strategy:
+          type: string
+        allowed_cors_origins:
+          items:
+            type: string
+          type: array
+        audience:
+          items:
+            type: string
+          type: array
+        authorization_code_grant_access_token_lifespan:
+          type: string
+        authorization_code_grant_id_token_lifespan:
+          type: string
+        authorization_code_grant_refresh_token_lifespan:
+          type: string
+        backchannel_logout_session_required:
+          type: boolean
+        backchannel_logout_uri:
+          type: string
+        client_credentials_grant_access_token_lifespan:
+          type: string
+        client_id:
+          type: string
+        client_name:
+          type: string
+        client_secret:
+          type: string
+        client_secret_expires_at:
+          format: int64
+          type: string
+        client_uri:
+          type: string
+        contacts:
+          items:
+            type: string
+          type: array
+        created_at:
+          format: date-time
+          type: string
+        frontchannel_logout_session_required:
+          type: boolean
+        frontchannel_logout_uri:
+          type: string
+        grant_types:
+          items:
+            type: string
+          type: array
+        implicit_grant_access_token_lifespan:
+          type: string
+        implicit_grant_id_token_lifespan:
+          type: string
+        jwks:
+          type: object
+        jwks_uri:
+          type: string
+        jwt_bearer_grant_access_token_lifespan:
+          type: string
+        logo_uri:
+          type: string
+        metadata:
+          type: object
+        owner:
+          type: string
+        policy_uri:
+          type: string
+        post_logout_redirect_uris:
+          items:
+            type: string
+          type: array
+        redirect_uris:
+          items:
+            type: string
+          type: array
+        refresh_token_grant_access_token_lifespan:
+          type: string
+        refresh_token_grant_id_token_lifespan:
+          type: string
+        refresh_token_grant_refresh_token_lifespan:
+          type: string
+        registration_access_token:
+          type: string
+        registration_client_uri:
+          type: string
+        request_object_signing_alg:
+          type: string
+        request_uris:
+          items:
+            type: string
+          type: array
+        response_types:
+          items:
+            type: string
+          type: array
+        scope:
+          type: string
+        sector_identifier_uri:
+          type: string
+        skip_consent:
+          type: boolean
+        subject_type:
+          type: string
+        token_endpoint_auth_method:
+          type: string
+        token_endpoint_auth_signing_alg:
+          type: string
+        tos_uri:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        userinfo_signed_response_alg:
+          type: string
+      type: object
+    clientsUpdateClientResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    clientsGetClientResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    clientsRemoveClientResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    clientsListClientsResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/clientsClient'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    clientsCreateClientResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

@@ -1,0 +1,371 @@
+openapi: 3.2.0
+info:
+  title: Pebble changes and tasks API
+  version: v1
+tags:
+- name: changes and tasks
+paths:
+  /v1/changes:
+    get:
+      summary: Get changes
+      tags:
+      - changes and tasks
+      description: Fetch information for the specified changes.
+      parameters:
+      - name: select
+        in: query
+        description: Filter changes by status.
+        schema:
+          type: string
+          enum:
+          - all
+          - in-progress
+          - ready
+          default: in-progress
+      - name: for
+        in: query
+        description: Filter changes for a specific service name.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Information about changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChangesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                - id: '4'
+                  kind: stop
+                  summary: Stop service "svc1" and 1 more
+                  status: Done
+                  tasks:
+                  - id: '7'
+                    kind: stop
+                    summary: Stop service "svc1"
+                    status: Done
+                    progress:
+                      label: ''
+                      done: 1
+                      total: 1
+                    spawn-time: '2024-12-27T10:08:14.399194229+08:00'
+                    ready-time: '2024-12-27T10:08:14.429319813+08:00'
+                  - id: '8'
+                    kind: stop
+                    summary: Stop service "svc2"
+                    status: Done
+                    progress:
+                      label: ''
+                      done: 1
+                      total: 1
+                    spawn-time: '2024-12-27T10:08:14.399199354+08:00'
+                    ready-time: '2024-12-27T10:08:14.432387271+08:00'
+                  ready: true
+                  spawn-time: '2024-12-27T10:08:14.399202521+08:00'
+                  ready-time: '2024-12-27T10:08:14.432389313+08:00'
+      operationId: getV1Changes
+      x-operation-id-source: derived
+  /v1/changes/{id}:
+    get:
+      summary: Get a specific change
+      tags:
+      - changes and tasks
+      description: Fetch information about a Change given its ID.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the change.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Information about the change.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChangeByIDResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  id: '38'
+                  kind: autostart
+                  summary: Autostart service "svc1" and 1 more
+                  status: Done
+                  tasks:
+                  - id: '54'
+                    kind: start
+                    summary: Start service "svc1"
+                    status: Done
+                    progress:
+                      label: ''
+                      done: 1
+                      total: 1
+                    spawn-time: '2024-12-27T12:31:26.673287868+08:00'
+                    ready-time: '2024-12-27T12:31:27.681780702+08:00'
+                  ready: true
+                  spawn-time: '2024-12-27T12:31:26.673297951+08:00'
+                  ready-time: '2024-12-27T12:31:27.686371869+08:00'
+      operationId: getV1ChangesById
+      x-operation-id-source: derived
+    post:
+      summary: Perform an action on a change
+      tags:
+      - changes and tasks
+      description: Perform an action on a change. Currently the only supported action is "abort".
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the change.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  description: The action to perform on the change.
+                  enum:
+                  - abort
+      responses:
+        '200':
+          description: Change aborted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChangeByIDResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  id: '8'
+                  kind: perform-check
+                  summary: Perform HTTP check "check1"
+                  status: Abort
+                  tasks:
+                  - id: '14'
+                    kind: perform-check
+                    summary: Perform HTTP check "check1"
+                    status: Abort
+                    progress:
+                      label: ''
+                      done: 1
+                      total: 1
+                    spawn-time: '2024-12-27T10:15:31.390053104+08:00'
+                  ready: false
+                  spawn-time: '2024-12-27T10:15:31.390062521+08:00'
+      operationId: postV1ChangesById
+      x-operation-id-source: derived
+  /v1/changes/{id}/wait:
+    get:
+      summary: Wait for a change to complete
+      description: 'Wait for the change to be finished.
+
+
+        If the wait operation succeeds, the result will have the "err" field set to an appropriate error message if the change itself had an error.'
+      tags:
+      - changes and tasks
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The ID of the change to wait for.
+      - in: query
+        name: timeout
+        schema:
+          type: string
+        description: 'Optional timeout (a [duration](#duration)).
+
+          If specified, wait till the change is ready or a timeout occurs, whichever is first.
+
+          If not specified or zero, wait indefinitely until the change is ready.
+
+          '
+      responses:
+        '200':
+          description: Wait for a change.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChangeByIDResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  id: '38'
+                  kind: autostart
+                  summary: Autostart service "svc1" and 1 more
+                  status: Done
+                  tasks:
+                  - id: '54'
+                    kind: start
+                    summary: Start service "svc1"
+                    status: Done
+                    progress:
+                      label: ''
+                      done: 1
+                      total: 1
+                    spawn-time: '2024-12-27T12:31:26.673287868+08:00'
+                    ready-time: '2024-12-27T12:31:27.681780702+08:00'
+                  ready: true
+                  spawn-time: '2024-12-27T12:31:26.673297951+08:00'
+                  ready-time: '2024-12-27T12:31:27.686371869+08:00'
+      operationId: getV1ChangesByIdWait
+      x-operation-id-source: derived
+  /v1/tasks/{task-id}/websocket/{websocket-id}:
+    get:
+      summary: Connect to a task's websocket
+      tags:
+      - changes and tasks
+      description: Establish a websocket connection to a specific task.
+      parameters:
+      - in: path
+        name: task-id
+        schema:
+          type: string
+        required: true
+        description: The ID of the task.
+      - in: path
+        name: websocket-id
+        schema:
+          type: string
+        required: true
+        description: The ID of the websocket.
+        enum:
+        - control
+        - stderr
+        - stdio
+      responses:
+        '101':
+          description: 'The connection is upgraded to the websocket protocol and the websocket connection is established.
+
+
+            The full websocket protocol is not documented. For details, see the [Python client code](https://github.com/canonical/operator/blob/main/ops/pebble.py#L1818).
+
+            '
+          content:
+            application/json:
+              example: null
+      operationId: getV1TasksByTaskIdWebsocketByWebsocketId
+      x-operation-id-source: derived
+components:
+  schemas:
+    changeInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+        summary:
+          type: string
+        status:
+          type: string
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/taskInfo'
+        ready:
+          type: boolean
+        err:
+          type: string
+        spawn-time:
+          type: string
+          format: date-time
+          description: spawn-time is a [time](#time).
+        ready-time:
+          type: string
+          format: date-time
+          description: ready-time is a [time](#time).
+        data:
+          type: object
+          additionalProperties:
+            type: string
+            format: json-string
+    taskInfoProgress:
+      type: object
+      properties:
+        label:
+          type: string
+        done:
+          type: integer
+        total:
+          type: integer
+    GetChangesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/changeInfo'
+    GetChangeByIDResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            $ref: '#/components/schemas/changeInfo'
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    taskInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+        summary:
+          type: string
+        status:
+          type: string
+        log:
+          type: array
+          items:
+            type: string
+        progress:
+          $ref: '#/components/schemas/taskInfoProgress'
+        spawn-time:
+          type: string
+          format: date-time
+          description: spawn-time is a [time](#time).
+        ready-time:
+          type: string
+          format: date-time
+          description: ready-time is a [time](#time).
+        data:
+          type: object
+          additionalProperties:
+            type: string
+            format: json-string

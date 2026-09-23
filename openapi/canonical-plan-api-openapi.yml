@@ -1,0 +1,62 @@
+openapi: 3.2.0
+info:
+  title: Pebble Plan API
+  version: v1
+tags:
+- name: Plan
+paths:
+  /v1/plan:
+    get:
+      summary: Get the current plan
+      tags:
+      - Plan
+      description: Get the plan in YAML format.
+      parameters:
+      - name: format
+        in: query
+        description: The format of the plan.
+        schema:
+          type: string
+          enum:
+          - yaml
+        required: true
+      responses:
+        '200':
+          description: The current plan in YAML format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPlanResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result: "services:\n    svc1:\n        startup: enabled\n        override: replace\n        command: foo\n"
+      operationId: getV1Plan
+      x-operation-id-source: derived
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    GetPlanResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: string

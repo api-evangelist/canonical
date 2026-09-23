@@ -1,0 +1,233 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Artefact Builds API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: artefact-builds
+paths:
+  /v1/artefacts/{artefact_id}/builds:
+    get:
+      tags:
+      - artefact-builds
+      summary: Get Artefact Builds
+      description: Get latest artefact builds of an artefact together with their test executions
+      operationId: get_artefact_builds_v1_artefacts__artefact_id__builds_get
+      parameters:
+      - name: artefact_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Artefact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtefactBuildResponse'
+                title: Response Get Artefact Builds V1 Artefacts  Artefact Id  Builds Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_artefact
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ArtefactBuildResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+        test_executions:
+          items:
+            $ref: '#/components/schemas/TestExecutionResponse'
+          type: array
+          title: Test Executions
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      - test_executions
+      title: ArtefactBuildResponse
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TestExecutionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        ci_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ci Link
+        c3_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C3 Link
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
+          type: array
+          title: Relevant Links
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+        test_plan:
+          type: string
+          title: Test Plan
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+        is_triaged:
+          type: boolean
+          title: Is Triaged
+        is_rerun_requested:
+          type: boolean
+          title: Is Rerun Requested
+          readOnly: true
+        rerun_priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Rerun Priority
+          readOnly: true
+      type: object
+      required:
+      - id
+      - ci_link
+      - c3_link
+      - environment
+      - status
+      - test_plan
+      - created_at
+      - execution_metadata
+      - is_triaged
+      - is_rerun_requested
+      - rerun_priority
+      title: TestExecutionResponse
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
+    EnvironmentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
+      type: object
+      required:
+      - id
+      - name
+      - architecture
+      title: EnvironmentResponse
+    TestExecutionRelevantLinkResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse

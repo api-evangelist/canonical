@@ -1,0 +1,2238 @@
+openapi: 3.2.0
+info:
+  title: Canonical Images API
+  version: '1.0'
+  description: 'Operations tagged images across 2 of this provider''s published API definitions: canonical-anbox-cloud-ams-api-openapi.json, canonical-lxd-rest-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Images
+paths:
+  /1.0/images:
+    get:
+      description: This endpoint returns a list of images available in the cluster.
+      tags:
+      - Images
+      summary: Get a list of images
+      operationId: images_get
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/images/foo\",\n  \"/1.0/images/bar\"\n]"
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      description: 'This endpoint imports an image into AMS cluster from an image server using
+
+        its name.'
+      tags:
+      - Images
+      summary: Import an image
+      operationId: image_post_import
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagesPost'
+        description: Details of the image to create
+        required: true
+  /1.0/images/:
+    post:
+      description: 'This endpoint allows the client to upload an image with a new package of
+
+        format gzip, bzip2 or xz.'
+      tags:
+      - Images
+      summary: Upload a package to create an image
+      operationId: image_post_upload
+      parameters:
+      - description: SHA-256 fingerprint of image e.g b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        name: X-AMS-Fingerprint
+        in: header
+        schema:
+          type: string
+      - description: 'Json encoded byte string of image details for e.g { "name": "my-image",  "default": false }'
+        name: X-AMS-Request
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/images/{id_or_name}:
+    get:
+      description: This endpoint gets the information about an image stored in AMS.
+      tags:
+      - Images
+      summary: Get information about an image
+      operationId: image_get
+      parameters:
+      - description: Id or name of the image to retrieve
+        name: id_or_name
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Type of the image variant to return could be `vm` or `container`
+        name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - container
+          - vm
+          default: container
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Image'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/images/{id}:
+    delete:
+      description: This endpoint deletes an image stored in AMS.
+      tags:
+      - Images
+      summary: Delete an image
+      operationId: image_delete
+      parameters:
+      - description: Id of the image to delete
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Type of the image variant to return could be `vm` or `container`
+        name: type
+        in: query
+        schema:
+          type: string
+          enum:
+          - container
+          - vm
+          default: container
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageDelete'
+        description: details for deleting the image
+    patch:
+      description: 'This endpoint updates an existing image with a new package of format gzip,
+
+        bzip2 or xz.'
+      tags:
+      - Images
+      summary: Update an image with a new package to upload
+      operationId: image_patch_upload
+      parameters:
+      - description: SHA-256 fingerprint of image e.g b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        name: X-AMS-Fingerprint
+        in: header
+        schema:
+          type: string
+      - description: 'Json encoded byte string of image details e.g { "name": "my-image",  "default": false }'
+        name: X-AMS-Request
+        in: header
+        required: true
+        schema:
+          type: string
+      - description: Id of the image to update
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/images/{id}/:
+    patch:
+      description: This endpoint updates an image's metadata only but not the package.
+      tags:
+      - Images
+      summary: Update an image's metadata
+      operationId: image_patch_meta
+      parameters:
+      - description: Id of the image to update
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagePatch'
+        description: Details of the attributes to update
+  /1.0/images/{id}/{version}:
+    delete:
+      description: This endpoint deletes a specific version of a stored image.
+      tags:
+      - Images
+      summary: Delete an image version
+      operationId: image_version_delete
+      parameters:
+      - description: Id or name of the image whose version needs to be deleted
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Version of the image to delete
+        name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/images?recursion=1:
+    get:
+      description: This endpoint returns a list of images available in the cluster.
+      tags:
+      - Images
+      summary: Get the list of images expanded
+      operationId: images_get_recursion1
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Image'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/images/{fingerprint}:
+    delete:
+      description: Removes the image from the image store.
+      operationId: image_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Delete the image
+      tags:
+      - Images
+    get:
+      description: Gets a specific image.
+      operationId: image_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Image_2'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the image
+      tags:
+      - Images
+    patch:
+      description: Updates a subset of the image definition.
+      operationId: image_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Partially update the image
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagePut'
+        description: Image configuration
+        required: true
+    put:
+      description: Updates the entire image definition.
+      operationId: image_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Update the image
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagePut'
+        description: Image configuration
+        required: true
+  /1.0/images/{fingerprint}/export:
+    get:
+      description: 'Download the raw image file(s) from the server.
+
+        If the image is in split format, a multipart http transfer occurs.'
+      operationId: image_export_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Raw image data
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the raw image file(s)
+      tags:
+      - Images
+    post:
+      description: Gets LXD to connect to a remote server and push the image to it.
+      operationId: images_export_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Make LXD push the image to a remote server
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageExportPost'
+        description: Image push request
+        required: true
+  /1.0/images/{fingerprint}/export?public:
+    get:
+      description: 'Download the raw image file(s) of a public image from the server.
+
+        If the image is in split format, a multipart http transfer occurs.'
+      operationId: image_export_get_untrusted
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Secret token to retrieve a private image
+        example: RANDOM-STRING
+        in: query
+        name: secret
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Raw image data
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the raw image file(s)
+      tags:
+      - Images
+  /1.0/images/{fingerprint}/refresh:
+    post:
+      description: 'This causes LXD to check the image source server for an updated
+
+        version of the image and if available to refresh the local copy with the
+
+        new version.'
+      operationId: images_refresh_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Refresh an image
+      tags:
+      - Images
+  /1.0/images/{fingerprint}/secret:
+    post:
+      description: 'This generates a background operation including a secret one time key
+
+        in its metadata which can be used to fetch this image from an untrusted
+
+        client.'
+      operationId: images_secret_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Generate secret for retrieval of the image by an untrusted client
+      tags:
+      - Images
+  /1.0/images/{fingerprint}?public:
+    get:
+      description: Gets a specific public image.
+      operationId: image_get_untrusted
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Secret token to retrieve a private image
+        example: RANDOM-STRING
+        in: query
+        name: secret
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Image_2'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the public image
+      tags:
+      - Images
+  /1.0/images/aliases:
+    get:
+      description: Returns a list of image aliases (URLs).
+      operationId: images_aliases_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/images/aliases/foo\",\n  \"/1.0/images/aliases/bar1\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the image aliases
+      tags:
+      - Images
+    post:
+      description: Creates a new image alias.
+      operationId: images_aliases_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Add an image alias
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageAliasesPost'
+        description: Image alias
+        required: true
+  /1.0/images/aliases/{name}:
+    delete:
+      description: Deletes a specific image alias.
+      operationId: image_alias_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Delete the image alias
+      tags:
+      - Images
+    get:
+      description: Gets a specific image alias.
+      operationId: image_alias_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image alias
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/ImageAliasesEntry'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the image alias
+      tags:
+      - Images
+    patch:
+      description: Updates a subset of the image alias configuration.
+      operationId: images_alias_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Partially update the image alias
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageAliasesEntryPut'
+        description: Image alias configuration
+        required: true
+    post:
+      description: Renames an existing image alias.
+      operationId: images_alias_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Rename the image alias
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageAliasesEntryPost'
+        description: Image alias rename request
+        required: true
+    put:
+      description: Updates the entire image alias configuration.
+      operationId: images_aliases_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Update the image alias
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImageAliasesEntryPut'
+        description: Image alias configuration
+        required: true
+  /1.0/images/aliases/{name}?public:
+    get:
+      description: 'Gets a specific public image alias.
+
+        This untrusted endpoint only works for aliases pointing to public images.'
+      operationId: image_alias_get_untrusted
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image alias
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/ImageAliasesEntry'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the public image alias
+      tags:
+      - Images
+  /1.0/images/aliases?recursion=1:
+    get:
+      description: Returns a list of image aliases (structs).
+      operationId: images_aliases_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of image aliases
+                    items:
+                      $ref: '#/components/schemas/ImageAliasesEntry'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the image aliases
+      tags:
+      - Images
+  /1.0/images?public:
+    get:
+      description: Returns a list of publicly available images (URLs).
+      operationId: images_get_untrusted
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        schema:
+          type: string
+      - description: Retrieve images from all projects
+        in: query
+        name: all-projects
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/images/06b86454720d36b20f94e31c6812e05ec51c1b568cf3a8abd273769d213394bb\",\n  \"/1.0/images/084dd79dd1360fd25a2479eb46674c2a5ef3022a40fe03c91ab3603e3402b8e1\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the public images
+      tags:
+      - Images
+    post:
+      description: 'Pushes the data to the target image server.
+
+        This is meant for LXD to LXD communication where a new image entry is
+
+        prepared on the target server and the source server is provided that URL
+
+        and a secret token to push the image content over.'
+      operationId: images_post_untrusted
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Add an image
+      tags:
+      - Images
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagesPost_2'
+        description: Image
+        required: true
+  /1.0/images?public&recursion=1:
+    get:
+      description: Returns a list of publicly available images (structs).
+      operationId: images_get_recursion1_untrusted
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        schema:
+          type: string
+      - description: Retrieve images from all projects
+        in: query
+        name: all-projects
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of images
+                    items:
+                      $ref: '#/components/schemas/Image_2'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the public images
+      tags:
+      - Images
+components:
+  schemas:
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    ImageType:
+      description: ImageType specifies the type of an image
+      type: string
+    Image:
+      description: Image represents an image available in AMS
+      type: object
+      properties:
+        architecture:
+          description: CPU architecture supported by the image
+          type: string
+          example: x86_64
+        default:
+          description: Flag to show whether the image is used by default if no image name is provided
+          type: boolean
+          example: false
+        id:
+          description: ID of the image
+          type: string
+          example: btavtegj1qm58qg7ru50
+        immutable:
+          description: Flag to show whether the image can be edited by an AMS instance or not
+          type: boolean
+          example: false
+        name:
+          description: Name of the image
+          type: string
+          example: my-image
+        status:
+          description: Current status of the image
+          type: string
+          enum:
+          - error
+          - created
+          - active
+          - initializing
+          - unknown
+          example: active
+        status_code:
+          $ref: '#/components/schemas/ImageStatus'
+        type:
+          $ref: '#/components/schemas/ImageType'
+        used_by:
+          description: List of application ids using the image as a base
+          type: array
+          items:
+            type: string
+          example:
+          - btavtegj1qm58asf123
+        versions:
+          description: List of versions for the image
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageVersion'
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    ImagePatch:
+      description: ImagePatch represents the fields to update an existing image
+      type: object
+      properties:
+        default:
+          description: Make the image as default
+          type: boolean
+          example: true
+        force_sync:
+          description: 'ForceSync forces synchronization of the image from the remote image server
+
+            Examle: true'
+          type: boolean
+    ImageStatus:
+      description: ImageStatus represents the status of an image
+      type: integer
+      format: int64
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    ImageDelete:
+      description: ImageDelete describes a request used to delete an image
+      type: object
+      properties:
+        force:
+          type: boolean
+    ImagesPost:
+      description: ImagesPost represents the fields to upload a new image
+      type: object
+      properties:
+        default:
+          description: Make the image as default
+          type: boolean
+          example: false
+        name:
+          description: Name of the image
+          type: string
+          example: my-image
+        path:
+          description: Path to store the image
+          type: string
+          example: /save/image
+        type:
+          $ref: '#/components/schemas/ImageType'
+    ImageVersion:
+      description: ImageVersion describes a single version of an image
+      type: object
+      properties:
+        created_at:
+          description: Creation UTC timestamp of the image
+          type: integer
+          format: int64
+          example: 1610641117
+        fingerprint:
+          description: Fingerprint of the image version
+          type: string
+          example: 0791cfc011f67c60b7bd0f852ddb686b79fa46083d9d43ef9845c9235c67b261
+        remote_id:
+          description: Version of the image in the remote server
+          type: string
+          example: 1.2.3
+        size:
+          description: Size (in bytes) of the image version
+          type: integer
+          format: int64
+          example: 529887868
+        status:
+          description: Current status of the image
+          type: string
+          enum:
+          - error
+          - created
+          - active
+          - initializing
+          - unknown
+          example: active
+        status_code:
+          $ref: '#/components/schemas/ImageStatus'
+        version:
+          description: Version for the image
+          type: integer
+          format: int64
+          example: 0
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    ImageAliasesPost:
+      description: ImageAliasesPost represents a new LXD image alias
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        description:
+          description: Alias description
+          example: Our preferred Ubuntu image
+          type: string
+          x-go-name: Description
+        name:
+          description: Alias name
+          example: ubuntu-24.04
+          type: string
+          x-go-name: Name
+        target:
+          description: Target fingerprint for the alias
+          example: 06b86454720d36b20f94e31c6812e05ec51c1b568cf3a8abd273769d213394bb
+          type: string
+          x-go-name: Target
+        type:
+          description: 'Alias type (container or virtual-machine)
+
+
+            API extension: image_types'
+          example: container
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Image_2:
+      description: Image represents a LXD image
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        aliases:
+          description: List of aliases
+          items:
+            $ref: '#/components/schemas/ImageAlias'
+          type: array
+          x-go-name: Aliases
+        architecture:
+          description: Architecture
+          example: x86_64
+          type: string
+          x-go-name: Architecture
+        auto_update:
+          description: Whether the image should auto-update when a new build is available
+          example: true
+          type: boolean
+          x-go-name: AutoUpdate
+        cached:
+          description: Whether the image is an automatically cached remote image
+          example: true
+          type: boolean
+          x-go-name: Cached
+        created_at:
+          description: When the image was originally created
+          example: '2021-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        expires_at:
+          description: 'When the image becomes obsolete
+
+
+            API extension: images_expiry'
+          example: '2025-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        filename:
+          description: Original filename
+          example: 06b86454720d36b20f94e31c6812e05ec51c1b568cf3a8abd273769d213394bb.rootfs
+          type: string
+          x-go-name: Filename
+        fingerprint:
+          description: Full SHA-256 fingerprint
+          example: 06b86454720d36b20f94e31c6812e05ec51c1b568cf3a8abd273769d213394bb
+          type: string
+          x-go-name: Fingerprint
+        last_used_at:
+          description: Last time the image was used
+          example: '2021-03-22T20:39:00.575185384-04:00'
+          format: date-time
+          type: string
+          x-go-name: LastUsedAt
+        profiles:
+          description: 'List of profiles to use when creating from this image (if none provided by user)
+
+
+            API extension: image_profiles'
+          example:
+          - default
+          items:
+            type: string
+          type: array
+          x-go-name: Profiles
+        project:
+          description: 'Project name
+
+
+            API extension: images_all_projects'
+          example: project1
+          type: string
+          x-go-name: Project
+        properties:
+          additionalProperties:
+            type: string
+          description: Descriptive properties
+          example:
+            os: Ubuntu
+            release: jammy
+            variant: cloud
+          type: object
+          x-go-name: Properties
+        public:
+          description: Whether the image is available to unauthenticated users
+          example: false
+          type: boolean
+          x-go-name: Public
+        release_codename:
+          description: 'OS release codename
+
+
+            API extension: image_extended_metadata'
+          example: jammy
+          type: string
+          x-go-name: ReleaseCodename
+        release_title:
+          description: 'OS release title
+
+
+            API extension: image_extended_metadata'
+          example: 22.04 LTS
+          type: string
+          x-go-name: ReleaseTitle
+        size:
+          description: Size of the image in bytes
+          example: 272237676
+          format: int64
+          type: integer
+          x-go-name: Size
+        type:
+          description: 'Type of image (container or virtual-machine)
+
+
+            API extension: image_types'
+          example: container
+          type: string
+          x-go-name: Type
+        update_source:
+          $ref: '#/components/schemas/ImageSource'
+        uploaded_at:
+          description: When the image was added to this LXD server
+          example: '2021-03-24T14:18:15.115036787-04:00'
+          format: date-time
+          type: string
+          x-go-name: UploadedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImagesPostSource:
+      description: ImagesPostSource represents the source of a new LXD image
+      properties:
+        alias:
+          description: Source alias to download from
+          example: jammy
+          type: string
+          x-go-name: Alias
+        certificate:
+          description: Source server certificate (if not trusted by system CA)
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        copy_aliases:
+          description: 'Whether to copy aliases from the source image
+
+
+            API extension: image_registries'
+          example: true
+          type: boolean
+          x-go-name: CopyAliases
+        fingerprint:
+          description: Source image fingerprint (for type "image")
+          example: 8ae945c52bb2f2df51c923b04022312f99bbb72c356251f54fa89ea7cf1df1d0
+          type: string
+          x-go-name: Fingerprint
+        image_registry:
+          description: 'Image registry name
+
+
+            API extension: image_registries'
+          example: ubuntu
+          type: string
+          x-go-name: ImageRegistry
+        image_type:
+          description: 'Type of image (container or virtual-machine)
+
+
+            API extension: image_types'
+          example: container
+          type: string
+          x-go-name: ImageType
+        mode:
+          description: Transfer mode (push or pull)
+          example: pull
+          type: string
+          x-go-name: Mode
+        name:
+          description: Instance name (for type "instance" or "snapshot")
+          example: c1/snap0
+          type: string
+          x-go-name: Name
+        project:
+          description: 'Source project name
+
+
+            API extension: image_source_project'
+          example: project1
+          type: string
+          x-go-name: Project
+        protocol:
+          description: Source server protocol
+          example: simplestreams
+          type: string
+          x-go-name: Protocol
+        secret:
+          description: Source image server secret token (when downloading private images)
+          example: RANDOM-STRING
+          type: string
+          x-go-name: Secret
+        server:
+          description: URL of the source server
+          example: https://cloud-images.ubuntu.com/releases/
+          type: string
+          x-go-name: Server
+        type:
+          $ref: '#/components/schemas/SourceType'
+        url:
+          description: 'Source URL (deprecated, image download from URL is no longer supported)
+
+
+            Deprecated: Image download from URL is no longer supported.'
+          example: https://some-server.com/some-directory/
+          type: string
+          x-deprecated: true
+          x-go-name: URL
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageExportPost:
+      description: ImageExportPost represents the fields required to export a LXD image
+      properties:
+        aliases:
+          description: List of aliases to set on the image
+          items:
+            $ref: '#/components/schemas/ImageAlias'
+          type: array
+          x-go-name: Aliases
+        certificate:
+          description: Remote server certificate
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        profiles:
+          description: 'List of profiles to use
+
+
+            API extension: image_copy_profile'
+          example:
+          - default
+          items:
+            type: string
+          type: array
+          x-go-name: Profiles
+        project:
+          description: 'Project name
+
+
+            API extension: image_target_project'
+          example: project1
+          type: string
+          x-go-name: Project
+        secret:
+          description: Image receive secret
+          example: RANDOM-STRING
+          type: string
+          x-go-name: Secret
+        target:
+          description: Target server URL
+          example: https://1.2.3.4:8443
+          type: string
+          x-go-name: Target
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageAlias:
+      description: ImageAlias represents an alias from the alias list of a LXD image
+      properties:
+        description:
+          description: Description of the alias
+          example: Our preferred Ubuntu image
+          type: string
+          x-go-name: Description
+        name:
+          description: Name of the alias
+          example: ubuntu-24.04
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageAliasesEntryPost:
+      description: ImageAliasesEntryPost represents the required fields to rename a LXD image alias
+      properties:
+        name:
+          description: Alias name
+          example: ubuntu-24.04
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode_2:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageAliasesEntryPut:
+      description: ImageAliasesEntryPut represents the modifiable fields of a LXD image alias
+      properties:
+        description:
+          description: Alias description
+          example: Our preferred Ubuntu image
+          type: string
+          x-go-name: Description
+        target:
+          description: Target fingerprint for the alias
+          example: 06b86454720d36b20f94e31c6812e05ec51c1b568cf3a8abd273769d213394bb
+          type: string
+          x-go-name: Target
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    SourceType:
+      title: SourceType represents source of the instance creation.
+      type: string
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageAliasesEntry:
+      description: ImageAliasesEntry represents a LXD image alias
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        description:
+          description: Alias description
+          example: Our preferred Ubuntu image
+          type: string
+          x-go-name: Description
+        name:
+          description: Alias name
+          example: ubuntu-24.04
+          type: string
+          x-go-name: Name
+        target:
+          description: Target fingerprint for the alias
+          example: 06b86454720d36b20f94e31c6812e05ec51c1b568cf3a8abd273769d213394bb
+          type: string
+          x-go-name: Target
+        type:
+          description: 'Alias type (container or virtual-machine)
+
+
+            API extension: image_types'
+          example: container
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
+      properties:
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
+          type: string
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
+          type: string
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImagesPost_2:
+      description: ImagesPost represents the fields available for a new LXD image
+      properties:
+        aliases:
+          description: 'Aliases to add to the image
+
+
+            API extension: image_create_aliases'
+          example:
+          - name: foo
+          - name: bar
+          items:
+            $ref: '#/components/schemas/ImageAlias'
+          type: array
+          x-go-name: Aliases
+        auto_update:
+          description: Whether the image should auto-update when a new build is available
+          example: true
+          type: boolean
+          x-go-name: AutoUpdate
+        compression_algorithm:
+          description: 'Compression algorithm to use when turning an instance into an image
+
+
+            API extension: image_compression_algorithm'
+          example: gzip
+          type: string
+          x-go-name: CompressionAlgorithm
+        expires_at:
+          description: 'When the image becomes obsolete
+
+
+            API extension: images_expiry'
+          example: '2025-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        filename:
+          description: Original filename of the image
+          example: lxd.tar.xz
+          type: string
+          x-go-name: Filename
+        profiles:
+          description: 'List of profiles to use when creating from this image (if none provided by user)
+
+
+            API extension: image_profiles'
+          example:
+          - default
+          items:
+            type: string
+          type: array
+          x-go-name: Profiles
+        properties:
+          additionalProperties:
+            type: string
+          description: Descriptive properties
+          example:
+            os: Ubuntu
+            release: jammy
+            variant: cloud
+          type: object
+          x-go-name: Properties
+        public:
+          description: Whether the image is available to unauthenticated users
+          example: false
+          type: boolean
+          x-go-name: Public
+        source:
+          $ref: '#/components/schemas/ImagesPostSource'
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImagePut:
+      description: ImagePut represents the modifiable fields of a LXD image
+      properties:
+        auto_update:
+          description: Whether the image should auto-update when a new build is available
+          example: true
+          type: boolean
+          x-go-name: AutoUpdate
+        expires_at:
+          description: 'When the image becomes obsolete
+
+
+            API extension: images_expiry'
+          example: '2025-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        profiles:
+          description: 'List of profiles to use when creating from this image (if none provided by user)
+
+
+            API extension: image_profiles'
+          example:
+          - default
+          items:
+            type: string
+          type: array
+          x-go-name: Profiles
+        properties:
+          additionalProperties:
+            type: string
+          description: Descriptive properties
+          example:
+            os: Ubuntu
+            release: jammy
+            variant: cloud
+          type: object
+          x-go-name: Properties
+        public:
+          description: Whether the image is available to unauthenticated users
+          example: false
+          type: boolean
+          x-go-name: Public
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageSource:
+      description: ImageSource represents the source of a LXD image
+      properties:
+        alias:
+          description: Source alias to download from
+          example: jammy
+          type: string
+          x-go-name: Alias
+        certificate:
+          description: Source server certificate (if not trusted by system CA)
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        image_registry:
+          description: 'Image registry name
+
+
+            API extension: image_registries'
+          example: ubuntu
+          type: string
+          x-go-name: ImageRegistry
+        image_type:
+          description: 'Type of image (container or virtual-machine)
+
+
+            API extension: image_types'
+          example: container
+          type: string
+          x-go-name: ImageType
+        protocol:
+          description: Source server protocol
+          example: simplestreams
+          type: string
+          x-go-name: Protocol
+        server:
+          description: URL of the source server
+          example: https://cloud-images.ubuntu.com/releases/
+          type: string
+          x-go-name: Server
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Operation_2:
+      description: Operation represents a LXD background operation
+      properties:
+        child_count:
+          description: 'Number of child operations.
+
+
+            API extension: operation_child_count'
+          example: 2
+          format: int64
+          type: integer
+          x-go-name: ChildCount
+        class:
+          description: Type of operation (task, token or websocket)
+          example: websocket
+          type: string
+          x-go-name: Class
+        created_at:
+          description: Operation creation time
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the operation
+          example: Executing command
+          type: string
+          x-go-name: Description
+        err:
+          description: Operation error message
+          example: Some error message
+          type: string
+          x-go-name: Err
+        err_code:
+          description: 'Operation error code
+
+
+            API extension: bulk_operations'
+          example: 404
+          format: int64
+          type: integer
+          x-go-name: ErrCode
+        id:
+          description: UUID of the operation
+          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
+          type: string
+          x-go-name: ID
+        location:
+          description: 'Which cluster member this record was found on
+
+
+            API extension: operation_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        may_cancel:
+          description: Whether the operation can be canceled
+          example: false
+          type: boolean
+          x-go-name: MayCancel
+        metadata:
+          additionalProperties: {}
+          description: Operation specific metadata
+          example:
+            command:
+            - bash
+            environment:
+              HOME: /root
+              LANG: C.UTF-8
+              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              TERM: xterm
+              USER: root
+            fds:
+              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
+              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
+            interactive: true
+          type: object
+          x-go-name: Metadata
+        requestor:
+          $ref: '#/components/schemas/OperationRequestor'
+        resources:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Affected resources
+          example:
+            instances:
+            - /1.0/instances/foo
+            - /1.0/instances/bar
+          type: object
+          x-go-name: Resources
+        status:
+          description: Status name
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode_2'
+        updated_at:
+          description: Operation last change
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: UpdatedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError_2:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation_2'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+x-refined-from:
+- canonical-anbox-cloud-ams-api-openapi.json
+- canonical-lxd-rest-api-openapi.yml

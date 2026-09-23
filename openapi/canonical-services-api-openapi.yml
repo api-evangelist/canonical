@@ -1,0 +1,158 @@
+openapi: 3.2.0
+info:
+  title: Pebble Services API
+  version: v1
+tags:
+- name: Services
+paths:
+  /v1/services:
+    get:
+      summary: List services
+      description: Fetch information about specific services (or all of them), ordered by service name.
+      tags:
+      - Services
+      parameters:
+      - in: query
+        name: names
+        description: The names of the services to get. To get multiple services, specify this parameter multiple times. If not set, get all services.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List services.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetServicesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                - name: svc1
+                  startup: enabled
+                  current: active
+                  current-since: '2024-12-27T12:19:27.569602108+08:00'
+                - name: svc2
+                  startup: enabled
+                  current: active
+                  current-since: '2024-12-27T12:19:27.5690974+08:00'
+      operationId: getV1Services
+      x-operation-id-source: derived
+    post:
+      summary: Manage services
+      description: Perform a service operation such as start, stop, or replan.
+      tags:
+      - Services
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  description: The action to perform.
+                  enum:
+                  - autostart
+                  - replan
+                  - restart
+                  - start
+                  - stop
+                services:
+                  type: array
+                  description: 'A list of service names.  Required for "start", "stop", and "restart".
+
+
+                    Ignored for "replan" and "autostart" (resolved automatically for "autostart" to default services).
+
+                    '
+                  items:
+                    type: string
+            example:
+              action: start
+              services:
+              - svc1
+      responses:
+        '202':
+          description: Accepted - asynchronous operation started.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostServicesResponse'
+              example:
+                type: async
+                status-code: 202
+                status: Accepted
+                change: '29'
+                result: null
+      operationId: postV1Services
+      x-operation-id-source: derived
+components:
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    GetServicesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/serviceInfo'
+    BaseAsyncResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          change:
+            type: string
+            description: The Change ID of the asynchronous change.
+    serviceInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the service.
+        startup:
+          type: string
+          description: Configured startup value.
+          enum:
+          - disabled
+          - enabled
+        current:
+          type: string
+          description: Current status of the service.
+          enum:
+          - active
+          - backup
+          - error
+          - inactive
+        current-since:
+          type: string
+          format: date-time
+          description: '[Time](#time) the service transitioned to the current status.'
+    PostServicesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseAsyncResponse'
+      - type: object
+        properties:
+          result:
+            type: 'null'

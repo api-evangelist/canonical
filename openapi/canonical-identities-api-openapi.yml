@@ -1,0 +1,1327 @@
+openapi: 3.2.0
+info:
+  title: Canonical Identities API
+  version: '1.0'
+  description: 'Operations tagged identities across 2 of this provider''s published API definitions: canonical-lxd-rest-api-openapi.yml, canonical-pebble-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Identities
+paths:
+  /1.0/auth/identities:
+    get:
+      description: Returns a list of identities (URLs).
+      operationId: identities_get
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/auth/identities/tls/e1e06266e36f67431c996d5678e66d732dfd12fe5073c161e62e6360619fc226\",\n  \"/1.0/auth/identities/oidc/auth0|4daf5e37ce230e455b64b65b\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the identities
+      tags:
+      - Identities
+  /1.0/auth/identities/bearer:
+    get:
+      description: Returns a list of bearer identities (URLs).
+      operationId: identities_get_bearer
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/auth/identities/bearer/my-identity\",\n  \"/1.0/auth/identities/bearer/2040864b-df39-4267-a8e2-e55cde33601d\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the bearer identities
+      tags:
+      - Identities
+    post:
+      description: Creates a new bearer identity.
+      operationId: identities_post_bearer
+      responses:
+        '201':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a bearer identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentitiesBearerPost'
+        description: Bearer Identity
+        required: true
+  /1.0/auth/identities/bearer/{nameOrID}/token:
+    delete:
+      description: Revokes any existing token for the identity.
+      operationId: identity_delete_bearer_token
+      responses:
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Revoke a bearer identity token
+      tags:
+      - Identities
+    post:
+      description: Issues a new token for the bearer identity and revokes any existing token.
+      operationId: identity_post_bearer_token
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/IdentityBearerToken'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Issue a token for a bearer identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityBearerTokenPost'
+        description: Parameters of token creation
+        required: true
+  /1.0/auth/identities/bearer/{nameOrIdentifier}:
+    delete:
+      description: Removes the bearer identity.
+      operationId: identity_delete_bearer
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Delete the bearer identity
+      tags:
+      - Identities
+    get:
+      description: Gets a specific bearer identity.
+      operationId: identity_get_bearer
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Identity'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the bearer identity
+      tags:
+      - Identities
+    patch:
+      description: Updates the editable fields of a bearer identity
+      operationId: identity_patch_bearer
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Partially update the bearer identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityPut'
+        description: Update request
+    put:
+      description: Replaces the editable fields of a bearer identity
+      operationId: identity_put_bearer
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Update the bearer identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityPut'
+        description: Update request
+  /1.0/auth/identities/bearer?recursion=1:
+    get:
+      description: Returns a list of bearer identities.
+      operationId: identities_get_bearer_recursion1
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of identities
+                    items:
+                      $ref: '#/components/schemas/Identity'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the bearer identities
+      tags:
+      - Identities
+  /1.0/auth/identities/current:
+    get:
+      description: Gets the identity of the requestor, including contextual authorization information.
+      operationId: identity_get_current
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/IdentityInfo'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the current identity
+      tags:
+      - Identities
+  /1.0/auth/identities/oidc:
+    get:
+      description: Returns a list of OIDC identities (URLs).
+      operationId: identities_get_oidc
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/auth/identities/oidc/jane.doe@example.com\",\n  \"/1.0/auth/identities/oidc/joe.bloggs@example.com\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the OIDC identities
+      tags:
+      - Identities
+  /1.0/auth/identities/oidc/{nameOrIdentifier}:
+    delete:
+      description: Removes the OIDC identity.
+      operationId: identity_delete_oidc
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Delete the OIDC identity
+      tags:
+      - Identities
+    get:
+      description: Gets a specific OIDC identity.
+      operationId: identity_get_oidc
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Identity'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the OIDC identity
+      tags:
+      - Identities
+    patch:
+      description: Updates the editable fields of an OIDC identity
+      operationId: identity_patch_oidc
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Partially update the OIDC identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityPut'
+        description: Update request
+    put:
+      description: Replaces the editable fields of an OIDC identity
+      operationId: identity_put_oidc
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Update the OIDC identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityPut'
+        description: Update request
+  /1.0/auth/identities/oidc?recursion=1:
+    get:
+      description: Returns a list of OIDC identities.
+      operationId: identities_get_oidc_recursion1
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of identities
+                    items:
+                      $ref: '#/components/schemas/Identity'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the OIDC identities
+      tags:
+      - Identities
+  /1.0/auth/identities/tls:
+    get:
+      description: Returns a list of TLS identities (URLs).
+      operationId: identities_get_tls
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/auth/identities/tls/e1e06266e36f67431c996d5678e66d732dfd12fe5073c161e62e6360619fc226\",\n  \"/1.0/auth/identities/tls/6d5678e66d732dfd12fe5073c161eec9962e6360619fc2261e06266e36f67431\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the TLS identities
+      tags:
+      - Identities
+    post:
+      description: 'Adds a TLS identity as a trusted client, or creates a pending TLS identity and returns a token
+
+        for use by an untrusted client. One of `token` or `certificate` must be set.'
+      operationId: identities_post_tls
+      responses:
+        '201':
+          description: ''
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a TLS identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentitiesTLSPost'
+        description: TLS Identity
+        required: true
+  /1.0/auth/identities/tls/{nameOrIdentifier}:
+    delete:
+      description: Removes the TLS identity and revokes trust.
+      operationId: identity_delete_tls
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Delete the TLS identity
+      tags:
+      - Identities
+    get:
+      description: Gets a specific TLS identity.
+      operationId: identity_get_tls
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Identity'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the TLS identity
+      tags:
+      - Identities
+    patch:
+      description: Updates the editable fields of a TLS identity
+      operationId: identity_patch_tls
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Partially update the TLS identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityPut'
+        description: Update request
+    put:
+      description: Replaces the editable fields of a TLS identity
+      operationId: identity_put_tls
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '501':
+          $ref: '#/components/responses/NotImplemented'
+      summary: Update the TLS identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentityPut'
+        description: Update request
+  /1.0/auth/identities/tls?public:
+    post:
+      description: 'Adds a TLS identity as a trusted client.
+
+        In this mode, the `trust_token` property must be set to the correct value.
+
+        The certificate that the client sent during the TLS handshake will be added.
+
+        The `certificate` field must be omitted.
+
+
+        The `?public` part of the URL isn''t required, it''s simply used to
+
+        separate the two behaviors of this endpoint.'
+      operationId: identities_post_tls_untrusted
+      responses:
+        '201':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a TLS identity
+      tags:
+      - Identities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdentitiesPostTLS'
+        description: TLS Identity
+        required: true
+  /1.0/auth/identities/tls?recursion=1:
+    get:
+      description: Returns a list of TLS identities.
+      operationId: identities_get_tls_recursion1
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of identities
+                    items:
+                      $ref: '#/components/schemas/Identity'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the TLS identities
+      tags:
+      - Identities
+  /1.0/auth/identities?recursion=1:
+    get:
+      description: Returns a list of identities.
+      operationId: identities_get_recursion1
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of identities
+                    items:
+                      $ref: '#/components/schemas/Identity'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the identities
+      tags:
+      - Identities
+  /v1/identities:
+    get:
+      summary: Get all identities
+      tags:
+      - Identities
+      description: Get a map of all identities in the system.
+      responses:
+        '200':
+          description: Identities successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetIdentitiesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  bob:
+                    access: admin
+                    local:
+                      user-id: 42
+      operationId: getV1Identities
+      x-operation-id-source: derived
+    post:
+      summary: Manage identities
+      tags:
+      - Identities
+      description: 'Add, update, replace, or remove identities in the system.
+
+
+        See Identities for the format of the identities data.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - add
+                  - update
+                  - replace
+                  - remove
+                  description: The action to perform on the identities.
+                identities:
+                  type: object
+                  additionalProperties:
+                  - $ref: '#/components/schemas/identity'
+                  description: The identities to add, update, or replace.  For "remove", set the values to null.
+              required:
+              - action
+              - identities
+            example:
+              action: add
+              identities:
+                bob:
+                  access: admin
+                  local:
+                    user-id: 42
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+      operationId: postV1Identities
+      x-operation-id-source: derived
+components:
+  schemas:
+    Permission:
+      properties:
+        entitlement:
+          description: Entitlement is the entitlement define for the entity type.
+          example: can_view
+          type: string
+          x-go-name: Entitlement
+        entity_type:
+          description: EntityType is the string representation of the entity type.
+          example: instance
+          type: string
+          x-go-name: EntityType
+        url:
+          description: EntityReference is the URL of the entity that the permission applies to.
+          example: /1.0/instances/c1?project=default
+          type: string
+          x-go-name: EntityReference
+      title: Permission represents a permission that may be granted to a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentitiesTLSPost:
+      properties:
+        certificate:
+          description: The PEM encoded x509 certificate of the identity
+          type: string
+          x-go-name: Certificate
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        name:
+          description: Name associated with the identity
+          example: foo
+          type: string
+          x-go-name: Name
+        token:
+          description: Whether to create a certificate add token
+          example: true
+          type: boolean
+          x-go-name: Token
+        trust_token:
+          description: Trust token (used to add an untrusted client)
+          example: blah
+          type: string
+          x-go-name: TrustToken
+      title: IdentitiesTLSPost contains required information for the creation of a TLS identity.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityBearerToken:
+      description: 'IdentityBearerToken contains a token issued for an identity whose authentication method is
+
+        api.AuthenticationMethodBearer.'
+      properties:
+        token:
+          type: string
+          x-go-name: Token
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityPut:
+      properties:
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        tls_certificate:
+          description: 'TLSCertificate is a base64 encoded x509 certificate. This can only be set if the authentication method of the identity is AuthenticationMethodTLS.
+
+
+            API extension: access_management_tls.'
+          type: string
+          x-go-name: TLSCertificate
+      title: IdentityPut contains the editable fields of an IdentityInfo.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityBearerTokenPost:
+      properties:
+        expiry:
+          type: string
+          x-go-name: Expiry
+      title: IdentityBearerTokenPost contains parameters used when issuing a token for a bearer identity.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityInfo:
+      description: These fields can only be evaluated for the currently authenticated identity.
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        authentication_method:
+          description: 'AuthenticationMethod is the authentication method that the identity
+
+            authenticates to LXD with.'
+          example: tls
+          type: string
+          x-go-name: AuthenticationMethod
+        effective_groups:
+          description: 'Effective groups is the combined and deduplicated list of LXD groups that the identity is a direct member of, and
+
+            the LXD groups that the identity is an effective member of via identity provider group mappings.'
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: EffectiveGroups
+        effective_permissions:
+          description: 'Effective permissions is the combined and deduplicated list of permissions that the identity has by virtue of
+
+            direct membership to a LXD group, or effective membership of a LXD group via identity provider group mappings.'
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          x-go-name: EffectivePermissions
+        expires_at:
+          description: 'ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the
+
+            expiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.
+
+            It is unset for identities whose credential has no expiry, that have no credential yet (pending identities),
+
+            or whose token has been revoked.
+
+
+            API extension: access_management_expiry.'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        fine_grained:
+          description: 'FineGrained is a boolean indicating whether the identity is fine-grained,
+
+            meaning that permissions are managed via group membership.'
+          type: boolean
+          x-go-name: FineGrained
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        id:
+          description: Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Identifier
+        name:
+          description: 'Name is the Name claim of the identity if authenticated via OIDC, or the name
+
+            of the certificate if authenticated with TLS.'
+          example: Jane Doe
+          type: string
+          x-go-name: Name
+        tls_certificate:
+          description: 'TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.
+
+
+            API extension: access_management_tls.'
+          type: string
+          x-go-name: TLSCertificate
+        type:
+          description: Type is the type of identity.
+          example: oidc-service-account
+          type: string
+          x-go-name: Type
+      title: IdentityInfo expands an Identity to include effective group membership and effective permissions.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Identity:
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        authentication_method:
+          description: 'AuthenticationMethod is the authentication method that the identity
+
+            authenticates to LXD with.'
+          example: tls
+          type: string
+          x-go-name: AuthenticationMethod
+        expires_at:
+          description: 'ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the
+
+            expiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.
+
+            It is unset for identities whose credential has no expiry, that have no credential yet (pending identities),
+
+            or whose token has been revoked.
+
+
+            API extension: access_management_expiry.'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        id:
+          description: Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Identifier
+        name:
+          description: 'Name is the Name claim of the identity if authenticated via OIDC, or the name
+
+            of the certificate if authenticated with TLS.'
+          example: Jane Doe
+          type: string
+          x-go-name: Name
+        tls_certificate:
+          description: 'TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.
+
+
+            API extension: access_management_tls.'
+          type: string
+          x-go-name: TLSCertificate
+        type:
+          description: Type is the type of identity.
+          example: oidc-service-account
+          type: string
+          x-go-name: Type
+      title: Identity is the type for an authenticated party that can make requests to the HTTPS API.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentitiesBearerPost:
+      properties:
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        name:
+          description: Name associated with the identity
+          example: foo
+          type: string
+          x-go-name: Name
+        type:
+          description: Type of identity
+          example: DevLXD token bearer
+          type: string
+          x-go-name: Type
+      title: IdentitiesBearerPost contains required information for the creation of a token identity.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    identity:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the identity.
+        access:
+          type: string
+          enum:
+          - admin
+          - read
+          - untrusted
+          description: The access level of the identity.
+        local:
+          type: object
+          properties:
+            user-id:
+              type: integer
+              description: The user ID associated with the local identity.
+    GetIdentitiesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/identity'
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotImplemented:
+      description: Not implemented
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not implemented
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 501
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+x-refined-from:
+- canonical-lxd-rest-api-openapi.yml
+- canonical-pebble-api-openapi.yml

@@ -1,0 +1,23 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Version API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: Version
+paths:
+  /v1/version:
+    get:
+      summary: Get Version
+      operationId: get_version_v1_version_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Version

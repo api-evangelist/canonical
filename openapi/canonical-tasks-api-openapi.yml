@@ -1,0 +1,129 @@
+openapi: 3.2.0
+info:
+  description: 'The Anbox Management Service (AMS) external REST API is the REST API used by
+
+    all AMS clients. Note that internal endpoints are not included in this
+
+    documentation.
+
+
+    The AMS API is available over both a local unix+http and a remote https API.
+
+    Authentication for local users relies on group membership and access to the
+
+    unix socket. For remote users, the default authentication method is TLS client
+
+    certificates.'
+  title: AMS external REST Tasks API
+  version: '1.0'
+tags:
+- name: Tasks
+paths:
+  /1.0/tasks:
+    get:
+      description: This endpoint returns a list of tasks in AMS.
+      tags:
+      - Tasks
+      summary: Get a list of tasks
+      operationId: tasks_get
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Task:
+      description: Task is the scheduling unit AMS uses for container launches
+      type: object
+      properties:
+        id:
+          description: ID of the task
+          type: string
+          example: c055dl0j1qm027422feg
+        object_id:
+          description: ID of the object that the task is operating on
+          type: string
+          example: c055dl0j1qm027422fe0
+        object_type:
+          description: Type of the object that the task is operating on
+          type: string
+          example: container
+        status:
+          description: Status of the task
+          type: string
+          enum:
+          - created
+          - prepared
+          - started
+          - running
+          - stopped
+          - shutdown
+          - completed
+          - error
+          - deleted
+          - unknown
+          example: running
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error

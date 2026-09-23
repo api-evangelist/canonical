@@ -1,0 +1,3465 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: lxd@lists.canonical.com
+    name: LXD upstream
+    url: https://github.com/canonical/lxd
+  description: 'This is the REST API used by all LXD clients.
+
+    Internal endpoints aren''t included in this documentation.
+
+
+    The LXD API is available over both a local unix+http and remote https API.
+
+    Authentication for local users relies on group membership and access to the unix socket.
+
+    For remote users, the default authentication method is TLS client.'
+  license:
+    name: AGPL-3.0-only
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  title: LXD external REST Storage API
+  version: '1.0'
+tags:
+- name: Storage
+paths:
+  /1.0/storage-pools:
+    get:
+      description: Returns a list of storage pools (URLs).
+      operationId: storage_pools_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local\",\n  \"/1.0/storage-pools/remote\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pools
+      tags:
+      - Storage
+    post:
+      description: 'Creates a new storage pool.
+
+        When clustered, storage pools require individual POST for each cluster member prior to a global POST.'
+      operationId: storage_pools_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a storage pool
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoragePoolsPost'
+        description: Storage pool
+        required: true
+  /1.0/storage-pools/{name}/buckets/{bucketName}:
+    delete:
+      description: Removes the storage bucket.
+      operationId: storage_pool_bucket_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete the storage bucket
+      tags:
+      - Storage
+    patch:
+      description: Updates a subset of the storage bucket configuration.
+      operationId: storage_pool_bucket_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Partially update the storage bucket
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBucketPut'
+        description: Storage bucket configuration
+        required: true
+    put:
+      description: Updates the entire storage bucket configuration.
+      operationId: storage_pool_bucket_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the storage bucket
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBucketPut'
+        description: Storage bucket configuration
+        required: true
+  /1.0/storage-pools/{name}/buckets/{bucketName}/keys/{keyName}:
+    delete:
+      description: Removes the storage bucket key.
+      operationId: storage_pool_bucket_key_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete the storage bucket key
+      tags:
+      - Storage
+    put:
+      description: Updates the entire storage bucket key configuration.
+      operationId: storage_pool_bucket_key_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the storage bucket key
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBucketKeyPut'
+        description: Storage bucket key configuration
+        required: true
+  /1.0/storage-pools/{name}/resources:
+    get:
+      description: Gets the usage information for the storage pool.
+      operationId: storage_pool_resources
+      parameters:
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Hardware resources
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/ResourcesStoragePool'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get storage pool resources information
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}:
+    delete:
+      description: Removes the storage pool.
+      operationId: storage_pools_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete the storage pool
+      tags:
+      - Storage
+    get:
+      description: Gets a specific storage pool.
+      operationId: storage_pool_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage pool
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StoragePool'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool
+      tags:
+      - Storage
+    patch:
+      description: Updates a subset of the storage pool configuration.
+      operationId: storage_pool_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Partially update the storage pool
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoragePoolPut'
+        description: Storage pool configuration
+        required: true
+    put:
+      description: Updates the entire storage pool configuration.
+      operationId: storage_pool_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the storage pool
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoragePoolPut'
+        description: Storage pool configuration
+        required: true
+  /1.0/storage-pools/{poolName}/buckets:
+    get:
+      description: Returns a list of storage pool buckets (URLs).
+      operationId: storage_pool_buckets_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Retrieve storage pool buckets from all projects
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/default/buckets/foo\",\n  \"/1.0/storage-pools/default/buckets/bar\",\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool buckets
+      tags:
+      - Storage
+    post:
+      description: Creates a new storage pool bucket.
+      operationId: storage_pool_bucket_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a storage pool bucket
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBucketsPost'
+        description: Bucket
+        required: true
+  /1.0/storage-pools/{poolName}/buckets/{bucketName}:
+    get:
+      description: Gets a specific storage pool bucket.
+      operationId: storage_pool_bucket_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage pool bucket
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StorageBucket'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool bucket
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/buckets/{bucketName}/keys:
+    get:
+      description: Returns a list of storage pool bucket keys (URLs).
+      operationId: storage_pool_bucket_keys_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/default/buckets/foo/keys/my-read-only-key\",\n  \"/1.0/storage-pools/default/buckets/bar/keys/admin\",\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool bucket keys
+      tags:
+      - Storage
+    post:
+      description: Creates a new storage pool bucket key.
+      operationId: storage_pool_bucket_key_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a storage pool bucket key
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBucketKeysPost'
+        description: Bucket
+        required: true
+  /1.0/storage-pools/{poolName}/buckets/{bucketName}/keys/{keyName}:
+    get:
+      description: Gets a specific storage pool bucket key.
+      operationId: storage_pool_bucket_key_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage pool bucket key
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StorageBucketKey'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool bucket key
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/buckets/{bucketName}/keys?recursion=1:
+    get:
+      description: Returns a list of storage pool bucket keys (structs).
+      operationId: storage_pool_bucket_keys_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage pool bucket keys
+                    items:
+                      $ref: '#/components/schemas/StorageBucketKey'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool bucket keys
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/buckets?recursion=1:
+    get:
+      description: Returns a list of storage pool buckets (structs).
+      operationId: storage_pool_buckets_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Retrieve storage pool buckets from all projects
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage pool buckets
+                    items:
+                      $ref: '#/components/schemas/StorageBucket'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pool buckets
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/volumes:
+    get:
+      description: Returns a list of storage volumes (URLs).
+      operationId: storage_pool_volumes_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local/volumes/container/a1\",\n  \"/1.0/storage-pools/local/volumes/container/a2\",\n  \"/1.0/storage-pools/local/volumes/custom/backups\",\n  \"/1.0/storage-pools/local/volumes/custom/images\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+    post:
+      description: 'Creates a new storage volume.
+
+        Will return an empty sync response on simple volume creation but an operation on copy or migration.'
+      operationId: storage_pool_volumes_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a storage volume
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumesPost'
+        description: Storage volume
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}:
+    get:
+      description: Returns a list of storage volumes (URLs) (type specific endpoint).
+      operationId: storage_pool_volumes_type_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local/volumes/custom/backups\",\n  \"/1.0/storage-pools/local/volumes/custom/images\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+    post:
+      description: 'Creates a new storage volume (type specific endpoint).
+
+        Will return an empty sync response on simple volume creation but an operation on copy or migration.'
+      operationId: storage_pool_volumes_type_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a storage volume
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumesPost'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/StorageVolumesPost'
+        description: Storage volume
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}:
+    delete:
+      description: Removes the storage volume.
+      operationId: storage_pool_volume_type_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete the storage volume
+      tags:
+      - Storage
+    get:
+      description: Gets a specific storage volume.
+      operationId: storage_pool_volume_type_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage volume
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StorageVolume'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume
+      tags:
+      - Storage
+    patch:
+      description: Updates a subset of the storage volume configuration.
+      operationId: storage_pool_volume_type_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '423':
+          $ref: '#/components/responses/StatusLocked'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Partially update the storage volume
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumePut'
+        description: Storage volume configuration
+        required: true
+    post:
+      description: 'Renames, moves a storage volume between pools or migrates an instance to another server.
+
+
+        The returned operation metadata will vary based on what''s requested.
+
+        For rename or move within the same server, this is a simple background operation with progress data.
+
+        For migration, in the push case, this will similarly be a background
+
+        operation with progress data, for the pull case, it will be a websocket
+
+        operation with a number of secrets to be passed to the target server.'
+      operationId: storage_pool_volume_type_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Rename or move/migrate a storage volume
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumePost'
+        description: Migration request
+    put:
+      description: Updates the entire storage volume configuration.
+      operationId: storage_pool_volume_type_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '423':
+          $ref: '#/components/responses/StatusLocked'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the storage volume
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumePut'
+        description: Storage volume configuration
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/backups:
+    get:
+      description: Returns a list of storage volume backups (URLs).
+      operationId: storage_pool_volumes_type_backups_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local/volumes/custom/foo/backups/backup0\",\n  \"/1.0/storage-pools/local/volumes/custom/foo/backups/backup1\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume backups
+      tags:
+      - Storage
+    post:
+      description: Creates a new storage volume backup.
+      operationId: storage_pool_volumes_type_backups_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Create a storage volume backup
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoragePoolVolumeBackupsPost'
+        description: Storage volume backup
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/backups/{backupName}:
+    delete:
+      description: Deletes a new storage volume backup.
+      operationId: storage_pool_volumes_type_backup_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete a storage volume backup
+      tags:
+      - Storage
+    get:
+      description: Gets a specific storage volume backup.
+      operationId: storage_pool_volumes_type_backup_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage volume backup
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StoragePoolVolumeBackup'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume backup
+      tags:
+      - Storage
+    post:
+      description: Renames a storage volume backup.
+      operationId: storage_pool_volumes_type_backup_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Rename a storage volume backup
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumeSnapshotPost'
+        description: Storage volume backup
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/backups/{backupName}/export:
+    get:
+      description: Download the raw backup file from the server.
+      operationId: storage_pool_volumes_type_backup_export_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Raw backup data
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the raw backup file
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/backups?recursion=1:
+    get:
+      description: Returns a list of storage volume backups (structs).
+      operationId: storage_pool_volumes_type_backups_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage volume backups
+                    items:
+                      $ref: '#/components/schemas/StoragePoolVolumeBackup'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume backups
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/snapshots:
+    get:
+      description: Returns a list of storage volume snapshots (URLs).
+      operationId: storage_pool_volumes_type_snapshots_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local/volumes/custom/foo/snapshots/snap0\",\n  \"/1.0/storage-pools/local/volumes/custom/foo/snapshots/snap1\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume snapshots
+      tags:
+      - Storage
+    post:
+      description: Creates a new storage volume snapshot.
+      operationId: storage_pool_volumes_type_snapshots_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Create a storage volume snapshot
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumeSnapshotsPost'
+        description: Storage volume snapshot
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/snapshots/{snapshotName}:
+    delete:
+      description: Deletes a new storage volume snapshot.
+      operationId: storage_pool_volumes_type_snapshot_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete a storage volume snapshot
+      tags:
+      - Storage
+    get:
+      description: Gets a specific storage volume snapshot.
+      operationId: storage_pool_volumes_type_snapshot_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage volume snapshot
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StorageVolumeSnapshot'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume snapshot
+      tags:
+      - Storage
+    patch:
+      description: Updates a subset of the storage volume snapshot configuration.
+      operationId: storage_pool_volumes_type_snapshot_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Partially update the storage volume snapshot
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumeSnapshotPut'
+        description: Storage volume snapshot configuration
+        required: true
+    post:
+      description: Renames a storage volume snapshot.
+      operationId: storage_pool_volumes_type_snapshot_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Rename a storage volume snapshot
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumeSnapshotPost'
+        description: Storage volume snapshot
+        required: true
+    put:
+      description: Updates the entire storage volume snapshot configuration.
+      operationId: storage_pool_volumes_type_snapshot_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the storage volume snapshot
+      tags:
+      - Storage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageVolumeSnapshotPut'
+        description: Storage volume snapshot configuration
+        required: true
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/snapshots?recursion=1:
+    get:
+      description: Returns a list of storage volume snapshots (structs).
+      operationId: storage_pool_volumes_type_snapshots_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage volume snapshots
+                    items:
+                      $ref: '#/components/schemas/StorageVolumeSnapshot'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume snapshots
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/volumes/{type}/{volumeName}/state:
+    get:
+      description: Gets a specific storage volume state (usage data).
+      operationId: storage_pool_volume_type_state_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Storage pool
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/StorageVolumeState'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volume state
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/volumes/{type}?recursion=1:
+    get:
+      description: Returns a list of storage volumes (structs) (type specific endpoint).
+      operationId: storage_pool_volumes_type_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage volumes
+                    items:
+                      $ref: '#/components/schemas/StorageVolume'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+  /1.0/storage-pools/{poolName}/volumes?recursion=1:
+    get:
+      description: Returns a list of storage volumes (structs).
+      operationId: storage_pool_volumes_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage volumes
+                    items:
+                      $ref: '#/components/schemas/StorageVolume'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+  /1.0/storage-pools?recursion=1:
+    get:
+      description: Returns a list of storage pools (structs).
+      operationId: storage_pools_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage pools
+                    items:
+                      $ref: '#/components/schemas/StoragePool'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage pools
+      tags:
+      - Storage
+  /1.0/storage-volumes:
+    get:
+      description: Returns a list of storage volumes (URLs).
+      operationId: storage_volumes_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local/volumes/container/a1\",\n  \"/1.0/storage-pools/local/volumes/container/a2\",\n  \"/1.0/storage-pools/local/volumes/custom/backups\",\n  \"/1.0/storage-pools/local/volumes/custom/images\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+  /1.0/storage-volumes/{type}:
+    get:
+      description: Returns a list of storage volumes (URLs) (type specific endpoint).
+      operationId: storage_pool_volumes_type_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/storage-pools/local/volumes/custom/backups\",\n  \"/1.0/storage-pools/local/volumes/custom/images\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+  /1.0/storage-volumes/{type}?recursion=1:
+    get:
+      description: Returns a list of storage volumes (structs) (type specific endpoint).
+      operationId: storage_pool_volumes_type_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage volumes
+                    items:
+                      $ref: '#/components/schemas/StorageVolume'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+  /1.0/storage-volumes?recursion=1:
+    get:
+      description: Returns a list of storage volumes (structs).
+      operationId: storage_pool_volumes_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Indicates whether volumes from all projects should be returned
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: bool
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      - description: Collection filter
+        example: default
+        in: query
+        name: filter
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of storage volumes
+                    items:
+                      $ref: '#/components/schemas/StorageVolume'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the storage volumes
+      tags:
+      - Storage
+components:
+  schemas:
+    StorageBucket:
+      description: StorageBucket represents the fields of a LXD storage pool bucket
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        config:
+          additionalProperties:
+            type: string
+          description: 'Storage bucket configuration map
+
+
+            API extension: storage_buckets'
+          example:
+            size: 50GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage bucket
+
+
+            API extension: storage_buckets'
+          example: My custom bucket
+          type: string
+          x-go-name: Description
+        location:
+          description: 'What cluster member this record was found on
+
+
+            API extension: storage_buckets'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        name:
+          description: 'Bucket name
+
+
+            API extension: storage_buckets'
+          example: foo
+          type: string
+          x-go-name: Name
+        project:
+          description: 'Project name
+
+
+            API extension: storage_buckets_all_projects'
+          example: project1
+          type: string
+          x-go-name: Project
+        s3_url:
+          description: 'Bucket S3 URL
+
+
+            API extension: storage_buckets'
+          example: https://127.0.0.1:8080/foo
+          type: string
+          x-go-name: S3URL
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumePostTarget:
+      description: StorageVolumePostTarget represents the migration target host and operation
+      properties:
+        certificate:
+          description: The certificate of the migration target
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        operation:
+          description: Remote operation URL (for migration)
+          example: https://1.2.3.4:8443/1.0/operations/1721ae08-b6a8-416a-9614-3f89302466e1
+          type: string
+          x-go-name: Operation
+        secrets:
+          additionalProperties:
+            type: string
+          description: Migration websockets credentials
+          example:
+            migration: random-string
+          type: object
+          x-go-name: Websockets
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeSnapshotPost:
+      description: StorageVolumeSnapshotPost represents the fields required to rename/move a LXD storage volume snapshot
+      properties:
+        migration:
+          description: 'Initiate volume snapshot migration
+
+
+            API extension: storage_api_remote_volume_snapshot_copy'
+          example: false
+          type: boolean
+          x-go-name: Migration
+        name:
+          description: New snapshot name
+          example: snap1
+          type: string
+          x-go-name: Name
+        target:
+          $ref: '#/components/schemas/StorageVolumePostTarget'
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageBucketsPost:
+      description: StorageBucketsPost represents the fields of a new LXD storage pool bucket
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: 'Storage bucket configuration map
+
+
+            API extension: storage_buckets'
+          example:
+            size: 50GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage bucket
+
+
+            API extension: storage_buckets'
+          example: My custom bucket
+          type: string
+          x-go-name: Description
+        name:
+          description: 'Bucket name
+
+
+            API extension: storage_buckets'
+          example: foo
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StoragePoolsPost:
+      description: StoragePoolsPost represents the fields of a new LXD storage pool
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Storage pool configuration map (refer to doc/storage.md)
+          example:
+            volume.block.filesystem: ext4
+            volume.size: 50GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage pool
+
+
+            API extension: entity_description'
+          example: Local SSD pool
+          type: string
+          x-go-name: Description
+        driver:
+          description: Storage pool driver (btrfs, ceph, cephfs, dir, lvm or zfs)
+          example: zfs
+          type: string
+          x-go-name: Driver
+        name:
+          description: Storage pool name
+          example: local
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StoragePoolVolumeBackup:
+      description: StoragePoolVolumeBackup represents a LXD volume backup
+      properties:
+        created_at:
+          description: When the backup was created
+          example: '2021-03-23T16:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        expires_at:
+          description: When the backup expires (gets auto-deleted)
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        name:
+          description: Backup name
+          example: backup0
+          type: string
+          x-go-name: Name
+        optimized_storage:
+          description: Whether to use a pool-optimized binary format (instead of plain tarball)
+          example: true
+          type: boolean
+          x-go-name: OptimizedStorage
+        volume_only:
+          description: Whether to ignore snapshots
+          example: false
+          type: boolean
+          x-go-name: VolumeOnly
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeStateUsage:
+      description: StorageVolumeStateUsage represents the disk usage of a volume
+      properties:
+        total:
+          description: 'Storage volume size in bytes. Uses 0 to convey that the volume has access to the entire pool''s storage.
+
+
+            API extension: storage_volume_state_total'
+          example: 5189222192
+          format: int64
+          type: integer
+          x-go-name: Total
+        used:
+          description: Used space in bytes. Uses 0 to indicate that the storage driver for the pool does not support retrieving volume usage.
+          example: 1693552640
+          format: uint64
+          type: integer
+          x-go-name: Used
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ResourcesStoragePoolInodes:
+      description: ResourcesStoragePoolInodes represents the inodes available to a given storage pool
+      properties:
+        total:
+          description: Total inodes
+          example: 30709993797
+          format: uint64
+          type: integer
+          x-go-name: Total
+        used:
+          description: Used inodes
+          example: 23937695
+          format: uint64
+          type: integer
+          x-go-name: Used
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeState:
+      description: StorageVolumeState represents the live state of the volume
+      properties:
+        usage:
+          $ref: '#/components/schemas/StorageVolumeStateUsage'
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageBucketKeyPut:
+      description: StorageBucketKeyPut represents the modifiable fields of a LXD storage pool bucket key
+      properties:
+        access-key:
+          description: 'Access key
+
+
+            API extension: storage_buckets'
+          example: 33UgkaIBLBIxb7O1
+          type: string
+          x-go-name: AccessKey
+        description:
+          description: 'Description of the storage bucket key
+
+
+            API extension: storage_buckets'
+          example: My read-only bucket key
+          type: string
+          x-go-name: Description
+        role:
+          description: 'Whether the key can perform write actions or not.
+
+
+            API extension: storage_buckets'
+          example: read-only
+          type: string
+          x-go-name: Role
+        secret-key:
+          description: 'Secret key
+
+
+            API extension: storage_buckets'
+          example: kDQD6AOgwHgaQI1UIJBJpPaiLgZuJbq0
+          type: string
+          x-go-name: SecretKey
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolume:
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        config:
+          additionalProperties:
+            type: string
+          description: Storage volume configuration map (refer to doc/storage.md)
+          example:
+            size: 50GiB
+            zfs.remove_snapshots: 'true'
+          type: object
+          x-go-name: Config
+        content_type:
+          description: 'Volume content type (filesystem or block)
+
+
+            API extension: custom_block_volumes'
+          example: filesystem
+          type: string
+          x-go-name: ContentType
+        created_at:
+          description: 'Volume creation timestamp
+
+            API extension: storage_volumes_created_at'
+          example: '2021-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: 'Description of the storage volume
+
+
+            API extension: entity_description'
+          example: My custom volume
+          type: string
+          x-go-name: Description
+        location:
+          description: 'What cluster member this record was found on
+
+
+            API extension: clustering'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        name:
+          description: Volume name
+          example: foo
+          type: string
+          x-go-name: Name
+        pool:
+          description: 'Name of the pool the volume is using
+
+
+            API extension: storage_volumes_all'
+          example: default
+          type: string
+          x-go-name: Pool
+        project:
+          description: 'Project containing the volume.
+
+
+            API extension: storage_volumes_all_projects'
+          example: default
+          type: string
+          x-go-name: Project
+        type:
+          description: Volume type
+          example: custom
+          type: string
+          x-go-name: Type
+        used_by:
+          description: List of URLs of objects using this storage volume
+          example:
+          - /1.0/instances/blah
+          items:
+            type: string
+          type: array
+          x-go-name: UsedBy
+      title: StorageVolume represents the fields of a LXD storage volume.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumesPost:
+      description: StorageVolumesPost represents the fields of a new LXD storage pool volume
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Storage volume configuration map (refer to doc/storage.md)
+          example:
+            size: 50GiB
+            zfs.remove_snapshots: 'true'
+          type: object
+          x-go-name: Config
+        content_type:
+          description: 'Volume content type (filesystem or block)
+
+
+            API extension: custom_block_volumes'
+          example: filesystem
+          type: string
+          x-go-name: ContentType
+        description:
+          description: 'Description of the storage volume
+
+
+            API extension: entity_description'
+          example: My custom volume
+          type: string
+          x-go-name: Description
+        name:
+          description: Volume name
+          example: foo
+          type: string
+          x-go-name: Name
+        restore:
+          description: 'Name of a snapshot to restore
+
+
+            API extension: storage_api_volume_snapshots'
+          example: snap0
+          type: string
+          x-go-name: Restore
+        source:
+          $ref: '#/components/schemas/StorageVolumeSource'
+        type:
+          description: Volume type (container, custom, image or virtual-machine)
+          example: custom
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    SourceType:
+      title: SourceType represents source of the instance creation.
+      type: string
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
+      properties:
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
+          type: string
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
+          type: string
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ResourcesStoragePool:
+      description: ResourcesStoragePool represents the resources available to a given storage pool
+      properties:
+        inodes:
+          $ref: '#/components/schemas/ResourcesStoragePoolInodes'
+        space:
+          $ref: '#/components/schemas/ResourcesStoragePoolSpace'
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeSource:
+      description: StorageVolumeSource represents the creation source for a new storage volume
+      properties:
+        certificate:
+          description: 'Certificate (for migration)
+
+
+            API extension: storage_api_remote_volume_handling'
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        location:
+          description: 'What cluster member this record was found on
+
+
+            API extension: cluster_internal_custom_volume_copy'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        mode:
+          description: 'Whether to use pull or push mode (for migration)
+
+
+            API extension: storage_api_remote_volume_handling'
+          example: pull
+          type: string
+          x-go-name: Mode
+        name:
+          description: Source volume name (for copy)
+          example: foo
+          type: string
+          x-go-name: Name
+        operation:
+          description: 'Remote operation URL (for migration)
+
+
+            API extension: storage_api_remote_volume_handling'
+          example: https://1.2.3.4:8443/1.0/operations/1721ae08-b6a8-416a-9614-3f89302466e1
+          type: string
+          x-go-name: Operation
+        pool:
+          description: Source storage pool (for copy)
+          example: local
+          type: string
+          x-go-name: Pool
+        project:
+          description: 'Source project name
+
+
+            API extension: storage_api_project'
+          example: foo
+          type: string
+          x-go-name: Project
+        refresh:
+          description: 'Whether existing destination volume should be refreshed
+
+
+            API extension: custom_volume_refresh'
+          example: false
+          type: boolean
+          x-go-name: Refresh
+        secrets:
+          additionalProperties:
+            type: string
+          description: 'Map of migration websockets (for migration)
+
+
+            API extension: storage_api_remote_volume_handling'
+          example:
+            rsync: RANDOM-STRING
+          type: object
+          x-go-name: Websockets
+        type:
+          $ref: '#/components/schemas/SourceType'
+        volume_only:
+          description: 'Whether snapshots should be discarded (for migration)
+
+
+            API extension: storage_api_volume_snapshots'
+          example: false
+          type: boolean
+          x-go-name: VolumeOnly
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeSnapshot:
+      description: StorageVolumeSnapshot represents a LXD storage volume snapshot
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Storage volume configuration map (refer to doc/storage.md)
+          example:
+            size: 50GiB
+            zfs.remove_snapshots: 'true'
+          type: object
+          x-go-name: Config
+        content_type:
+          description: 'The content type (filesystem or block)
+
+
+            API extension: custom_block_volumes'
+          example: filesystem
+          type: string
+          x-go-name: ContentType
+        created_at:
+          description: 'Volume snapshot creation timestamp
+
+            API extension: storage_volumes_created_at'
+          example: '2021-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the storage volume
+          example: My custom volume
+          type: string
+          x-go-name: Description
+        expires_at:
+          description: 'When the snapshot expires (gets auto-deleted)
+
+
+            API extension: custom_volume_snapshot_expiry'
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        name:
+          description: Snapshot name
+          example: snap0
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeSnapshotsPost:
+      description: StorageVolumeSnapshotsPost represents the fields available for a new LXD storage volume snapshot
+      properties:
+        description:
+          description: Description of the storage volume snapshot
+          example: My custom snapshot
+          type: string
+          x-go-name: Description
+        expires_at:
+          description: 'When the snapshot expires (gets auto-deleted)
+
+
+            API extension: custom_volume_snapshot_expiry'
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        name:
+          description: Snapshot name
+          example: snap0
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumePost:
+      description: StorageVolumePost represents the fields required to rename a LXD storage pool volume
+      properties:
+        migration:
+          description: 'Initiate volume migration
+
+
+            API extension: storage_api_remote_volume_handling'
+          example: false
+          type: boolean
+          x-go-name: Migration
+        name:
+          description: New volume name
+          example: foo
+          type: string
+          x-go-name: Name
+        pool:
+          description: 'New storage pool
+
+
+            API extension: storage_api_local_volume_handling'
+          example: remote
+          type: string
+          x-go-name: Pool
+        project:
+          description: 'New project name
+
+
+            API extension: storage_volume_project_move'
+          example: foo
+          type: string
+          x-go-name: Project
+        source:
+          $ref: '#/components/schemas/StorageVolumeSource'
+        target:
+          $ref: '#/components/schemas/StorageVolumePostTarget'
+        volume_only:
+          description: 'Whether snapshots should be discarded (migration only)
+
+
+            API extension: storage_api_remote_volume_snapshots'
+          example: false
+          type: boolean
+          x-go-name: VolumeOnly
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumeSnapshotPut:
+      description: StorageVolumeSnapshotPut represents the modifiable fields of a LXD storage volume
+      properties:
+        description:
+          description: Description of the storage volume
+          example: My custom volume
+          type: string
+          x-go-name: Description
+        expires_at:
+          description: 'When the snapshot expires (gets auto-deleted)
+
+
+            API extension: custom_volume_snapshot_expiry'
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageBucketKeysPost:
+      description: StorageBucketKeysPost represents the fields of a new LXD storage pool bucket key
+      properties:
+        access-key:
+          description: 'Access key
+
+
+            API extension: storage_buckets'
+          example: 33UgkaIBLBIxb7O1
+          type: string
+          x-go-name: AccessKey
+        description:
+          description: 'Description of the storage bucket key
+
+
+            API extension: storage_buckets'
+          example: My read-only bucket key
+          type: string
+          x-go-name: Description
+        name:
+          description: 'Key name
+
+
+            API extension: storage_buckets'
+          example: my-read-only-key
+          type: string
+          x-go-name: Name
+        role:
+          description: 'Whether the key can perform write actions or not.
+
+
+            API extension: storage_buckets'
+          example: read-only
+          type: string
+          x-go-name: Role
+        secret-key:
+          description: 'Secret key
+
+
+            API extension: storage_buckets'
+          example: kDQD6AOgwHgaQI1UIJBJpPaiLgZuJbq0
+          type: string
+          x-go-name: SecretKey
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageBucketPut:
+      description: StorageBucketPut represents the modifiable fields of a LXD storage pool bucket
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: 'Storage bucket configuration map
+
+
+            API extension: storage_buckets'
+          example:
+            size: 50GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage bucket
+
+
+            API extension: storage_buckets'
+          example: My custom bucket
+          type: string
+          x-go-name: Description
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StoragePoolPut:
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Storage pool configuration map (refer to doc/storage.md)
+          example:
+            volume.block.filesystem: ext4
+            volume.size: 50GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage pool
+
+
+            API extension: entity_description'
+          example: Local SSD pool
+          type: string
+          x-go-name: Description
+      title: StoragePoolPut represents the modifiable fields of a LXD storage pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageBucketKey:
+      description: StorageBucketKey represents the fields of a LXD storage pool bucket key
+      properties:
+        access-key:
+          description: 'Access key
+
+
+            API extension: storage_buckets'
+          example: 33UgkaIBLBIxb7O1
+          type: string
+          x-go-name: AccessKey
+        description:
+          description: 'Description of the storage bucket key
+
+
+            API extension: storage_buckets'
+          example: My read-only bucket key
+          type: string
+          x-go-name: Description
+        name:
+          description: 'Key name
+
+
+            API extension: storage_buckets'
+          example: my-read-only-key
+          type: string
+          x-go-name: Name
+        role:
+          description: 'Whether the key can perform write actions or not.
+
+
+            API extension: storage_buckets'
+          example: read-only
+          type: string
+          x-go-name: Role
+        secret-key:
+          description: 'Secret key
+
+
+            API extension: storage_buckets'
+          example: kDQD6AOgwHgaQI1UIJBJpPaiLgZuJbq0
+          type: string
+          x-go-name: SecretKey
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StoragePool:
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        config:
+          additionalProperties:
+            type: string
+          description: Storage pool configuration map (refer to doc/storage.md)
+          example:
+            volume.block.filesystem: ext4
+            volume.size: 50GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage pool
+
+
+            API extension: entity_description'
+          example: Local SSD pool
+          type: string
+          x-go-name: Description
+        driver:
+          description: Storage pool driver (btrfs, ceph, cephfs, dir, lvm or zfs)
+          example: zfs
+          type: string
+          x-go-name: Driver
+        locations:
+          description: 'Cluster members on which the storage pool has been defined
+
+
+            API extension: clustering'
+          example:
+          - lxd01
+          - lxd02
+          - lxd03
+          items:
+            type: string
+          readOnly: true
+          type: array
+          x-go-name: Locations
+        name:
+          description: Storage pool name
+          example: local
+          type: string
+          x-go-name: Name
+        status:
+          description: 'Pool status (Pending, Created, Errored or Unknown)
+
+
+            API extension: clustering'
+          example: Created
+          readOnly: true
+          type: string
+          x-go-name: Status
+        used_by:
+          description: List of URLs of objects using this storage pool
+          example:
+          - /1.0/profiles/default
+          - /1.0/instances/c1
+          items:
+            type: string
+          type: array
+          x-go-name: UsedBy
+      title: StoragePool represents the fields of a LXD storage pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StorageVolumePut:
+      description: StorageVolumePut represents the modifiable fields of a LXD storage volume
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Storage volume configuration map (refer to doc/storage.md)
+          example:
+            size: 50GiB
+            zfs.remove_snapshots: 'true'
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the storage volume
+
+
+            API extension: entity_description'
+          example: My custom volume
+          type: string
+          x-go-name: Description
+        restore:
+          description: 'Name of a snapshot to restore
+
+
+            API extension: storage_api_volume_snapshots'
+          example: snap0
+          type: string
+          x-go-name: Restore
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ResourcesStoragePoolSpace:
+      description: ResourcesStoragePoolSpace represents the space available to a given storage pool
+      properties:
+        total:
+          description: Total disk space (bytes)
+          example: 420100937728
+          format: uint64
+          type: integer
+          x-go-name: Total
+        used:
+          description: Used disk space (bytes)
+          example: 343537419776
+          format: uint64
+          type: integer
+          x-go-name: Used
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Operation:
+      description: Operation represents a LXD background operation
+      properties:
+        child_count:
+          description: 'Number of child operations.
+
+
+            API extension: operation_child_count'
+          example: 2
+          format: int64
+          type: integer
+          x-go-name: ChildCount
+        class:
+          description: Type of operation (task, token or websocket)
+          example: websocket
+          type: string
+          x-go-name: Class
+        created_at:
+          description: Operation creation time
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the operation
+          example: Executing command
+          type: string
+          x-go-name: Description
+        err:
+          description: Operation error message
+          example: Some error message
+          type: string
+          x-go-name: Err
+        err_code:
+          description: 'Operation error code
+
+
+            API extension: bulk_operations'
+          example: 404
+          format: int64
+          type: integer
+          x-go-name: ErrCode
+        id:
+          description: UUID of the operation
+          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
+          type: string
+          x-go-name: ID
+        location:
+          description: 'Which cluster member this record was found on
+
+
+            API extension: operation_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        may_cancel:
+          description: Whether the operation can be canceled
+          example: false
+          type: boolean
+          x-go-name: MayCancel
+        metadata:
+          additionalProperties: {}
+          description: Operation specific metadata
+          example:
+            command:
+            - bash
+            environment:
+              HOME: /root
+              LANG: C.UTF-8
+              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              TERM: xterm
+              USER: root
+            fds:
+              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
+              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
+            interactive: true
+          type: object
+          x-go-name: Metadata
+        requestor:
+          $ref: '#/components/schemas/OperationRequestor'
+        resources:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Affected resources
+          example:
+            instances:
+            - /1.0/instances/foo
+            - /1.0/instances/bar
+          type: object
+          x-go-name: Resources
+        status:
+          description: Status name
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: Operation last change
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: UpdatedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StoragePoolVolumeBackupsPost:
+      description: StoragePoolVolumeBackupsPost represents the fields available for a new LXD volume backup
+      properties:
+        compression_algorithm:
+          description: What compression algorithm to use
+          example: gzip
+          type: string
+          x-go-name: CompressionAlgorithm
+        expires_at:
+          description: When the backup expires (gets auto-deleted)
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        name:
+          description: Backup name
+          example: backup0
+          type: string
+          x-go-name: Name
+        optimized_storage:
+          description: Whether to use a pool-optimized binary format (instead of plain tarball)
+          example: true
+          type: boolean
+          x-go-name: OptimizedStorage
+        version:
+          description: 'What backup format version to use
+
+
+            API extension: backup_metadata_version'
+          example: 1
+          format: uint32
+          type: integer
+          x-go-name: Version
+        volume_only:
+          description: Whether to ignore snapshots
+          example: false
+          type: boolean
+          x-go-name: VolumeOnly
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    StatusLocked:
+      description: Status Locked
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: status locked
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 423
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

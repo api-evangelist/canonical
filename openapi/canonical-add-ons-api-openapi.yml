@@ -1,0 +1,499 @@
+openapi: 3.2.0
+info:
+  description: 'The Anbox Management Service (AMS) external REST API is the REST API used by
+
+    all AMS clients. Note that internal endpoints are not included in this
+
+    documentation.
+
+
+    The AMS API is available over both a local unix+http and a remote https API.
+
+    Authentication for local users relies on group membership and access to the
+
+    unix socket. For remote users, the default authentication method is TLS client
+
+    certificates.'
+  title: AMS external REST Addons API
+  version: '1.0'
+tags:
+- name: Add Ons
+paths:
+  /1.0/addons:
+    get:
+      description: This endpoint returns a list of addons in AMS.
+      tags:
+      - Add Ons
+      summary: Get a list of addons
+      operationId: addons_get
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/addons/foo\",\n  \"/1.0/addons/bar\"\n]"
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      description: 'This enpoint creates a new addon by uploading a package with the addon
+
+        manifest and hooks. The package format must be bzip2 or zip archive.
+
+
+        Required Extensions:
+
+        `zip_archive_support`: To use the zip format, the server must have the extension.'
+      tags:
+      - Add Ons
+      summary: Create a new addon
+      operationId: addons_post
+      parameters:
+      - description: SHA-256 fingerprint of package e.g b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        name: X-AMS-Fingerprint
+        in: header
+        schema:
+          type: string
+      - description: 'JSON encoded byte string of addon details e.g { "name": "my-addon" }'
+        name: X-AMS-Request
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/addons/{name}:
+    get:
+      description: This endpoint gets the information of an addon stored in AMS.
+      tags:
+      - Add Ons
+      summary: Get an addon
+      operationId: addon_get
+      parameters:
+      - description: Name of the addon to retrieve
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Addon'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: This endpoint deletes an addon stored in AMS.
+      tags:
+      - Add Ons
+      summary: Delete an addon
+      operationId: addon_delete
+      parameters:
+      - description: Name of the addon to delete
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      description: 'This endpoint updates an addon''s metadata and creates a new addon version
+
+        for it.'
+      tags:
+      - Add Ons
+      summary: Update an addon with a new package
+      operationId: addon_patch
+      parameters:
+      - description: SHA-256 fingerprint of addon payload e.g b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        name: X-AMS-Fingerprint
+        in: header
+        schema:
+          type: string
+      - description: Json encoded byte string of addon details e.g {}
+        name: X-AMS-Request
+        in: header
+        required: true
+        schema:
+          type: string
+      - description: Name of the addon to update
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/addons/{name}/{version}:
+    delete:
+      description: This endpoint deletes a specific version of an addon.
+      tags:
+      - Add Ons
+      summary: Delete an addon version
+      operationId: addon_version_delete
+      parameters:
+      - description: Name of the addon whose version needs to be deleted
+        name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Version of the addon to delete
+        name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/addons?recursion=1:
+    get:
+      description: This endpoint returns a list of available addons in the cluster.
+      tags:
+      - Add Ons
+      summary: Get a list of addons expanded
+      operationId: addons_get_recursion1
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Addon'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    Addon:
+      description: Addon describes a package with additional functionality to be added to containers
+      type: object
+      properties:
+        name:
+          description: Name of the addon
+          type: string
+          example: my-addon
+        used_by:
+          description: List of applications using this addon
+          type: array
+          items:
+            type: string
+          example:
+          - app1
+          - app2
+        versions:
+          description: List of versions of the addon
+          type: array
+          items:
+            $ref: '#/components/schemas/AddonVersion'
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    AddonVersion:
+      description: AddonVersion describes a single version of an addon
+      type: object
+      properties:
+        created_at:
+          description: Creation timestamp of the addon
+          type: integer
+          format: int64
+          example: 1610641117
+        fingerprint:
+          description: SHA-256 fingerprint of the addon version
+          type: string
+          example: 0791cfc011f67c60b7bd0f852ddb686b79fa46083d9d43ef9845c9235c67b261
+        size:
+          description: Size (in bytes) of the addon payload
+          type: integer
+          format: int64
+          example: 529887868
+        version:
+          description: Version for the addon
+          type: integer
+          format: int64
+          example: 0
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+  responses:
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error

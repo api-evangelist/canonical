@@ -1,0 +1,156 @@
+openapi: 3.2.0
+info:
+  description: 'The Anbox Management Service (AMS) external REST API is the REST API used by
+
+    all AMS clients. Note that internal endpoints are not included in this
+
+    documentation.
+
+
+    The AMS API is available over both a local unix+http and a remote https API.
+
+    Authentication for local users relies on group membership and access to the
+
+    unix socket. For remote users, the default authentication method is TLS client
+
+    certificates.'
+  title: AMS external REST Service API
+  version: '1.0'
+tags:
+- name: Service
+paths:
+  /1.0/:
+    get:
+      description: 'This endpoint returns the service status and its supported API extensions.
+
+        It also returns whether the connection is trusted or not.'
+      tags:
+      - Service
+      summary: Get the status and features supported by the service
+      operationId: service_get
+      responses:
+        '200':
+          description: Current config for the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/ServiceStatus'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/version:
+    get:
+      description: This endpoint returns the current running version for the service.
+      tags:
+      - Service
+      summary: Get the current version for the service
+      operationId: version_get
+      responses:
+        '200':
+          description: Current config for the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/VersionResponse'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    ServiceStatus:
+      description: ServiceStatus represents the status of the AMS service
+      type: object
+      properties:
+        api_extensions:
+          description: List of supported features for the service version running
+          type: array
+          items:
+            type: string
+          example:
+          - addon_restore_hook
+          - container_logs
+          - registry
+        api_status:
+          description: Shows the API stability status
+          type: string
+          example: stable
+        api_version:
+          description: API version for the service
+          type: string
+          example: '1.0'
+        auth:
+          description: Used to see if the client is trusted. Can be `trusted` or `untrusted`.
+          type: string
+          example: untrusted
+        auth_methods:
+          description: Authentication method used for the requests.
+          type: array
+          items:
+            type: string
+          example: 2waySSL
+        cluster_id:
+          description: ID of the subcluster the AMS instance is part of
+          type: string
+          example: cilsreunfpfec9b1ktg0
+        cluster_name:
+          description: Name of the subcluster the AMS instance is part of
+          type: string
+          example: prod0
+    VersionResponse:
+      description: VersionResponse shows the version for the running service
+      type: object
+      properties:
+        version:
+          description: Version of the service
+          type: string
+          example: 1.18.2
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error

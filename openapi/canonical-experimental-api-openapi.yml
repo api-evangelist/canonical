@@ -1,0 +1,1050 @@
+openapi: 3.2.0
+info:
+  title: Snapd REST Experimental API
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.txt
+  version: '1.0'
+  description: 'The REST API provides access to snapd''s state and many of its key functions,
+
+    as listed below.
+
+
+    For general information on how to use the API, including how to access it,
+
+    its requests and responses, results fields and error types, see Using the
+
+    REST API.'
+servers:
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
+tags:
+- name: Experimental
+  description: Interact with experimental features.
+paths:
+  /v2/confdb:
+    post:
+      tags:
+      - Experimental
+      summary: Delegate remote confdb management to operators
+      description: 'Grants or withdraws an operator''s ability to remotely manage confdb values
+
+        on the device.
+
+
+        Use the `delegate` action to allow an operator to remotely manage specific
+
+        confdb views using the specified authentication methods.
+
+
+        Use the `undelegate` action to withdraw this ability. Omit `views` or
+
+        `authentications` to withdraw all views or all authentication methods
+
+        respectively.'
+      operationId: postConfdbControl
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfdbControlAction'
+            examples:
+              delegate:
+                summary: Delegate access to an operator
+                value:
+                  action: delegate
+                  operator-id: alice
+                  authentications:
+                  - operator-key
+                  - store
+                  views:
+                  - bob/network/wifi-admin
+                  - bob/network/wifi-state
+              undelegate:
+                summary: Withdraw all access from an operator
+                value:
+                  action: undelegate
+                  operator-id: alice
+              undelegatePartial:
+                summary: Withdraw access to specific views
+                value:
+                  action: undelegate
+                  operator-id: alice
+                  authentications:
+                  - store
+                  views:
+                  - bob/network/wifi-admin
+      responses:
+        '200':
+          description: The confdb-control assertion was updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  result:
+                    type:
+                    - object
+                    - 'null'
+                    example: null
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+  /v2/interfaces/requests/prompts:
+    get:
+      tags:
+      - Experimental
+      summary: Retrieve all outstanding prompts
+      description: Retrieves a list of all outstanding access request prompts.
+      operationId: getPrompts
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: An array of prompt objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PromptingPrompt'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/interfaces/requests/prompts/{id}:
+    get:
+      tags:
+      - Experimental
+      summary: Retrieve a prompt by ID
+      description: Retrieves the details of a single prompt specified by its unique ID.
+      operationId: getPromptById
+      security: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The unique identifier of the prompt to retrieve.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: The details of the requested prompt.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptingPrompt'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Experimental
+      summary: Reply to a prompt
+      description: 'Submit a reply (allow or deny) to an outstanding prompt, potentially
+
+        creating a new rule.'
+      operationId: replyToPrompt
+      security: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The unique identifier of the prompt to which to reply.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromptingReply'
+      responses:
+        '200':
+          description: An array of prompt IDs that were also satisfied by this reply.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/interfaces/requests/rules:
+    get:
+      tags:
+      - Experimental
+      summary: Retrieve all rules
+      description: Retrieves a list of all prompting rules, with optional filtering.
+      operationId: getRules
+      security: []
+      parameters:
+      - name: snap
+        in: query
+        required: false
+        description: Only retrieve rules which apply to the given snap.
+        schema:
+          type: string
+      - name: interface
+        in: query
+        required: false
+        description: Only retrieve rules which apply to the given interface.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: An array of rule objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PromptingRule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Experimental
+      summary: Create or remove rules
+      description: Create a new access rule or remove a set of existing rules based on a selector.
+      operationId: manageRules
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PromptingRuleActionAdd'
+              - $ref: '#/components/schemas/PromptingRuleActionRemove'
+      responses:
+        '200':
+          description: The created rule (for 'add' action) or an array of removed rules (for 'remove' action).
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/PromptingRule'
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/PromptingRule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/interfaces/requests/rules/{id}:
+    get:
+      tags:
+      - Experimental
+      summary: Retrieve a rule by ID
+      description: Retrieves the details of a single rule specified by its unique ID.
+      operationId: getRuleById
+      security: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The unique identifier of the rule to retrieve.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: The details of the requested rule.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptingRule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Experimental
+      summary: Patch or remove a rule by ID
+      description: Update or remove an existing rule specified by its unique ID.
+      operationId: updateRuleById
+      security: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The unique identifier of the rule to patch or remove.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PromptingRuleActionPatch'
+              - $ref: '#/components/schemas/PromptingRuleActionRemoveById'
+      responses:
+        '200':
+          description: The updated state of the rule, or its last state before deletion.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptingRule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    PromptingRule:
+      type: object
+      description: An object describing the structure of a rule.
+      required:
+      - id
+      - timestamp
+      - user
+      - snap
+      - interface
+      - constraints
+      properties:
+        id:
+          type: string
+          description: Unique rule identifier.
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of rule creation/modification.
+        user:
+          type: integer
+          description: The UID for which the rule applies.
+        snap:
+          type: string
+          description: The name of the snap for which the rule applies.
+        interface:
+          type: string
+          description: The interface for which the rule applies.
+          enum:
+          - camera
+          - home
+        constraints:
+          oneOf:
+          - $ref: '#/components/schemas/PromptingRuleConstraintsCamera'
+          - $ref: '#/components/schemas/PromptingRuleConstraintsHome'
+    PromptingConstraintsCamera:
+      type: object
+      description: Details about the applicability of the new rule to requests.
+      required:
+      - permissions
+      properties:
+        permissions:
+          type: object
+          description: A map from permission name to the information about that permission.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    PromptingRuleActionAdd:
+      type: object
+      description: The schema the API uses for the 'add' action of /v2/interfaces/rules.
+      required:
+      - action
+      - rule
+      properties:
+        action:
+          type: string
+          description: The action to perform on the rules endpoint.
+          enum:
+          - add
+        rule:
+          type: object
+          properties:
+            snap:
+              type: string
+              description: The snap for which to add the rule.
+            interface:
+              type: string
+              description: The interface for which to add the rule.
+            constraints:
+              oneOf:
+              - $ref: '#/components/schemas/PromptingConstraintsCamera'
+              - $ref: '#/components/schemas/PromptingConstraintsHome'
+    PromptingRuleConstraintsCamera:
+      type: object
+      description: Details about the applicability of the existing rule to requests.
+      required:
+      - permissions
+      properties:
+        permissions:
+          type: object
+          description: A map linking the permission name to it's respective information.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionRuleEntry'
+    PromptingPermissionRuleEntry:
+      type: object
+      required:
+      - outcome
+      - lifespan
+      properties:
+        outcome:
+          type: string
+          enum:
+          - allow
+          - deny
+        lifespan:
+          type: string
+          description: 'The lifespan for which the permission applies.
+
+
+            timespan: the permission applies for the given duration specified by the
+
+            duration field or until it is deleted
+
+
+            session: the permission applies until the user logs out (specifically,
+
+            until the systemd user session ends)
+
+
+            forever: the permission applies until it is deleted'
+          enum:
+          - timespan
+          - session
+          - forever
+        expiration:
+          type: string
+          format: date-time
+          description: 'The timestamp at which the permission will expire. Required if lifespan
+
+            is timespan, otherwise must be omitted.'
+        session-id:
+          type: string
+          description: 'The opaque session ID used for session-based permissions. Required if
+
+            lifespan is session, otherwise must be omitted.'
+    PromptingPermissionEntry:
+      type: object
+      required:
+      - outcome
+      - lifespan
+      properties:
+        outcome:
+          type: string
+          enum:
+          - allow
+          - deny
+        lifespan:
+          type: string
+          description: 'The lifespan for which the permission applies.
+
+
+            timespan: the permission applies for the given duration specified by the
+
+            duration field or until it is deleted
+
+
+            session: the permission applies until the user logs out (specifically,
+
+            until the systemd user session ends)
+
+
+            forever: the permission applies until it is deleted'
+          enum:
+          - timespan
+          - session
+          - forever
+        duration:
+          type: string
+          description: 'The duration for which the permission is valid. Required if lifespan is
+
+            timespan, otherwise must be omitted.'
+          format: Go duration
+          externalDocs:
+            description: 'Read more about how Go handles time and durations in the official Go
+
+              Time package documentation.'
+            url: https://pkg.go.dev/time
+          example: 7h30m
+    PromptingRuleConstraintsHome:
+      type: object
+      description: Details about the applicability of the existing rule to requests.
+      required:
+      - path-pattern
+      - permissions
+      properties:
+        path-pattern:
+          type: string
+          description: Path glob matching filepaths for which the rule applies.
+        permissions:
+          type: object
+          description: A map linking the permission name to it's respective information.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionRuleEntry'
+    PromptingPatchConstraintsCamera:
+      type: object
+      description: 'Details about the applicability of the modified rule to requests.
+
+
+        Any fields which are omitted are left unchanged from the existing rule.'
+      properties:
+        permissions:
+          type: object
+          description: 'A map from permission name to the information about that permission.
+
+
+            Any permissions omitted from this map are left unchanged from the existing rule.
+
+
+            To remove a permission from the existing rule, map the permission name to null.'
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    PromptingReplyConstraintsCamera:
+      type: object
+      description: Represents the constraints associated with a reply to a prompt for the camera interface.
+      required:
+      - permissions
+      properties:
+        permissions:
+          type: array
+          description: The permissions applied to requests to access cameras via the camera interface.
+          items:
+            type: string
+            enum:
+            - access
+    PromptingPrompt:
+      type: object
+      required:
+      - id
+      - timestamp
+      - snap
+      - interface
+      - constraints
+      properties:
+        id:
+          type: string
+          description: Unique prompt identifier.
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp at which the prompt was created or last modified (RFC3339Nano format).
+        snap:
+          type: string
+          description: The name of the snap whose action triggered the prompt.
+        interface:
+          type: string
+          description: The interface associated with the prompt.
+          enum:
+          - home
+          - camera
+        constraints:
+          oneOf:
+          - $ref: '#/components/schemas/PromptingPromptConstraintsCamera'
+          - $ref: '#/components/schemas/PromptingPromptConstraintsHome'
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    PromptingRuleActionPatch:
+      type: object
+      description: The schema the API uses for the 'patch' action of /v2/interfaces/rules/{id}.
+      required:
+      - action
+      - rule
+      properties:
+        action:
+          type: string
+          description: The action to perform on the rule with the given ID.
+          enum:
+          - patch
+        rule:
+          type: object
+          properties:
+            constraints:
+              oneOf:
+              - $ref: '#/components/schemas/PromptingPatchConstraintsCamera'
+              - $ref: '#/components/schemas/PromptingPatchConstraintsHome'
+    PromptingConstraintsHome:
+      type: object
+      description: Details about the applicability of the new rule to requests.
+      required:
+      - path-pattern
+      - permissions
+      properties:
+        path-pattern:
+          type: string
+          description: Path glob matching filepaths for which the rule applies.
+        permissions:
+          type: object
+          description: A map from permission name to the information about that permission.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    PromptingPromptConstraintsHome:
+      type: object
+      description: Represents the constraints associated with a prompt for the home interface.
+      required:
+      - path
+      - requested-permissions
+      - available-permissions
+      properties:
+        path:
+          type: string
+          description: The path for which access is requested.
+          example: /home/ubuntu/Downloads/image.png
+        requested-permissions:
+          type: array
+          description: The permissions for which access is requested.
+          items:
+            type: string
+            enum:
+            - read
+            - write
+            - execute
+        available-permissions:
+          type: array
+          description: The complete list of permissions for the home interface.
+          items:
+            type: string
+            enum:
+            - read
+            - write
+            - execute
+    PromptingRuleActionRemoveById:
+      type: object
+      description: The schema the API uses for the 'remove' action of /v2/interfaces/rules/{id}.
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          description: The action to perform on the rule with the given ID.
+          enum:
+          - remove
+    PromptingReplyConstraintsHome:
+      type: object
+      description: Represents the constraints associated with a reply to a prompt for the home interface.
+      required:
+      - path-pattern
+      - permissions
+      properties:
+        path-pattern:
+          type: string
+          description: 'Path glob matching filepaths for which the reply applies, which must
+
+            match (in the globstar sense) the originally-requested path, must
+
+            begin with /, and may include bash-like constructions such as *, /**/,
+
+            and {a,b}, but must not include character classes of the form [abc] or
+
+            [^abc].'
+          example: /home/user0/Pictures/**/*.{png,jpg,jpeg,svg}
+        permissions:
+          type: array
+          description: 'The permission applied to files matching the path glob in
+
+            ''path-pattern''.'
+          items:
+            type: string
+            enum:
+            - read
+            - write
+            - execute
+    PromptingPromptConstraintsCamera:
+      type: object
+      description: Represents the constraints associated with a prompt for the camera interface.
+      required:
+      - requested-permissions
+      - available-permissions
+      properties:
+        requested-permissions:
+          type: array
+          description: The permissions for which access is requested.
+          items:
+            type: string
+            enum:
+            - access
+        available-permissions:
+          type: array
+          description: The complete list of permissions for the camera interface.
+          items:
+            type: string
+            enum:
+            - access
+    PromptingReply:
+      type: object
+      required:
+      - action
+      - lifespan
+      - constraints
+      properties:
+        action:
+          type: string
+          enum:
+          - allow
+          - deny
+        lifespan:
+          type: string
+          description: 'The lifespan for which the decision applies.
+
+
+            single: the decision only applies to the prompt with the given ID
+
+
+            timespan: the decision creates a rule which applies for the duration
+
+            specified by the duration field or until it is deleted
+
+
+            session: the decision creates a rule which applies until the user logs
+
+            out (specifically, until the systemd user session ends)
+
+
+            forever: the decision creates a rule which applies until it is deleted'
+          enum:
+          - single
+          - timespan
+          - session
+          - forever
+        duration:
+          type: string
+          description: 'The duration for which the decision applies. Required if lifespan is
+
+            timespan, otherwise must be omitted.'
+          format: Go duration
+          externalDocs:
+            description: 'Read more about how Go handles time and durations in the official Go
+
+              Time package documentation.'
+            url: https://pkg.go.dev/time
+          example: 7h30m
+        constraints:
+          oneOf:
+          - $ref: '#/components/schemas/PromptingReplyConstraintsCamera'
+          - $ref: '#/components/schemas/PromptingReplyConstraintsHome'
+    ConfdbControlAction:
+      type: object
+      description: Request to delegate or withdraw an operator's remote access to confdb views.
+      required:
+      - action
+      - operator-id
+      properties:
+        action:
+          type: string
+          enum:
+          - delegate
+          - undelegate
+          description: 'The action to perform.
+
+
+            Use `delegate` to grant access, or `undelegate` to withdraw it.'
+        operator-id:
+          type: string
+          description: The account ID of the operator.
+          example: alice
+        authentications:
+          type: array
+          description: 'Determines how request messages are signed. With `operator-key`, the
+
+            operator signs messages directly. With `store`, the Store signs on their
+
+            behalf.
+
+
+            Required for `delegate`. For `undelegate`, omit to withdraw all
+
+            authentication methods.'
+          items:
+            type: string
+            enum:
+            - operator-key
+            - store
+          example:
+          - operator-key
+        views:
+          type: array
+          description: 'The confdb views, specified in the format `<account-id>/<schema>/<view-name>`.
+
+
+            Required for `delegate`. For `undelegate`, omit to withdraw access from
+
+            all views.'
+          items:
+            type: string
+          example:
+          - bob/network/wifi-admin
+          - bob/network/wifi-state
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    PromptingRuleActionRemove:
+      type: object
+      description: The schema the API uses for the 'remove' action of /v2/interfaces/rules.
+      required:
+      - action
+      - selector
+      properties:
+        action:
+          type: string
+          description: The action to perform on the rules endpoint.
+          enum:
+          - remove
+        selector:
+          type: object
+          description: Used to select rules for removal.
+          properties:
+            snap:
+              type: string
+              description: The snap for which to remove rules.
+            interface:
+              type: string
+              description: The interface for which to remove rules.
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    PromptingPatchConstraintsHome:
+      type: object
+      description: 'Details about the applicability of the modified rule to requests.
+
+
+        Any fields which are omitted are left unchanged from the existing rule.'
+      properties:
+        path-pattern:
+          type: string
+          description: Path glob matching filepaths for which the rule applies.
+        permissions:
+          type: object
+          description: 'A map from permission name to the information about that permission.
+
+
+            Any permissions omitted from this map are left unchanged from the existing rule.
+
+
+            To remove a permission from the existing rule, map the permission name to null.'
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+  parameters:
+    UserId:
+      name: user-id
+      in: query
+      required: false
+      description: 'Admin only: Specify a particular UID with which to identify when acting on the
+
+        API, rather than the default, which is the UID of the client.'
+      schema:
+        type: integer
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    AccessDenied:
+      description: "Access Denied. The daemon/store cannot or will not process the request because \nthe user does not have the correct authorization from the system."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                description: The HTTP status code.
+                enum:
+                - 401
+              status:
+                type: string
+                description: The textual representation of the status code.
+                enum:
+                - Unauthorized
+              type:
+                type: string
+                description: The type of response.
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    description: A machine-readable string identifying the error type.
+                    enum:
+                    - login-required
+                  message:
+                    type: string
+                    description: A human-readable error message.
+                    enum:
+                    - access denied
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation

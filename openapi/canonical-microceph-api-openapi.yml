@@ -1,7 +1,9 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   version: '1.0'
-  title: 'MicroCeph REST APIs'
+  title: REST Microceph API
+tags:
+- name: Microceph
 paths:
   /1.0/microceph/config/log-level:
     put:
@@ -12,8 +14,8 @@ paths:
         required: true
         content:
           application/json:
-            schema: 
-              $ref: "#/components/schemas/Level"
+            schema:
+              $ref: '#/components/schemas/Level'
       responses:
         '200':
           description: Successfully set log-level
@@ -21,8 +23,10 @@ paths:
           description: Default error response
           content:
             application/json:
-              schema: 
-                $ref: "#/components/schemas/Response"
+              schema:
+                $ref: '#/components/schemas/Response'
+      tags:
+      - Microceph
     get:
       summary: Get log level for MicroCeph
       description: Fetches the current logging level of the MicroCeph daemon.
@@ -32,55 +36,62 @@ paths:
           description: Successfully fetched log-level
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   metadata:
                     type: integer
                     description: Numerical value of the log-level
-                    $ref: "#/components/schemas/Level"
+                    $ref: '#/components/schemas/Level'
                     example: 4
-        default: 
+        default:
           description: Default error response
           content:
             application/json:
-              schema: 
-                $ref: "#/components/schemas/Response"
-          
+              schema:
+                $ref: '#/components/schemas/Response'
+      tags:
+      - Microceph
 components:
   schemas:
     Level:
       type: string
-      oneOf: 
-        - title: PANIC
-          const: 0
-        - title: FATAL
-          const: 1
-        - title: ERROR
-          const: 2
-        - title: WARNING
-          const: 3
-        - title: INFO
-          const: 4
-        - title: DEBUG
-          const: 5
-        - title: TRACE
-          const: 6
+      oneOf:
+      - title: PANIC
+        const: 0
+      - title: FATAL
+        const: 1
+      - title: ERROR
+        const: 2
+      - title: WARNING
+        const: 3
+      - title: INFO
+        const: 4
+      - title: DEBUG
+        const: 5
+      - title: TRACE
+        const: 6
     Response:
       type: object
       properties:
         type:
           type: string
           description: Type of response
-          examples: ["sync", "error"]
+          examples:
+          - sync
+          - error
         status:
           type: string
           description: Status of operation.
-          examples: ["Success", "Error"]
+          examples:
+          - Success
+          - Error
         status_code:
           type: integer
           description: Success HTTP status code, 0 for errors.
-          examples: [200, 0]
+          examples:
+          - 200
+          - 0
         operation:
           type: string
           description: Operation name.
@@ -90,9 +101,9 @@ components:
         error:
           type: string
           description: Description of error.
-          example: "Failed to run: ceph config get test_key: exit status 22"
+          example: 'Failed to run: ceph config get test_key: exit status 22'
         metadata:
-          oneOf: 
-            -  type: object
-            -  type: 'null'
+          oneOf:
+          - type: object
+          - type: 'null'
           description: Response payload, could be null, or a valid json object.

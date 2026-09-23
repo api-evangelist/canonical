@@ -1,0 +1,177 @@
+openapi: 3.2.0
+info:
+  title: Canonical Health API
+  version: '1.0'
+  description: 'Operations tagged health across 3 of this provider''s published API definitions: canonical-cos-registration-server-api-openapi.yml, canonical-pebble-api-openapi.yml, canonical-test-observer-api-openapi.json. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Health
+paths:
+  /api/v1/health/:
+    get:
+      operationId: health_retrieve
+      description: Health get view.
+      summary: Health
+      tags:
+      - Health
+      security:
+      - {}
+      responses:
+        '200':
+          description: The application is alive.
+  /v1/health:
+    get:
+      summary: Health of specified checks
+      description: 'Fetch healthy status of specified checks.
+
+
+        See Health endpoint for more details.'
+      tags:
+      - Health
+      parameters:
+      - name: level
+        in: query
+        description: Health check level. If omitted, aggregate healthy status of checks with any (or no) level.
+        schema:
+          type: string
+          enum:
+          - alive
+          - ready
+      - name: names
+        in: query
+        description: The names of the checks to get. To get multiple checks, specify this parameter multiple times. If not set, get all checks.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Check is healthy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHealthOKResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  healthy: true
+        '502':
+          description: Check is not healthy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHealthUnhealthyResponse'
+              example:
+                type: sync
+                status-code: 502
+                status: Bad Gateway
+                result:
+                  healthy: false
+      operationId: getV1Health
+      x-operation-id-source: derived
+  /health/live:
+    get:
+      summary: Live
+      description: 'Liveness probe.
+
+
+        Returns 200 OK if the application process is running and responding to requests.
+
+        Does not check external dependencies like the database.
+
+
+        Use this probe with container orchestration to determine if the process should be restarted.
+
+        Note that this should only be accessible internally (e.g. from the host container)
+
+        and not accessible over the public API.'
+      operationId: live_health_live_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Live Health Live Get
+      tags:
+      - Health
+  /health/ready:
+    get:
+      summary: Ready
+      description: 'Readiness probe.
+
+
+        Returns 200 OK if the application is ready to serve traffic, including database connectivity.
+
+        Performs a simple database query to verify the connection is valid.
+
+
+        Use this probe with container orchestration to determine if traffic should be routed to this pod.
+
+        Note that this should only be accessible internally (e.g. from the host container)
+
+        and not accessible over the public API.
+
+        Returns 503 if the database is unavailable.'
+      operationId: ready_health_ready_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Ready Health Ready Get
+      tags:
+      - Health
+components:
+  schemas:
+    GetHealthOKResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              healthy:
+                type: boolean
+                description: True if the check is healthy, false otherwise.
+                const: true
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    GetHealthUnhealthyResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              healthy:
+                type: boolean
+                description: True if the check is healthy, false otherwise.
+                const: false
+x-refined-from:
+- canonical-cos-registration-server-api-openapi.yml
+- canonical-pebble-api-openapi.yml
+- canonical-test-observer-api-openapi.json

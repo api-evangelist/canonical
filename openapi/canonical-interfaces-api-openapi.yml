@@ -1,0 +1,436 @@
+openapi: 3.2.0
+info:
+  title: Snapd REST Interfaces API
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.txt
+  version: '1.0'
+  description: 'The REST API provides access to snapd''s state and many of its key functions,
+
+    as listed below.
+
+
+    For general information on how to use the API, including how to access it,
+
+    its requests and responses, results fields and error types, see Using the
+
+    REST API.'
+servers:
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
+tags:
+- name: Interfaces
+  description: Display and manage interactions between snaps.
+paths:
+  /v2/connections:
+    get:
+      tags:
+      - Interfaces
+      summary: Get all interface connections
+      description: Retrieves the connection status of all plugs and slots on the system.
+      operationId: getConnections
+      security: []
+      parameters:
+      - name: snap
+        in: query
+        description: Limit results to a given snap name.
+        schema:
+          type: string
+      - name: select
+        in: query
+        description: 'When set to ''all'', unconnected slots and plugs are included. When unset or empty, the
+
+          results include only those plugs and slots that are connected.'
+        schema:
+          type: string
+          enum:
+          - ''
+          - all
+      - name: interface
+        in: query
+        description: Limit results to a specific interface name.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A synchronous response containing the connection status of plugs and slots.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    $ref: '#/components/schemas/ConnectionStatus'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/interfaces:
+    get:
+      tags:
+      - Interfaces
+      summary: Get available interfaces
+      description: Retrieves the available interfaces and their associated metadata.
+      operationId: getInterfaces
+      security: []
+      parameters:
+      - name: select
+        in: query
+        description: 'Set to ''all'' to retrieve all interfaces, or ''connected'' to only return
+
+          connected interfaces (if this parameter is omitted then the call returns
+
+          the legacy format that should be no longer used).'
+        schema:
+          type: string
+          enum:
+          - all
+          - connected
+      - name: slots
+        in: query
+        description: If set to true, slot information will be returned.
+        schema:
+          type: boolean
+      - name: plugs
+        in: query
+        description: If set to true, plug information will be returned.
+        schema:
+          type: boolean
+      - name: doc
+        in: query
+        description: If set to true, interface documentation will be returned.
+        schema:
+          type: boolean
+      - name: names
+        in: query
+        description: 'Interfaces that match the list of comma-separated names will be returned.
+
+          The parameter matches against the name of the interface, not the name of
+
+          snaps, plugs, or slots.'
+        schema:
+          type: string
+          example: content
+      responses:
+        '200':
+          description: 'For non-legacy calls, returns an array of interface information.
+
+            For legacy calls, returns an array of interface objects.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    example: 200
+                  status:
+                    type: string
+                    example: OK
+                  type:
+                    type: string
+                    example: sync
+                  result:
+                    oneOf:
+                    - $ref: '#/components/schemas/LegacyInterfaceObject'
+                    - $ref: '#/components/schemas/ModernInterfaceObject'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  schemas:
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    ConnectionStatus:
+      type: object
+      description: The overall connection status of plugs and slots on the system.
+      properties:
+        established:
+          type: array
+          description: A list of connections that are currently established.
+          items:
+            $ref: '#/components/schemas/Connection'
+        undesired:
+          type: array
+          description: A list of connections that have been manually disconnected.
+          items:
+            $ref: '#/components/schemas/Connection'
+        plugs:
+          type: array
+          description: A list of all available plugs.
+          items:
+            $ref: '#/components/schemas/Plug'
+        slots:
+          type: array
+          description: A list of all available slots.
+          items:
+            $ref: '#/components/schemas/Slot'
+    Connection:
+      type: object
+      description: Represents a connection between a specific plug and slot.
+      properties:
+        slot:
+          $ref: '#/components/schemas/SlotRef'
+        plug:
+          $ref: '#/components/schemas/PlugRef'
+        interface:
+          type: string
+          description: The name of the interface governing the connection.
+        manual:
+          type: boolean
+          description: True if the connection was established manually.
+        gadget:
+          type: boolean
+          description: True if the connection is defined by the gadget snap.
+        slot-attrs:
+          type: object
+          additionalProperties: true
+          description: 'A map of the slot''s attributes.
+
+            These are negotiated by and belong to the connection.'
+        plug-attrs:
+          type: object
+          additionalProperties: true
+          description: 'A map of the plug''s attributes.
+
+            These are negotiated by and belong to the connection.'
+    Slot:
+      type: object
+      description: Detailed information about a slot.
+      properties:
+        snap:
+          type: string
+          description: The name of the snap providing the slot.
+        slot:
+          type: string
+          description: The name of the slot itself.
+        interface:
+          type: string
+          description: The interface name for the slot.
+        attrs:
+          type: object
+          additionalProperties: true
+          description: 'A static map of the slot''s attributes.
+
+            These are attributes that belong to the slot'
+        apps:
+          type: array
+          items:
+            type: string
+          description: A list of apps associated with this slot.
+        label:
+          type: string
+          description: The display label for the slot.
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlugRef'
+          description: A list of plugs connected to this slot.
+    LegacyInterfaceObject:
+      type: object
+      description: The legacy interface object.
+      properties:
+        plugs:
+          type: array
+          description: A list of plugs on the system matching the search criteria.
+          items:
+            $ref: '#/components/schemas/Plug'
+        slots:
+          type: array
+          description: A list of slots on the system matching the search criteria.
+          items:
+            $ref: '#/components/schemas/Slot'
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    PlugRef:
+      type: object
+      description: A reference to a specific plug.
+      properties:
+        snap:
+          type: string
+          description: The name of the snap providing the plug.
+        plug:
+          type: string
+          description: The name of the plug.
+    Plug:
+      type: object
+      description: Detailed information about a plug.
+      properties:
+        snap:
+          type: string
+          description: The name of the snap providing the plug.
+        plug:
+          type: string
+          description: The name of the plug itself.
+        interface:
+          type: string
+          description: The interface name for the plug.
+        attrs:
+          type: object
+          additionalProperties: true
+          description: 'A static map of the plug''s attributes.
+
+            These are attributes that belong to the plug'
+        apps:
+          type: array
+          items:
+            type: string
+          description: A list of apps associated with this plug.
+        label:
+          type: string
+          description: The display label for the plug.
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlotRef'
+          description: A list of slots this plug is connected to.
+    ModernInterfaceObject:
+      type: array
+      description: Modernized interface object.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: The name of the interface.
+          summary:
+            type: string
+            description: The summary providing information regarding the interface.
+          doc-url:
+            type: string
+            format: url
+            description: The url to the interfaces documentation.
+          plugs:
+            type: array
+            description: A list of plugs on the system matching the search criteria.
+            items:
+              $ref: '#/components/schemas/Plug'
+          slots:
+            type: array
+            description: A list of slots on the system matching the search criteria.
+            items:
+              $ref: '#/components/schemas/Slot'
+    SlotRef:
+      type: object
+      description: A reference to a specific slot.
+      properties:
+        snap:
+          type: string
+          description: The name of the snap providing the slot.
+        slot:
+          type: string
+          description: The name of the slot.
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation

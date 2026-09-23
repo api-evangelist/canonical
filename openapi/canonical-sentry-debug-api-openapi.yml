@@ -1,0 +1,25 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Sentry Debug API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: Sentry Debug
+paths:
+  /sentry-debug:
+    get:
+      summary: Trigger Error
+      operationId: trigger_error_sentry_debug_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      x-permissions:
+      - view_sentry_debug
+      tags:
+      - Sentry Debug

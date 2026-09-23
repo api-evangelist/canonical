@@ -1,0 +1,63 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Oidc API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Oidc_Api
+paths:
+  /oidc/auth-init:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - Oidc_Api
+      summary: Initiate client request and proxy request to OIDC provider
+      description: ':return: dict containing required OIDC parameters for client to
+
+        authenticate with provider'
+      operationId: postOidcAuthInit
+      x-operation-id-source: derived
+  /oidc/auth-poll/{request_id}:
+    post:
+      parameters:
+      - in: path
+        name: request_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Oidc_Api
+      summary: Poll for OIDC authentication result based on request ID
+      description: ':param request_id: unique request ID generated during auth initiation
+
+        :return: dict containing authentication result and user info if successful'
+      operationId: postOidcAuthPollByRequestId
+      x-operation-id-source: derived
+components:
+  schemas:
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object

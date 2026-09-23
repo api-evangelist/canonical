@@ -1,0 +1,1113 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: lxd@lists.canonical.com
+    name: LXD upstream
+    url: https://github.com/canonical/lxd
+  description: 'This is the REST API used by all LXD clients.
+
+    Internal endpoints aren''t included in this documentation.
+
+
+    The LXD API is available over both a local unix+http and remote https API.
+
+    Authentication for local users relies on group membership and access to the unix socket.
+
+    For remote users, the default authentication method is TLS client.'
+  license:
+    name: AGPL-3.0-only
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  title: LXD external REST Networks API
+  version: '1.0'
+tags:
+- name: Networks
+paths:
+  /1.0/networks:
+    get:
+      description: Returns a list of networks (URLs).
+      operationId: networks_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Retrieve networks from all projects
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/networks/lxdbr0\",\n  \"/1.0/networks/lxdbr1\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the networks
+      tags:
+      - Networks
+    post:
+      description: 'Creates a new network.
+
+        When clustered, most network types require individual POST for each cluster member prior to a global POST.'
+      operationId: networks_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Add a network
+      tags:
+      - Networks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NetworksPost'
+        description: Network
+        required: true
+  /1.0/networks/{name}:
+    delete:
+      description: Removes the network.
+      operationId: network_delete
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete the network
+      tags:
+      - Networks
+    get:
+      description: Gets a specific network.
+      operationId: network_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Network
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Network'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the network
+      tags:
+      - Networks
+    patch:
+      description: Updates a subset of the network configuration.
+      operationId: network_patch
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Partially update the network
+      tags:
+      - Networks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NetworkPut'
+        description: Network configuration
+        required: true
+    post:
+      description: Renames an existing network.
+      operationId: network_post
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Rename the network
+      tags:
+      - Networks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NetworkPost'
+        description: Network rename request
+        required: true
+    put:
+      description: Updates the entire network configuration.
+      operationId: network_put
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '202':
+          $ref: '#/components/responses/Operation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the network
+      tags:
+      - Networks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NetworkPut'
+        description: Network configuration
+        required: true
+  /1.0/networks/{name}/leases:
+    get:
+      description: Returns a list of DHCP leases for the network.
+      operationId: networks_leases_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of DHCP leases
+                    items:
+                      $ref: '#/components/schemas/NetworkLease'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the DHCP leases
+      tags:
+      - Networks
+  /1.0/networks/{name}/state:
+    get:
+      description: Returns the current network state information.
+      operationId: networks_state_get
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/NetworkState'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the network state
+      tags:
+      - Networks
+  /1.0/networks?recursion=1:
+    get:
+      description: Returns a list of networks (structs).
+      operationId: networks_get_recursion1
+      parameters:
+      - description: Project name
+        example: default
+        in: query
+        name: project
+        schema:
+          type: string
+      - description: Cluster member name
+        example: lxd01
+        in: query
+        name: target
+        schema:
+          type: string
+      - description: Retrieve networks from all projects
+        example: true
+        in: query
+        name: all-projects
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of networks
+                    items:
+                      $ref: '#/components/schemas/Network'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the networks
+      tags:
+      - Networks
+components:
+  schemas:
+    NetworkState:
+      description: NetworkState represents the network state
+      properties:
+        addresses:
+          description: List of addresses
+          items:
+            $ref: '#/components/schemas/NetworkStateAddress'
+          type: array
+          x-go-name: Addresses
+        bond:
+          $ref: '#/components/schemas/NetworkStateBond'
+        bridge:
+          $ref: '#/components/schemas/NetworkStateBridge'
+        counters:
+          $ref: '#/components/schemas/NetworkStateCounters'
+        hwaddr:
+          description: MAC address
+          example: 00:16:3e:5a:83:57
+          type: string
+          x-go-name: Hwaddr
+        mtu:
+          description: MTU
+          example: 1500
+          format: int64
+          type: integer
+          x-go-name: Mtu
+        ovn:
+          $ref: '#/components/schemas/NetworkStateOVN'
+        state:
+          description: Link state
+          example: up
+          type: string
+          x-go-name: State
+        type:
+          description: Interface type
+          example: broadcast
+          type: string
+          x-go-name: Type
+        vlan:
+          $ref: '#/components/schemas/NetworkStateVLAN'
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Network:
+      description: Network represents a LXD network
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        config:
+          additionalProperties:
+            type: string
+          description: Network configuration map (refer to doc/networks.md)
+          example:
+            ipv4.address: 10.0.0.1/24
+            ipv4.nat: 'true'
+            ipv6.address: none
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the profile
+
+
+            API extension: entity_description'
+          example: My new LXD bridge
+          type: string
+          x-go-name: Description
+        locations:
+          description: 'Cluster members on which the network has been defined
+
+
+            API extension: clustering'
+          example:
+          - lxd01
+          - lxd02
+          - lxd03
+          items:
+            type: string
+          readOnly: true
+          type: array
+          x-go-name: Locations
+        managed:
+          description: 'Whether this is a LXD managed network
+
+
+            API extension: network'
+          example: true
+          readOnly: true
+          type: boolean
+          x-go-name: Managed
+        name:
+          description: The network name
+          example: lxdbr0
+          readOnly: true
+          type: string
+          x-go-name: Name
+        project:
+          description: 'Project name
+
+
+            API extension: networks_all_projects'
+          example: project1
+          type: string
+          x-go-name: Project
+        status:
+          description: 'The state of the network (for managed network in clusters)
+
+
+            API extension: clustering'
+          example: Created
+          readOnly: true
+          type: string
+          x-go-name: Status
+        type:
+          description: The network type
+          example: bridge
+          readOnly: true
+          type: string
+          x-go-name: Type
+        used_by:
+          description: List of URLs of objects using this profile
+          example:
+          - /1.0/profiles/default
+          - /1.0/instances/c1
+          items:
+            type: string
+          readOnly: true
+          type: array
+          x-go-name: UsedBy
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateBridge:
+      description: NetworkStateBridge represents bridge specific state
+      properties:
+        forward_delay:
+          description: Delay on port join (ms)
+          example: 1500
+          format: uint64
+          type: integer
+          x-go-name: ForwardDelay
+        id:
+          description: Bridge ID
+          example: 8000.0a0f7c6edbd9
+          type: string
+          x-go-name: ID
+        stp:
+          description: Whether STP is enabled
+          example: false
+          type: boolean
+          x-go-name: STP
+        upper_devices:
+          description: List of devices that are in the bridge
+          example:
+          - eth0
+          - eth1
+          items:
+            type: string
+          type: array
+          x-go-name: UpperDevices
+        vlan_default:
+          description: Default VLAN ID
+          example: 1
+          format: uint64
+          type: integer
+          x-go-name: VLANDefault
+        vlan_filtering:
+          description: Whether VLAN filtering is enabled
+          example: false
+          type: boolean
+          x-go-name: VLANFiltering
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkPost:
+      description: NetworkPost represents the fields required to rename a LXD network
+      properties:
+        name:
+          description: The new name for the network
+          example: lxdbr1
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
+      properties:
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
+          type: string
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
+          type: string
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateBond:
+      description: NetworkStateBond represents bond specific state
+      properties:
+        down_delay:
+          description: Delay on link down (ms)
+          example: 0
+          format: uint64
+          type: integer
+          x-go-name: DownDelay
+        lower_devices:
+          description: List of devices that are part of the bond
+          example:
+          - eth0
+          - eth1
+          items:
+            type: string
+          type: array
+          x-go-name: LowerDevices
+        mii_frequency:
+          description: How often to check for link state (ms)
+          example: 100
+          format: uint64
+          type: integer
+          x-go-name: MIIFrequency
+        mii_state:
+          description: Bond link state
+          example: up
+          type: string
+          x-go-name: MIIState
+        mode:
+          description: Bonding mode
+          example: 802.3ad
+          type: string
+          x-go-name: Mode
+        transmit_policy:
+          description: Transmit balancing policy
+          example: layer3+4
+          type: string
+          x-go-name: TransmitPolicy
+        up_delay:
+          description: Delay on link up (ms)
+          example: 0
+          format: uint64
+          type: integer
+          x-go-name: UpDelay
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateOVN:
+      description: NetworkStateOVN represents OVN specific state
+      properties:
+        chassis:
+          description: OVN network chassis name
+          type: string
+          x-go-name: Chassis
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateCounters:
+      description: NetworkStateCounters represents packet counters
+      properties:
+        bytes_received:
+          description: Number of bytes received
+          example: 250542118
+          format: uint64
+          type: integer
+          x-go-name: BytesReceived
+        bytes_sent:
+          description: Number of bytes sent
+          example: 17524040140
+          format: uint64
+          type: integer
+          x-go-name: BytesSent
+        packets_received:
+          description: Number of packets received
+          example: 1182515
+          format: uint64
+          type: integer
+          x-go-name: PacketsReceived
+        packets_sent:
+          description: Number of packets sent
+          example: 1567934
+          format: uint64
+          type: integer
+          x-go-name: PacketsSent
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworksPost:
+      description: NetworksPost represents the fields of a new LXD network
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Network configuration map (refer to doc/networks.md)
+          example:
+            ipv4.address: 10.0.0.1/24
+            ipv4.nat: 'true'
+            ipv6.address: none
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the profile
+
+
+            API extension: entity_description'
+          example: My new LXD bridge
+          type: string
+          x-go-name: Description
+        name:
+          description: The name of the new network
+          example: lxdbr1
+          type: string
+          x-go-name: Name
+        type:
+          description: The network type (refer to doc/networks.md)
+          example: bridge
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateVLAN:
+      description: NetworkStateVLAN represents VLAN specific state
+      properties:
+        lower_device:
+          description: Parent device
+          example: eth0
+          type: string
+          x-go-name: LowerDevice
+        vid:
+          description: VLAN ID
+          example: 100
+          format: uint64
+          type: integer
+          x-go-name: VID
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkPut:
+      description: NetworkPut represents the modifiable fields of a LXD network
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Network configuration map (refer to doc/networks.md)
+          example:
+            ipv4.address: 10.0.0.1/24
+            ipv4.nat: 'true'
+            ipv6.address: none
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the profile
+
+
+            API extension: entity_description'
+          example: My new LXD bridge
+          type: string
+          x-go-name: Description
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLease:
+      description: NetworkLease represents a DHCP lease
+      properties:
+        address:
+          description: The IP address
+          example: 10.0.0.98
+          type: string
+          x-go-name: Address
+        hostname:
+          description: The hostname associated with the record
+          example: c1
+          type: string
+          x-go-name: Hostname
+        hwaddr:
+          description: The MAC address
+          example: 00:16:3e:2c:89:d9
+          type: string
+          x-go-name: Hwaddr
+        location:
+          description: 'What cluster member this record was found on
+
+
+            API extension: network_leases_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        project:
+          description: 'Name of the project of the entity related to the hostname
+
+
+            API extension: network_allocations_ovn_uplink'
+          example: default
+          type: string
+          x-go-name: Project
+        type:
+          description: The type of record (static or dynamic)
+          example: dynamic
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Operation:
+      description: Operation represents a LXD background operation
+      properties:
+        child_count:
+          description: 'Number of child operations.
+
+
+            API extension: operation_child_count'
+          example: 2
+          format: int64
+          type: integer
+          x-go-name: ChildCount
+        class:
+          description: Type of operation (task, token or websocket)
+          example: websocket
+          type: string
+          x-go-name: Class
+        created_at:
+          description: Operation creation time
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the operation
+          example: Executing command
+          type: string
+          x-go-name: Description
+        err:
+          description: Operation error message
+          example: Some error message
+          type: string
+          x-go-name: Err
+        err_code:
+          description: 'Operation error code
+
+
+            API extension: bulk_operations'
+          example: 404
+          format: int64
+          type: integer
+          x-go-name: ErrCode
+        id:
+          description: UUID of the operation
+          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
+          type: string
+          x-go-name: ID
+        location:
+          description: 'Which cluster member this record was found on
+
+
+            API extension: operation_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        may_cancel:
+          description: Whether the operation can be canceled
+          example: false
+          type: boolean
+          x-go-name: MayCancel
+        metadata:
+          additionalProperties: {}
+          description: Operation specific metadata
+          example:
+            command:
+            - bash
+            environment:
+              HOME: /root
+              LANG: C.UTF-8
+              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              TERM: xterm
+              USER: root
+            fds:
+              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
+              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
+            interactive: true
+          type: object
+          x-go-name: Metadata
+        requestor:
+          $ref: '#/components/schemas/OperationRequestor'
+        resources:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Affected resources
+          example:
+            instances:
+            - /1.0/instances/foo
+            - /1.0/instances/bar
+          type: object
+          x-go-name: Resources
+        status:
+          description: Status name
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: Operation last change
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: UpdatedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateAddress:
+      description: NetworkStateAddress represents a network address
+      properties:
+        address:
+          description: IP address
+          example: 10.0.0.1
+          type: string
+          x-go-name: Address
+        family:
+          description: Address family
+          example: inet
+          type: string
+          x-go-name: Family
+        netmask:
+          description: IP netmask (CIDR)
+          example: '24'
+          type: string
+          x-go-name: Netmask
+        scope:
+          description: Address scope
+          example: global
+          type: string
+          x-go-name: Scope
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

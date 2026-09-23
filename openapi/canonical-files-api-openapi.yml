@@ -1,0 +1,380 @@
+openapi: 3.2.0
+info:
+  title: Pebble Files API
+  version: v1
+tags:
+- name: Files
+paths:
+  /v1/files:
+    get:
+      summary: Read or list files
+      tags:
+      - Files
+      description: Read the contents of files or list files from the remote system.
+      parameters:
+      - name: action
+        in: query
+        description: Action to perform.
+        required: true
+        schema:
+          type: string
+          enum:
+          - list
+          - read
+      - name: path
+        in: query
+        description: 'For "read": Absolute file path to read. To read multiple files, specify this parameter multiple times.
+
+
+          For "list": Absolute path to the directory to list.
+
+          '
+        required: true
+        schema:
+          type: string
+        style: form
+        explode: true
+      - name: pattern
+        in: query
+        description: Glob pattern to filter files/directories for the "list" action.
+        schema:
+          type: string
+      - name: itself
+        in: query
+        description: 'For the "list" action, `itself` specifies whether to return information about the directory itself ("true")
+
+          or list the contents of the directory ("false").
+
+          '
+        schema:
+          type: string
+          enum:
+          - 'false'
+          - 'true'
+      responses:
+        '200':
+          description: "For \"list\": JSON array of file information.\n\nFor \"read\":  Multipart form data response with file contents and metadata. Raw multipart response example:\n\n```\nContent-Type: multipart/form-data; boundary=01234567890123456789012345678901\\r\n--01234567890123456789012345678901\\r\nContent-Disposition: form-data; name=\"files\"; filename=\"/etc/hosts\"\\r\n\\r\n127.0.0.1 localhost  # \\xf0\\x9f\\x98\\x80\\nfoo\\r\\nbar\\r\n--01234567890123456789012345678901\\r\nContent-Disposition: form-data; name=\"response\"\\r\n\\r\n{\n    \"result\": [{\"path\": \"/etc/hosts\"}],\n    \"status\": \"OK\",\n    \"status-code\": 200,\n    \"type\": \"sync\"\n}\\r\n--01234567890123456789012345678901--\\r\n```\n"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFilesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                - path: /home/ubuntu/PEBBLE_HOME/layers/001-simple-layer.yaml
+                  name: 001-simple-layer.yaml
+                  type: file
+                  size: 122
+                  permissions: '664'
+                  last-modified: '2024-12-27T11:13:31+08:00'
+                  user-id: 1000
+                  user: ubuntu
+                  group-id: 1000
+                  group: ubuntu
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/ReadFilesResponse'
+              example:
+                files: foo some file content
+                response:
+                  type: sync
+                  status-code: 200
+                  status: OK
+                  result:
+                  - path: /home/ubuntu/bar
+      operationId: getV1Files
+      x-operation-id-source: derived
+    post:
+      summary: Create, write, remove files/directories
+      tags:
+      - Files
+      description: 'This endpoint can:
+
+
+        - Write content to a path on the remote system. For this mode, use a multipart/form-data request body with JSON metadata in the first part. In the JSON metadata, set `action` to `write`.
+
+        - Create a directory or directory tree. For this mode, use an application/json request body with `action` set to `make-dirs`.
+
+        - Delete a file or directory. For this mode, use an application/json request body with `action` set to `remove`.'
+      requestBody:
+        description: 'For "read":  Multipart form data response with file contents and metadata. Raw multipart request example:
+
+
+          ```
+
+          Content-Type: multipart/form-data; boundary=------------------------CH5rDyBTPdcJALbspJ8rzb\r
+
+          \r
+
+          --------------------------CH5rDyBTPdcJALbspJ8rzb\r
+
+          Content-Disposition: form-data; name="request"\r
+
+          \r
+
+          {"action": "write", "files": [{"path": "/foo/bar", "00a4: make-dirs": true, "permissions": "644"}]}\r
+
+          --------------------------CH5rDyBTPdcJALbspJ8rzb\r
+
+          Content-Disposition: form-data; name="files"; filename="/foo/bar"\r
+
+          Content-Type: application/octet-stream\r
+
+          \r
+
+          some fake content.\r
+
+          --------------------------CH5rDyBTPdcJALbspJ8rzb--\r
+
+          ```
+
+          '
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: string
+                  description: 'JSON metadata about the files to write.
+
+
+                    The format is binary because it''s in a multipart part.
+
+
+                    Example: ''{"action": "write", "files": [{"path": "/home/ubuntu/foo", "make-dirs": true, "permissions": "644"}]}''
+
+                    '
+                  format: binary
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: 'The files to be written.
+
+
+                    Each file is a separate part.
+
+
+                    For the file part, "Content-Type" is "application/octet-stream".
+
+
+                    "Content-Disposition" is "form-data; name="files"; filename=foo".
+
+                    '
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/PostFilesMakeDirsRequest'
+              - $ref: '#/components/schemas/PostFilesRemovePathsRequest'
+            description: JSON payload for "make-dirs" or "remove" actions.
+      responses:
+        '200':
+          description: Successful operation. The result in the response is a JSON array of the file result object containing path and (optional) errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostFilesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                - path: /home/ubuntu/foo
+      operationId: postV1Files
+      x-operation-id-source: derived
+components:
+  schemas:
+    PostFilesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        description: JSON metadata about the file read operation.
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/fileResult'
+    fileResult:
+      type: object
+      properties:
+        path:
+          type: string
+        error:
+          $ref: '#/components/schemas/errorResult'
+    removePathsItem:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The path to the file or directory to remove.
+        recursive:
+          type: boolean
+          description: Whether to remove recursively (for directories).
+      required:
+      - path
+    PostFilesRemovePathsRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - remove
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/removePathsItem'
+      required:
+      - action
+      - paths
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    FileInfo:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Full path to the file or directory.
+        name:
+          type: string
+          description: Name of the file or directory.
+        type:
+          type: string
+          description: Type of file entry (e.g., "file", "directory", "symlink").
+          enum:
+          - device
+          - directory
+          - file
+          - named-pipe
+          - socket
+          - symlink
+          - unknown
+        size:
+          type: integer
+          format: int64
+          description: Size of the file in bytes (only for regular files).
+        permissions:
+          type: string
+          description: File permissions in octal format (for example, "644").
+        last-modified:
+          type: string
+          format: date-time
+          description: Last modified [time](#time) in RFC3339 format.
+        user-id:
+          type: integer
+          description: User ID of the owner.
+        user:
+          type: string
+          description: Username of the owner.
+        group-id:
+          type: integer
+          description: Group ID of the owner.
+        group:
+          type: string
+          description: Group name of the owner.
+      required:
+      - path
+      - name
+      - type
+      - permissions
+      - last-modified
+    PostFilesMakeDirsRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - make-dirs
+        dirs:
+          type: array
+          items:
+            $ref: '#/components/schemas/makeDirsItem'
+      required:
+      - action
+      - dirs
+    ListFilesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/FileInfo'
+    ReadFilesResponse:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+          description: Array of files. Each file part will have its own headers.
+        response:
+          $ref: '#/components/schemas/PostFilesResponse'
+    errorResult:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message.
+        kind:
+          type: string
+          description: Type of error.
+          enum:
+          - daemon-restart
+          - generic-file-error
+          - login-required
+          - no-default-services
+          - not-found
+          - permission-denied
+          - system-restart
+        value:
+          type: object
+          description: Additional error information, if any.
+      required:
+      - message
+    makeDirsItem:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The directory path to create.
+        make-parents:
+          type: boolean
+          description: Whether to create parent directories as needed.
+        permissions:
+          type: string
+          description: Permissions for the created directory (octal format, e.g., "755").
+        user-id:
+          type: integer
+          description: User ID of the owner.
+        user:
+          type: string
+          description: Username of the owner.
+        group-id:
+          type: integer
+          description: Group ID of the owner.
+        group:
+          type: string
+          description: Group name of the owner.
+      required:
+      - path

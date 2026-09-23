@@ -1,0 +1,107 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Internal API
+  version: '0.1'
+tags:
+- name: Internal
+paths:
+  /api/v0/tenants/lookup:
+    get:
+      description: Internal endpoint. Not intended for public API consumers.
+      operationId: TenantService_LookupTenants
+      parameters:
+      - description: 'Exactly one of email or identity_id must be provided.
+
+          When identity_id is set, the Kratos email-to-identity lookup is skipped.'
+        in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: identity_id
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenantLookupTenantsResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: Lookup tenants (internal)
+      tags:
+      - Internal
+      x-internal: true
+components:
+  schemas:
+    tenantLookupTenantsResponse:
+      properties:
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
+      type: object
+    tenantTenant:
+      properties:
+        created_at:
+          type: string
+        enabled:
+          type: boolean
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

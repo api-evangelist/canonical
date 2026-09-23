@@ -1,0 +1,1943 @@
+openapi: 3.2.0
+info:
+  title: Ubuntu Security API
+  version: v1
+tags:
+- name: Security
+paths:
+  /security/compat/notices.json:
+    get:
+      parameters:
+      - description: Any string - Selects notices that have either id, details or cves.id matching it.
+        in: query
+        name: details
+        required: false
+        schema:
+          type: string
+      - description: CVE ID to filter notices by.
+        in: query
+        name: cve_id
+        required: false
+        schema:
+          type: string
+      - description: Comma-separated list of CVE IDs to filter notices by.
+        in: query
+        name: cves
+        required: false
+        schema:
+          type: string
+      - description: 'Ubuntu release codename to filter notices by.example: `"noble"`.'
+        in: query
+        name: release
+        required: false
+        schema:
+          type: string
+      - description: Number of Notices per response.Defaults to `10`. Max `20`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+          default: 10
+          maximum: 20
+          minimum: 1
+      - description: Number of Notices to omit from response.Defaults to `0`.
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - description: 'Select order: choose `oldest` for ASC order; `newest` for DESC order. Default is `newest`.'
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+          default: newest
+      - description: True or False if you want to select hidden notices. Default is `false`.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticesAPI'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      tags:
+      - Security
+      summary: Get security compat notices json
+      x-summary-source: derived
+      operationId: getSecurityCompatNoticesJson
+      x-operation-id-source: derived
+  /security/compat/notices/{notice_id}.json:
+    get:
+      parameters:
+      - description: True or False if you want to select hidden notices. Default is `false`.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+      - in: path
+        name: notice_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeAPIDetailed'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Get security compat notices {notice id} json
+      x-summary-source: derived
+      operationId: getSecurityCompatNotices{noticeId}Json
+      x-operation-id-source: derived
+  /security/cves.json:
+    get:
+      parameters:
+      - description: Any string -  Selects CVEs that have either id, description or ubuntu_description matching it
+        in: query
+        name: q
+        required: false
+        schema:
+          type: string
+      - description: CVE priority
+        in: query
+        name: priority
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: Package name
+        in: query
+        name: package
+        required: false
+        schema:
+          type: string
+      - description: Number of CVEs per response. Defaults to 10. Max 20.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+          maximum: 20
+          minimum: 1
+      - description: Number of CVEs to omit from response. Defaults to 0.
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+      - description: Package component
+        in: query
+        name: component
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: 'List of release codenames '
+        in: query
+        name: version
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: CVE status
+        in: query
+        name: cve_status
+        required: false
+        schema:
+          type: string
+          enum:
+          - not-in-ubuntu
+          - active
+          - rejected
+      - description: List of package statuses
+        in: query
+        name: status
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: Select `ascending` or `oldest` (depreciated) for ASC order;leave empty for descending order
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+          enum:
+          - oldest, descending, ascending
+          default: descending
+      - description: Select `priority` to group CVEs by highest to lowest priority
+        in: query
+        name: group_by
+        required: false
+        schema:
+          type: string
+          enum:
+          - priority
+      - description: Select `updated` to sort by most recently updated CVEs;leave empty to sort by publish date
+        in: query
+        name: sort_by
+        required: false
+        schema:
+          type: string
+          enum:
+          - updated
+          - published
+          default: published
+      - description: True or False if you want to select hidden notices. Default is False.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVEsAPI'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      tags:
+      - Security
+      summary: Get security cves json
+      x-summary-source: derived
+      operationId: getSecurityCvesJson
+      x-operation-id-source: derived
+  /security/cves/{cve_id}.json:
+    get:
+      parameters:
+      - description: True or False if you want to select hidden notices. Default is False.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+      - in: path
+        name: cve_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVEAPIDetailed'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Get security cves {cve id} json
+      x-summary-source: derived
+      operationId: getSecurityCves{cveId}Json
+      x-operation-id-source: derived
+  /security/notices.json:
+    get:
+      parameters:
+      - description: Any string - Selects notices that have either id, details or cves.id matching it.
+        in: query
+        name: details
+        required: false
+        schema:
+          type: string
+      - description: CVE ID to filter notices by.
+        in: query
+        name: cve_id
+        required: false
+        schema:
+          type: string
+      - description: Comma-separated list of CVE IDs to filter notices by.
+        in: query
+        name: cves
+        required: false
+        schema:
+          type: string
+      - description: 'Ubuntu release codename to filter notices by.example: `"noble"`.'
+        in: query
+        name: release
+        required: false
+        schema:
+          type: string
+      - description: Number of Notices per response.Defaults to `10`. Max `20`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+          default: 10
+          maximum: 20
+          minimum: 1
+      - description: Number of Notices to omit from response.Defaults to `0`.
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - description: 'Select order: choose `oldest` for ASC order; `newest` for DESC order. Default is `newest`.'
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+          default: newest
+      - description: True or False if you want to select hidden notices. Default is `false`.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticesAPISchemaV2'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      tags:
+      - Security
+      summary: Get security notices json
+      x-summary-source: derived
+      operationId: getSecurityNoticesJson
+      x-operation-id-source: derived
+  /security/notices/{notice_id}.json:
+    get:
+      parameters:
+      - description: True or False if you want to select hidden notices. Default is `false`.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+      - in: path
+        name: notice_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeAPIDetailedSchemaV2'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Get security notices {notice id} json
+      x-summary-source: derived
+      operationId: getSecurityNotices{noticeId}Json
+      x-operation-id-source: derived
+  /security/page/notices.json:
+    get:
+      parameters:
+      - description: Any string - Selects notices that have either id, details or cves.id matching it.
+        in: query
+        name: details
+        required: false
+        schema:
+          type: string
+      - description: CVE ID to filter notices by.
+        in: query
+        name: cve_id
+        required: false
+        schema:
+          type: string
+      - description: Comma-separated list of CVE IDs to filter notices by.
+        in: query
+        name: cves
+        required: false
+        schema:
+          type: string
+      - description: 'List of release codenames '
+        in: query
+        name: release
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - description: Number of Notices per response.Defaults to `10`. Max `20`.
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+          default: 10
+          maximum: 20
+          minimum: 1
+      - description: Number of Notices to omit from response.Defaults to `0`.
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: integer
+          default: 0
+      - description: 'Select order: choose `oldest` for ASC order; `newest` for DESC order. Default is `newest`.'
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+          default: newest
+      - description: True or False if you want to select hidden notices. Default is `false`.
+        in: query
+        name: show_hidden
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageNoticesAPI'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      tags:
+      - Security
+      summary: Get security page notices json
+      x-summary-source: derived
+      operationId: getSecurityPageNoticesJson
+      x-operation-id-source: derived
+  /security/releases.json:
+    get:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleasesAPI'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Get security releases json
+      x-summary-source: derived
+      operationId: getSecurityReleasesJson
+      x-operation-id-source: derived
+  /security/releases/{release_codename}.json:
+    get:
+      parameters:
+      - in: path
+        name: release_codename
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReleaseAPI'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Get security releases {release codename} json
+      x-summary-source: derived
+      operationId: getSecurityReleases{releaseCodename}Json
+      x-operation-id-source: derived
+  /security/updates/cves.json:
+    put:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+        '413':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                $ref: '#/components/schemas/CVEImport'
+              type: array
+      tags:
+      - Security
+      summary: Replace security updates cves json
+      x-summary-source: derived
+      operationId: putSecurityUpdatesCvesJson
+      x-operation-id-source: derived
+  /security/updates/cves/{cve_id}.json:
+    delete:
+      parameters:
+      - in: path
+        name: cve_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Delete security updates cves {cve id} json
+      x-summary-source: derived
+      operationId: deleteSecurityUpdatesCves{cveId}Json
+      x-operation-id-source: derived
+  /security/updates/notices.json:
+    post:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateNoticeImport'
+      tags:
+      - Security
+      summary: Create security updates notices json
+      x-summary-source: derived
+      operationId: postSecurityUpdatesNoticesJson
+      x-operation-id-source: derived
+  /security/updates/notices/{notice_id}.json:
+    delete:
+      parameters:
+      - in: path
+        name: notice_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Delete security updates notices {notice id} json
+      x-summary-source: derived
+      operationId: deleteSecurityUpdatesNotices{noticeId}Json
+      x-operation-id-source: derived
+    put:
+      parameters:
+      - in: path
+        name: notice_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeImport'
+      tags:
+      - Security
+      summary: Replace security updates notices {notice id} json
+      x-summary-source: derived
+      operationId: putSecurityUpdatesNotices{noticeId}Json
+      x-operation-id-source: derived
+  /security/updates/releases.json:
+    post:
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Release'
+      tags:
+      - Security
+      summary: Create security updates releases json
+      x-summary-source: derived
+      operationId: postSecurityUpdatesReleasesJson
+      x-operation-id-source: derived
+  /security/updates/releases/{release_codename}.json:
+    delete:
+      parameters:
+      - in: path
+        name: release_codename
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      tags:
+      - Security
+      summary: Delete security updates releases {release codename} json
+      x-summary-source: derived
+      operationId: deleteSecurityUpdatesReleases{releaseCodename}Json
+      x-operation-id-source: derived
+    put:
+      parameters:
+      - in: path
+        name: release_codename
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '422':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageWithErrors'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRelease'
+      tags:
+      - Security
+      summary: Replace security updates releases {release codename} json
+      x-summary-source: derived
+      operationId: putSecurityUpdatesReleases{releaseCodename}Json
+      x-operation-id-source: derived
+components:
+  schemas:
+    CveImpact:
+      properties:
+        baseMetricV3:
+          $ref: '#/components/schemas/CveBaseMetric'
+        baseMetricV4:
+          $ref: '#/components/schemas/CveBaseMetricV4'
+      type: object
+    CvssV4SupplementalMetrics:
+      properties:
+        automatable:
+          type:
+          - string
+          - 'null'
+        providerUrgency:
+          type:
+          - string
+          - 'null'
+        recovery:
+          type:
+          - string
+          - 'null'
+        safety:
+          type:
+          - string
+          - 'null'
+        valueDensity:
+          type:
+          - string
+          - 'null'
+        vulnerabilityResponseEffort:
+          type:
+          - string
+          - 'null'
+      type: object
+    RelatedNotices:
+      properties:
+        id:
+          type: string
+        packages:
+          type: string
+      type: object
+    CvssV4EnvironmentalMetricsImport:
+      properties:
+        modifiedBaseMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4ModifiedBaseMetricsImport'
+        securityRequirements:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4SecurityRequirements'
+      type: object
+    CvssV4Import:
+      properties:
+        baseEnvironmentalScore:
+          type:
+          - number
+          - 'null'
+        baseEnvironmentalSeverity:
+          type:
+          - string
+          - 'null'
+        baseMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4BaseMetricsImport'
+        baseScore:
+          type:
+          - number
+          - 'null'
+        baseSeverity:
+          type:
+          - string
+          - 'null'
+        baseThreatEnvironmentalScore:
+          type:
+          - number
+          - 'null'
+        baseThreatEnvironmentalSeverity:
+          type:
+          - string
+          - 'null'
+        baseThreatScore:
+          type:
+          - number
+          - 'null'
+        baseThreatSeverity:
+          type:
+          - string
+          - 'null'
+        environmentalMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4EnvironmentalMetricsImport'
+        supplementalMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4SupplementalMetrics'
+        threatMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4ThreatMetrics'
+        vectorString:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
+      type: object
+    CveImpactImport:
+      properties:
+        baseMetricV3:
+          $ref: '#/components/schemas/CveBaseMetric'
+        baseMetricV4:
+          $ref: '#/components/schemas/CveBaseMetricV4Import'
+      type: object
+    NoticeAPI:
+      properties:
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    CvssV4ThreatMetrics:
+      properties:
+        exploitMaturity:
+          type:
+          - string
+          - 'null'
+      type: object
+    Release:
+      properties:
+        codename:
+          type: string
+        development:
+          type: boolean
+        esm_expires:
+          format: date-time
+          type: string
+        lts:
+          type: boolean
+        name:
+          type: string
+        release_date:
+          format: date-time
+          type: string
+        support_expires:
+          format: date-time
+          type: string
+        version:
+          type: string
+      required:
+      - codename
+      - development
+      - esm_expires
+      - lts
+      - name
+      - release_date
+      - support_expires
+      - version
+      type: object
+    CvePackage:
+      properties:
+        debian:
+          type: string
+        name:
+          type: string
+        source:
+          type: string
+        statuses:
+          items:
+            $ref: '#/components/schemas/Status'
+          type: array
+        ubuntu:
+          type: string
+      required:
+      - debian
+      - name
+      - source
+      - ubuntu
+      type: object
+    NoticeReleases:
+      properties:
+        codename:
+          type: string
+        support_tag:
+          type: string
+        version:
+          type: string
+      type: object
+    CvssV4:
+      properties:
+        baseEnvironmentalScore:
+          type:
+          - number
+          - 'null'
+        baseEnvironmentalSeverity:
+          type:
+          - string
+          - 'null'
+        baseMetrics:
+          $ref: '#/components/schemas/CvssV4BaseMetrics'
+        baseScore:
+          type:
+          - number
+          - 'null'
+        baseSeverity:
+          type:
+          - string
+          - 'null'
+        baseThreatEnvironmentalScore:
+          type:
+          - number
+          - 'null'
+        baseThreatEnvironmentalSeverity:
+          type:
+          - string
+          - 'null'
+        baseThreatScore:
+          type:
+          - number
+          - 'null'
+        baseThreatSeverity:
+          type:
+          - string
+          - 'null'
+        environmentalMetrics:
+          $ref: '#/components/schemas/CvssV4EnvironmentalMetrics'
+        supplementalMetrics:
+          $ref: '#/components/schemas/CvssV4SupplementalMetrics'
+        threatMetrics:
+          $ref: '#/components/schemas/CvssV4ThreatMetrics'
+        vectorString:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
+      type: object
+    NoticeImport:
+      properties:
+        cves:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        summary:
+          type: string
+        title:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    CVEAPI:
+      properties:
+        bugs:
+          items:
+            type: string
+          type: array
+        codename:
+          type:
+          - string
+          - 'null'
+        cvss3:
+          type:
+          - number
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        impact:
+          $ref: '#/components/schemas/CveImpact'
+        mitigation:
+          type:
+          - string
+          - 'null'
+        notes:
+          items:
+            $ref: '#/components/schemas/Note'
+          type: array
+        notices_ids:
+          items:
+            pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+            type: string
+          type: array
+        packages:
+          items:
+            $ref: '#/components/schemas/CvePackage'
+          type: array
+        patches:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        priority:
+          type:
+          - string
+          - 'null'
+        published:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        references:
+          items:
+            type: string
+          type: array
+        status:
+          type:
+          - string
+          - 'null'
+        tags:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        ubuntu_description:
+          type:
+          - string
+          - 'null'
+        updated_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      type: object
+    CvssV4SecurityRequirements:
+      properties:
+        availabilityRequirements:
+          type:
+          - string
+          - 'null'
+        confidentialityRequirements:
+          type:
+          - string
+          - 'null'
+        integrityRequirements:
+          type:
+          - string
+          - 'null'
+      type: object
+    NoticesAPI:
+      properties:
+        limit:
+          type:
+          - integer
+          - 'null'
+        notices:
+          items:
+            $ref: '#/components/schemas/NoticeAPIDetailed'
+          type: array
+        offset:
+          type:
+          - integer
+          - 'null'
+        total_results:
+          type: integer
+      type: object
+    UpdateRelease:
+      properties:
+        codename:
+          type: string
+        development:
+          type: boolean
+        esm_expires:
+          format: date-time
+          type: string
+        lts:
+          type: boolean
+        name:
+          type: string
+        release_date:
+          format: date-time
+          type: string
+        support_expires:
+          format: date-time
+          type: string
+        version:
+          type: string
+      required:
+      - codename
+      - development
+      - esm_expires
+      - lts
+      - name
+      - release_date
+      - support_expires
+      - version
+      type: object
+    ReleaseAPI:
+      properties:
+        codename:
+          type: string
+        development:
+          type: boolean
+        esm_expires:
+          format: date-time
+          type: string
+        lts:
+          type: boolean
+        name:
+          type: string
+        release_date:
+          format: date-time
+          type: string
+        support_expires:
+          format: date-time
+          type: string
+        support_tag:
+          type: string
+        version:
+          type: string
+      required:
+      - codename
+      - development
+      - esm_expires
+      - lts
+      - name
+      - release_date
+      - support_expires
+      - version
+      type: object
+    CvssV4SubsequentSystemImpactMetrics:
+      properties:
+        availabilityImpact:
+          type:
+          - string
+          - 'null'
+        confidentialityImpact:
+          type:
+          - string
+          - 'null'
+        integrityImpact:
+          type:
+          - string
+          - 'null'
+      type: object
+    PageNoticeAPI:
+      properties:
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        published:
+          format: date-time
+          type: string
+        releases:
+          items:
+            $ref: '#/components/schemas/NoticeReleases'
+          type: array
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - published
+      - summary
+      - title
+      type: object
+    NoticeAPIDetailed:
+      properties:
+        cves:
+          items:
+            $ref: '#/components/schemas/CVEAPI'
+          type: array
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        related_notices:
+          items:
+            $ref: '#/components/schemas/RelatedNotices'
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        releases:
+          items:
+            $ref: '#/components/schemas/NoticeReleases'
+          type: array
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    CVESummaryV2:
+      properties:
+        id:
+          type: string
+        notices_ids:
+          items:
+            type: string
+          type: array
+      type: object
+    NoticeAPIDetailedSchemaV2:
+      properties:
+        cves:
+          items:
+            $ref: '#/components/schemas/CVESummaryV2'
+          type: array
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        related_notices:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        releases:
+          items:
+            $ref: '#/components/schemas/NoticeReleases'
+          type: array
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    Note:
+      properties:
+        author:
+          type: string
+        note:
+          type: string
+      required:
+      - author
+      - note
+      type: object
+    CvssV4ExploitabilityMetrics:
+      properties:
+        attackComplexity:
+          type:
+          - string
+          - 'null'
+        attackRequirements:
+          type:
+          - string
+          - 'null'
+        attackVector:
+          type:
+          - string
+          - 'null'
+        privilegesRequired:
+          type:
+          - string
+          - 'null'
+        userInteraction:
+          type:
+          - string
+          - 'null'
+      type: object
+    CvssV3:
+      properties:
+        attackComplexity:
+          type:
+          - string
+          - 'null'
+        attackVector:
+          type:
+          - string
+          - 'null'
+        availabilityImpact:
+          type:
+          - string
+          - 'null'
+        baseScore:
+          type:
+          - number
+          - 'null'
+        baseSeverity:
+          type:
+          - string
+          - 'null'
+        confidentialityImpact:
+          type:
+          - string
+          - 'null'
+        integrityImpact:
+          type:
+          - string
+          - 'null'
+        privilegesRequired:
+          type:
+          - string
+          - 'null'
+        scope:
+          type:
+          - string
+          - 'null'
+        userInteraction:
+          type:
+          - string
+          - 'null'
+        vectorString:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
+      type: object
+    CvssV4ModifiedBaseMetricsImport:
+      properties:
+        exploitabilityMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
+      type: object
+    CvssV4BaseMetricsImport:
+      properties:
+        exploitabilityMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
+      type: object
+    Status:
+      properties:
+        component:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        pocket:
+          type:
+          - string
+          - 'null'
+        release_codename:
+          type: string
+        status:
+          type: string
+      required:
+      - release_codename
+      - status
+      type: object
+    NoticesAPISchemaV2:
+      properties:
+        limit:
+          type:
+          - integer
+          - 'null'
+        notices:
+          items:
+            $ref: '#/components/schemas/NoticeAPIDetailedSchemaV2'
+          type: array
+        offset:
+          type:
+          - integer
+          - 'null'
+        total_results:
+          type: integer
+      type: object
+    CVEAPIDetailed:
+      properties:
+        bugs:
+          items:
+            type: string
+          type: array
+        codename:
+          type:
+          - string
+          - 'null'
+        cvss3:
+          type:
+          - number
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        impact:
+          $ref: '#/components/schemas/CveImpact'
+        mitigation:
+          type:
+          - string
+          - 'null'
+        notes:
+          items:
+            $ref: '#/components/schemas/Note'
+          type: array
+        notices:
+          items:
+            $ref: '#/components/schemas/NoticeAPI'
+          type: array
+        notices_ids:
+          items:
+            pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+            type: string
+          type: array
+        packages:
+          items:
+            $ref: '#/components/schemas/CvePackage'
+          type: array
+        patches:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        priority:
+          type:
+          - string
+          - 'null'
+        published:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        references:
+          items:
+            type: string
+          type: array
+        status:
+          type:
+          - string
+          - 'null'
+        tags:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        ubuntu_description:
+          type:
+          - string
+          - 'null'
+        updated_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      type: object
+    MessageWithErrors:
+      properties:
+        errors:
+          type: string
+        message:
+          type: string
+      type: object
+    PageNoticesAPI:
+      properties:
+        limit:
+          type:
+          - integer
+          - 'null'
+        notices:
+          items:
+            $ref: '#/components/schemas/PageNoticeAPI'
+          type: array
+        offset:
+          type:
+          - integer
+          - 'null'
+        total_results:
+          type: integer
+      type: object
+    CveBaseMetricV4:
+      properties:
+        cvssV4:
+          $ref: '#/components/schemas/CvssV4'
+      type: object
+    CvssV4EnvironmentalMetrics:
+      properties:
+        modifiedBaseMetrics:
+          $ref: '#/components/schemas/CvssV4ModifiedBaseMetrics'
+        securityRequirements:
+          $ref: '#/components/schemas/CvssV4SecurityRequirements'
+      type: object
+    NoticePackage:
+      properties:
+        channel:
+          type:
+          - string
+          - 'null'
+        description:
+          type: string
+        is_source:
+          type: boolean
+        is_visible:
+          type: boolean
+        name:
+          type: string
+        package_type:
+          type: string
+        pocket:
+          type: string
+        source_link:
+          type:
+          - string
+          - 'null'
+        version:
+          type: string
+        version_link:
+          type:
+          - string
+          - 'null'
+      required:
+      - is_source
+      - name
+      - version
+      type: object
+    CvssV4VulnerableSystemImpactMetrics:
+      properties:
+        availabilityImpact:
+          type:
+          - string
+          - 'null'
+        confidentialityImpact:
+          type:
+          - string
+          - 'null'
+        integrityImpact:
+          type:
+          - string
+          - 'null'
+      type: object
+    CVEsAPI:
+      properties:
+        cves:
+          items:
+            $ref: '#/components/schemas/CVEAPIDetailed'
+          type: array
+        limit:
+          type:
+          - integer
+          - 'null'
+        offset:
+          type:
+          - integer
+          - 'null'
+        total_results:
+          type: integer
+      type: object
+    CvssV4ModifiedBaseMetrics:
+      properties:
+        exploitabilityMetrics:
+          $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
+      type: object
+    CveBaseMetric:
+      properties:
+        cvssV3:
+          $ref: '#/components/schemas/CvssV3'
+        exploitabilityScore:
+          type:
+          - number
+          - 'null'
+        impactScore:
+          type:
+          - number
+          - 'null'
+      type: object
+    Message:
+      properties:
+        message:
+          type: string
+      type: object
+    CvssV4BaseMetrics:
+      properties:
+        exploitabilityMetrics:
+          $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
+      type: object
+    CVEImport:
+      properties:
+        bugs:
+          items:
+            type: string
+          type: array
+        codename:
+          type:
+          - string
+          - 'null'
+        cvss3:
+          type:
+          - number
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        impact:
+          $ref: '#/components/schemas/CveImpactImport'
+        mitigation:
+          type:
+          - string
+          - 'null'
+        notes:
+          items:
+            $ref: '#/components/schemas/Note'
+          type: array
+        packages:
+          items:
+            $ref: '#/components/schemas/CvePackage'
+          type: array
+        patches:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        priority:
+          type:
+          - string
+          - 'null'
+        published:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        references:
+          items:
+            type: string
+          type: array
+        status:
+          type:
+          - string
+          - 'null'
+        tags:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        ubuntu_description:
+          type:
+          - string
+          - 'null'
+        updated_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      type: object
+    CreateNoticeImport:
+      properties:
+        cves:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        summary:
+          type: string
+        title:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    ReleasesAPI:
+      properties:
+        releases:
+          items:
+            $ref: '#/components/schemas/ReleaseAPI'
+          type: array
+      type: object
+    CveBaseMetricV4Import:
+      properties:
+        cvssV4:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4Import'
+      type: object

@@ -1,0 +1,196 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Authentication Service API
+  version: '0.1'
+tags:
+- name: Authentication Service
+paths:
+  /api/v0/auth:
+    get:
+      operationId: AuthenticationService_Login
+      parameters:
+      - in: query
+        name: next
+        schema:
+          type: string
+      responses:
+        '302':
+          content:
+            application/json:
+              schema: {}
+          description: 'Redirects the client to the identity provider''s authorization endpoint.
+
+
+            The response is a 302 Redirect with a Location header.'
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - Authentication Service
+      summary: Authentication service login
+      x-summary-source: derived
+  /api/v0/auth/callback:
+    get:
+      operationId: AuthenticationService_Callback
+      parameters:
+      - in: query
+        name: code
+        schema:
+          type: string
+      - in: query
+        name: scope
+        schema:
+          type: string
+      - in: query
+        name: state
+        schema:
+          type: string
+      responses:
+        '302':
+          content:
+            application/json:
+              schema: {}
+          description: 'This endpoint redirects the client to the original location after authentication.
+
+
+            The response is a 302 Redirect with a Location header.'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - Authentication Service
+      summary: Authentication service callback
+      x-summary-source: derived
+  /api/v0/auth/logout:
+    get:
+      operationId: AuthenticationService_Logout
+      parameters:
+      - in: query
+        name: next
+        schema:
+          type: string
+      responses:
+        '302':
+          content:
+            application/json:
+              schema: {}
+          description: 'This endpoint logs out the client and redirects to the requested location.
+
+
+            The response is a 302 Redirect with a Location header.'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - Authentication Service
+      summary: Authentication service logout
+      x-summary-source: derived
+  /api/v0/auth/me:
+    get:
+      operationId: AuthenticationService_Me
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authenticationMeResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - Authentication Service
+      summary: Authentication service me
+      x-summary-source: derived
+components:
+  schemas:
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authenticationMeResp:
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        nonce:
+          type: string
+        sid:
+          type: string
+        sub:
+          type: string
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

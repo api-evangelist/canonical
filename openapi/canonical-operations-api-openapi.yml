@@ -1,0 +1,850 @@
+openapi: 3.2.0
+info:
+  title: Canonical Operations API
+  version: '1.0'
+  description: 'Operations tagged operations across 2 of this provider''s published API definitions: canonical-anbox-cloud-ams-api-openapi.json, canonical-lxd-rest-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Operations
+paths:
+  /1.0/operations:
+    get:
+      description: 'This endpoint returns a list of URLs for operations that are currently in
+
+        progress or queued.'
+      tags:
+      - Operations
+      summary: Get a list of operations
+      operationId: operations_get
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/operations/foo\",\n  \"/1.0/operations/bar\"\n]"
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/operations/{uuid}:
+    get:
+      description: This endpoint gets the information about an operation.
+      tags:
+      - Operations
+      summary: Get the current status of an operation
+      operationId: operation_get
+      parameters:
+      - description: uuid of the operation
+        name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Operation'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: 'This endpoint is used to change the state of cancellable API to “cancelling”
+
+        rather than actually removing the operation entry.'
+      tags:
+      - Operations
+      summary: Cancel an operation
+      operationId: operation_delete
+      parameters:
+      - description: uuid of the operation
+        name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/operations/{uuid}/wait:
+    get:
+      description: 'This is a synchronous endpoint for a client to wait until an operation
+
+        reaches a final status.'
+      tags:
+      - Operations
+      summary: Wait for an operation to complete
+      operationId: operation_wait_get
+      parameters:
+      - description: uuid of the operation
+        name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 'The amount of time (in seconds) to wait until the operation is considered
+
+          to be timed out. If the value is assigned to -1, the operation will wait
+
+          infinitely until the monitored operation reaches a final status.'
+        name: timeout
+        in: query
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Operation'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/operations/{uuid}/websocket:
+    get:
+      description: 'The connection to this endpoint is upgraded into a websocket connection,
+
+        speaking the protocol defined by the operation type. For example, in the
+
+        case of an exec operation, the websocket is the bidirectional pipe for
+
+        stdin/stdout/stderr to flow to and from the process inside the container.
+
+        In the case of migration, it will be the primary interface over which the
+
+        migration information is communicated.'
+      tags:
+      - Operations
+      summary: Get the websocket connection to monitor operation
+      operationId: operation_websocket_get
+      parameters:
+      - description: uuid of the operation
+        name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: 'This is the secret that was provided when the operation was created.
+
+          Guests are allowed to connect only if they have the correct secret.'
+        name: secret
+        in: query
+        schema:
+          type: string
+      responses:
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/operations?recursion=1:
+    get:
+      description: 'This endpoint returns a list of operations that are currently in progress
+
+        or queued.'
+      tags:
+      - Operations
+      summary: Get a list of expanded operations
+      operationId: operations_get_recursion1
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Operation'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/operations/{id}:
+    delete:
+      description: Cancels the operation if supported.
+      operationId: operation_delete
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse_2'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Cancel the operation
+      tags:
+      - Operations
+    get:
+      description: Gets the operation state.
+      operationId: operation_get
+      responses:
+        '200':
+          description: Operation
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Operation_2'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the operation state
+      tags:
+      - Operations
+  /1.0/operations/{id}/wait:
+    get:
+      description: Waits for the operation to reach a final state (or timeout) and retrieve its final state.
+      operationId: operation_wait_get
+      parameters:
+      - description: Timeout in seconds (-1 means never)
+        example: -1
+        in: query
+        name: timeout
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Operation
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Operation_2'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Wait for the operation
+      tags:
+      - Operations
+  /1.0/operations/{id}/wait?public:
+    get:
+      description: 'Waits for the operation to reach a final state (or timeout) and retrieve its final state.
+
+
+        When accessed by an untrusted user, the secret token must be provided.'
+      operationId: operation_wait_get_untrusted
+      parameters:
+      - description: Authentication token
+        example: random-string
+        in: query
+        name: secret
+        schema:
+          type: string
+      - description: Timeout in seconds (-1 means never)
+        example: -1
+        in: query
+        name: timeout
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Operation
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Operation_2'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Wait for the operation
+      tags:
+      - Operations
+  /1.0/operations/{id}/websocket:
+    get:
+      description: 'Connects to an associated websocket stream for the operation.
+
+        This should almost never be done directly by a client, instead it''s
+
+        meant for LXD to LXD communication with the client only relaying the
+
+        connection information to the servers.'
+      operationId: operation_websocket_get
+      parameters:
+      - description: Authentication token
+        example: random-string
+        in: query
+        name: secret
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Websocket operation messages (dependent on operation)
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the websocket stream
+      tags:
+      - Operations
+  /1.0/operations/{id}/websocket?public:
+    get:
+      description: 'Connects to an associated websocket stream for the operation.
+
+        This should almost never be done directly by a client, instead it''s
+
+        meant for LXD to LXD communication with the client only relaying the
+
+        connection information to the servers.
+
+
+        The untrusted endpoint is used by the target server to connect to the source server.
+
+        Authentication is performed through the secret token.'
+      operationId: operation_websocket_get_untrusted
+      parameters:
+      - description: Authentication token
+        example: random-string
+        in: query
+        name: secret
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Websocket operation messages (dependent on operation)
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Get the websocket stream
+      tags:
+      - Operations
+components:
+  schemas:
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    StatusCode_2:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    Operation_2:
+      description: Operation represents a LXD background operation
+      properties:
+        child_count:
+          description: 'Number of child operations.
+
+
+            API extension: operation_child_count'
+          example: 2
+          format: int64
+          type: integer
+          x-go-name: ChildCount
+        class:
+          description: Type of operation (task, token or websocket)
+          example: websocket
+          type: string
+          x-go-name: Class
+        created_at:
+          description: Operation creation time
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the operation
+          example: Executing command
+          type: string
+          x-go-name: Description
+        err:
+          description: Operation error message
+          example: Some error message
+          type: string
+          x-go-name: Err
+        err_code:
+          description: 'Operation error code
+
+
+            API extension: bulk_operations'
+          example: 404
+          format: int64
+          type: integer
+          x-go-name: ErrCode
+        id:
+          description: UUID of the operation
+          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
+          type: string
+          x-go-name: ID
+        location:
+          description: 'Which cluster member this record was found on
+
+
+            API extension: operation_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        may_cancel:
+          description: Whether the operation can be canceled
+          example: false
+          type: boolean
+          x-go-name: MayCancel
+        metadata:
+          additionalProperties: {}
+          description: Operation specific metadata
+          example:
+            command:
+            - bash
+            environment:
+              HOME: /root
+              LANG: C.UTF-8
+              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              TERM: xterm
+              USER: root
+            fds:
+              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
+              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
+            interactive: true
+          type: object
+          x-go-name: Metadata
+        requestor:
+          $ref: '#/components/schemas/OperationRequestor'
+        resources:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Affected resources
+          example:
+            instances:
+            - /1.0/instances/foo
+            - /1.0/instances/bar
+          type: object
+          x-go-name: Resources
+        status:
+          description: Status name
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode_2'
+        updated_at:
+          description: Operation last change
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: UpdatedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
+      properties:
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
+          type: string
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
+          type: string
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metadata:
+                example: '{}'
+              status:
+                type: string
+                example: Success
+              status_code:
+                type: integer
+                format: int64
+                example: 200
+              type:
+                type: string
+                example: sync
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: missing secret
+              error_code:
+                type: integer
+                format: int64
+                example: 401
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse_2:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError_2:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+x-refined-from:
+- canonical-anbox-cloud-ams-api-openapi.json
+- canonical-lxd-rest-api-openapi.yml

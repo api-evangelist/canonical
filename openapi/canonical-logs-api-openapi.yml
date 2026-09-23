@@ -1,0 +1,104 @@
+openapi: 3.2.0
+info:
+  title: Pebble Logs API
+  version: v1
+tags:
+- name: Logs
+paths:
+  /v1/logs:
+    get:
+      summary: Get service logs
+      tags:
+      - Logs
+      description: 'Successful fetch previously-written logs from the given services,
+
+        or request logs from the given services and follows them, in JSON lines format.
+
+
+        Example:
+
+
+        ```
+
+        {"time":"2024-12-31T02:11:09.361Z","service":"svc1","message":" * Serving Flask app ''main''"}
+
+        {"time":"2024-12-31T02:11:09.361Z","service":"svc1","message":" * Debug mode: off"}
+
+        {"time":"2024-12-31T02:11:09.382Z","service":"svc1","message":" * Running on http://127.0.0.1:5000"}
+
+        ```'
+      parameters:
+      - name: services
+        in: query
+        description: 'Service name to filter logs by.
+
+
+          To get logs from multiple services, specify this parameter multiple times.
+
+
+          If not set, returns logs for all services.
+
+          '
+        schema:
+          type: string
+      - name: follow
+        in: query
+        description: Whether to follow the logs (keep streaming new logs).
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          default: 'false'
+      - name: n
+        in: query
+        description: 'Number of log entries to retrieve.
+
+
+          If `follow` is true, `n` is ignored.
+
+
+          If `follow` is false:
+
+
+          - If `n` is -1, all available logs are returned (up to a server-defined limit).
+
+          - If `n` is 0 or not specified, a server-defined default number of logs is returned. The default is currently 30.
+
+          - If `n` is a positive integer, up to that many logs are returned.
+
+          '
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Service logs in JSON lines format.
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/logs'
+              example:
+                time: '2024-12-27T02:32:53.185Z'
+                service: svc1
+                message: ' * Serving Flask app ''main'''
+      operationId: getV1Logs
+      x-operation-id-source: derived
+components:
+  schemas:
+    logs:
+      type: object
+      properties:
+        time:
+          type: string
+          format: date-time
+          description: '[Time](#time) of the log entry in RFC3339 format.'
+        service:
+          type: string
+          description: Name of the service that generated the log.
+        message:
+          type: string
+          description: Log message content (trailing newline characters are trimmed).
+      required:
+      - time
+      - service
+      - message

@@ -1,0 +1,359 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform App Authorization Service API
+  version: '0.1'
+tags:
+- name: AppAuthorizationService
+paths:
+  /api/v0/authz/apps/{app_id}/groups:
+    delete:
+      operationId: AppAuthorizationService_RemoveAllowedGroupsForApp
+      parameters:
+      - in: path
+        name: app_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authorizationRemoveAllowedGroupsForAppResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: RemoveAllowedGroupsForApp removes an app from all groups it is allowed in
+      tags:
+      - AppAuthorizationService
+    get:
+      operationId: AppAuthorizationService_GetAllowedGroupsForApp
+      parameters:
+      - in: path
+        name: app_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authorizationGetAllowedGroupsForAppResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: GetAllowedGroupsForApp retrieves the list of groups an app is allowed in
+      tags:
+      - AppAuthorizationService
+  /api/v0/authz/groups/{group_id}/apps:
+    delete:
+      operationId: AppAuthorizationService_RemoveAllowedAppsFromGroup
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authorizationRemoveAllowedAppsFromGroupResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: RemoveAllowedAppsFromGroup removes all apps from the allowed list of a group
+      tags:
+      - AppAuthorizationService
+    get:
+      operationId: AppAuthorizationService_GetAllowedAppsInGroup
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authorizationGetAllowedAppsInGroupResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: GetAllowedAppsInGroup retrieves the list of apps allowed in a specific group
+      tags:
+      - AppAuthorizationService
+    post:
+      operationId: AppAuthorizationService_AddAllowedAppToGroup
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authorizationApp'
+        required: true
+        x-originalParamName: app
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authorizationAddAllowedAppToGroupResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: AddAllowedAppToGroup adds an app to the allowed list of a group
+      tags:
+      - AppAuthorizationService
+  /api/v0/authz/groups/{group_id}/apps/{app_id}:
+    delete:
+      operationId: AppAuthorizationService_RemoveAllowedAppFromGroup
+      parameters:
+      - in: path
+        name: group_id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: app_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/authorizationRemoveAllowedAppFromGroupResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      summary: RemoveAllowedAppFromGroup removes a specific app from the allowed list of a…
+      tags:
+      - AppAuthorizationService
+components:
+  schemas:
+    authorizationApp:
+      properties:
+        client_id:
+          type: string
+      type: object
+    authorizationRemoveAllowedAppFromGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationRemoveAllowedAppsFromGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationGetAllowedAppsInGroupResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/authorizationApp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationGetAllowedGroupsForAppResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apiauthorizationGroup'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationRemoveAllowedGroupsForAppResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationAddAllowedAppToGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    apiauthorizationGroup:
+      properties:
+        group_id:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

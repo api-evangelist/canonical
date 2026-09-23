@@ -1,0 +1,91 @@
+openapi: 3.2.0
+info:
+  description: The Anbox Stream Gateway provides federated access to Anbox Cloud regions.
+  title: Anbox Stream Gateway Application API
+  contact:
+    name: Canonical
+    url: https://ubuntu.com/support
+    email: indore@lists.canonical.com
+  license:
+    name: Proprietary
+  version: '1.0'
+servers:
+- url: /1.0/
+tags:
+- name: Application
+paths:
+  /1.0/applications:
+    get:
+      security:
+      - AuthToken: []
+      description: Return all applications that were registered via AMS and that support streaming.
+      tags:
+      - Application
+      summary: Get applications
+      operationId: handle-get-applications
+      responses:
+        '200':
+          description: List of applications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.ApplicationsGetResponse'
+components:
+  schemas:
+    api_gateway.Application:
+      type: object
+      properties:
+        name:
+          type: string
+          example: com.foo.bar
+    api_gateway.ResponseType:
+      type: string
+      enum:
+      - sync
+      - async
+      - error
+      x-enum-varnames:
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError
+    api.ApplicationsGetResponse:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/api_gateway.Application'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api_gateway.ResponseStatus:
+      type: string
+      enum:
+      - success
+      - failed
+      - unknown
+      x-enum-varnames:
+      - ResponseStatusSuccess
+      - ResponseStatusFailed
+      - ResponseStatusUnknown

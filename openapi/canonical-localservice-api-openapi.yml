@@ -1,0 +1,424 @@
+openapi: 3.2.0
+info:
+  title: debarchive Local Service API
+  version: 0.1.0
+  description: Manages local repositories.
+tags:
+- name: LocalService
+  description: Manages local repositories.
+paths:
+  /v1/locals:
+    get:
+      tags:
+      - LocalService
+      description: Returns a list of local repositories.
+      operationId: LocalService_ListLocals
+      parameters:
+      - name: pageSize
+        in: query
+        description: "The maximum number of local repositories to return.\n The service may return fewer than this value.\n If unspecified, at most 100 local repositories will be returned.\n The maximum value is 1000; values above 1000 will be treated as 1000."
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: "A page token, received from a previous call.\n Provide this to retrieve the subsequent page.\n\n When paginating, all other request parameters provided must match\n the call that provided the page token."
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: "An expression for filtering the results of the request.\n The fields eligible for filtering are:\n\n   * `display_name`\n\n Some examples of using filters are:\n\n   * `display_name=\"local\"`  --> The local has the display name \"local\".\n   * `display_name=\"local*\"` --> The local has the prefix \"local\" in its display name."
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLocalsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service list locals
+      x-summary-source: derived
+    post:
+      tags:
+      - LocalService
+      description: Creates a new local repository.
+      operationId: LocalService_CreateLocal
+      parameters:
+      - name: localId
+        in: query
+        description: "The ID to use for the local repository (optional).\n If provided, the full resource name will be `locals/{local_id}`."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Local'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Local'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service create local
+      x-summary-source: derived
+  /v1/locals/{local}:
+    get:
+      tags:
+      - LocalService
+      description: Retrieves a local repository by its resource name.
+      operationId: LocalService_GetLocal
+      parameters:
+      - name: local
+        in: path
+        description: The local id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Local'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service get local
+      x-summary-source: derived
+    delete:
+      tags:
+      - LocalService
+      description: Deletes a local repository.
+      operationId: LocalService_DeleteLocal
+      parameters:
+      - name: local
+        in: path
+        description: The local id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content: {}
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service delete local
+      x-summary-source: derived
+    patch:
+      tags:
+      - LocalService
+      description: Updates a local repository.
+      operationId: LocalService_UpdateLocal
+      parameters:
+      - name: local
+        in: path
+        description: The local id.
+        required: true
+        schema:
+          type: string
+      - name: updateMask
+        in: query
+        description: The list of fields to update.
+        schema:
+          type: string
+          format: field-mask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Local'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Local'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service update local
+      x-summary-source: derived
+  /v1/locals/{local}/packages:
+    get:
+      tags:
+      - LocalService
+      description: Retrieves a list of packages available in a local repository.
+      operationId: LocalService_ListLocalPackages
+      parameters:
+      - name: local
+        in: path
+        description: The local id.
+        required: true
+        schema:
+          type: string
+      - name: pageSize
+        in: query
+        description: "The maximum number of packages to return.\n The service may return fewer than this value.\n If unspecified, at most 100 packages will be returned.\n The maximum value is 1000; values above 1000 will be treated as 1000."
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: "A page token, received from a previous call.\n Provide this to retrieve the subsequent page.\n\n When paginating, all other parameters provided must match\n the call that provided the page token."
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListLocalPackagesResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service list local packages
+      x-summary-source: derived
+  /v1/locals/{local}:importPackages:
+    post:
+      tags:
+      - LocalService
+      description: 'Imports packages from a URL pointing to a package list or index
+
+        into the local repository. This is an async operation; poll the returned operation for status.'
+      operationId: LocalService_ImportLocalPackages
+      parameters:
+      - name: local
+        in: path
+        description: The local id.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportLocalPackagesRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service import local packages
+      x-summary-source: derived
+  /v1/locals:batchGet:
+    post:
+      tags:
+      - LocalService
+      description: Retrieves a list of local repositories based on their names.
+      operationId: LocalService_BatchGetLocals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchGetLocalsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchGetLocalsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Local service batch get locals
+      x-summary-source: derived
+components:
+  schemas:
+    GoogleProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: The type of the serialized message.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+    ListLocalsResponse:
+      type: object
+      properties:
+        locals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Local'
+          description: The list of local repositories.
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing local repositories.
+    ListLocalPackagesResponse:
+      type: object
+      properties:
+        localPackages:
+          type: array
+          items:
+            type: string
+          description: "The list of package name strings.\n Example: [\"snap-http_1.4.0_source\", ...]"
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing local repository packages.
+    Local:
+      required:
+      - displayName
+      - defaultDistribution
+      - defaultComponent
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the local repository.\n Format: \"locals/{local}\""
+        localId:
+          readOnly: true
+          type: string
+          description: The local repository ID is exposed separately for convenience.
+        displayName:
+          type: string
+          description: The human-readable name used to reference this local repository.
+        comment:
+          type: string
+          description: A user-facing description of the local repository.
+        defaultDistribution:
+          type: string
+          description: The default distribution to publish.
+        defaultComponent:
+          type: string
+          description: The default component to publish.
+        lastOperation:
+          readOnly: true
+          type: string
+          description: The last associated LRO with the local
+        lastImportTime:
+          readOnly: true
+          type: string
+          description: The timestamp of the last successful package import.
+          format: date-time
+      description: Represents a local repository.
+    ImportLocalPackagesRequest:
+      required:
+      - name
+      - url
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the local repository to import packages into.\n Format: \"locals/{local}\""
+        url:
+          type: string
+          description: The URL of the package list or index to import from.
+        validateOnly:
+          type: boolean
+          description: "If set to true, the request is validated without actually performing the import.\n The set of packages that would be imported is returned as the result of the task.\n See: https://google.aip.dev/163"
+      description: The request message for importing packages into a local repository.
+    Operation:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The server-assigned name, which is only unique within the same service that\n originally returns it. If you use the default HTTP mapping, the\n `name` should be a resource name ending with `operations/{unique_id}`."
+        metadata:
+          allOf:
+          - $ref: '#/components/schemas/GoogleProtobufAny'
+          description: "Service-specific metadata associated with the operation.  It typically\n contains progress information and common metadata such as create time.\n Some services might not provide such metadata.  Any method that returns a\n long-running operation should document the metadata type, if any."
+        done:
+          type: boolean
+          description: "If the value is `false`, it means the operation is still in progress.\n If `true`, the operation is completed, and either `error` or `response` is\n available."
+        error:
+          allOf:
+          - $ref: '#/components/schemas/Status'
+          description: The error result of the operation in case of failure or cancellation.
+        response:
+          allOf:
+          - $ref: '#/components/schemas/GoogleProtobufAny'
+          description: "The normal, successful response of the operation.  If the original\n method returns no data on success, such as `Delete`, the response is\n `google.protobuf.Empty`.  If the original method is standard\n `Get`/`Create`/`Update`, the response should be the resource.  For other\n methods, the response should have the type `XxxResponse`, where `Xxx`\n is the original method name.  For example, if the original method name\n is `TakeSnapshot()`, the inferred response type is\n `TakeSnapshotResponse`."
+      description: "This resource represents a long-running operation that is the result of a\n network API call."
+    BatchGetLocalsRequest:
+      required:
+      - names
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string
+          description: "The names of the local repositories to retrieve.\n A maximum of 100 local repositories can be retrieved in a batch.\n Format: locals/{local}"
+        returnPartialSuccess:
+          type: boolean
+          description: "Setting this field to `true` will opt the request into returning the\n locals that are reachable, and into including the names of those that\n were unreachable in the [BatchGetLocalsResponse.unreachable] field."
+      description: The request message for retrieving a batch of local repositories.
+    BatchGetLocalsResponse:
+      type: object
+      properties:
+        locals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Local'
+          description: Local repositories requested.
+        unreachable:
+          type: array
+          items:
+            type: string
+          description: "Unreachable locals. Populated when the request opts into\n `return_partial_success` and reading across collections."
+      description: The response message for retrieving a batch of local repositories.
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+          format: int32
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoogleProtobufAny'
+          description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+      description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'

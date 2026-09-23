@@ -1,0 +1,767 @@
+openapi: 3.2.0
+info:
+  title: Canonical Certificates API
+  version: '1.0'
+  description: 'Operations tagged certificates across 2 of this provider''s published API definitions: canonical-anbox-cloud-ams-api-openapi.json, canonical-lxd-rest-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Certificates
+paths:
+  /1.0/certificates:
+    get:
+      description: This endpoint returns a list of certificates of trusted clients
+      tags:
+      - Certificates
+      summary: Get a list of certificates
+      operationId: certificates_get
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/certificates/b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9\",\n  \"/1.0/certificates/a52c80e8337d3e08a52e52c6aa25ecfac473eae34a4880ed0088b9dbc2fagcd5\"\n]"
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      description: 'This endpoint adds a new trusted client to the service by adding a new
+
+        client certificate.'
+      tags:
+      - Certificates
+      summary: Add a new client certificate
+      operationId: certificates_post
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '409':
+          $ref: '#/components/responses/ErrorAlreadyExists'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatesPost'
+        description: Details of the certificate to create
+        required: true
+  /1.0/certificates/{fingerprint}:
+    get:
+      description: 'The endpoint gets the information of a trusted client''s certificate and its
+
+        fingerprint.'
+      tags:
+      - Certificates
+      summary: Get the information about a certificate
+      operationId: certificate_get
+      parameters:
+      - description: SHA-256 fingerprint of the certificate to retrieve
+        name: fingerprint
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Certificate'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: 'This endpoint deletes a client''s trusted certificate from the service''s
+
+        trust store.'
+      tags:
+      - Certificates
+      summary: Delete a client's trusted certificate
+      operationId: certificate_delete
+      parameters:
+      - description: SHA-256 fingerprint of the certificate
+        name: fingerprint
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      description: Updates a subset of the certificate configuration.
+      operationId: certificate_patch
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Partially update the trusted certificate
+      tags:
+      - Certificates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatePut'
+        description: Certificate configuration
+        required: true
+    put:
+      description: Updates the entire certificate configuration.
+      operationId: certificate_put
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '412':
+          $ref: '#/components/responses/PreconditionFailed'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Update the trusted certificate
+      tags:
+      - Certificates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatePut'
+        description: Certificate configuration
+        required: true
+  /1.0/certificates?recursion=1:
+    get:
+      description: This endpoint returns a list of certificates of trusted clients.
+      tags:
+      - Certificates
+      summary: Get a list of expanded certificates
+      operationId: certificates_get_recursion1
+      parameters:
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Certificate'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/certificates?public:
+    post:
+      description: 'Adds a certificate to the trust store as an untrusted user.
+
+        In this mode, the `token` property must be set to the correct value.
+
+
+        The `certificate` field can be omitted in which case the TLS client
+
+        certificate in use for the connection will be retrieved and added to the
+
+        trust store.
+
+
+        The `?public` part of the URL isn''t required, it''s simply used to
+
+        separate the two behaviors of this endpoint.'
+      operationId: certificates_post_untrusted
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError_2'
+      summary: Add a trusted certificate
+      tags:
+      - Certificates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificatesPost_2'
+        description: Certificate
+        required: true
+components:
+  schemas:
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    Certificate:
+      description: Certificate represents an available client certificate
+      type: object
+      properties:
+        certificate:
+          description: Base64 encoded certificate content without the header or the footer
+          type: string
+          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
+        fingerprint:
+          description: SHA-256 fingerprint of the certificate
+          type: string
+          example: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    CertificatesPost:
+      description: CertificatesPost represents the fields of a new auth provided certificate
+      type: object
+      properties:
+        certificate:
+          description: Base64 encoded certificate content without the header or the footer
+          type: string
+          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
+        trust-password:
+          description: TrustPassword is used to register a new client with the service
+          type: string
+          example: sUp3rs3cr3t
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    CertificatePut:
+      description: CertificatePut represents the modifiable fields of a LXD certificate
+      properties:
+        certificate:
+          description: 'The certificate itself, as PEM encoded X509 certificate
+
+
+            API extension: certificate_self_renewal'
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        name:
+          description: Name associated with the certificate
+          example: castiana
+          type: string
+          x-go-name: Name
+        projects:
+          description: 'List of allowed projects (applies when restricted)
+
+
+            API extension: certificate_project'
+          example:
+          - default
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Projects
+        restricted:
+          description: 'Whether to limit the certificate to listed projects
+
+
+            API extension: certificate_project'
+          example: true
+          type: boolean
+          x-go-name: Restricted
+        type:
+          description: Usage type for the certificate
+          example: client
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Certificate_2:
+      description: Certificate represents a LXD certificate
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        certificate:
+          description: 'The certificate itself, as PEM encoded X509 certificate
+
+
+            API extension: certificate_self_renewal'
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        fingerprint:
+          description: SHA256 fingerprint of the certificate
+          example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
+          readOnly: true
+          type: string
+          x-go-name: Fingerprint
+        name:
+          description: Name associated with the certificate
+          example: castiana
+          type: string
+          x-go-name: Name
+        projects:
+          description: 'List of allowed projects (applies when restricted)
+
+
+            API extension: certificate_project'
+          example:
+          - default
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Projects
+        restricted:
+          description: 'Whether to limit the certificate to listed projects
+
+
+            API extension: certificate_project'
+          example: true
+          type: boolean
+          x-go-name: Restricted
+        type:
+          description: Usage type for the certificate
+          example: client
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    CertificatesPost_2:
+      description: CertificatesPost represents the fields of a new LXD certificate
+      properties:
+        certificate:
+          description: 'The certificate itself, as base64 encoded X509 PEM certificate
+
+
+            API extension: certificate_self_renewal'
+          example: base64 encoded X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        name:
+          description: Name associated with the certificate
+          example: castiana
+          type: string
+          x-go-name: Name
+        password:
+          description: 'Server trust password (used to add an untrusted client, deprecated, use trust_token)
+
+
+            Deprecated: Use TrustToken.'
+          example: blah
+          type: string
+          x-deprecated: true
+          x-go-name: Password
+        projects:
+          description: 'List of allowed projects (applies when restricted)
+
+
+            API extension: certificate_project'
+          example:
+          - default
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Projects
+        restricted:
+          description: 'Whether to limit the certificate to listed projects
+
+
+            API extension: certificate_project'
+          example: true
+          type: boolean
+          x-go-name: Restricted
+        token:
+          description: 'Whether to create a certificate add token
+
+
+            API extension: certificate_token'
+          example: true
+          type: boolean
+          x-go-name: Token
+        trust_token:
+          description: 'Trust token (used to add an untrusted client)
+
+
+            API extension: explicit_trust_token'
+          example: blah
+          type: string
+          x-go-name: TrustToken
+        type:
+          description: Usage type for the certificate
+          example: client
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError_2:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+x-refined-from:
+- canonical-anbox-cloud-ams-api-openapi.json
+- canonical-lxd-rest-api-openapi.yml

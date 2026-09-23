@@ -1,0 +1,2526 @@
+openapi: 3.2.0
+info:
+  title: Canonical Applications API
+  version: '1.0'
+  description: 'Operations tagged applications across 3 of this provider''s published API definitions: canonical-anbox-cloud-ams-api-openapi.json, canonical-cos-registration-server-api-openapi.yml, canonical-test-observer-api-openapi.json. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Applications
+paths:
+  /1.0/applications:
+    get:
+      description: This endpoint returns a list of available applications.
+      tags:
+      - Applications
+      summary: Get a list of applications
+      operationId: applications_get
+      parameters:
+      - description: Index to start listing the records
+        name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      - description: Limit the number of returned records
+        name: limit
+        in: query
+        schema:
+          type: integer
+          default: -1
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      - example: btavtegj1qm58qg7ru50
+        description: Filter applications by id. This is an exact match for the string.
+        name: id
+        in: query
+        schema:
+          type: string
+      - example: my-app
+        description: Filter applications by name. This is an exact match for the string.
+        name: name
+        in: query
+        schema:
+          type: string
+      - example: a2.3
+        description: Filter applications by their instance_type.
+        name: instance_type
+        in: query
+        schema:
+          type: string
+      - example: initializing
+        description: Filter applications by status.
+        name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - initializing
+          - ready
+          - error
+          - deleted
+      - example: com.foo.bar
+        description: Filter applications by their boot package.
+        name: boot_package
+        in: query
+        schema:
+          type: string
+      - example: false
+        description: Filter immutable applications.
+        name: immutable
+        in: query
+        schema:
+          type: boolean
+      - example: false
+        description: Filter applications with automatic updates enabled.
+        name: inhibit_auto_updates
+        in: query
+        schema:
+          type: boolean
+      - example: false
+        description: Filter published applications.
+        name: published
+        in: query
+        schema:
+          type: boolean
+      - example: gms,ssh
+        description: Filter applications by their attached addon names.
+        name: addons
+        in: query
+        schema:
+          type: string
+      - example: x86_64
+        description: Filter applications by their supported ABI architecture.
+        name: abi
+        in: query
+        schema:
+          type: string
+      - example: created_by=anbox,foo,bar
+        description: Filter applications by tags.
+        name: tags
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      type: string
+                    example: "[\n  \"/1.0/applications/foo\",\n  \"/1.0/applications/bar\"\n]"
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      description: 'This endpoint creates a new application in AMS using a manifest file. The
+
+        payload to upload must be a tarball compressed with bzip2 or a zip archive.
+
+        Also it must contain a **manifest.yaml** file which declares the basic
+
+        information for the creation of the application.
+
+
+        Required Extensions:
+
+        `zip_archive_support`: To use the zip format, the server must have the extension.
+
+        To support the following syntax in the application **manifest.yaml** file, the
+
+        server requires the corresponding extensions:
+
+        Manifest Key | Required Extension |
+
+        ---------------- | -----------------------------------|
+
+        resources | application_resource_customization |
+
+        watchdog | application_watchdog_settings |
+
+        services | application_services_configuration |
+
+        version | application_manifest_version |
+
+        video-encoder | application_gpu_encoder |'
+      tags:
+      - Applications
+      summary: Create a new application
+      operationId: application_post
+      parameters:
+      - description: Whether the application is based on a virtual machine or a container
+        name: vm
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - description: SHA-256 fingerprint of the payload e.g b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        name: X-AMS-Fingerprint
+        in: header
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                upfile:
+                  type: string
+                  description: A tarball or zip file
+                  format: binary
+              required:
+              - upfile
+    delete:
+      description: 'This endpoint deletes multiple applications. If the deletion of a single application
+
+        fails the operation is aborted and an error is returned.'
+      tags:
+      - Applications
+      summary: Delete multiple applications
+      operationId: applications_delete
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationsDelete'
+        description: List of applications to delete
+  /1.0/applications/{id}:
+    get:
+      description: This endpoint gets the information about an application stored in AMS.
+      tags:
+      - Applications
+      summary: Get information about an application
+      operationId: application_get
+      parameters:
+      - description: Id of the application
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/NoMetaSyncResponse'
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/Application'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: This endpoint deletes an application and its versions from AMS.
+      tags:
+      - Applications
+      summary: Delete an application
+      operationId: application_delete
+      parameters:
+      - description: Id of the application
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      description: 'This endpoint updates an application with a new package of format bzip2 or
+
+        zip by uploading a new package to replace/update the existing package.
+
+
+        Required Extensions:
+
+        `zip_archive_support`: To use the zip format, the server must have the extension.'
+      tags:
+      - Applications
+      summary: Update an application with a new package
+      operationId: application_patch_upload
+      parameters:
+      - description: Id of the application
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: SHA-256 fingerprint of application e.g b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        name: X-AMS-Fingerprint
+        in: header
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                upfile:
+                  type: string
+                  description: A tarball or zip file
+                  format: binary
+              required:
+              - upfile
+  /1.0/applications/{id}/:
+    patch:
+      description: 'This endpoint updates an applications''s metadata only but not the package.
+
+        Changing the following fields will lead to the creation of a new application
+
+        version:
+
+
+        SUPPORTED UPDATE FIELD | WILL CREATE A NEW APPLICATION VERSION |
+
+        ------------------------- | ----------------------------------------- |
+
+        image | no |
+
+        instance-type | no |
+
+        tags | no |
+
+        addons | no |
+
+        resources | no |
+
+        inhibit_auto_updates | no |
+
+        services | yes |
+
+        watchdog | yes |
+
+        boot_activity | yes |
+
+        required_permissions | yes |
+
+        video_encoder | yes |
+
+        manifest_version | yes |
+
+
+        Required Extensions:
+
+        `application_partial_updates`: To use those fields that would create a new
+
+        application version on application update.'
+      tags:
+      - Applications
+      summary: Update an applications's metadata
+      operationId: application_patch_meta
+      parameters:
+      - description: Id of the application to update
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: Success response of the service
+          headers:
+            Etag:
+              description: E-Tag of the resource
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationPatch'
+        description: Details of the attributes to update
+  /1.0/applications/{id}/manifest:
+    get:
+      description: 'This endpoint gets the latest application manifest file.
+
+
+        Required Extensions:
+
+        `application_manifest_download`: The use of this API requires this extension'
+      tags:
+      - Applications
+      summary: Get an application's manifest
+      operationId: application_manifest_get
+      parameters:
+      - description: Id of the application to retrieve
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            X-AMS-ManifestSha256:
+              description: SHA-256 of the manifest file
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/applications/{id}/{version}:
+    get:
+      description: This endpoint gets the information of a specific version of an application.
+      tags:
+      - Applications
+      summary: Get information about an application's specific version
+      operationId: application_version_get
+      parameters:
+      - description: Id of the application
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Version of the application
+        name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            X-AMS-ManifestSha256:
+              description: SHA-256 of the version manifest file
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      description: This endpoint deletes a specific version of an application.
+      tags:
+      - Applications
+      summary: Delete a version of an application
+      operationId: application_version_delete
+      parameters:
+      - description: Id of the application
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Version of the application
+        name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationVersionDelete'
+        description: Details for the application version to delete
+    patch:
+      description: 'This endpoint updates the information of a specific version of an application.
+
+
+        Required Extensions:
+
+        `application_image_export`: The use of this API requires this extension'
+      tags:
+      - Applications
+      summary: Update a specific version of an application
+      operationId: application_version_patch
+      parameters:
+      - description: Id of the application
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Version of the application
+        name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '202':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationResponse'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationVersionPatch'
+        description: Details for the application version to update
+  /1.0/applications/{id}/{version}/manifest:
+    get:
+      description: 'This endpoint gets the application manifest file of one specific application
+
+        version.
+
+
+        Required Extensions:
+
+        `application_manifest_download`: The use of this API requires this extension'
+      tags:
+      - Applications
+      summary: Get the manifest for a specific version of an application
+      operationId: application_version_manifest_get
+      parameters:
+      - description: Id of the application to retrieve
+        name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - description: Version of the application to retrieve
+        name: version
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success response of the service
+          headers:
+            X-AMS-ManifestSha256:
+              description: SHA-256 of the manifest file
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '403':
+          $ref: '#/components/responses/ErrorForbidden'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /1.0/applications?recursion=1:
+    get:
+      description: This endpoint returns a list of available applications in the cluster.
+      tags:
+      - Applications
+      summary: Get a list of applications with expanded object definitions
+      operationId: applications_get_recursion1
+      parameters:
+      - description: Index to start listing the records
+        name: offset
+        in: query
+        schema:
+          type: integer
+          default: 0
+      - description: Limit the number of returned records
+        name: limit
+        in: query
+        schema:
+          type: integer
+          default: -1
+      - description: Expand the returned resource definition
+        name: recursion
+        in: query
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          default: 0
+      - example: btavtegj1qm58qg7ru50
+        description: Filter applications by id. This is an exact match for the string.
+        name: id
+        in: query
+        schema:
+          type: string
+      - example: my-app
+        description: Filter applications by name. This is an exact match for the string.
+        name: name
+        in: query
+        schema:
+          type: string
+      - example: a2.3
+        description: Filter applications by their instance_type.
+        name: instance_type
+        in: query
+        schema:
+          type: string
+      - example: initializing
+        description: Filter applications by status.
+        name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - initializing
+          - ready
+          - error
+          - deleted
+      - example: com.foo.bar
+        description: Filter applications by their boot package.
+        name: boot_package
+        in: query
+        schema:
+          type: string
+      - example: false
+        description: Filter immutable applications.
+        name: immutable
+        in: query
+        schema:
+          type: boolean
+      - example: false
+        description: Filter applications with automatic updates enabled.
+        name: inhibit_auto_updates
+        in: query
+        schema:
+          type: boolean
+      - example: false
+        description: Filter published applications.
+        name: published
+        in: query
+        schema:
+          type: boolean
+      - example: gms,ssh
+        description: Filter applications by their attached addon names.
+        name: addons
+        in: query
+        schema:
+          type: string
+      - example: x86_64
+        description: Filter applications by their supported ABI architecture.
+        name: abi
+        in: query
+        schema:
+          type: string
+      - example: created_by=anbox,foo,bar
+        description: Filter applications by tags.
+        name: tags
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success response of the service
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/CollectionResponse'
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Application'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/applications/foxglove/dashboards/:
+    get:
+      operationId: applications_foxglove_dashboards_list
+      description: List all Foxglove dashboards and their attribute
+      summary: List Foxglove dashboards
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FoxgloveDashboard'
+          description: ''
+    post:
+      operationId: applications_foxglove_dashboards_create
+      description: Add a Foxglove dashboard by its ID
+      summary: Add a Foxglove dashboard
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoxgloveDashboard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FoxgloveDashboard'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoxgloveDashboard'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+  /api/v1/applications/foxglove/dashboards/{uid}/:
+    get:
+      operationId: applications_foxglove_dashboards_retrieve
+      description: Returns Foxglove dashboard JSON object, intended for file download.
+      summary: Download Foxglove dashboard JSON file
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 'Dashboard JSON returned as an attachment with content-disposition header like: ''attachment; filename=dashboard_uid.json'''
+        '404':
+          description: Dashboard not found
+    put:
+      operationId: applications_foxglove_dashboards_update
+      description: Update all the fields of a given Foxglove dashboard
+      summary: Update a Foxglove dashboard completely
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FoxgloveDashboard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FoxgloveDashboard'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoxgloveDashboard'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Dashboard not found
+    patch:
+      operationId: applications_foxglove_dashboards_partial_update
+      description: Update the provided fields of a given Foxglove dashboard
+      summary: Update a Foxglove dashboard partially
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFoxgloveDashboard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFoxgloveDashboard'
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoxgloveDashboard'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Dashboard not found
+    delete:
+      operationId: applications_foxglove_dashboards_destroy
+      summary: Delete a Foxglove dashboard
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FoxgloveDashboard'
+          description: ''
+        '404':
+          description: Dashboard not found
+  /api/v1/applications/grafana/dashboards/:
+    get:
+      operationId: applications_grafana_dashboards_list
+      description: List all Grafana dashboards and their attribute
+      summary: List Grafana dashboards
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GrafanaDashboard'
+          description: ''
+    post:
+      operationId: applications_grafana_dashboards_create
+      description: Add a Grafana dashboard by its ID
+      summary: Add a Grafana dashboard
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaDashboard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaDashboard'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaDashboard'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+  /api/v1/applications/grafana/dashboards/{uid}/:
+    get:
+      operationId: applications_grafana_dashboards_retrieve
+      description: Returns Grafana dashboard JSON object, intended for file download.
+      summary: Download Grafana dashboard JSON file
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 'Dashboard JSON returned as an attachment with content-disposition header like: ''attachment; filename=dashboard_uid.json'''
+        '404':
+          description: Dashboard not found
+    put:
+      operationId: applications_grafana_dashboards_update
+      description: Update all the fields of a given Grafana dashboard
+      summary: Update a Grafana dashboard completely
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrafanaDashboard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GrafanaDashboard'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaDashboard'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Dashboard not found
+    patch:
+      operationId: applications_grafana_dashboards_partial_update
+      description: Update the provided fields of a given Grafana dashboard
+      summary: Update a Grafana dashboard partially
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaDashboard'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGrafanaDashboard'
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaDashboard'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Dashboard not found
+    delete:
+      operationId: applications_grafana_dashboards_destroy
+      summary: Delete a Grafana dashboard
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrafanaDashboard'
+          description: ''
+        '404':
+          description: Dashboard not found
+  /api/v1/applications/loki/alert_rules/:
+    get:
+      operationId: applications_loki_alert_rules_retrieve
+      description: List all Loki alert rule file and their attribute.This endpoint returns all the non-templated rules as well as the templated rules rendered for the devices that specified them.
+      summary: List Loki alert rule file
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiAlertRuleFile'
+          description: ''
+    post:
+      operationId: applications_loki_alert_rules_create
+      description: Add a Loki alert rule file by its ID
+      summary: Add a Loki alert rule file
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LokiAlertRuleFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LokiAlertRuleFile'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiAlertRuleFile'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+  /api/v1/applications/loki/alert_rules/{uid}/:
+    get:
+      operationId: applications_loki_alert_rules_retrieve_2
+      description: Returns Loki alert rule file.Templated rules won't be rendered.
+      summary: Download Loki alert rule file
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiAlertRuleFile'
+          description: ''
+        '404':
+          description: Alert rule file not found
+    put:
+      operationId: applications_loki_alert_rules_update
+      description: Update all the fields of a given Loki alert rule file
+      summary: Update a Loki alert rule file completely
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LokiAlertRuleFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LokiAlertRuleFile'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiAlertRuleFile'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Alert rule file not found
+    patch:
+      operationId: applications_loki_alert_rules_partial_update
+      description: Update the provided fields of a given Loki alert rule file
+      summary: Update a Loki alert rule file partially
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLokiAlertRuleFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLokiAlertRuleFile'
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiAlertRuleFile'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Alert rule file not found
+    delete:
+      operationId: applications_loki_alert_rules_destroy
+      summary: Delete a Loki alert rule file
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LokiAlertRuleFile'
+          description: ''
+        '404':
+          description: Alert rule file not found
+  /api/v1/applications/prometheus/alert_rules/:
+    get:
+      operationId: applications_prometheus_alert_rules_retrieve
+      description: List all Prometheus alert rule file and their attribute.This endpoint returns all the non-templated rules as well as the templated rules rendered for the devices that specified them.
+      summary: List Prometheus alert rule file
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          description: ''
+    post:
+      operationId: applications_prometheus_alert_rules_create
+      description: Add a Prometheus alert rule file by its ID
+      summary: Add a Prometheus alert rule file
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PrometheusAlertRuleFile'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+  /api/v1/applications/prometheus/alert_rules/{uid}/:
+    get:
+      operationId: applications_prometheus_alert_rules_retrieve_2
+      description: Returns Prometheus alert rule file.Templated rules won't be rendered.
+      summary: Download Prometheus alert rule file
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          description: ''
+        '404':
+          description: Alert rule file not found
+    put:
+      operationId: applications_prometheus_alert_rules_update
+      description: Update all the fields of a given Prometheus alert rule file
+      summary: Update a Prometheus alert rule file completely
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PrometheusAlertRuleFile'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Alert rule file not found
+    patch:
+      operationId: applications_prometheus_alert_rules_partial_update
+      description: Update the provided fields of a given Prometheus alert rule file
+      summary: Update a Prometheus alert rule file partially
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPrometheusAlertRuleFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPrometheusAlertRuleFile'
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                DateParseError:
+                  value:
+                    field_name: error details
+                  summary: Date parse error
+          description: ''
+        '404':
+          description: Alert rule file not found
+    delete:
+      operationId: applications_prometheus_alert_rules_destroy
+      summary: Delete a Prometheus alert rule file
+      parameters:
+      - in: path
+        name: uid
+        schema:
+          type: string
+        required: true
+      tags:
+      - Applications
+      security:
+      - {}
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrometheusAlertRuleFile'
+          description: ''
+        '404':
+          description: Alert rule file not found
+  /v1/applications:
+    get:
+      tags:
+      - Applications
+      summary: Get Applications
+      operationId: get_applications_v1_applications_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ApplicationResponse'
+                type: array
+                title: Response Get Applications V1 Applications Get
+      x-permissions:
+      - view_application
+    post:
+      tags:
+      - Applications
+      summary: Create Application
+      operationId: create_application_v1_applications_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationPost'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - add_application
+  /v1/applications/me/rotate:
+    post:
+      tags:
+      - Applications
+      summary: Rotate Own Api Key
+      operationId: rotate_own_api_key_v1_applications_me_rotate_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+  /v1/applications/{application_id}/rotate:
+    post:
+      tags:
+      - Applications
+      summary: Rotate Api Key
+      operationId: rotate_api_key_v1_applications__application_id__rotate_post
+      parameters:
+      - name: application_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Application Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_application
+  /v1/applications/me:
+    get:
+      tags:
+      - Applications
+      summary: Get Authenticated Application
+      operationId: get_authenticated_application_v1_applications_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/ApplicationResponse'
+                - type: 'null'
+                title: Response Get Authenticated Application V1 Applications Me Get
+  /v1/applications/{application_id}:
+    get:
+      tags:
+      - Applications
+      summary: Get Application
+      operationId: get_application_v1_applications__application_id__get
+      parameters:
+      - name: application_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Application Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_application
+    delete:
+      tags:
+      - Applications
+      summary: Delete Application
+      operationId: delete_application_v1_applications__application_id__delete
+      parameters:
+      - name: application_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Application Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_application
+    patch:
+      tags:
+      - Applications
+      summary: Update Application
+      operationId: update_application_v1_applications__application_id__patch
+      parameters:
+      - name: application_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Application Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationPatch_2'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_application
+components:
+  schemas:
+    ApplicationPatch:
+      description: ApplicationPatch represents the fields a user can modify
+      type: object
+      properties:
+        addons:
+          description: List of addons enabled for the application
+          type: array
+          items:
+            type: string
+          example:
+          - ssh
+          - gms
+        boot_activity:
+          description: Name of the boot package for the version
+          type: string
+          example: com.foo.bar.MainActivity
+        bootstrap:
+          $ref: '#/components/schemas/ApplicationBootstrap'
+        features:
+          description: List of features supported by the application
+          type: array
+          items:
+            type: string
+          example:
+          - feature1
+          - feature2
+        hooks:
+          $ref: '#/components/schemas/ApplicationHooks'
+        image:
+          description: Base image id or name to use for the applicaiton
+          type: string
+          example: btavtegj1qm58qg7ru50
+        inhibit_auto_updates:
+          description: Whether or not to auto update the application's base image
+          type: boolean
+          example: false
+        instance-type:
+          description: Instance type to use for the application
+          type: string
+          example: a3.4
+        manifest_version:
+          description: Version of the manifest used to create the application
+          type: string
+          example: '0.1'
+        node_selector:
+          description: List of tags for filtering the nodes to run the application on
+          type: array
+          items:
+            type: string
+          example:
+          - gpu=nvidia
+          - cpu=intel
+        required_permissions:
+          description: Required android application permissions
+          type: array
+          items:
+            type: string
+          example:
+          - android.permission.WRITE_EXTERNAL_STORAGE
+          - android.permission.READ_EXTERNAL_STORAGE
+        resources:
+          $ref: '#/components/schemas/ApplicationResourcesPost'
+        services:
+          description: 'List of services exposed by the application that should be expose on the instance
+
+            For application version update, changing those values would trigger a new application version creation'
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkServiceSpec'
+        tags:
+          description: Tags to attach to the application
+          type: array
+          items:
+            type: string
+          example:
+          - created_by=anbox
+        video_encoder:
+          $ref: '#/components/schemas/VideoEncoderType'
+        watchdog:
+          $ref: '#/components/schemas/ApplicationWatchdog'
+    Application:
+      description: Application represents an AMS application
+      type: object
+      properties:
+        abi:
+          description: ABI supported by the application
+          type: string
+          example: x86_64
+        addons:
+          description: List of addons enabled for the application
+          type: array
+          items:
+            type: string
+          example:
+          - ssh
+          - gms
+        boot_package:
+          description: Name of the boot package for the application
+          type: string
+          example: com.foo.bar
+        created_at:
+          description: Creation UTC timestamp of the application
+          type: integer
+          format: int64
+          example: 1532150640
+        id:
+          description: ID of the application
+          type: string
+          example: btavtegj1qm58qg7ru50
+        immutable:
+          description: Flag to show whether the application can be edited
+          type: boolean
+          example: false
+        inhibit_auto_updates:
+          description: Whether or not to auto update the application's base image
+          type: boolean
+          example: false
+        instance_type:
+          description: Instance type required by the application
+          type: string
+          example: a2.3
+        name:
+          description: Name of the application
+          type: string
+          example: my-app
+        node_selector:
+          description: List of tags for filtering the nodes to run the application on
+          type: array
+          items:
+            type: string
+          example:
+          - gpu=nvidia
+          - cpu=intel
+        parent_image_id:
+          description: Parent image used for the application
+          type: string
+          example: btavtegj1qm58qg7ru50
+        published:
+          description: Whether or not the application is published
+          type: boolean
+          example: false
+        resources:
+          $ref: '#/components/schemas/ApplicationResources'
+        status:
+          description: Current status of the application
+          type: string
+          enum:
+          - initializing
+          - unknown
+          - ready
+          - deleted
+          - error
+          example: deleted
+        status_code:
+          $ref: '#/components/schemas/ApplicationStatus'
+        tags:
+          description: Tags to attach to the application
+          type: array
+          items:
+            type: string
+          example:
+          - created_by=anbox
+        versions:
+          description: List of versions for the application
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationVersion'
+        vm:
+          description: Whether the application is based on virtual machines or containers
+          type: boolean
+    ApplicationVersion:
+      description: ApplicationVersion describes a single version of an application
+      type: object
+      properties:
+        addons:
+          description: List of addons enabled for the version
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationAddon'
+        boot_activity:
+          description: Name of the boot package for the version
+          type: string
+          example: com.foo.bar.MainActivity
+        bootstrap:
+          $ref: '#/components/schemas/ApplicationBootstrap'
+        created_at:
+          description: Creation UTC timestamp of the version
+          type: integer
+          format: int64
+          example: 1532150640
+        error_message:
+          description: Error message in case the application ran into an error
+          type: string
+          example: '{}'
+        extra_data:
+          description: Extra data to be setup on the instance on application creation
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ApplicationExtraData'
+          example: {}
+        features:
+          description: List of features supported by the application
+          type: array
+          items:
+            type: string
+          example:
+          - feature1
+          - feature2
+        hooks:
+          $ref: '#/components/schemas/ApplicationHooks'
+        manifest_version:
+          description: Version of the manifest used to create the application
+          type: string
+          example: '0.1'
+        number:
+          description: Version of the application
+          type: integer
+          format: int64
+          example: 0
+        parent_image_id:
+          description: Parent image used for the application version
+          type: string
+          example: btavtegj1qm58qg7ru50
+        parent_image_version:
+          description: Parent image version to use for the application version
+          type: integer
+          format: int64
+          example: 0
+        published:
+          description: Whether or not the version is published
+          type: boolean
+          example: false
+        required_permissions:
+          description: Required android application permissions
+          type: array
+          items:
+            type: string
+          example:
+          - android.permission.WRITE_EXTERNAL_STORAGE
+          - android.permission.READ_EXTERNAL_STORAGE
+        services:
+          description: List of services exposed by the application that should be exposed on the instance
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkServiceSpec'
+        status:
+          description: Current status of the version
+          type: string
+          enum:
+          - initializing
+          - unknown
+          - ready
+          - deleted
+          - error
+          example: deleted
+        status_code:
+          $ref: '#/components/schemas/ImageStatus'
+        video_encoder:
+          $ref: '#/components/schemas/VideoEncoderType'
+        watchdog:
+          $ref: '#/components/schemas/ApplicationWatchdog'
+    ApplicationVersionDelete:
+      description: ApplicationVersionDelete represents the fields used to delete an application version
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the application version should be forced
+          type: boolean
+          example: false
+    NetworkProtocol:
+      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
+      type: string
+    ApplicationExtraData:
+      description: ApplicationExtraData represents an extra application data
+      type: object
+      properties:
+        owner:
+          description: Owner and group for the files
+          type: string
+          example: root:root
+        permissions:
+          description: Unix permissions for the files
+          type: string
+          example: '0644'
+        target:
+          description: Path to the target file on the android filesystem
+          type: string
+          example: /sdcard/Android/obb/com.foo.bar/
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    ApplicationResourcesPost:
+      description: ApplicationResourcesPost represents the fields used to update an application resource
+      type: object
+      properties:
+        cpus:
+          description: Number of CPUs required by the application
+          type: integer
+          format: int64
+          example: 2
+        disk-size:
+          description: Storage size required by the application
+          type: string
+          example: 3GB
+        gpu-slots:
+          description: Number of GPU slots required by the application
+          type: integer
+          format: int64
+          example: 2
+        memory:
+          description: Memory to be assigned to the application
+          type: string
+          example: 3GB
+        vpu-slots:
+          description: Number of VPU slots required by the application
+          type: integer
+          format: int64
+          example: 1
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    ApplicationAddon:
+      description: ApplicationAddon describes a specific version of an addon an application version uses
+      type: object
+      properties:
+        name:
+          description: Name of the application addon
+          type: string
+          example: ssh
+        version:
+          description: Version of the application addon
+          type: integer
+          format: int64
+          example: 0
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    NetworkServiceSpec:
+      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+      type: object
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the container a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the container to expose the service correctly.
+
+            Exampe: ssh'
+          type: string
+        port:
+          description: Port is the port the container provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: 'PortEnd is the end of the port range set for a service. If empty, only a
+
+            single port is opened'
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
+    ApplicationWatchdog:
+      description: ApplicationWatchdog describes the fields used to update an application watchdog
+      type: object
+      properties:
+        allowed-packages:
+          description: List of android packages to enable the watchdog for
+          type: array
+          items:
+            type: string
+          example:
+          - com.android.settings
+        disabled:
+          description: Whether or not to enable the watchdog for the application
+          type: boolean
+          example: true
+    ApplicationsDelete:
+      description: ApplicationsDelete represents a list of application to delete together
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the applications should be forced
+          type: boolean
+          example: false
+        ids:
+          description: IDs or names of the applications to delete
+          type: array
+          items:
+            type: string
+          example:
+          - cilsreunfpfec9b1ktg0
+          - cilsreunfpfec9b1ktg1
+          - myapp
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    ApplicationHooks:
+      description: ApplicationHooks describes the fields used to configure the hooks of an application
+      type: object
+      properties:
+        timeout:
+          description: Time limit to wait for the hook to complete before timing out
+          type: string
+          example: 10m
+    ImageStatus:
+      description: ImageStatus represents the status of an image
+      type: integer
+      format: int64
+    ApplicationResources:
+      description: ApplicationResources describes resources allocated for an application
+      type: object
+      properties:
+        cpus:
+          description: Number of CPUs required by the application
+          type: integer
+          format: int64
+          example: 2
+        disk-size:
+          description: Storage size required by the application
+          type: string
+          example: 3GB
+        gpu-slots:
+          description: Number of GPU slots required by the application
+          type: integer
+          format: int64
+          example: 2
+        memory:
+          description: Memory to be assigned to the application
+          type: string
+          example: 3GB
+        vpu-slots:
+          description: Number of VPU slots required by the application
+          type: integer
+          format: int64
+          example: 1
+    ApplicationVersionPatch:
+      description: ApplicationVersionPatch represents the fields used to update an application version
+      type: object
+      properties:
+        published:
+          description: Used to publish a specific version of the application
+          type: boolean
+          example: true
+    ApplicationBootstrap:
+      description: ApplicationBootstrap describes the fields used to configure the application bootstrap
+      type: object
+      properties:
+        keep:
+          description: List of files to keep after the bootstrap
+          type: array
+          items:
+            type: string
+          example:
+          - app.apk
+    ApplicationStatus:
+      description: ApplicationStatus represents the status an application can be in
+      type: integer
+      format: int64
+    VideoEncoderType:
+      description: VideoEncoderType describes the type of a video encoder is used by an application
+      type: string
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    PatchedPrometheusAlertRuleFile:
+      type: object
+      description: Prometheus Alert Rule Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        rules:
+          type: string
+        template:
+          type: boolean
+          title: Whether this rules file is                                    a template and must be rendered
+    PatchedFoxgloveDashboard:
+      type: object
+      description: Foxglove Dashboard Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        dashboard:
+          title: Dashboard json field
+    PatchedGrafanaDashboard:
+      type: object
+      description: Grafana Dashboard Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        dashboard:
+          title: Dashboard json field
+    GrafanaDashboard:
+      type: object
+      description: Grafana Dashboard Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        dashboard:
+          title: Dashboard json field
+      required:
+      - dashboard
+      - uid
+    PrometheusAlertRuleFile:
+      type: object
+      description: Prometheus Alert Rule Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        rules:
+          type: string
+        template:
+          type: boolean
+          title: Whether this rules file is                                    a template and must be rendered
+      required:
+      - rules
+      - uid
+    PatchedLokiAlertRuleFile:
+      type: object
+      description: Loki Alert Rule Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        rules:
+          type: string
+        template:
+          type: boolean
+          title: Whether this rules file is                                    a template and must be rendered
+    LokiAlertRuleFile:
+      type: object
+      description: Loki Alert Rule Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        rules:
+          type: string
+        template:
+          type: boolean
+          title: Whether this rules file is                                    a template and must be rendered
+      required:
+      - rules
+      - uid
+    FoxgloveDashboard:
+      type: object
+      description: Foxglove Dashboard Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        dashboard:
+          title: Dashboard json field
+      required:
+      - dashboard
+      - uid
+    Permission:
+      type: string
+      enum:
+      - view_user
+      - change_user
+      - view_team
+      - change_team
+      - add_application
+      - change_application
+      - view_application
+      - view_permission
+      - view_issue
+      - change_issue
+      - change_issue_attachment
+      - change_issue_attachment_bulk
+      - change_attachment_rule
+      - change_auto_rerun
+      - view_test
+      - change_test
+      - view_rerun
+      - change_rerun
+      - change_rerun_bulk
+      - view_artefact
+      - change_artefact
+      - view_environment_review
+      - change_environment_review
+      - view_report
+      - view_test_case_reported_issue
+      - change_test_case_reported_issue
+      - view_environment_reported_issue
+      - change_environment_reported_issue
+      - view_notification
+      - change_notification
+      - view_sentry_debug
+      title: Permission
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApplicationPatch_2:
+      properties:
+        permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Permission'
+            type: array
+          - type: 'null'
+          title: Permissions
+      type: object
+      title: ApplicationPatch
+    ApplicationResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+        api_key:
+          type: string
+          title: Api Key
+      type: object
+      required:
+      - id
+      - name
+      - permissions
+      - api_key
+      title: ApplicationResponse
+    ApplicationPost:
+      properties:
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+      type: object
+      required:
+      - name
+      - permissions
+      title: ApplicationPost
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
+x-refined-from:
+- canonical-anbox-cloud-ams-api-openapi.json
+- canonical-cos-registration-server-api-openapi.yml
+- canonical-test-observer-api-openapi.json

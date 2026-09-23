@@ -1,0 +1,20 @@
+openapi: 3.2.0
+info:
+  title: Hardware API (hwapi) API
+  description: API server for working with hardware information from C3
+  version: 1.0.0
+tags:
+- name: Hardware API (hwapi)
+paths:
+  /:
+    get:
+      summary: Root
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Hardware API (hwapi)

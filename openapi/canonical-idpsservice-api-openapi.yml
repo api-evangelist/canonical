@@ -1,0 +1,412 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Idps Service API
+  version: '0.1'
+tags:
+- name: IdpsService
+paths:
+  /api/v0/idps:
+    get:
+      operationId: IdpsService_ListIdps
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idpsListIdpsResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdpsService
+      summary: Idps service list idps
+      x-summary-source: derived
+    post:
+      operationId: IdpsService_CreateIdp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idpsCreateIdpBody'
+        required: true
+        x-originalParamName: idp
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idpsCreateIdpResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdpsService
+      summary: Idps service create idp
+      x-summary-source: derived
+  /api/v0/idps/{id}:
+    delete:
+      operationId: IdpsService_RemoveIdp
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idpsRemoveIdpResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdpsService
+      summary: Idps service remove idp
+      x-summary-source: derived
+    get:
+      operationId: IdpsService_GetIdp
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idpsGetIdpResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdpsService
+      summary: Idps service get idp
+      x-summary-source: derived
+    patch:
+      operationId: IdpsService_UpdateIdp
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/idpsUpdateIdpBody'
+        required: true
+        x-originalParamName: idp
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/idpsUpdateIdpResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdpsService
+      summary: Idps service update idp
+      x-summary-source: derived
+components:
+  schemas:
+    idpsIdp:
+      properties:
+        apple_private_key:
+          type: string
+        apple_private_key_id:
+          type: string
+        apple_team_id:
+          type: string
+        auth_url:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        id:
+          type: string
+        issuer_url:
+          type: string
+        label:
+          type: string
+        mapper_url:
+          type: string
+        microsoft_tenant:
+          type: string
+        provider:
+          type: string
+        requested_claims:
+          type: string
+        scope:
+          items:
+            type: string
+          type: array
+        subject_source:
+          type: string
+        token_url:
+          type: string
+      type: object
+    idpsRemoveIdpResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsCreateIdpResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsUpdateIdpResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsGetIdpResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsListIdpsResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsUpdateIdpBody:
+      properties:
+        apple_private_key:
+          type: string
+        apple_private_key_id:
+          type: string
+        apple_team_id:
+          type: string
+        auth_url:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        id:
+          type: string
+        issuer_url:
+          type: string
+        label:
+          type: string
+        mapper_url:
+          type: string
+        microsoft_tenant:
+          type: string
+        provider:
+          type: string
+        requested_claims:
+          type: string
+        scope:
+          items:
+            type: string
+          type: array
+        subject_source:
+          type: string
+        token_url:
+          type: string
+      type: object
+    idpsCreateIdpBody:
+      properties:
+        apple_private_key:
+          type: string
+        apple_private_key_id:
+          type: string
+        apple_team_id:
+          type: string
+        auth_url:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        id:
+          type: string
+        issuer_url:
+          type: string
+        label:
+          type: string
+        mapper_url:
+          type: string
+        microsoft_tenant:
+          type: string
+        provider:
+          type: string
+        requested_claims:
+          type: string
+        scope:
+          items:
+            type: string
+          type: array
+        subject_source:
+          type: string
+        token_url:
+          type: string
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

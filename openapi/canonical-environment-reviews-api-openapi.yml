@@ -1,0 +1,283 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Environment Reviews API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: environment-reviews
+paths:
+  /v1/artefacts/{artefact_id}/environment-reviews:
+    get:
+      tags:
+      - environment-reviews
+      summary: Get Environment Reviews
+      operationId: get_environment_reviews_v1_artefacts__artefact_id__environment_reviews_get
+      parameters:
+      - name: artefact_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Artefact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewResponse'
+                title: Response Get Environment Reviews V1 Artefacts  Artefact Id  Environment Reviews Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_environment_review
+    patch:
+      tags:
+      - environment-reviews
+      summary: Bulk Update Environment Reviews
+      operationId: bulk_update_environment_reviews_v1_artefacts__artefact_id__environment_reviews_patch
+      parameters:
+      - name: artefact_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Artefact Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EnvironmentReviewPatch'
+              title: Requests
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewResponse'
+                title: Response Bulk Update Environment Reviews V1 Artefacts  Artefact Id  Environment Reviews Patch
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_environment_review
+  /v1/artefacts/{artefact_id}/environment-reviews/{review_id}:
+    patch:
+      tags:
+      - environment-reviews
+      summary: Update Environment Review
+      operationId: update_environment_review_v1_artefacts__artefact_id__environment_reviews__review_id__patch
+      parameters:
+      - name: artefact_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Artefact Id
+      - name: review_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Review Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentReviewPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_environment_review
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ArtefactBuildMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EnvironmentReviewPatch:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        review_decision:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewDecision'
+            type: array
+          - type: 'null'
+          title: Review Decision
+        review_comment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Review Comment
+      type: object
+      title: EnvironmentReviewPatch
+    EnvironmentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
+      type: object
+      required:
+      - id
+      - name
+      - architecture
+      title: EnvironmentResponse
+    ArtefactBuildEnvironmentReviewResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        review_decision:
+          items:
+            $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewDecision'
+          type: array
+          title: Review Decision
+        review_comment:
+          type: string
+          title: Review Comment
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        artefact_build:
+          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+        reviewers:
+          items:
+            $ref: '#/components/schemas/ReviewerResponse'
+          type: array
+          title: Reviewers
+          default: []
+      type: object
+      required:
+      - id
+      - review_decision
+      - review_comment
+      - environment
+      - artefact_build
+      title: ArtefactBuildEnvironmentReviewResponse
+    ArtefactBuildEnvironmentReviewDecision:
+      type: string
+      enum:
+      - REJECTED
+      - APPROVED_INCONSISTENT_TEST
+      - APPROVED_UNSTABLE_PHYSICAL_INFRA
+      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
+      - APPROVED_FAULTY_HARDWARE
+      - APPROVED_ALL_TESTS_PASS
+      title: ArtefactBuildEnvironmentReviewDecision

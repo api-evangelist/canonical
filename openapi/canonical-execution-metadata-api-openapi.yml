@@ -1,0 +1,57 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Execution Metadata API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: execution-metadata
+paths:
+  /v1/execution-metadata:
+    get:
+      tags:
+      - execution-metadata
+      summary: Get Execution Metadata
+      operationId: get_execution_metadata_v1_execution_metadata_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionMetadataGetResponse'
+      x-permissions:
+      - view_test
+components:
+  schemas:
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    ExecutionMetadataGetResponse:
+      properties:
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+      type: object
+      required:
+      - execution_metadata
+      title: ExecutionMetadataGetResponse

@@ -1,0 +1,486 @@
+openapi: 3.2.0
+info:
+  title: Test Observer Teams API
+  description: Test Observer API (see https://github.com/canonical/test_observer)
+  license:
+    name: GNU Affero General Public License v3
+    url: https://raw.githubusercontent.com/canonical/test_observer/refs/heads/main/backend/LICENSE
+  version: 0.1.0
+tags:
+- name: Teams
+paths:
+  /v1/teams:
+    get:
+      tags:
+      - Teams
+      summary: Get Teams
+      operationId: get_teams_v1_teams_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TeamResponse'
+                type: array
+                title: Response Get Teams V1 Teams Get
+      x-permissions:
+      - view_team
+    post:
+      tags:
+      - Teams
+      summary: Create Team
+      description: Create a new team
+      operationId: create_team_v1_teams_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+  /v1/teams/{team_id}:
+    get:
+      tags:
+      - Teams
+      summary: Get Team
+      operationId: get_team_v1_teams__team_id__get
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Team Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - view_team
+    patch:
+      tags:
+      - Teams
+      summary: Update Team
+      operationId: update_team_v1_teams__team_id__patch
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Team Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamPatch'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+  /v1/teams/{team_id}/members/{user_id}:
+    post:
+      tags:
+      - Teams
+      summary: Add Team Member
+      description: Add a user to a team
+      operationId: add_team_member_v1_teams__team_id__members__user_id__post
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Team Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+    delete:
+      tags:
+      - Teams
+      summary: Remove Team Member
+      description: Remove a user from a team
+      operationId: remove_team_member_v1_teams__team_id__members__user_id__delete
+      parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Team Id
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-permissions:
+      - change_team
+components:
+  schemas:
+    Permission:
+      type: string
+      enum:
+      - view_user
+      - change_user
+      - view_team
+      - change_team
+      - add_application
+      - change_application
+      - view_application
+      - view_permission
+      - view_issue
+      - change_issue
+      - change_issue_attachment
+      - change_issue_attachment_bulk
+      - change_attachment_rule
+      - change_auto_rerun
+      - view_test
+      - change_test
+      - view_rerun
+      - change_rerun
+      - change_rerun_bulk
+      - view_artefact
+      - change_artefact
+      - view_environment_review
+      - change_environment_review
+      - view_report
+      - view_test_case_reported_issue
+      - change_test_case_reported_issue
+      - view_environment_reported_issue
+      - change_environment_reported_issue
+      - view_notification
+      - change_notification
+      - view_sentry_debug
+      title: Permission
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    ArtefactMatchingRuleBase:
+      properties:
+        name:
+          type: string
+          title: Name
+          default: ''
+        family:
+          $ref: '#/components/schemas/FamilyName'
+        stage:
+          type: string
+          title: Stage
+          default: ''
+        track:
+          type: string
+          title: Track
+          default: ''
+        branch:
+          type: string
+          title: Branch
+          default: ''
+        store:
+          type: string
+          title: Store
+          default: ''
+        series:
+          type: string
+          title: Series
+          default: ''
+        os:
+          type: string
+          title: Os
+          default: ''
+        release:
+          type: string
+          title: Release
+          default: ''
+        owner:
+          type: string
+          title: Owner
+          default: ''
+        grant_permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Grant Permissions
+      type: object
+      required:
+      - family
+      title: ArtefactMatchingRuleBase
+      description: Base model for artefact matching rule with common fields
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TeamPatch:
+      properties:
+        permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Permission'
+            type: array
+          - type: 'null'
+          title: Permissions
+        artefact_matching_rules:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ArtefactMatchingRuleBase'
+            type: array
+          - type: 'null'
+          title: Artefact Matching Rules
+      type: object
+      title: TeamPatch
+    TeamCreate:
+      properties:
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+          default: []
+        artefact_matching_rules:
+          items:
+            $ref: '#/components/schemas/ArtefactMatchingRuleBase'
+          type: array
+          title: Artefact Matching Rules
+          default: []
+      type: object
+      required:
+      - name
+      title: TeamCreate
+    UserMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        name:
+          type: string
+          title: Name
+        is_admin:
+          type: boolean
+          title: Is Admin
+      type: object
+      required:
+      - id
+      - email
+      - name
+      - is_admin
+      title: UserMinimalResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TeamResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+        members:
+          items:
+            $ref: '#/components/schemas/UserMinimalResponse'
+          type: array
+          title: Members
+        artefact_matching_rules:
+          items:
+            $ref: '#/components/schemas/ArtefactMatchingRuleInResponse'
+          type: array
+          title: Artefact Matching Rules
+      type: object
+      required:
+      - id
+      - name
+      - permissions
+      - members
+      - artefact_matching_rules
+      title: TeamResponse
+    ArtefactMatchingRuleInResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        family:
+          $ref: '#/components/schemas/FamilyName'
+        stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stage
+        track:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Track
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch
+        store:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Store
+        series:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Series
+        os:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Os
+        release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release
+        owner:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+        grant_permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Grant Permissions
+      type: object
+      required:
+      - id
+      - name
+      - family
+      - stage
+      - track
+      - branch
+      - store
+      - series
+      - os
+      - release
+      - owner
+      - grant_permissions
+      title: ArtefactMatchingRuleInResponse
+      description: Artefact matching rule fields when included in responses (no relationships)

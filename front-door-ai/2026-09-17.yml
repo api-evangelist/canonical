@@ -1,0 +1,29 @@
+# Front Door AI Index — canonical — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: canonical
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: canonical.com
+  final_host: canonical.com
+  ownership: own
+  owner: canonical
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 26
+  host_score: 26
+  density: 6.92
+  words: 3755
+  tiers:
+    agentic: 0
+    core: 26
+    model: 0
+  ambiguous: 5
+  top_terms:
+    AI: 16
+    machine learning: 6
+    ML: 4
+    automation: 3
+    smart: 2

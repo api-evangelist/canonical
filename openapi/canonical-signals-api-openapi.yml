@@ -1,0 +1,77 @@
+openapi: 3.2.0
+info:
+  title: Pebble Signals API
+  version: v1
+tags:
+- name: Signals
+paths:
+  /v1/signals:
+    post:
+      summary: Send a signal to services
+      tags:
+      - Signals
+      description: Send a signal to each of the specified services.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signal:
+                  type: string
+                  description: The signal to send. For example, "SIGHUP", "SIGINT", "SIGKILL".
+                services:
+                  type: array
+                  description: List of service names to send the signal to.
+                  items:
+                    type: string
+                  minItems: 1
+              required:
+              - signal
+              - services
+            example:
+              signal: SIGHUP
+              services:
+              - svc1
+      responses:
+        '200':
+          description: Signal sent successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostSignalsResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result: true
+      operationId: postV1Signals
+      x-operation-id-source: derived
+components:
+  schemas:
+    PostSignalsResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: boolean
+            const: true
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '

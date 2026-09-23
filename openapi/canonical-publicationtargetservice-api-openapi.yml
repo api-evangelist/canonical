@@ -1,0 +1,402 @@
+openapi: 3.2.0
+info:
+  title: debarchive Publication Target Service API
+  version: 0.1.0
+  description: Manages the storage destinations for publishing Debian archives.
+tags:
+- name: PublicationTargetService
+  description: Manages the storage destinations for publishing Debian archives.
+paths:
+  /v1/publicationTargets:
+    get:
+      tags:
+      - PublicationTargetService
+      description: Lists publication targets.
+      operationId: PublicationTargetService_ListPublicationTargets
+      parameters:
+      - name: pageSize
+        in: query
+        description: "The maximum number of publication targets to return.\n The service may return fewer than this value.\n If unspecified, at most 100 publication targets will be returned.\n The maximum value is 1000; values above 1000 will be treated as 1000."
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: "A page token, received from a previous call.\n Provide this to retrieve the subsequent page.\n\n When paginating, all other request parameters provided must match\n the call that provided the page token."
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: "An expression for filtering the results of the request.\n The fields eligible for filtering are:\n\n   * `display_name`\n\n Some examples of using filters are:\n\n   * `display_name=\"target\"`  --> The publication target has the display name \"target\".\n   * `display_name=\"target*\"` --> The publication target has the prefix \"target\" in its display name."
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPublicationTargetsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication target service list publication targets
+      x-summary-source: derived
+    post:
+      tags:
+      - PublicationTargetService
+      description: Creates a new publication target.
+      operationId: PublicationTargetService_CreatePublicationTarget
+      parameters:
+      - name: publicationTargetId
+        in: query
+        description: "The ID to use for the publication target (optional).\n If not provided, the server will generate one."
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicationTarget'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationTarget'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication target service create publication target
+      x-summary-source: derived
+  /v1/publicationTargets/{publicationTarget}:
+    get:
+      tags:
+      - PublicationTargetService
+      description: Retrieves details of a single publication target.
+      operationId: PublicationTargetService_GetPublicationTarget
+      parameters:
+      - name: publicationTarget
+        in: path
+        description: The publicationTarget id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationTarget'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication target service get publication target
+      x-summary-source: derived
+    delete:
+      tags:
+      - PublicationTargetService
+      description: Deletes a PublicationTarget. This does not necessarily clean up published artifacts.
+      operationId: PublicationTargetService_DeletePublicationTarget
+      parameters:
+      - name: publicationTarget
+        in: path
+        description: The publicationTarget id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content: {}
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication target service delete publication target
+      x-summary-source: derived
+    patch:
+      tags:
+      - PublicationTargetService
+      description: Updates an existing publication target.
+      operationId: PublicationTargetService_UpdatePublicationTarget
+      parameters:
+      - name: publicationTarget
+        in: path
+        description: The publicationTarget id.
+        required: true
+        schema:
+          type: string
+      - name: updateMask
+        in: query
+        description: The list of fields to update.
+        schema:
+          type: string
+          format: field-mask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicationTarget'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicationTarget'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication target service update publication target
+      x-summary-source: derived
+  /v1/publicationTargets:batchGet:
+    post:
+      tags:
+      - PublicationTargetService
+      description: Retrieves a list of publication targets based on their names.
+      operationId: PublicationTargetService_BatchGetPublicationTargets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchGetPublicationTargetsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchGetPublicationTargetsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication target service batch get publication targets
+      x-summary-source: derived
+components:
+  schemas:
+    GoogleProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: The type of the serialized message.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+    PublicationTarget:
+      required:
+      - displayName
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the publication target.\n Format: \"publicationTargets/{publication_target}\""
+        displayName:
+          type: string
+          description: The user-defined display name.
+        publicationTargetId:
+          readOnly: true
+          type: string
+          description: The publication_id (uuid) is part of the `name`, and is exposed separately for convenience.
+        s3:
+          allOf:
+          - $ref: '#/components/schemas/S3Target'
+          description: S3 storage.
+        swift:
+          allOf:
+          - $ref: '#/components/schemas/SwiftTarget'
+          description: Swift storage.
+        filesystem:
+          allOf:
+          - $ref: '#/components/schemas/FilesystemTarget'
+          description: Filesystem storage.
+      description: Represents a publication storage destination (S3, Swift, or filesystem).
+    BatchGetPublicationTargetsRequest:
+      required:
+      - names
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string
+          description: "The names of the publication targets to retrieve.\n A maximum of 100 publication targets can be retrieved in a batch.\n Format: publicationTargets/{publication_target}"
+        returnPartialSuccess:
+          type: boolean
+          description: "Setting this field to `true` will opt the request into returning the\n publication targets that are reachable, and into including the names of\n those that were unreachable in the\n [BatchGetPublicationTargetsResponse.unreachable] field."
+      description: The request message for retrieving a batch of publication targets.
+    ListPublicationTargetsResponse:
+      type: object
+      properties:
+        publicationTargets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationTarget'
+          description: The publication targets.
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing publication targets.
+    BatchGetPublicationTargetsResponse:
+      type: object
+      properties:
+        publicationTargets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationTarget'
+          description: Publication targets requested.
+        unreachable:
+          type: array
+          items:
+            type: string
+          description: "Unreachable publication targets. Populated when the request opts into\n `return_partial_success` and reading across collections."
+      description: The response message for retrieving a batch of publication targets.
+    S3Target:
+      required:
+      - region
+      - bucket
+      - awsAccessKeyId
+      - awsSecretAccessKey
+      type: object
+      properties:
+        region:
+          type: string
+          description: The AWS region for the S3 bucket. Possibly unused if using S3-compatible storage without regions.
+        bucket:
+          type: string
+          description: The name of the target bucket.
+        endpoint:
+          type: string
+          description: "Hostname used for S3-compatible storage.\n If set, the region is ignored."
+        awsAccessKeyId:
+          writeOnly: true
+          type: string
+          description: AWS-style access key ID for the bucket.
+        awsSecretAccessKey:
+          writeOnly: true
+          type: string
+          description: AWS-style secret access key for the bucket.
+        prefix:
+          type: string
+          description: "Path prefix under which artifacts will be published.\n Defaults to the bucket root if not specified."
+        acl:
+          type: string
+          description: ACL (Access Control List) used for published files.
+        storageClass:
+          type: string
+          description: The AWS S3 storage class to use.
+        encryptionMethod:
+          type: string
+          description: "Server-side encryption method. Defaults to none.\n Currently, the only available encryption method is `AES256`."
+        plusWorkaround:
+          type: boolean
+          description: Workaround for specific S3-compatible issues (e.g. "+" in filenames).
+        disableMultiDel:
+          type: boolean
+          description: "Disables the `MultiDel` S3 API.\n Useful for S3-compatible cloud storage providers that do not support it."
+        forceSigV2:
+          type: boolean
+          description: "Disables Signature V4 support.\n Useful for S3-compatible cloud storage providers that do not support SigV4."
+        debug:
+          type: boolean
+          description: Enables debug logging for S3 operations.
+      description: An S3 publication target destination.
+    SwiftTarget:
+      required:
+      - container
+      - username
+      - password
+      - authUrl
+      type: object
+      properties:
+        container:
+          type: string
+          description: The name of the container.
+        username:
+          writeOnly: true
+          type: string
+          description: OpenStack username for Keystone access.
+        password:
+          writeOnly: true
+          type: string
+          description: OpenStack password for Keystone access.
+        prefix:
+          type: string
+          description: "Path prefix under which artifacts will be published.\n Defaults to the container root if not specified."
+        authUrl:
+          type: string
+          description: The full URL of the Keystone server (including port and version).
+        tenant:
+          type: string
+          description: The OpenStack tenant name.
+        tenantId:
+          type: string
+          description: The OpenStack tenant ID.
+        domain:
+          type: string
+          description: The OpenStack domain name.
+        domainId:
+          type: string
+          description: The OpenStack domain ID.
+        tenantDomain:
+          type: string
+          description: The OpenStack domain name the tenant/project belongs to.
+        tenantDomainId:
+          type: string
+          description: The OpenStack domain ID the tenant/project belongs to.
+      description: A Swift (OpenStack) storage destination.
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+          format: int32
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoogleProtobufAny'
+          description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+      description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+    FilesystemTarget:
+      required:
+      - path
+      type: object
+      properties:
+        path:
+          type: string
+          description: "The path to the directory where files should be published.\n This is relative to the server's configured `FILESYSTEM_PUBLISHED_ROOT`."
+        linkMethod:
+          enum:
+          - HARDLINK
+          - SYMLINK
+          - COPY
+          type: string
+          description: The link method to use for published files. Defaults to `HARDLINK`.
+          format: enum
+      description: A local filesystem storage destination.

@@ -1,0 +1,796 @@
+openapi: 3.2.0
+info:
+  title: Canonical Notices API
+  version: '1.0'
+  description: 'Operations tagged notices across 2 of this provider''s published API definitions: canonical-pebble-api-openapi.yml, canonical-snapd-rest-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
+tags:
+- name: Notices
+paths:
+  /v1/notices:
+    get:
+      summary: Get notices
+      tags:
+      - Notices
+      description: Get a list of notices that match the filters, ordered by the last-repeated time.
+      parameters:
+      - in: query
+        name: user-id
+        description: Filter notices by user ID. Only one user ID can be specified. This parameter can only be used by admin users.
+        schema:
+          type: integer
+      - in: query
+        name: users
+        description: If set to "all", return notices for all users. Cannot be used with `user-id`. This parameter can only be used by admin users.
+        schema:
+          type: string
+          enum:
+          - all
+      - in: query
+        name: types
+        description: Filter notices by type. To specify multiple types, include this parameter multiple times.
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - change-update
+            - custom
+            - warning
+      - in: query
+        name: keys
+        description: Filter notices by keys. To specify multiple keys, include this parameter multiple times.
+        schema:
+          type: array
+          items:
+            type: string
+      - in: query
+        name: after
+        description: Filter notices occurring after the specified [time](#time).
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timeout
+        description: The maximum time [duration](#duration) to wait for notices. If no notices are available within this time, an empty list is returned.
+        schema:
+          type: string
+          format: duration
+      responses:
+        '200':
+          description: Notices successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNoticesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                - id: '1'
+                  user-id: null
+                  type: change-update
+                  key: '1'
+                  first-occurred: '2024-12-27T09:55:13.393868798Z'
+                  last-occurred: '2024-12-27T09:55:14.400978382Z'
+                  last-repeated: '2024-12-27T09:55:14.400978382Z'
+                  occurrences: 3
+                  last-data:
+                    kind: autostart
+                  expire-after: 168h0m0s
+      operationId: getV1Notices
+      x-operation-id-source: derived
+    post:
+      summary: Create a new notice
+      tags:
+      - Notices
+      description: Record an occurrence of a notice with the specified options.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - add
+                  description: The action to perform.
+                type:
+                  type: string
+                  enum:
+                  - custom
+                  description: The type of notice to create.
+                key:
+                  type: string
+                  description: The key for the notice (must follow the "example.com/path" format).
+                repeat-after:
+                  type: string
+                  format: duration
+                  description: '[Duration](#duration) after which the notice can be repeated.'
+                data:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: Additional JSON data associated with the notice.
+              required:
+              - action
+              - type
+              - key
+            example:
+              action: add
+              type: custom
+              key: example.com/path
+      responses:
+        '200':
+          description: Notice successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostNoticesResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  id: '3'
+      operationId: postV1Notices
+      x-operation-id-source: derived
+  /v1/notices/{id}:
+    get:
+      summary: Get a specific notice
+      tags:
+      - Notices
+      description: Get a single notice by ID.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The ID of the notice to retrieve.
+      responses:
+        '200':
+          description: Notice successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNoticeByIDResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  id: '1'
+                  user-id: null
+                  type: change-update
+                  key: '1'
+                  first-occurred: '2024-12-24T10:29:17.63483469Z'
+                  last-occurred: '2024-12-24T10:29:18.651789065Z'
+                  last-repeated: '2024-12-24T10:29:18.651789065Z'
+                  occurrences: 3
+                  last-data:
+                    kind: autostart
+                  expire-after: 168h0m0s
+      operationId: getV1NoticesById
+      x-operation-id-source: derived
+  /v2/notices:
+    get:
+      tags:
+      - Notices
+      summary: Retrieve system notices
+      description: 'Retrieves notices for the current user and any public notices, with optional
+
+        filtering.'
+      operationId: getNotices
+      security: []
+      parameters:
+      - name: types
+        in: query
+        description: 'If types is specified, only return notices with types matching the given
+
+          types. The types parameter can include multiple types, notices matching
+
+          any of the types are returned.'
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoticeType'
+      - name: keys
+        in: query
+        description: If specified, only return notices with one of the given keys.
+        schema:
+          type: array
+          items:
+            type: string
+            example: '-'
+      - name: after
+        in: query
+        description: 'If specified, only return notices with a ''last-repeated'' field greater
+
+          than the specified time, in RFC3339 UTC format.'
+        schema:
+          type: string
+          format: date-time
+          example: '2025-09-08T17:29:40.829324752Z'
+      - name: timeout
+        in: query
+        description: 'If there are notices matching the filter which have already been
+
+          recorded, these notices are returned immediately. Otherwise, if timeout
+
+          is specified, wait up to the given duration for any new notices matching
+
+          the filter to be recorded. This allows the user to use long-polling to
+
+          be notified immediately when a new notice is recorded.'
+        schema:
+          type: string
+          example: 7m30s
+      - name: user-id
+        in: query
+        description: 'Admin only.
+
+          Instead of returning notices associated with the user who initiated the
+
+          API request, return notices associated with the given UID. Public
+
+          notices are still returned, as before. Cannot be used with the ''users''
+
+          parameter.'
+        schema:
+          type: integer
+          example: 1000
+      - name: users
+        in: query
+        description: 'Admin only.
+
+          Value must be ''all''. Return notices associated with all users, instead
+
+          of just the user which initiated the API request. Cannot be used with
+
+          the ''user-id'' parameter.'
+        schema:
+          type: string
+          enum:
+          - all
+      responses:
+        '200':
+          description: 'A synchronous response containing a list of notices matching the filter
+
+            criteria.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notice'
+        4XX:
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags:
+      - Notices
+      summary: Create a notice
+      description: 'Create a notice. Currently, this can only be used to create notices of type
+
+        ''snap-run-inhibit''. Only the ''snap'' command is allowed to create notices of
+
+        that type.'
+      operationId: postNotices
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              - key
+              - type
+              properties:
+                action:
+                  type: string
+                  description: The action to perform.
+                  enum:
+                  - add
+                key:
+                  type: string
+                  description: The key of the notice to add.
+                type:
+                  type: string
+                  description: The type of the notice to add.
+                  enum:
+                  - snap-run-inhibit
+      responses:
+        '200':
+          description: A synchronous response indicating success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    type: object
+                    description: 'The result object contains information about the response to
+
+                      the request.'
+                    properties:
+                      id:
+                        type: string
+                        description: The ID of the newly-created notice.
+                        example: '74'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    servers:
+    - url: unix:///run/snapd.socket
+      description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+        this socket.'
+    - url: unix:///run/snapd-snap.socket
+      description: Snapd socket access for snaps
+  /v2/notices/{id}:
+    get:
+      tags:
+      - Notices
+      summary: Retrieve a specific system notice
+      description: Retrieves a single notice by its unique ID.
+      operationId: getNoticeByID
+      security: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The unique ID of the notice to retrieve.
+        schema:
+          type: string
+          example: '74'
+      responses:
+        '200':
+          description: A synchronous response containing the details of the requested notice.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    $ref: '#/components/schemas/Notice'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    servers:
+    - url: unix:///run/snapd.socket
+      description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+        this socket.'
+    - url: unix:///run/snapd-snap.socket
+      description: Snapd socket access for snaps
+components:
+  schemas:
+    PostNoticesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Server-generated unique ID for the notice.
+            required:
+            - id
+    notice:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Server-generated unique ID for the notice.
+        user-id:
+          type: integer
+          nullable: true
+          description: The user ID associated with the notice (null for public notices).
+        type:
+          type: string
+          description: The type of the notice (e.g., "custom").
+          enum:
+          - change-update
+          - custom
+          - warning
+        key:
+          type: string
+          description: The key that differentiates notices of the same type.
+        first-occurred:
+          type: string
+          format: date-time
+          description: The first [time](#time) this notice occurred.
+        last-occurred:
+          type: string
+          format: date-time
+          description: The last [time](#time) this notice occurred.
+        last-repeated:
+          type: string
+          format: date-time
+          description: The last [time](#time) this notice was repeated.
+        occurrences:
+          type: integer
+          description: The number of times this notice has occurred.
+        last-data:
+          type: object
+          additionalProperties:
+            type: map
+          description: Additional data from the last occurrence.
+        repeat-after:
+          type: string
+          format: duration
+          description: '[Duration](#duration) after last repeat before allowing another repeat.'
+        expire-after:
+          type: string
+          format: duration
+          description: '[Duration](#duration) after last occurrence before the notice expires.'
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    GetNoticeByIDResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            $ref: '#/components/schemas/notice'
+    GetNoticesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/notice'
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    Notice:
+      type: object
+      description: A notice recorded by snapd, such as a warning or change update.
+      properties:
+        id:
+          type: string
+          description: The unique ID of the notice.
+          example: '67'
+        user-id:
+          type:
+          - integer
+          - 'null'
+          description: The UID of the user who may view the notice, or null if public.
+          example: 4293792034
+        type:
+          $ref: '#/components/schemas/NoticeType'
+        key:
+          type: string
+          description: 'An identifier which differentiates notices of this type. Notices recorded
+
+            with the type and key of an existing notice count as an occurrence of that
+
+            notice. Notice keys can take the form of the following:
+
+
+            - 63
+
+            - ''-''
+
+            - ''libreoffice''
+
+            - ''ABCDABCDABCDABCD'''
+          example: ABCDABCDABCDABCD
+        first-occurred:
+          type: string
+          format: date-time
+          description: The timestamp of the first time this notice occurred (RFC3339 UTC format).
+          example: '2025-09-08T17:29:40.829324752Z'
+        last-occurred:
+          type: string
+          format: date-time
+          description: The timestamp of the last time this notice occurred (RFC3339 UTC format).
+          example: '2025-09-10T14:30:23.055109521Z'
+        last-repeated:
+          type: string
+          format: date-time
+          description: 'The timestamp of the last time this notice was repeated (RFC3339 UTC
+
+            format).'
+          example: '2025-09-10T14:30:23.055109521Z'
+        occurrences:
+          type: integer
+          description: The number of times this notice has occurred.
+          example: 4
+        last-data:
+          type: object
+          description: Additional data captured from the last occurrence.
+          additionalProperties: true
+          example:
+            kind: alias
+        repeat-after:
+          type: string
+          description: A duration string after which the notice may be repeated (optional).
+          example: 1h30m
+        expire-after:
+          type: string
+          description: A duration string after which the notice may be deleted.
+          example: 168h0m0s
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+          enum:
+          - internal server error
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    NoticeType:
+      type: string
+      description: The type of the notice.
+      enum:
+      - change-update
+      - warning
+      - refresh-inhibit
+      - snap-run-inhibit
+      - interfaces-requests-prompt
+      - interfaces-requests-rule-update
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation
+x-refined-from:
+- canonical-pebble-api-openapi.yml
+- canonical-snapd-rest-api-openapi.yml

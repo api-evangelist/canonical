@@ -1,0 +1,366 @@
+openapi: 3.2.0
+info:
+  title: debarchive Publication Service API
+  version: 0.1.0
+  description: Manages the publication of Debian artifacts.
+tags:
+- name: PublicationService
+  description: Manages the publication of Debian artifacts.
+paths:
+  /v1/publications:
+    get:
+      tags:
+      - PublicationService
+      description: Returns a list of publications.
+      operationId: PublicationService_ListPublications
+      parameters:
+      - name: pageSize
+        in: query
+        description: "The maximum number of publications to return.\n The service may return fewer than this value.\n If unspecified, at most 100 publications will be returned.\n The maximum value is 1000; values above 1000 will be treated as 1000."
+        schema:
+          type: integer
+          format: int32
+      - name: pageToken
+        in: query
+        description: "A page token, received from a previous call.\n Provide this to retrieve the subsequent page.\n\n When paginating, all other request parameters provided must match\n the call that provided the page token."
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: "An expression for filtering the results of the request.\n The fields eligible for filtering are:\n\n   * `source`\n   * `publication_target`\n\n Some examples of using filters are:\n\n   * `source=\"locals/123\"`  --> The publication has source \"locals/123\".\n   * `publication_target=\"publicationTargets/456\"` --> The publication has target \"publicationTargets/456\"."
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListPublicationsResponse'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication service list publications
+      x-summary-source: derived
+    post:
+      tags:
+      - PublicationService
+      description: Creates a new publication.
+      operationId: PublicationService_CreatePublication
+      parameters:
+      - name: publicationId
+        in: query
+        description: The ID to use for the publication (optional).
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publication'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication service create publication
+      x-summary-source: derived
+  /v1/publications/{publication}:
+    get:
+      tags:
+      - PublicationService
+      description: Retrieves a publication by its resource name.
+      operationId: PublicationService_GetPublication
+      parameters:
+      - name: publication
+        in: path
+        description: The publication id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication service get publication
+      x-summary-source: derived
+    delete:
+      tags:
+      - PublicationService
+      description: Deletes a Publication.
+      operationId: PublicationService_DeletePublication
+      parameters:
+      - name: publication
+        in: path
+        description: The publication id.
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content: {}
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication service delete publication
+      x-summary-source: derived
+    patch:
+      tags:
+      - PublicationService
+      description: Updates the details of a publication.
+      operationId: PublicationService_UpdatePublication
+      parameters:
+      - name: publication
+        in: path
+        description: The publication id.
+        required: true
+        schema:
+          type: string
+      - name: updateMask
+        in: query
+        description: The list of fields to update.
+        schema:
+          type: string
+          format: field-mask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Publication'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication service update publication
+      x-summary-source: derived
+  /v1/publications/{publication}:publish:
+    post:
+      tags:
+      - PublicationService
+      description: Publishes a publication to its publication target.
+      operationId: PublicationService_PublishPublication
+      parameters:
+      - name: publication
+        in: path
+        description: The publication id.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishPublicationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        default:
+          description: Default error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+      summary: Publication service publish publication
+      x-summary-source: derived
+components:
+  schemas:
+    GpgKey:
+      required:
+      - armor
+      type: object
+      properties:
+        armor:
+          writeOnly: true
+          type: string
+          description: The GPG key in ASCII armor format.
+        isPrivate:
+          readOnly: true
+          type: boolean
+          description: Indicates if the key holds a private component.
+        fingerprint:
+          readOnly: true
+          type: string
+          description: The fingerprint of the key.
+      description: A GPG key resource.
+    GoogleProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: The type of the serialized message.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+    PublishPublicationRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the publication to publish.\n Format: \"publications/{publication}\""
+        forceOverwrite:
+          type: boolean
+          description: Force overwrite of existing artifacts.
+        forceCleanup:
+          type: boolean
+          description: Force cleanup of old artifacts.
+      description: The request message for publishing a publication.
+    Operation:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The server-assigned name, which is only unique within the same service that\n originally returns it. If you use the default HTTP mapping, the\n `name` should be a resource name ending with `operations/{unique_id}`."
+        metadata:
+          allOf:
+          - $ref: '#/components/schemas/GoogleProtobufAny'
+          description: "Service-specific metadata associated with the operation.  It typically\n contains progress information and common metadata such as create time.\n Some services might not provide such metadata.  Any method that returns a\n long-running operation should document the metadata type, if any."
+        done:
+          type: boolean
+          description: "If the value is `false`, it means the operation is still in progress.\n If `true`, the operation is completed, and either `error` or `response` is\n available."
+        error:
+          allOf:
+          - $ref: '#/components/schemas/Status'
+          description: The error result of the operation in case of failure or cancellation.
+        response:
+          allOf:
+          - $ref: '#/components/schemas/GoogleProtobufAny'
+          description: "The normal, successful response of the operation.  If the original\n method returns no data on success, such as `Delete`, the response is\n `google.protobuf.Empty`.  If the original method is standard\n `Get`/`Create`/`Update`, the response should be the resource.  For other\n methods, the response should have the type `XxxResponse`, where `Xxx`\n is the original method name.  For example, if the original method name\n is `TakeSnapshot()`, the inferred response type is\n `TakeSnapshotResponse`."
+      description: "This resource represents a long-running operation that is the result of a\n network API call."
+    ListPublicationsResponse:
+      type: object
+      properties:
+        publications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Publication'
+          description: A list of publications.
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing publications.
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+          format: int32
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoogleProtobufAny'
+          description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+      description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+    Publication:
+      required:
+      - displayName
+      - publicationTarget
+      - source
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the publication.\n Format: \"publications/{uuid}\""
+        displayName:
+          type: string
+          description: The human-readable name used to reference this publication.
+        publicationId:
+          readOnly: true
+          type: string
+          description: The publication ID (UUID) is exposed separately for convenience.
+        publicationTarget:
+          type: string
+          description: "The resource name of the publication target.\n Format: \"publicationTargets/{publication_target}\""
+        source:
+          type: string
+          description: "The resource name of the source mirror or local repository.\n Format: \"mirrors/{mirror}\" or \"locals/{local}\""
+        distribution:
+          type: string
+          description: "The name of the distribution to publish.\n Inferred from the source if omitted."
+        label:
+          type: string
+          description: Value for the `Label:` field in the published repository's Release file.
+        origin:
+          type: string
+          description: "Value for the `Origin:` field in the published repository's Release file.\n Inferred from the source if omitted."
+        architectures:
+          type: array
+          items:
+            type: string
+          description: "List of architectures to publish.\n Defaults to all source architectures if omitted."
+        acquireByHash:
+          type: boolean
+          description: Provides index files by hash in the published repository, if the files are unique.
+        butAutomaticUpgrades:
+          type: boolean
+          description: 'Sets `ButAutomaticUpgrade: yes|no` in the published repository''s Release file if provided.'
+        notAutomatic:
+          type: boolean
+          description: 'Sets `NotAutomatic: yes|no` in the published repository''s Release file if provided.'
+        multiDist:
+          type: boolean
+          description: "Indicates if multiple distributions can be published to the same location, sharing a package\n pool."
+        skipBz2:
+          type: boolean
+          description: Indicates if bz2 compression should be skipped for index files.
+        skipContents:
+          type: boolean
+          description: Indicates if content indexes should not be generated.
+        gpgKey:
+          allOf:
+          - $ref: '#/components/schemas/GpgKey'
+          description: Optional GPG key to sign the release file(s). If not provided, the files will be unsigned.
+        publishTime:
+          readOnly: true
+          type: string
+          description: The timestamp of the last successful publication.
+          format: date-time
+        lastOperation:
+          readOnly: true
+          type: string
+          description: The name of the most recent long-running operation performed on the publication.
+      description: "The configuration for publishing Debian artifacts from a Source (mirror or local repository) to\n a publication target."

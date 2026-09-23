@@ -1,0 +1,96 @@
+openapi: 3.2.0
+info:
+  description: The Anbox Stream Gateway provides federated access to Anbox Cloud regions.
+  title: Anbox Stream Gateway Region API
+  contact:
+    name: Canonical
+    url: https://ubuntu.com/support
+    email: indore@lists.canonical.com
+  license:
+    name: Proprietary
+  version: '1.0'
+servers:
+- url: /1.0/
+tags:
+- name: Region
+paths:
+  /1.0/regions:
+    get:
+      security:
+      - AuthToken: []
+      description: 'Regions are cloud regions, allowing clients to be as close as possible
+
+        to the agent running the Android container.
+
+
+        The list is dynamic and regions might change as agents are added or removed.'
+      tags:
+      - Region
+      summary: Get regions
+      operationId: handle-get-regions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api.RegionsGetResponse'
+components:
+  schemas:
+    api_gateway.ResponseType:
+      type: string
+      enum:
+      - sync
+      - async
+      - error
+      x-enum-varnames:
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError
+    api.Region:
+      type: object
+      properties:
+        name:
+          type: string
+          example: eu-west-1
+    api.RegionsGetResponse:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/api.Region'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api_gateway.ResponseStatus:
+      type: string
+      enum:
+      - success
+      - failed
+      - unknown
+      x-enum-varnames:
+      - ResponseStatusSuccess
+      - ResponseStatusFailed
+      - ResponseStatusUnknown

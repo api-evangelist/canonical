@@ -1,0 +1,759 @@
+openapi: 3.2.0
+info:
+  title: Snapd REST Apps API
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.txt
+  version: '1.0'
+  description: 'The REST API provides access to snapd''s state and many of its key functions,
+
+    as listed below.
+
+
+    For general information on how to use the API, including how to access it,
+
+    its requests and responses, results fields and error types, see Using the
+
+    REST API.'
+servers:
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
+tags:
+- name: Apps
+paths:
+  /v2/aliases:
+    get:
+      operationId: getAliases
+      summary: Get the available app aliases
+      tags:
+      - Apps
+      security: []
+      responses:
+        '200':
+          description: A dictionary containing the aliases for each snap.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    description: 'The status-code property contains the HTTP response value.
+
+                      '
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    description: 'The status property contains the textual representation of the ''status-code'' property.
+
+                      For the ''status-code'' equal to 200, the ''status'' is always ''OK''
+
+                      '
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    description: 'The type property indicates that this is a synchronous API response and the whole content
+
+                      is now available. The result of the API call is in the result object. The value is always
+
+                      ''sync''.
+
+                      '
+                    enum:
+                    - sync
+                  result:
+                    type: object
+                    description: 'The result object contains information about all the aliases in the system.
+
+                      '
+                    additionalProperties:
+                      type: object
+                      description: 'Each top-level property is a snap instance name. Typically snap instance is
+
+                        the name of the snap, except when parallel-instances as used and the snap name
+
+                        is followed by an underscore and then the instance key.
+
+                        '
+                      additionalProperties:
+                        type: object
+                        description: 'Each top-level property under the snap name above, is the name of the actual alias.
+
+                          The alias is visible as a top-level command and is exposed on PATH in the system.
+
+                          '
+                        required:
+                        - command
+                        - status
+                        properties:
+                          command:
+                            type: string
+                            description: 'The name of the snap entry-point executable invoked by this alias.
+
+                              This is typically the name of the snap followed by dot and then the name
+
+                              of the application within the snap. It may also be just the name of the snap.
+
+                              '
+                          status:
+                            type: string
+                            description: 'Status describes the status of the alias. The value ''manual'' indicates that the
+
+                              status was created manually by the user. The status ''disabled'' indicates the user
+
+                              manually removed the alias (it will not be re-created automatically by snapd).
+
+                              The status ''auto'' indicates that the alias was created automatically by snapd.
+
+                              '
+                            enum:
+                            - auto
+                            - manual
+                            - disabled
+                          auto:
+                            type: string
+                            description: 'The app the alias is for as assigned by an assertion
+
+                              '
+                          manual:
+                            type: string
+                            description: 'The app the alias is for if status is manual.
+
+                              Overrides auto
+
+                              '
+        4XX:
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags:
+      - Apps
+      summary: Modify aliases
+      description: Modify aliases by performing an 'alias', 'unalias', or 'prefer' action.
+      operationId: modifyAliases
+      security:
+      - PeerAuth: []
+      requestBody:
+        description: The action to perform on an alias.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              - alias
+              properties:
+                action:
+                  type: string
+                  description: The action to perform on the alias.
+                  enum:
+                  - alias
+                  - unalias
+                  - prefer
+                snap:
+                  type: string
+                  description: The snap name to modify (optional for unalias).
+                  example: moon-buggy
+                app:
+                  type: string
+                  description: The app to modify (optional).
+                alias:
+                  type: string
+                  description: The alias to modify.
+                  example: foo
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /v2/apps:
+    get:
+      tags:
+      - Apps
+      summary: List available apps
+      description: Lists applications available from installed snaps. Can be filtered by services or snap names.
+      operationId: listApps
+      security: []
+      parameters:
+      - name: global
+        in: query
+        description: Defaults to true for the root user to preserve normal behavior and match snapctl functionality.
+        schema:
+          type: boolean
+      - name: select
+        in: query
+        description: Limit which apps are returned.
+        schema:
+          type: string
+          enum:
+          - service
+          example: service
+      - name: names
+        in: query
+        description: Comma-separated list of snap names to get apps for.
+        schema:
+          type: string
+          example: spotify, lxd
+      responses:
+        '200':
+          description: A synchronous response containing the connection status of plugs and slots.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    $ref: '#/components/schemas/App'
+        4XX:
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags:
+      - Apps
+      summary: Modify attributes of applications
+      description: Perform actions like start, stop, or restart on snap applications, typically services.
+      operationId: modifyApps
+      security:
+      - PeerAuth: []
+      requestBody:
+        description: The action to perform on one or more applications.
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/AppActionStart'
+              - $ref: '#/components/schemas/AppActionStop'
+              - $ref: '#/components/schemas/AppActionRestart'
+              discriminator:
+                propertyName: action
+                mapping:
+                  start: '#/components/schemas/AppActionStart'
+                  stop: '#/components/schemas/AppActionStop'
+                  restart: '#/components/schemas/AppActionRestart'
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    AppActionStop:
+      type: object
+      description: Stops one or more services.
+      allOf:
+      - $ref: '#/components/schemas/AppActionBase'
+      - type: object
+        required:
+        - action
+        properties:
+          action:
+            type: string
+            enum:
+            - stop
+          disable:
+            type: boolean
+            description: Arranges to no longer start the service at system boot.
+            default: false
+      example:
+        action: stop
+        names:
+        - lxd
+        disable: true
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+          enum:
+          - internal server error
+    Activator:
+      type: object
+      description: 'Details about a single service activator. Note that uppercase field names
+
+        exist to maintain backward compatibility with the non-conformant previous
+
+        implementation, and are thus not documented here.'
+      required:
+      - name
+      - type
+      - active
+      - enabled
+      properties:
+        active:
+          type: boolean
+          description: Whether the activator is active or not.
+        enabled:
+          type: boolean
+          description: Whether the activator is enabled or not.
+        name:
+          type: string
+          description: The name of the activator.
+        type:
+          type: string
+          description: The type of the activator.
+          enum:
+          - dbus
+          - socket
+          - timer
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    AppActionBase:
+      type: object
+      required:
+      - action
+      - names
+      properties:
+        action:
+          type: string
+          description: The action to perform.
+        names:
+          type: array
+          description: A list of names of snaps (e.g. "lxd") or specific apps (e.g. "lxd.daemon") to operate on.
+          items:
+            type: string
+            example: multipass
+        scope:
+          type: array
+          items:
+            type: string
+        users:
+          type: object
+          properties:
+            names:
+              type: array
+              items:
+                type: string
+            selector:
+              type: string
+              description: Internally converted to an integer by the servers marshalling/unmarshalling process
+              enum:
+              - userX
+              - self
+              - all
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    ConflictError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message explaining the conflict.
+          example: snap 'alias-snap' has 'manip' change in progress
+        kind:
+          type: string
+          description: A machine-readable string identifying the error type.
+          enum:
+          - snap-change-conflict
+        value:
+          type: object
+          description: Additional structured data about the conflict.
+          properties:
+            change-kind:
+              type: string
+              description: The kind of change that is in progress.
+              enum:
+              - manip
+            snap-name:
+              type: string
+              description: The name of the snap that has a conflicting change.
+              example: alias-snap
+    App:
+      type: object
+      description: Represents a single application provided by a snap.
+      required:
+      - name
+      properties:
+        snap:
+          type: string
+          description: The snap providing the app.
+        name:
+          type: string
+          description: The name of the app.
+        desktop-file:
+          type: string
+          description: The desktop file for the app.
+        daemon:
+          type: string
+          description: The daemon type, if the app is a service.
+          enum:
+          - forking
+          - notify
+          - oneshot
+          - simple
+        enabled:
+          type: boolean
+          description: True if the app is an enabled service.
+        active:
+          type: boolean
+          description: True if the app is an active service.
+        common-id:
+          type: string
+          description: Common ID associated with this app.
+        activators:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activator'
+      example:
+        snap: lxd
+        name: daemon
+        daemon: simple
+        enabled: true
+        activators:
+        - name: unix
+          type: socket
+          active: true
+          enabled: true
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    AppActionRestart:
+      type: object
+      description: Restarts one or more services.
+      allOf:
+      - $ref: '#/components/schemas/AppActionBase'
+      - type: object
+        required:
+        - action
+        properties:
+          action:
+            type: string
+            enum:
+            - restart
+          reload:
+            type: boolean
+            description: Tries to reload the service if it supports it; otherwise, it performs a full restart.
+            default: false
+      example:
+        action: restart
+        names:
+        - lxd
+        reload: true
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    AppActionStart:
+      type: object
+      description: Starts one or more services.
+      allOf:
+      - $ref: '#/components/schemas/AppActionBase'
+      - type: object
+        required:
+        - action
+        properties:
+          action:
+            type: string
+            enum:
+            - start
+          enable:
+            type: boolean
+            description: Arranges to have the service start at system boot.
+            default: false
+      example:
+        action: start
+        names:
+        - lxd
+        enable: true
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+  responses:
+    Conflict:
+      description: Conflict. The request conflicts with the current state of the server.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                description: The HTTP status code.
+                enum:
+                - 409
+              status:
+                type: string
+                description: The textual representation of the status code.
+                enum:
+                - Conflict
+              type:
+                type: string
+                description: The type of response.
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/ConflictError'
+    Accepted:
+      description: The asynchronous request was accepted and is being processed.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response for an accepted asynchronous operation.
+            properties:
+              type:
+                type: string
+                enum:
+                - async
+              status-code:
+                type: integer
+                enum:
+                - 202
+              status:
+                type: string
+                enum:
+                - Accepted
+              change:
+                type: string
+                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
+                example: '61'
+              result:
+                type:
+                - object
+                - 'null'
+                description: For an accepted async operation, this is always null as the result is not yet available.
+                example: null
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    AccessDenied:
+      description: "Access Denied. The daemon/store cannot or will not process the request because \nthe user does not have the correct authorization from the system."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                description: The HTTP status code.
+                enum:
+                - 401
+              status:
+                type: string
+                description: The textual representation of the status code.
+                enum:
+                - Unauthorized
+              type:
+                type: string
+                description: The type of response.
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    description: A machine-readable string identifying the error type.
+                    enum:
+                    - login-required
+                  message:
+                    type: string
+                    description: A human-readable error message.
+                    enum:
+                    - access denied
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation

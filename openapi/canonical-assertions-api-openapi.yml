@@ -1,46 +1,16 @@
 openapi: 3.2.0
-x-generated-from: documentation
-x-provenance-note: >-
-  Hand-authored by API Evangelist from the publicly documented Snap Store Device API
-  reference at https://api.snapcraft.io/docs/ — NOT harvested from a Canonical-published
-  machine-readable contract, because Canonical publishes none for api.snapcraft.io. Marked
-  2026-09-05 so this file is never mistaken for a provider artifact. The specs Canonical does
-  publish are the other thirteen documents in openapi/, each harvested verbatim.
 info:
-  title: Canonical Snap Store Device Assertions API
-  description: 'Public Snap Store Device API (api.snapcraft.io) used by snap clients to
-
-    discover snaps, fetch metadata, refresh installed snaps, search the
-
-    store, and download assertions. Endpoints come from the publicly
-
-    documented snap store reference (https://api.snapcraft.io/docs/).
-
-
-    Most endpoints are open / unauthenticated. Authenticated endpoints under
-
-    /api/v1/snaps/auth/ use Ubuntu One macaroons and require the
-
-    Snap-Device-Series header.
-
-
-    This specification is a best-effort, hand-authored representation. The
-
-    Charmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local
-
-    REST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,
-
-    and Landscape APIs are not modeled here — see apis.yml for those
-
-    surfaces and their respective Canonical documentation.
-
-    '
-  version: v2
-  contact:
-    name: Canonical / Snapcraft
-    url: https://api.snapcraft.io/docs/
+  title: Canonical Assertions API
+  version: '1.0'
+  description: 'Operations tagged Assertions across 2 of this provider''s published API definitions: canonical-openapi.yml, canonical-snapd-rest-api-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.snapcraft.io
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
 tags:
 - name: Assertions
 paths:
@@ -74,3 +44,789 @@ paths:
                 type: string
       tags:
       - Assertions
+      operationId: getV2AssertionsByTypeByPrimaryKey
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.snapcraft.io
+  /v2/assertions:
+    get:
+      tags:
+      - Assertions
+      summary: Get the list of assertion types
+      description: Retrieves a list of all known assertion types in the system.
+      operationId: listAssertionTypes
+      security: []
+      responses:
+        '200':
+          description: A list of available assertion types.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    type: object
+                    properties:
+                      types:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - account
+                          - account-key
+                          - account-key-request
+                          - base-declaration
+                          - confdb-control
+                          - confdb-schema
+                          - cluster
+                          - device-session-request
+                          - hardware-identity
+                          - model
+                          - preseed
+                          - repair
+                          - request-message
+                          - response-message
+                          - serial
+                          - serial-request
+                          - snap-build
+                          - snap-declaration
+                          - snap-developer
+                          - snap-resource-pair
+                          - snap-resource-revision
+                          - snap-revision
+                          - store
+                          - system-user
+                          - validation
+                          - validation-set
+        4XX:
+          $ref: '#/components/responses/InternalError'
+    post:
+      tags:
+      - Assertions
+      summary: Attempt to add or replace an assertion
+      description: 'Requires a valid assertion with a signature signed by a verifiable public
+
+        key. The body of the request provides the assertion to add. If replacing an
+
+        existing assertion the new must be consistent with and its prerequisite.'
+      operationId: addAssertion
+      security:
+      - PeerAuth: []
+      requestBody:
+        description: The raw assertion text to add to the database.
+        required: true
+        content:
+          application/x.ubuntu.assertion:
+            schema:
+              type: string
+              description: A raw assertion string.
+              example: 'type: system-user
+
+                authority-id: canonical
+
+                series: 16
+
+                brand-id: canonical
+
+                ...
+
+                sign-key-sha3-384: <key>
+
+
+                <signature>
+
+                '
+      responses:
+        '200':
+          description: The assertion was successfully added.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    servers:
+    - url: unix:///run/snapd.socket
+      description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+        this socket.'
+    - url: unix:///run/snapd-snap.socket
+      description: Snapd socket access for snaps
+  /v2/assertions/{assertion-type}:
+    parameters:
+    - name: assertion-type
+      in: path
+      required: true
+      description: The type of assertion to retrieve.
+      schema:
+        type: string
+        example: account
+    get:
+      tags:
+      - Assertions
+      summary: Get assertions of a given type
+      description: 'Get all the assertions in the system assertion database of the given type.
+
+        Assertions can be filtered by providing assertion header keys as query
+
+        parameters (e.g., `?username=canonical`). The response is a stream of
+
+        assertions separated by double newlines. An assertion type of
+
+        snap-declaration can also be used to retrieve a remote snap-declaration
+
+        assertion for a given snap-id. This can also be accomplished from within the
+
+        snap environment.'
+      operationId: getAssertionsByType
+      security: []
+      parameters:
+      - name: remote
+        in: query
+        description: 'When using remote, a primary key must be associated with the request
+
+          assertion type. These mappings are as below
+
+          account -> account-id
+
+          account-key -> public-key-sha3-384
+
+          base-declaration -> series
+
+          confdb-schema -> account-id AND name
+
+          model -> series AND brand-id AND model
+
+          preseed -> series AND brand-id AND model AND system_label
+
+          repair -> brand-id AND repair-id
+
+          serial -> brand-id AND model AND serial
+
+          snap-build -> snap-sha3-384
+
+          snap-declaration -> series AND snap-id
+
+          snap-developer -> snap-id AND publisher-id
+
+          snap-resource-revision -> snap-id AND resource-name AND
+
+          resource-sha3-384 AND provenance
+
+          snap-resource-pair -> snap-id AND resource-name AND
+
+          resource-revision AND snap-revision AND provenance
+
+          snap-revision -> snap-sha3-384 AND provenance
+
+          store -> store
+
+          system-user -> brand-id AND email
+
+          validation -> series AND snap-id AND approved-snap-id AND
+
+          approved-snap-revision
+
+          validation-set -> series AND account-id AND name AND sequence
+
+
+          Some assertion types do not have a definite authority set
+
+          account-key-request -> public-key-sha3-384
+
+          confdb-control -> brand-id AND model AND serial
+
+          device-session-request -> brand_id AND model AND serial
+
+          serial-request - N/A'
+        schema:
+          type: boolean
+          default: false
+      - name: json
+        in: query
+        description: 'If true, the response is formatted as a JSON object containing the
+
+          headers of the assertions instead of the default signed assertion
+
+          stream format.'
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: 'The response format depends on the `json` query parameter.
+
+            - By default (`json=false`), returns a stream of signed assertions.
+
+            - When `json=true`, returns a single JSON object.'
+          headers:
+            X-Ubuntu-Assertions-Count:
+              description: 'The total number of assertions returned in the stream.
+
+                (Only present for `application/x-ubuntu-assertion-stream` responses).'
+              schema:
+                type: integer
+          content:
+            application/x-ubuntu-assertion-stream:
+              schema:
+                type: string
+                description: 'A string containing one or more signed assertions, each separated
+
+                  by double newlines. This is the default response format.'
+                example: 'type: account
+
+                  authority-id: canonical
+
+                  account-id: canonical
+
+                  display-name: canonical
+
+                  timestamp: 2016-04-01T00:00:00.0Z
+
+                  username: canonical
+
+                  validation: certified
+
+                  sign-key-sha3-384: <key>
+
+
+                  <signature>
+
+                  '
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssertionResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    servers:
+    - url: unix:///run/snapd.socket
+      description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+        this socket.'
+    - url: unix:///run/snapd-snap.socket
+      description: Snapd socket access for snaps
+  /v2/model:
+    get:
+      tags:
+      - Assertions
+      summary: Get the active model assertion
+      description: 'Retrieves the active model assertion for the system.
+
+        The model assertion describes a snap-based device.'
+      externalDocs:
+        description: Read more about model assertions on the Ubuntu Core documentation.
+        url: https://documentation.ubuntu.com/core/reference/assertions/model/
+      operationId: getModelAssertion
+      security: []
+      responses:
+        '200':
+          description: The raw model assertion text.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'type: model
+
+                  authority-id: generic
+
+                  series:16
+
+                  brand-id: generic
+
+                  model: generic-classic
+
+                  classic: true
+
+                  timestamp: 2017-07-27T00:00:00.0Z
+
+                  sign-key-sha3-384: d-JcZF9nD9eBw7bwMnH61x-bklnQOhQud1Is6o_cn2wTj8EYDi9musrIT9z2MdAa
+
+                  AcLBXAQAAQ[...]
+
+                  '
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Assertions
+      summary: Replace the model assertion
+      description: 'Replaces the current model assertion, potentially triggering a remodel of
+
+        the system.
+
+
+        The endpoint accepts two different content types depending on the use case:
+
+        - `application/json`: For a standard (online) remodel where the system will
+
+        fetch required snaps from the store.
+
+        - `multipart/form-data`: For an offline remodel, where the new model
+
+        assertion and all required snaps and other files are provided directly in
+
+        the request.'
+      externalDocs:
+        description: Read more about offline remodeling on the Ubuntu Core documentation.
+        url: https://documentation.ubuntu.com/core/explanation/remodelling/index.html#heading--offline
+      operationId: setModelAssertion
+      security:
+      - PeerAuth: []
+      requestBody:
+        description: 'The new model assertion and, for offline remodels, any required files
+
+          (snaps, etc.).'
+        required: true
+        content:
+          application/json:
+            schema:
+              description: 'Used for online remodeling. The request body is a JSON object
+
+                containing the new model assertion.'
+              type: object
+              required:
+              - assertion
+              properties:
+                assertion:
+                  type: string
+                  description: A string containing the full, signed model assertion.
+                  example: 'type: model
+
+                    authority-id: generic
+
+                    series: 16
+
+                    brand-id: generic
+
+                    model: generic-classic
+
+                    classic: true
+
+                    timestamp: 2025-10-03T10:40:00.0Z
+
+                    sign-key-sha3-384: d-JcZF9nD9eBw7bwMnH61x-bklnQOhQud1Is6o_cn2wTj8EYDi9musrIT9z2MdAa
+
+                    AcLBXAQAAQ[...]
+
+                    '
+            examples:
+              remodelRequest:
+                summary: A typical JSON request to set a new model.
+                value:
+                  assertion: 'type: model
+
+                    authority-id: generic
+
+                    series: 16
+
+                    brand-id: generic
+
+                    model: generic-classic
+
+                    classic: true
+
+                    timestamp: 2025-10-03T10:40:00.0Z
+
+                    sign-key-sha3-384: d-JcZF9nD9eBw7bwMnH61x-bklnQOhQud1Is6o_cn2wTj8EYDi9musrIT9z2MdAa
+
+                    AcLBXAQAAQ[...]'
+          multipart/form-data:
+            schema:
+              description: 'Used for offline remodeling to sideload the assertion and all
+
+                required files (e.g., snaps) in a single request, avoiding the need to
+
+                download them from the store.'
+              type: object
+              properties:
+                assertion:
+                  type: string
+                  description: The new model assertion text.
+              additionalProperties:
+                type: string
+                format: binary
+                description: Snap files or other assets required by the new model.
+            encoding:
+              assertion:
+                contentType: text/plain
+              '*':
+                contentType: application/octet-stream
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    servers:
+    - url: unix:///run/snapd.socket
+      description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+        this socket.'
+    - url: unix:///run/snapd-snap.socket
+      description: Snapd socket access for snaps
+  /v2/model/serial:
+    get:
+      tags:
+      - Assertions
+      summary: Get the current serial assertion
+      description: 'Retrieves the current serial assertion for the system. The serial assertion
+
+        is a statement used to bind a device identity to it''s public key, provided by the store.'
+      externalDocs:
+        description: Read more about serial assertions on the Ubuntu Core documentation.
+        url: https://documentation.ubuntu.com/core/reference/assertions/serial/
+      operationId: getSerialAssertion
+      security: []
+      responses:
+        '200':
+          description: The raw serial assertion text.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "type: serial\nauthority-id: generic\nbrand-id: generic\nmodel: generic-classic\nserial: 46923e6d-5d45-420d-905a-99a9e92493b4\ndevice-key:\n  AcbBTQRWhcGAARAA...\n  ...AEQEAAQ==\ndevice-key-sha3-384: PznqOqWAx4_f8tFafGI2...\ntimestamp: 2025-07-17T03:11:33.518427Z\nsign-key-sha3-384: wrfougkz3Huq2T_Kklfnu...\n...bX5JkJG5cunW0h/\n"
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Assertions
+      summary: Perform an action on the serial assertion
+      description: 'Performs an asynchronous action on the current serial assertion by sending a
+
+        JSON command. The only supported action is `forget`, which causes the
+
+        system to unregister its current serial and prepare for a new one.'
+      externalDocs:
+        description: Read more about offline remodeling on the Ubuntu Core documentation.
+        url: https://documentation.ubuntu.com/core/explanation/remodelling/index.html#heading--offline
+      operationId: setSerialAssertion
+      security:
+      - PeerAuth: []
+      requestBody:
+        description: A JSON object specifying the action to perform on the serial.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  description: The action to perform on the serial assertion.
+                  enum:
+                  - forget
+                no-registration-until-reboot:
+                  type: boolean
+                  description: If true, delays device registration until the next reboot.
+                  default: false
+              required:
+              - action
+              example:
+                action: forget
+                no-registration-until-reboot: true
+      responses:
+        '202':
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    servers:
+    - url: unix:///run/snapd.socket
+      description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+        this socket.'
+    - url: unix:///run/snapd-snap.socket
+      description: Snapd socket access for snaps
+components:
+  schemas:
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+          enum:
+          - internal server error
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    AssertionResult:
+      type: object
+      properties:
+        result:
+          type: array
+          description: A list of assertion results.
+          items:
+            type: object
+            properties:
+              headers:
+                type: object
+                description: A key-value map of the assertion headers.
+                additionalProperties:
+                  type: string
+        status:
+          type: string
+          example: OK
+        status-code:
+          type: integer
+          example: 200
+        type:
+          type: string
+          example: sync
+      example:
+        result:
+        - headers:
+            account-id: canonical
+            authority-id: canonical
+            display-name: Canonical
+            sign-key-sha3-384: -CvQKAwRQ5h3Ffn10FILJoEZUXOv6km9FwA80-Rcj-f-6jadQ89VRswHNiEB9Lxk
+            timestamp: '2016-04-01T00:00:00.0Z'
+            type: account
+            username: canonical
+            validation: certified
+        - headers:
+            account-id: generic
+            authority-id: canonical
+            display-name: Generic
+            sign-key-sha3-384: -CvQKAwRQ5h3Ffn10FILJoEZUXOv6km9FwA80-Rcj-f-6jadQ89VRswHNiEB9Lxk
+            timestamp: '2017-07-27T00:00:00.0Z'
+            type: account
+            username: generic
+            validation: certified
+        status: OK
+        status-code: 200
+        type: sync
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    Accepted:
+      description: The asynchronous request was accepted and is being processed.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response for an accepted asynchronous operation.
+            properties:
+              type:
+                type: string
+                enum:
+                - async
+              status-code:
+                type: integer
+                enum:
+                - 202
+              status:
+                type: string
+                enum:
+                - Accepted
+              change:
+                type: string
+                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
+                example: '61'
+              result:
+                type:
+                - object
+                - 'null'
+                description: For an accepted async operation, this is always null as the result is not yet available.
+                example: null
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation
+x-refined-from:
+- canonical-openapi.yml
+- canonical-snapd-rest-api-openapi.yml

@@ -1,0 +1,2001 @@
+openapi: 3.2.0
+info:
+  title: Testflinger V1 API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: v1
+paths:
+  /v1/:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - v1
+      summary: Identify ourselves
+      operationId: getV1
+      x-operation-id-source: derived
+  /v1/job:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+          description: Successful response
+        '204':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          description: No job found
+      tags:
+      - v1
+      summary: Request a job to run from supported queues
+      description: 'The agent must identify itself via the ``agent_name`` cookie. One or more
+
+        ``queue`` query parameters must be supplied; the server returns the first
+
+        available job across those queues.
+
+
+        Any secrets referenced in the job are resolved against the secrets store
+
+        at this point. Secrets that are inaccessible (store unreachable, path not
+
+        found, or insufficient permissions) are silently resolved to an empty
+
+        string rather than causing the request to fail. Agents must therefore
+
+        handle the possibility of empty secret values.'
+      operationId: getV1Job
+      x-operation-id-source: derived
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobId'
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - v1
+      summary: Add a job to the queue
+      description: 'The ``job_queue`` field in the submitted JSON determines which queue the
+
+        job is placed on. All other fields are passed through to the agent
+
+        unchanged.
+
+
+        Returns HTTP 422 if the job references secrets that are inaccessible at
+
+        submission time (e.g. the secrets store is unreachable or the secret path
+
+        does not exist for the submitting client).'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+      operationId: postV1Job
+      x-operation-id-source: derived
+  /v1/job/search:
+    get:
+      parameters:
+      - in: query
+        name: tags
+        description: List of tags to search for
+        schema:
+          type: array
+          items:
+            type: string
+        required: false
+        explode: true
+        style: form
+      - in: query
+        name: match
+        description: Match mode - 'all' or 'any' (default 'any')
+        schema:
+          type: string
+          enum:
+          - any
+          - all
+        required: false
+      - in: query
+        name: state
+        description: List of job states to include
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - setup
+            - provision
+            - firmware_update
+            - test
+            - allocate
+            - allocated
+            - reserve
+            - cleanup
+            - cancelled
+            - completed
+            - active
+        required: false
+        explode: true
+        style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobSearchResponse'
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - v1
+      summary: Search for jobs by tags
+      operationId: getV1JobSearch
+      x-operation-id-source: derived
+  /v1/agents/data:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentOut'
+          description: Successful response
+      tags:
+      - v1
+      summary: Get all agent data
+      operationId: getV1AgentsData
+      x-operation-id-source: derived
+  /v1/job/{job_id}:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Request the json job definition for a specified job, even if it has
+      description: 'already run.
+
+
+        :param job_id:
+
+        UUID as a string for the job
+
+        :return:
+
+        JSON data for the job or error string and http error'
+      operationId: getV1JobByJobId
+      x-operation-id-source: derived
+  /v1/oauth2/token:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - v1
+      summary: Issue both access token and refresh token for a client
+      description: 'Get JWT with priority and queue permissions.
+
+
+        Before being encrypted, the JWT can contain fields like:
+
+        {
+
+        exp: ,
+
+        iat: ,
+
+        sub: ,
+
+        permissions: {
+
+        max_priority: ,
+
+        allowed_queues: ,
+
+        max_reservation_time: ,
+
+        }
+
+        }'
+      operationId: postV1Oauth2Token
+      x-operation-id-source: derived
+  /v1/agents/queues:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                example:
+                  device001: Queue for device001
+                  some-queue: some other queue
+          description: Mapping of queue names and descriptions
+      tags:
+      - v1
+      summary: Get all advertised queues from this server
+      description: 'Returns a dict of queue names and descriptions, ex:
+
+        {
+
+        "some_queue": "A queue for testing",
+
+        "other_queue": "A queue for something else"
+
+        }'
+      operationId: getV1AgentsQueues
+      x-operation-id-source: derived
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - v1
+      summary: Tell testflinger the queue names that are being serviced
+      description: 'Some agents may want to advertise some of the queues they listen on so that
+
+        the user can check which queues are valid to use.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueuesIn'
+      operationId: postV1AgentsQueues
+      x-operation-id-source: derived
+  /v1/agents/images:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - v1
+      summary: Tell testflinger about known images for a specified queue
+      description: 'images will be stored in a dict of key/value pairs as part of the queues
+
+        collection. That dict will contain image_name:provision_data mappings, ex:
+
+        {
+
+        "some_queue": {
+
+        "core22": "http://cdimage.ubuntu.com/.../core-22.tar.gz",
+
+        "jammy": "http://cdimage.ubuntu.com/.../ubuntu-22.04.tar.gz"
+
+        },
+
+        "other_queue": {
+
+        ...
+
+        }
+
+        }.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagesIn'
+      operationId: postV1AgentsImages
+      x-operation-id-source: derived
+  /v1/oauth2/revoke:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - v1
+      summary: Revoke a refresh token. Only admins can perform this action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenIn'
+      operationId: postV1Oauth2Revoke
+      x-operation-id-source: derived
+  /v1/oauth2/refresh:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - v1
+      summary: Refresh access token using a valid refresh token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenIn'
+      operationId: postV1Oauth2Refresh
+      x-operation-id-source: derived
+  /v1/result/{job_id}:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultGet'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '204':
+          content: {}
+          description: No result found
+      tags:
+      - v1
+      summary: Return results for a specified job_id
+      description: 'Results are reconstructed from the log storage system to maintain
+
+        backward compatibility. Phase exit codes are combined with captured
+
+        log data and returned as a flat structure:
+
+
+        - ``{phase}_status``: exit code for each phase
+
+        - ``{phase}_output``: stdout log for that phase (if available)
+
+        - ``{phase}_serial``: serial console log for that phase (if available)
+
+        - Additional metadata fields such as ``device_info`` and ``job_state``
+
+
+        :param job_id: UUID as a string for the job
+
+        :raises HTTPError: If the job_id is not a valid UUID'
+      operationId: getV1ResultByJobId
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post a result for a specified job_id
+      description: ':param job_id: UUID as a string for the job
+
+        :raises HTTPError: If the job_id is not a valid UUID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultPost'
+      operationId: postV1ResultByJobId
+      x-operation-id-source: derived
+  /v1/queues/wait_times:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - v1
+      summary: Get wait time metrics - optionally take a list of queues
+      operationId: getV1QueuesWaitTimes
+      x-operation-id-source: derived
+  /v1/restricted-queues:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestrictedQueueOut'
+          description: Successful response
+      tags:
+      - v1
+      summary: List all agent's restricted queues and its owners
+      operationId: getV1RestrictedQueues
+      x-operation-id-source: derived
+  /v1/client-permissions:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientPermissionsOut'
+          description: Successful response
+      tags:
+      - v1
+      summary: Retrieve all client permissions from database
+      operationId: getV1ClientPermissions
+      x-operation-id-source: derived
+  /v1/job/{job_id}/action:
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Take action on the job status for a specified job ID
+      description: ':param job_id:
+
+        UUID as a string for the job'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionIn'
+      operationId: postV1JobByJobIdAction
+      x-operation-id-source: derived
+  /v1/job/{job_id}/events:
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post status updates from the agent to the server to be forwarded
+      description: 'to the server-configured webhook url.
+
+
+        The json sent to this endpoint may contain data such as the following:
+
+        {
+
+        "agent_id": "",
+
+        "job_queue": "",
+
+        "job_status_webhook": "",
+
+        "events": [
+
+        {
+
+        "event_name": "",
+
+        "timestamp": "",
+
+        "detail": ""
+
+        },
+
+        ...
+
+        ]
+
+        }
+
+
+        :param job_id: UUID as a string for the job
+
+        :param json_data: JSON data containing the status updates and webhook URL'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusUpdate'
+      operationId: postV1JobByJobIdEvents
+      x-operation-id-source: derived
+  /v1/agents/images/{queue}:
+    get:
+      parameters:
+      - in: path
+        name: queue
+        schema:
+          type: string
+        required: true
+      responses:
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                example:
+                  core22: 'url: http://.../core22.img.xz'
+                  server-22.04: 'url: http://.../ubuntu-22.04.img.xz'
+          description: Mapping of image names and provision data
+      tags:
+      - v1
+      summary: Get a dict of known images for a given queue
+      operationId: getV1AgentsImagesByQueue
+      x-operation-id-source: derived
+  /v1/job/{job_id}/position:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Return the position of the specified jobid in the queue
+      operationId: getV1JobByJobIdPosition
+      x-operation-id-source: derived
+  /v1/result/{job_id}/status:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultStatus'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '204':
+          content: {}
+          description: No result found
+      tags:
+      - v1
+      summary: Return job state and phase exit codes for a specified job_id
+      description: 'This is a lightweight alternative to GET /result/ that omits
+
+        log data (output and serial). Use this when only the job state or
+
+        phase statuses are needed.
+
+
+        :param job_id: UUID as a string for the job
+
+        :raises HTTPError: If the job_id is not a valid UUID'
+      operationId: getV1ResultByJobIdStatus
+      x-operation-id-source: derived
+  /v1/job/{job_id}/attachments:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Return the attachments bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job
+
+        :return:
+
+        send_file stream of attachment tarball to download'
+      operationId: getV1JobByJobIdAttachments
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post attachment bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job'
+      operationId: postV1JobByJobIdAttachments
+      x-operation-id-source: derived
+  /v1/result/{job_id}/artifact:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Return artifact bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job
+
+        :return:
+
+        send_file stream of artifact tarball to download'
+      operationId: getV1ResultByJobIdArtifact
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post artifact bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job'
+      operationId: postV1ResultByJobIdArtifact
+      x-operation-id-source: derived
+  /v1/agents/data/{agent_name}:
+    get:
+      parameters:
+      - in: path
+        name: agent_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Get the information from a specified agent
+      description: ':param agent_name:
+
+        String with the name of the agent to retrieve information from.
+
+        :return:
+
+        JSON data with the specified agent information.'
+      operationId: getV1AgentsDataByAgentName
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: agent_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post information about the agent to the server
+      description: 'The json sent to this endpoint may contain data such as the following:
+
+        {
+
+        "state": string, # State the device is in
+
+        "queues": array[string], # Queues the device is listening on
+
+        "location": string, # Location of the device
+
+        "job_id": string, # Job ID the device is running, if any
+
+        "log": array[string], # push and keep only the last 100 lines
+
+        }'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentIn'
+      operationId: postV1AgentsDataByAgentName
+      x-operation-id-source: derived
+  /v1/queues/{queue_name}/jobs:
+    get:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Get the jobs in a specified queue along with its state
+      description: ':param queue_name
+
+        String with the queue name where to perform the query.
+
+        :return:
+
+        JSON data with the jobs allocated to the specified queue.'
+      operationId: getV1QueuesByQueueNameJobs
+      x-operation-id-source: derived
+  /v1/queues/{queue_name}/agents:
+    get:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Get the list of all data for agents listening to a specified queue
+      operationId: getV1QueuesByQueueNameAgents
+      x-operation-id-source: derived
+  /v1/restricted-queues/{queue_name}:
+    get:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestrictedQueueOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Get restricted queues for a specific agent
+      operationId: getV1RestrictedQueuesByQueueName
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Add an owner to the specific restricted queue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestrictedQueueIn'
+      operationId: postV1RestrictedQueuesByQueueName
+      x-operation-id-source: derived
+    delete:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Delete an owner from the specific restricted queue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestrictedQueueIn'
+      operationId: deleteV1RestrictedQueuesByQueueName
+      x-operation-id-source: derived
+  /v1/client-permissions/{client_id}:
+    get:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientPermissionsOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Retrieve single client-permissions from database
+      operationId: getV1ClientPermissionsByClientId
+      x-operation-id-source: derived
+    put:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Add or create client permissions for a specified user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientPermissionsIn'
+      operationId: putV1ClientPermissionsByClientId
+      x-operation-id-source: derived
+    delete:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Delete client id along with its permissions
+      operationId: deleteV1ClientPermissionsByClientId
+      x-operation-id-source: derived
+  /v1/secrets/{client_id}/{path}:
+    put:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: path
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretOut'
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Store a secret value for the specified client_id and path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecretIn'
+      operationId: putV1SecretsByClientIdByPath
+      x-operation-id-source: derived
+    delete:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: path
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Remove a secret value for the specified client_id and path
+      operationId: deleteV1SecretsByClientIdByPath
+      x-operation-id-source: derived
+  /v1/agents/provision_logs/{agent_name}:
+    post:
+      parameters:
+      - in: path
+        name: agent_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post provision logs for the agent to the server
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionLogsIn'
+      operationId: postV1AgentsProvisionLogsByAgentName
+      x-operation-id-source: derived
+  /v1/result/{job_id}/log/{log_type}:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: log_type
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogGet'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Get logs for a specified job_id
+      description: 'Logs are persistent and may be retrieved multiple times. Results are
+
+        organised by phase. Each phase entry contains:
+
+
+        - ``last_fragment_number``: highest fragment number stored for that phase
+
+        - ``log_data``: combined log text from all matching fragments
+
+
+        Optional query parameters for filtering:
+
+
+        - ``phase``: restrict results to a single test phase
+
+        - ``start_fragment``: return only fragments from this number onwards
+
+        - ``start_timestamp``: return only fragments created after this
+
+        ISO 8601 timestamp
+
+
+        :param job_id: UUID as a string for the job
+
+        :param log_type: LogType enum value for the type of log requested
+
+        :raises HTTPError: If the job_id is not a valid UUID or if invalid query
+
+        :return: Dictionary with log data'
+      operationId: getV1ResultByJobIdLogByLogType
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: log_type
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - v1
+      summary: Post logs for a specified job ID
+      description: 'Agents stream log data in sequential fragments. Each request must
+
+        include:
+
+
+        - ``fragment_number``: sequential integer starting from 0
+
+        - ``timestamp``: ISO 8601 timestamp when the fragment was created
+
+        - ``phase``: test phase name (setup, provision, firmware_update, test,
+
+        allocate, reserve, cleanup)
+
+        - ``log_data``: the log content for this fragment
+
+
+        :param job_id: UUID as a string for the job
+
+        :param log_type: LogType enum value for the type of log being posted
+
+        :raises HTTPError: If the job_id is not a valid UUID
+
+        :param json_data: Dictionary with log data'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogPost'
+      operationId: postV1ResultByJobIdLogByLogType
+      x-operation-id-source: derived
+components:
+  schemas:
+    ResultGet:
+      type: object
+      properties:
+        setup_status:
+          type: integer
+        provision_status:
+          type: integer
+        firmware_update_status:
+          type: integer
+        test_status:
+          type: integer
+        allocate_status:
+          type: integer
+        reserve_status:
+          type: integer
+        cleanup_status:
+          type: integer
+        job_state:
+          type: string
+        setup_output:
+          type: string
+        setup_serial:
+          type: string
+        provision_output:
+          type: string
+        provision_serial:
+          type: string
+        firmware_update_output:
+          type: string
+        firmware_update_serial:
+          type: string
+        test_output:
+          type: string
+        test_serial:
+          type: string
+        allocate_output:
+          type: string
+        allocate_serial:
+          type: string
+        reserve_output:
+          type: string
+        reserve_serial:
+          type: string
+        cleanup_output:
+          type: string
+        cleanup_serial:
+          type: string
+        device_info:
+          type: object
+          additionalProperties: {}
+        cancelled_by:
+          type:
+          - string
+          - 'null'
+          default: null
+      additionalProperties: false
+    LogGetItem:
+      type: object
+      properties:
+        last_fragment_number:
+          type: integer
+        log_data:
+          type: string
+      required:
+      - last_fragment_number
+      - log_data
+      additionalProperties: false
+    ClientPermissionsOut:
+      type: object
+      properties:
+        client_id:
+          type: string
+        max_priority:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: integer
+        allowed_queues:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        max_reservation_time:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+        role:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+      required:
+      - allowed_queues
+      - client_id
+      - max_priority
+      - max_reservation_time
+      - role
+      additionalProperties: false
+    ResultStatus:
+      type: object
+      properties:
+        setup_status:
+          type: integer
+        provision_status:
+          type: integer
+        firmware_update_status:
+          type: integer
+        test_status:
+          type: integer
+        allocate_status:
+          type: integer
+        reserve_status:
+          type: integer
+        cleanup_status:
+          type: integer
+        job_state:
+          type: string
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    JobEvent:
+      type: object
+      properties:
+        event_name:
+          type: string
+        timestamp:
+          type: string
+        detail:
+          type: string
+      required:
+      - event_name
+      - timestamp
+      additionalProperties: false
+    Attachment:
+      type: object
+      properties:
+        agent:
+          type: string
+        device:
+          type: string
+      required:
+      - agent
+      additionalProperties: false
+    StatusUpdate:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        job_queue:
+          type: string
+        job_status_webhook:
+          type: string
+          format: url
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobEvent'
+      required:
+      - job_status_webhook
+      additionalProperties: false
+    RestrictedQueueOut:
+      type: object
+      properties:
+        queue:
+          type: string
+        owners:
+          type: array
+          items:
+            type: string
+      required:
+      - owners
+      - queue
+      additionalProperties: false
+    LogGet:
+      type: object
+      properties:
+        output:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LogGetItem'
+        serial:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LogGetItem'
+      additionalProperties: false
+    RestrictedQueueIn:
+      type: object
+      properties:
+        client_id:
+          type: string
+      required:
+      - client_id
+      additionalProperties: false
+    RefreshTokenIn:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          minLength: 1
+      required:
+      - refresh_token
+      additionalProperties: false
+    ActionIn:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - cancel
+      required:
+      - action
+      additionalProperties: false
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: string
+        parent_job_id:
+          type: string
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        job_queue:
+          type: string
+          minLength: 1
+        global_timeout:
+          type: integer
+        output_timeout:
+          type: integer
+        allocation_timeout:
+          type: integer
+        provision_data:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/ProvisionData'
+        firmware_update_data:
+          type: object
+          additionalProperties: {}
+        test_data:
+          $ref: '#/components/schemas/TestData'
+        allocate_data:
+          type: object
+          additionalProperties: {}
+        reserve_data:
+          $ref: '#/components/schemas/ReserveData'
+        job_status_webhook:
+          type: string
+        job_priority:
+          type: integer
+        exclude_agents:
+          type: array
+          items:
+            type: string
+        debug:
+          type: boolean
+      required:
+      - job_queue
+      additionalProperties: false
+    TestData:
+      type: object
+      properties:
+        test_cmds:
+          type: string
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        test_username:
+          type: string
+        test_password:
+          type: string
+        secrets:
+          type: object
+          additionalProperties:
+            type: string
+            pattern: ^[a-zA-Z0-9_/-]+$
+      additionalProperties: false
+    LogPost:
+      type: object
+      properties:
+        fragment_number:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        phase:
+          type: string
+          enum:
+          - setup
+          - provision
+          - firmware_update
+          - test
+          - allocate
+          - reserve
+          - cleanup
+        log_data:
+          type: string
+      required:
+      - fragment_number
+      - log_data
+      - phase
+      - timestamp
+      additionalProperties: false
+    ClientPermissionsIn:
+      type: object
+      properties:
+        client_secret:
+          type: string
+          minLength: 15
+        max_priority:
+          type: object
+          additionalProperties:
+            type: integer
+        max_reservation_time:
+          type: object
+          additionalProperties:
+            type: integer
+        role:
+          type: string
+          enum:
+          - admin
+          - manager
+          - contributor
+          - agent
+        email:
+          type: string
+          format: email
+      additionalProperties: false
+    ImagesIn:
+      type: object
+      properties: {}
+      additionalProperties: true
+    ProvisionLogsIn:
+      type: object
+      properties:
+        job_id:
+          type: string
+        exit_code:
+          type: integer
+        detail:
+          type: string
+      required:
+      - exit_code
+      - job_id
+      additionalProperties: false
+    AgentJob:
+      type: object
+      properties:
+        job_id:
+          type: string
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        job_queue:
+          type: string
+        job_state:
+          type: string
+        job_priority:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - job_id
+      additionalProperties: false
+    ResultPost:
+      type: object
+      properties:
+        status:
+          type: object
+          additionalProperties:
+            type: integer
+        agent_id:
+          type: string
+        device_info:
+          type: object
+          additionalProperties: {}
+        job_state:
+          type: string
+      additionalProperties: false
+    AgentOut:
+      type: object
+      properties:
+        name:
+          type: string
+        job_id:
+          type: string
+        state:
+          type: string
+        queues:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        provision_type:
+          type: string
+        comment:
+          type: string
+        restricted_to:
+          type: object
+          additionalProperties: {}
+        job:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/AgentJob'
+      required:
+      - name
+      additionalProperties: false
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    SecretIn:
+      type: object
+      properties:
+        value:
+          type: string
+          minLength: 1
+        expire_after:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+        ephemeral:
+          type: boolean
+          default: false
+      required:
+      - value
+      additionalProperties: false
+    ReserveData:
+      type: object
+      properties:
+        ssh_keys:
+          type: array
+          items:
+            type: string
+            pattern: ^(lp|gh):(\S+)$
+        timeout: {}
+      additionalProperties: false
+    ProvisionData:
+      type: object
+      properties: {}
+      additionalProperties: false
+    JobOut:
+      type: object
+      properties:
+        job_id:
+          type: string
+        parent_job_id:
+          type: string
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        job_queue:
+          type: string
+          minLength: 1
+        global_timeout:
+          type: integer
+        output_timeout:
+          type: integer
+        allocation_timeout:
+          type: integer
+        provision_data:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/ProvisionData'
+        firmware_update_data:
+          type: object
+          additionalProperties: {}
+        test_data:
+          $ref: '#/components/schemas/TestData'
+        allocate_data:
+          type: object
+          additionalProperties: {}
+        reserve_data:
+          $ref: '#/components/schemas/ReserveData'
+        job_status_webhook:
+          type: string
+        job_priority:
+          type: integer
+        exclude_agents:
+          type: array
+          items:
+            type: string
+        debug:
+          type: boolean
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+      required:
+      - job_queue
+      additionalProperties: false
+    JobSearchResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+      required:
+      - jobs
+      additionalProperties: false
+    SecretOut:
+      type: object
+      properties:
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: UTC datetime for secret expiration if TTL is set.
+      additionalProperties: false
+    AgentIn:
+      type: object
+      properties:
+        identifier:
+          type: string
+        job_id:
+          type: string
+        location:
+          type: string
+        log:
+          type: array
+          items:
+            type: string
+        provision_type:
+          type: string
+        queues:
+          type: array
+          items:
+            type: string
+        state:
+          type: string
+        comment:
+          type: string
+      additionalProperties: false
+    QueuesIn:
+      type: object
+      properties: {}
+      additionalProperties: true
+    JobId:
+      type: object
+      properties:
+        job_id:
+          type: string
+      required:
+      - job_id
+      additionalProperties: false

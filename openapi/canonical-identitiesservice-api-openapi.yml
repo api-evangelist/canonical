@@ -1,0 +1,491 @@
+openapi: 3.2.0
+info:
+  contact:
+    name: Identity Platform API
+    url: https://github.com/canonical/identity-platform-api
+  description: REST API for the Admin UI service
+  license:
+    name: AGPL-3.0
+    url: https://github.com/canonical/identity-platform-api/blob/main/LICENSE
+  title: Identity Platform Identities Service API
+  version: '0.1'
+tags:
+- name: IdentitiesService
+paths:
+  /api/v0/identities:
+    get:
+      operationId: IdentitiesService_ListIdentities
+      parameters:
+      - in: query
+        name: credID
+        schema:
+          type: string
+      - in: query
+        name: size
+        schema:
+          type: string
+      - in: query
+        name: page_token
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identitiesListIdentitiesResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdentitiesService
+      summary: Identities service list identities
+      x-summary-source: derived
+    post:
+      operationId: IdentitiesService_CreateIdentity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identitiesCreateIdentityBody'
+        required: true
+        x-originalParamName: identity
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identitiesCreateIdentityResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdentitiesService
+      summary: Identities service create identity
+      x-summary-source: derived
+  /api/v0/identities/{id}:
+    delete:
+      operationId: IdentitiesService_RemoveIdentity
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identitiesRemoveIdentityResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdentitiesService
+      summary: Identities service remove identity
+      x-summary-source: derived
+    get:
+      operationId: IdentitiesService_GetIdentity
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identitiesGetIdentityResp'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdentitiesService
+      summary: Identities service get identity
+      x-summary-source: derived
+    put:
+      operationId: IdentitiesService_UpdateIdentity
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/identitiesUpdateIdentityBody'
+        required: true
+        x-originalParamName: identity
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/identitiesUpdateIdentityResp'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Bad request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Forbidden
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/typesErrorResponse'
+          description: Internal server error
+      tags:
+      - IdentitiesService
+      summary: Identities service update identity
+      x-summary-source: derived
+components:
+  schemas:
+    identitiesNullableString:
+      properties:
+        isSet:
+          type: boolean
+        value:
+          type: string
+      type: object
+    identitiesUpdateIdentityBody:
+      properties:
+        additional_properties:
+          type: object
+        credentials:
+          type: object
+        metadata_admin:
+          type: object
+        metadata_public:
+          type: object
+        schema_id:
+          type: string
+        state:
+          type: string
+        traits:
+          type: object
+      type: object
+    identitiesRemoveIdentityResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/identitiesIdentity'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    identitiesIdentity:
+      properties:
+        additional_properties:
+          additionalProperties: {}
+          type: object
+        created_at:
+          format: date-time
+          type: string
+        credentials:
+          additionalProperties:
+            $ref: '#/components/schemas/identitiesIdentityCredentials'
+          type: object
+        id:
+          type: string
+        metadata_admin:
+          type: object
+        metadata_public:
+          type: object
+        organization_id:
+          $ref: '#/components/schemas/identitiesNullableString'
+        recovery_addresses:
+          items:
+            $ref: '#/components/schemas/identitiesRecoveryIdentityAddress'
+          type: array
+        schema_id:
+          type: string
+        schema_url:
+          type: string
+        state:
+          type: string
+        state_changed_at:
+          format: date-time
+          type: string
+        traits:
+          type: object
+        updated_at:
+          format: date-time
+          type: string
+        verifiable_addresses:
+          items:
+            $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
+          type: array
+      type: object
+    identitiesCreateIdentityBody:
+      properties:
+        additional_properties:
+          type: object
+        credentials:
+          type: object
+        metadata_admin:
+          type: object
+        metadata_public:
+          type: object
+        recovery_addresses:
+          items:
+            $ref: '#/components/schemas/identitiesRecoveryIdentityAddress'
+          type: array
+        schema_id:
+          type: string
+        state:
+          type: string
+        traits:
+          type: object
+        verifiable_addresses:
+          items:
+            $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
+          type: array
+      type: object
+    identitiesListIdentitiesResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/identitiesIdentity'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    identitiesCreateIdentityResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/identitiesIdentity'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    identitiesGetIdentityResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/identitiesIdentity'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    identitiesVerifiableIdentityAddress:
+      properties:
+        additional_properties:
+          additionalProperties: {}
+          type: object
+        created_at:
+          format: date-time
+          type: string
+        id:
+          type: string
+        status:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        value:
+          type: string
+        verified:
+          type: boolean
+        verified_at:
+          format: date-time
+          type: string
+        via:
+          type: string
+      type: object
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    identitiesRecoveryIdentityAddress:
+      properties:
+        additional_properties:
+          additionalProperties: {}
+          type: object
+        created_at:
+          format: date-time
+          type: string
+        id:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        value:
+          type: string
+        via:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    identitiesUpdateIdentityResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/identitiesIdentity'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    identitiesIdentityCredentials:
+      properties:
+        additional_properties:
+          additionalProperties: {}
+          type: object
+        config:
+          additionalProperties: {}
+          type: object
+        created_at:
+          format: date-time
+          type: string
+        identifiers:
+          items:
+            type: string
+          type: array
+        type:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        version:
+          format: int64
+          type: string
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            email: ''
+            openid: ''
+            profile: ''
+          tokenUrl: https://example.com/oauth/token
+      type: oauth2
+externalDocs:
+  description: REST API for the Admin UI service
+  url: https://github.com/canonical/identity-platform-admin-ui/blob/main/API.md

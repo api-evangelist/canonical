@@ -1,40 +1,11 @@
 openapi: 3.2.0
-x-generated-from: documentation
-x-provenance-note: >-
-  Hand-authored by API Evangelist from the publicly documented Snap Store Device API
-  reference at https://api.snapcraft.io/docs/ — NOT harvested from a Canonical-published
-  machine-readable contract, because Canonical publishes none for api.snapcraft.io. Marked
-  2026-09-05 so this file is never mistaken for a provider artifact. The specs Canonical does
-  publish are the other thirteen documents in openapi/, each harvested verbatim.
 info:
-  title: Canonical Snap Store Device Assertions Search API
+  title: Canonical Snap Store Device Search API
   description: 'Public Snap Store Device API (api.snapcraft.io) used by snap clients to
 
     discover snaps, fetch metadata, refresh installed snaps, search the
 
-    store, and download assertions. Endpoints come from the publicly
-
-    documented snap store reference (https://api.snapcraft.io/docs/).
-
-
-    Most endpoints are open / unauthenticated. Authenticated endpoints under
-
-    /api/v1/snaps/auth/ use Ubuntu One macaroons and require the
-
-    Snap-Device-Series header.
-
-
-    This specification is a best-effort, hand-authored representation. The
-
-    Charmhub API (api.charmhub.io), Snapcraft Dashboard API, snapd local
-
-    REST API, LXD REST API, MAAS API, Juju, Launchpad, Ubuntu Pro Client,
-
-    and Landscape APIs are not modeled here — see apis.yml for those
-
-    surfaces and their respective Canonical documentation.
-
-    '
+    store, and download assertions.'
   version: v2
   contact:
     name: Canonical / Snapcraft
@@ -66,6 +37,8 @@ paths:
           $ref: '#/components/responses/Generic'
       tags:
       - Search
+      operationId: getApiV1Search
+      x-operation-id-source: derived
 components:
   responses:
     Generic:
@@ -87,3 +60,5 @@ components:
     Generic:
       type: object
       additionalProperties: true
+x-generated-from: documentation
+x-provenance-note: Hand-authored by API Evangelist from the publicly documented Snap Store Device API reference at https://api.snapcraft.io/docs/ — NOT harvested from a Canonical-published machine-readable contract, because Canonical publishes none for api.snapcraft.io. Marked 2026-09-05 so this file is never mistaken for a provider artifact. The specs Canonical does publish are the other thirteen documents in openapi/, each harvested verbatim.

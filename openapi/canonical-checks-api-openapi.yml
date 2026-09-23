@@ -1,0 +1,223 @@
+openapi: 3.2.0
+info:
+  title: Pebble Checks API
+  version: v1
+tags:
+- name: Checks
+paths:
+  /v1/checks:
+    get:
+      summary: Get checks
+      tags:
+      - Checks
+      description: Fetch information about specific health checks (or all of them), ordered by check name.
+      parameters:
+      - name: level
+        in: query
+        description: Filter checks by level. If omitted, aggregate healthy status of checks with any (or no) level.
+        schema:
+          type: string
+          enum:
+          - alive
+          - ready
+      - name: names
+        in: query
+        description: The names of the checks to get. To get multiple checks, specify this parameter multiple times. If not set, get all checks.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Information about health checks.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChecksResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                - name: check1
+                  status: up
+                  threshold: 3
+                  change-id: '37'
+                  prev-change-id: '23'
+      operationId: getV1Checks
+      x-operation-id-source: derived
+    post:
+      summary: Manage checks
+      description: Perform a check operation such as start or stop.
+      tags:
+      - Checks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  description: The action to perform.
+                  enum:
+                  - start
+                  - stop
+                checks:
+                  type: array
+                  description: 'A list of service names.  Required.
+
+                    '
+                  items:
+                    type: string
+            example:
+              action: start
+              checks:
+              - svc1
+      responses:
+        '200':
+          description: Check operations completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckActionResponse'
+              example:
+                type: sync
+                status-code: 200
+                result:
+                  changed:
+                  - chk1
+                  - chk2
+      operationId: postV1Checks
+      x-operation-id-source: derived
+  /v1/checks/refresh:
+    post:
+      summary: Refresh a check
+      description: Runs a specified check immediately.
+      tags:
+      - Checks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the check to refresh.
+              required:
+              - name
+            example:
+              name: chk1
+      responses:
+        '200':
+          description: Check refreshed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshCheckResponse'
+              example:
+                type: sync
+                status-code: 200
+                status: OK
+                result:
+                  info:
+                    name: check1
+                    startup: enabled
+                    status: up
+                    successes: 2
+                    failures: 1
+                    threshold: 3
+                    change-id: '1'
+                  error: check timed out after 1s
+      operationId: postV1ChecksRefresh
+      x-operation-id-source: derived
+components:
+  schemas:
+    CheckActionResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              changed:
+                type: array
+                items:
+                  type: string
+                description: List of checks that were changed.
+    GetChecksResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/checkInfo'
+    RefreshCheckResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              info:
+                $ref: '#/components/schemas/checkInfo'
+                type: object
+              error:
+                type: string
+                description: The error message if the check failed; empty string on success.
+    checkInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the check.
+        level:
+          type: string
+          description: Level of the check.
+          enum:
+          - alive
+          - ready
+        status:
+          type: string
+          description: Status of the check.
+          enum:
+          - inactive
+          - down
+          - up
+        successes:
+          type: integer
+          description: Number of successes since check started or status transitioned from "down" to "up".
+        failures:
+          type: integer
+          description: Number of consecutive failures.
+        threshold:
+          type: integer
+          description: Failure threshold.
+        change-id:
+          type: string
+          description: ID of the change associated with the check.
+        prev-change-id:
+          type: string
+          description: ID of the previous change associated with the check.
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '

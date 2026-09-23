@@ -1,0 +1,432 @@
+openapi: 3.2.0
+info:
+  contact:
+    email: lxd@lists.canonical.com
+    name: LXD upstream
+    url: https://github.com/canonical/lxd
+  description: 'This is the REST API used by all LXD clients.
+
+    Internal endpoints aren''t included in this documentation.
+
+
+    The LXD API is available over both a local unix+http and remote https API.
+
+    Authentication for local users relies on group membership and access to the unix socket.
+
+    For remote users, the default authentication method is TLS client.'
+  license:
+    name: AGPL-3.0-only
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  title: LXD external REST Auth Groups API
+  version: '1.0'
+tags:
+- name: Auth Groups
+paths:
+  /1.0/auth/groups:
+    get:
+      description: Returns a list of authorization groups (URLs).
+      operationId: auth_groups_get
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of endpoints
+                    example: "[\n  \"/1.0/auth/groups/foo\",\n  \"/1.0/auth/groups/bar\"\n]"
+                    items:
+                      type: string
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the groups
+      tags:
+      - Auth Groups
+    post:
+      description: Creates a new authorization group.
+      operationId: auth_groups_post
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Create a new authorization group
+      tags:
+      - Auth Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthGroupsPost'
+        description: Group request
+        required: true
+  /1.0/auth/groups/{groupName}:
+    delete:
+      description: Deletes the authorization group
+      operationId: auth_group_delete
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Delete the authorization group
+      tags:
+      - Auth Groups
+    get:
+      description: Gets a specific authorization group.
+      operationId: auth_group_get
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    $ref: '#/components/schemas/AuthGroup'
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the authorization group
+      tags:
+      - Auth Groups
+    patch:
+      description: Updates the editable fields of an authorization group
+      operationId: auth_group_patch
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Partially update the authorization group
+      tags:
+      - Auth Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthGroupPut'
+        description: Update request
+    post:
+      description: Renames the authorization group
+      operationId: auth_group_post
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Rename the authorization group
+      tags:
+      - Auth Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthGroupPost'
+        description: Update request
+    put:
+      description: Replaces the editable fields of an authorization group
+      operationId: auth_group_put
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySyncResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Update the authorization group
+      tags:
+      - Auth Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthGroupPut'
+        description: Update request
+  /1.0/auth/groups?recursion=1:
+    get:
+      description: Returns a list of authorization groups.
+      operationId: auth_groups_get_recursion1
+      responses:
+        '200':
+          description: API endpoints
+          content:
+            application/json:
+              schema:
+                description: Sync response
+                properties:
+                  metadata:
+                    description: List of auth groups
+                    items:
+                      $ref: '#/components/schemas/AuthGroup'
+                    type: array
+                  status:
+                    description: Status description
+                    example: Success
+                    type: string
+                  status_code:
+                    description: Status code
+                    example: 200
+                    type: integer
+                  type:
+                    description: Response type
+                    example: sync
+                    type: string
+                type: object
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      summary: Get the groups
+      tags:
+      - Auth Groups
+components:
+  schemas:
+    Permission:
+      properties:
+        entitlement:
+          description: Entitlement is the entitlement define for the entity type.
+          example: can_view
+          type: string
+          x-go-name: Entitlement
+        entity_type:
+          description: EntityType is the string representation of the entity type.
+          example: instance
+          type: string
+          x-go-name: EntityType
+        url:
+          description: EntityReference is the URL of the entity that the permission applies to.
+          example: /1.0/instances/c1?project=default
+          type: string
+          x-go-name: EntityReference
+      title: Permission represents a permission that may be granted to a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    AuthGroupPost:
+      properties:
+        name:
+          description: Name is the name of the group.
+          example: default-c1-viewers
+          type: string
+          x-go-name: Name
+      title: AuthGroupPost is used for renaming a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    AuthGroup:
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        description:
+          description: Description is a short description of the group.
+          example: Viewers of instance c1 in the default project
+          type: string
+          x-go-name: Description
+        identities:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Identities is a map of authentication method to slice of identity identifiers.
+          type: object
+          x-go-name: Identities
+        identity_provider_groups:
+          description: 'IdentityProviderGroups are a list of groups from the IdP whose mapping
+
+            includes this group.'
+          example:
+          - sales
+          - operations
+          items:
+            type: string
+          type: array
+          x-go-name: IdentityProviderGroups
+        name:
+          description: Name is the name of the group.
+          example: default-c1-viewers
+          type: string
+          x-go-name: Name
+        permissions:
+          description: Permissions are a list of permissions.
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          x-go-name: Permissions
+      title: AuthGroup is the type for a LXD group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    AuthGroupsPost:
+      properties:
+        description:
+          description: Description is a short description of the group.
+          example: Viewers of instance c1 in the default project
+          type: string
+          x-go-name: Description
+        name:
+          description: Name is the name of the group.
+          example: default-c1-viewers
+          type: string
+          x-go-name: Name
+        permissions:
+          description: Permissions are a list of permissions.
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          x-go-name: Permissions
+      title: AuthGroupsPost is used for creating a new group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    AuthGroupPut:
+      properties:
+        description:
+          description: Description is a short description of the group.
+          example: Viewers of instance c1 in the default project
+          type: string
+          x-go-name: Description
+        permissions:
+          description: Permissions are a list of permissions.
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          x-go-name: Permissions
+      title: AuthGroupPut contains the editable fields of a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

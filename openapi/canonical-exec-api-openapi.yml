@@ -1,0 +1,147 @@
+openapi: 3.2.0
+info:
+  title: Pebble Exec API
+  version: v1
+tags:
+- name: Exec
+paths:
+  /v1/exec:
+    post:
+      summary: Execute a command
+      tags:
+      - Exec
+      description: 'Start a command with the given options and return a value representing the process.
+
+
+        This API returns a `task-id` (see the response schema and the example below),
+
+        then you need to call `/v1/tasks/{task-id}/websocket/control` and `/v1/tasks/{task-id}/websocket/stdio`
+
+        (also `/v1/tasks/{task-id}/websocket/stderr` if `split-stderr` is true) with the returned `task-id`.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostExecRequest'
+            example:
+              command:
+              - /bin/ls
+              - -l
+      responses:
+        '202':
+          description: Command execution initiated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostExecResponse'
+              example:
+                type: async
+                status-code: 202
+                status: Accepted
+                change: '4'
+                result:
+                  environment:
+                    HOME: /home/ubuntu
+                  task-id: '7'
+                  working-dir: /home/ubuntu
+      operationId: postV1Exec
+      x-operation-id-source: derived
+components:
+  schemas:
+    BaseAsyncResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          change:
+            type: string
+            description: The Change ID of the asynchronous change.
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    PostExecRequest:
+      type: object
+      properties:
+        command:
+          type: array
+          items:
+            type: string
+          description: The command to execute (including arguments).
+        service-context:
+          type: string
+          description: The service context to use for execution.
+        environment:
+          type: object
+          additionalProperties:
+            type: string
+          description: Environment variables to set for the command.
+        working-dir:
+          type: string
+          description: The working directory for the command.
+        timeout:
+          type: string
+          description: The timeout for the command execution (e.g., "60s", "1m").
+        user-id:
+          type: integer
+          description: The user ID to run the command as.
+        user:
+          type: string
+          description: The username to run the command as.
+        group-id:
+          type: integer
+          description: The group ID to run the command as.
+        group:
+          type: string
+          description: The group name to run the command as.
+        terminal:
+          type: boolean
+          description: Whether to allocate a pseudo-terminal.
+        interactive:
+          type: boolean
+          description: Whether the command is interactive.
+        split-stderr:
+          type: boolean
+          description: Whether to split stderr from stdout.
+        width:
+          type: integer
+          description: The width of the terminal (if applicable).
+        height:
+          type: integer
+          description: The height of the terminal (if applicable).
+      required:
+      - command
+    PostExecResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseAsyncResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              environment:
+                type: object
+                additionalProperties:
+                  type: string
+                description: The environment variables.
+              task-id:
+                type: string
+                format: uuid
+                description: The ID of the executed task.
+              working-dir:
+                type: string
+                description: The working directory.

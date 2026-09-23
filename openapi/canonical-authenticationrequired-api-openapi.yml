@@ -1,0 +1,1825 @@
+openapi: 3.2.0
+info:
+  title: Snapd REST Authentication Required API
+  license:
+    name: GPL-3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.txt
+  version: '1.0'
+  description: 'The REST API provides access to snapd''s state and many of its key functions,
+
+    as listed below.
+
+
+    For general information on how to use the API, including how to access it,
+
+    its requests and responses, results fields and error types, see Using the
+
+    REST API.'
+servers:
+- url: unix:///run/snapd.socket
+  description: 'Local snapd socket access. Unless otherwise specified, routes appear on
+
+    this socket.'
+- url: unix:///run/snapd-snap.socket
+  description: Snapd socket access for snaps
+tags:
+- name: AuthenticationRequired
+  description: Access is restricted to the root user.
+paths:
+  /v2/changes:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get all changes
+      description: Retrieves a list of all changes in progress or completed on the system.
+      operationId: getChanges
+      security:
+      - PeerAuth: []
+      parameters:
+      - name: select
+        in: query
+        description: Limit which changes are returned.
+        schema:
+          type: string
+          enum:
+          - all
+          - in-progress
+          - ready
+          default: in-progress
+      - name: for
+        in: query
+        description: Optional snap name to limit results to.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'A synchronous response containing all the changes that have occurred,
+
+            and have not been garbage-collected yet.'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Change'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/changes/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: The ID of the change to retrieve.
+      schema:
+        type: string
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get the status of a change
+      description: Retrieves the current status of a specific background change by its ID.
+      operationId: getChangeById
+      security:
+      - PeerAuth: []
+      responses:
+        '200':
+          description: The current status of the change.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Change'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Abort a change
+      description: Aborts a change that is currently in progress.
+      operationId: abortChangeById
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - abort
+      responses:
+        '200':
+          description: The change was successfully aborted. The response body contains the final state of the change.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Change'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/cohorts:
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Create cohort keys
+      description: Creates a set of cohort keys for a given set of snaps.
+      operationId: createCohorts
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              - snaps
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - create
+                snaps:
+                  type: array
+                  description: An array of snap names to create cohorts for.
+                  items:
+                    type: string
+                  example:
+                  - libreoffice
+                  - lxd
+                  - multipass
+      responses:
+        '200':
+          description: A map of snap names to their newly created cohort keys.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - cohorts
+                properties:
+                  cohorts:
+                    type: object
+                    description: An object mapping each snap name to its corresponding cohort key string.
+                    additionalProperties:
+                      type: string
+                      description: The generated cohort key for the snap.
+                example:
+                  cohorts:
+                    core24: MSBkd1RBaDdNWlowMXp5cmlPWkVycWQxSnluUUxpT0d2TSAxNzU5NDIxNjg0IDc3Yzk1ODllNDYxNzEwNDUwZWZiNjE5YjMwNmJiMzJlMmJiZTlkMzNmOGRlMmIwYmQzNmQ4ZWEyYjcwNGNmZmI=
+                    snapd: MSBQTXJyVjRtbDh1V3VFVURCVDhkU0duS1VZYmV2VmhjNCAxNzU5NDIxNjg0IDU1YzdjZWRkZWJhNjFkNjIxMjU3ZTAwMDYxMjllZWJkYjE4N2Y3YTE0MTc0NmM2NjAyM2IyYWY4ZDY2MzRlZDU=
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/find:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Find snaps in the store
+      description: 'Finds snaps or components in the store that match the search criteria and
+
+        are compatible with the host system. In order for the user to be authorized
+
+        to use this route, they must be logged in via ''snap-login'', hence being
+
+        tagged as both OpenAccess and AuthenticationRequired. PeerAuth is not listed
+
+        here as sudo is not required to interact with the route.'
+      operationId: findSnaps
+      security: []
+      parameters:
+      - name: q
+        in: query
+        description: 'Search for packages that match the given string. Spaces between words
+
+          are treated as logical AND operators. This is a weighted broad search,
+
+          meant as the main interface to searching for packages.'
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: 'An exact name to search for. Supports ''*'' as a wildcard at the end.
+
+          Cannot be used together with q. This is meant for things like
+
+          auto-completion. '
+        schema:
+          type: string
+      - name: scope
+        in: query
+        description: If set to 'wide', broadens the search to include non-stable packages.
+        schema:
+          type: string
+          enum:
+          - wide
+      - name: section
+        in: query
+        description: 'The name of a store section to search within.
+
+          Use GET /v2/sections to get the names of the sections.'
+        schema:
+          type: string
+      - name: select
+        in: query
+        description: 'Alter the collection searched.
+
+          refresh - search refreshable snaps. Cannot be used with q, nor name.
+
+          private - search private snaps (by default, find only searches public snaps).
+
+          Cannot be used with name, only q (for now at least).'
+        schema:
+          type: string
+          enum:
+          - refresh
+          - private
+      - name: common-id
+        in: query
+        description: 'Search for packages using the common-id attribute.
+
+          This is often the application name used by other packaging formats.'
+        schema:
+          type: string
+          example: org.videolan.vlc
+      responses:
+        '200':
+          description: A list of snaps from the store that match the search criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Snap'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/login:
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Authenticate user with snapd and store
+      description: 'Authenticates a user with Snapd and the store using their credentials.
+
+        Credentials are saved to the ~/.snap/auth.json file and further
+
+        communication is made with these credentials.'
+      operationId: loginUser
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The email associated with the desired account.
+                  pattern: .@.*\..
+                  example: random.user@emailaddr.com
+                password:
+                  type: string
+                  format: password
+                  description: The password associated with the email address.
+                  example: password1234!
+                otp:
+                  type: string
+                  description: A one-time password for two-factor authentication.
+                  example: '123456'
+      responses:
+        '200':
+          description: A synchronous response containing the result of the login information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    type: object
+                    required:
+                    - id
+                    - email
+                    - macaroon
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                        format: email
+                        description: The email used to authenticate with the store.
+                      macaroon:
+                        type: string
+                        description: The macaroon returned by the store after successful authentication.
+                      discharges:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - discharge-for-macaroon-authentication
+                      username:
+                        type: string
+                        description: Local username associated with the account.
+                        example: user-name
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+  /v2/logout:
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Log user out of snapd and the store
+      description: Logs the currently authenticated user out of snapd and the store.
+      operationId: logoutUser
+      security:
+      - PeerAuth: []
+      parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+          format: 'Authorization: Macaroon <the-macaroon>'
+          description: The authorization to remove from the system.
+      responses:
+        '200':
+          description: Successfully logged out.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+  /v2/logs:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get log contents
+      description: Retrieves log contents from the snapd daemon. The response is a stream of newline-delimited JSON objects.
+      operationId: getLogs
+      security:
+      - PeerAuth: []
+      parameters:
+      - name: follow
+        in: query
+        description: If set, returns log entries as they occur, streaming the response.
+        schema:
+          type: boolean
+          default: false
+      - name: n
+        in: query
+        description: Number of log entries to return.
+        schema:
+          type: integer
+          default: 10
+      - name: names
+        in: query
+        description: Comma-separated list of snap names to filter by.
+        schema:
+          type: string
+          example: multipass,lxd
+      responses:
+        '200':
+          description: A stream of log messages. Each line is a self-contained JSON object.
+          content:
+            application/x-ndjson:
+              schema:
+                $ref: '#/components/schemas/Log'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /v2/snapctl:
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Run snapctl command
+      description: 'Executes a ''snapctl'' command within a given context. This route uses the
+
+        socket /run/snapd-snap.socket. This is intended to be used only from within
+
+        a snap itself.'
+      operationId: runSnapctl
+      security:
+      - PeerAuth: []
+      parameters:
+      - in: header
+        name: X-Snapctl-Features
+        description: 'A comma-separated list of feature flags supported by the connecting snapctl client. This is used for feature negotiation between the client and the daemon.  Older clients may not send this header.
+
+          '
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: The context and arguments for the snapctl command.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - context-id
+              - args
+              properties:
+                context-id:
+                  type: string
+                  description: 'The context ID for this call. The context ID is passed to hooks
+
+                    through the $SNAP_COOKIE environment variable. The ''snapctl''
+
+                    command passes this automatically. For hooks that are calling
+
+                    the endpoint manually, the responsibility falls on the binary to
+
+                    retrieve the context ID itself.'
+                  example: ABCDEF
+                args:
+                  type: array
+                  description: A list of arguments to pass to snapctl.
+                  items:
+                    type: string
+                  example:
+                  - get
+                  - username
+                stdin:
+                  type: string
+                  description: If args is fde-setup-result, provides stdin to the context.
+      responses:
+        '200':
+          description: The output from the snapctl command.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stdout:
+                    type: string
+                    description: Data written to stdout by the command.
+                  stderr:
+                    type: string
+                    description: Data written to stderr by the command.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/snaps/{name}/conf:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get snap configuration
+      description: Retrieve configuration details for an installed snap. Use 'system' as the name to get system options.
+      operationId: getSnapConfig
+      security:
+      - PeerAuth: []
+      parameters:
+      - name: name
+        in: path
+        required: true
+        description: The name of the snap or the reserved name 'system'.
+        schema:
+          type: string
+      - name: keys
+        in: query
+        required: false
+        description: A comma-separated list of keys to retrieve. Dotted keys can be used for nested values.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A JSON map of configuration keys and their values.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/snapshots/{set-id}/export:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Export a snapshot set
+      description: 'Retrieves a snapshot set as a downloadable tar archive (`.tgz`).
+
+        The response body is a binary stream.'
+      operationId: exportSnapshot
+      security:
+      - PeerAuth: []
+      parameters:
+      - name: set-id
+        in: path
+        required: true
+        description: The ID of the snapshot set to export.
+        schema:
+          type: integer
+          example: 2
+      responses:
+        '200':
+          description: A gzipped tar archive (.tgz) of the exported snapshot set.
+          content:
+            application/gzip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AccessDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/system/system-recovery-keys:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get system recovery key
+      description: Retrieve LUKS encryption keys when using full disk encryption on Ubuntu Core.
+      operationId: getSystemRecoveryKey
+      security:
+      - PeerAuth: []
+      responses:
+        '200':
+          description: The recovery key for the system.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      recovery-key:
+                        type: string
+                        example: 14697-25590-04585-06938-46886-23115-29787-34072
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Manage system recovery keys
+      description: Removes and resets LUKS encryption keys when using full disk encryption on Ubuntu Core devices.
+      operationId: manageSystemRecoveryKeys
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              properties:
+                action:
+                  type: string
+                  description: The only supported action is 'remove'.
+                  enum:
+                  - remove
+      responses:
+        '200':
+          description: The action was successful.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/systems:
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Perform an action on the current recovery system or create a new one
+      description: 'Perform an action such as ''reboot'', ''install'' on the current active recovery
+
+        system, or ''create'' a new recovery system.'
+      operationId: performSystemAction
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/SystemActionCreate'
+              - $ref: '#/components/schemas/SystemActionInstall'
+              - $ref: '#/components/schemas/SystemActionReboot'
+      responses:
+        '200':
+          description: The action was successfully initiated (for synchronous actions like reboot).
+        '202':
+          description: The asynchronous action (e.g., create, install) was accepted and is in progress.
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/systems/{label}:
+    parameters:
+    - name: label
+      in: path
+      required: true
+      description: The label of the recovery system.
+      schema:
+        type: string
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get details for a specific recovery system
+      description: Retrieves detailed information for a single recovery system, including storage encryption status and available actions.
+      operationId: getSystemDetails
+      security:
+      - PeerAuth: []
+      responses:
+        '200':
+          description: Detailed information about the recovery system.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemDetails'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Perform an action on a specific recovery system
+      description: Perform an action on the recovery system identified by its label. The required parameters in the request body depend on the specified action.
+      operationId: performLabeledSystemAction
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/SystemActionDo'
+              - $ref: '#/components/schemas/SystemActionReboot'
+              - $ref: '#/components/schemas/SystemActionInstall'
+              - $ref: '#/components/schemas/SystemActionRemove'
+              - $ref: '#/components/schemas/SystemActionCheckPassphrase'
+              - $ref: '#/components/schemas/SystemActionCheckPin'
+              - $ref: '#/components/schemas/SystemActionFixEncryptionSupport'
+      responses:
+        '200':
+          description: The action was successfully initiated (for synchronous actions).
+        '202':
+          description: The asynchronous action (e.g., install, remove) was accepted and is in progress.
+          $ref: '#/components/responses/Accepted'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/validation-sets:
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get all enabled validation sets
+      description: Retrieves a list of all enabled validation sets on the system.
+      externalDocs:
+        description: Read more about validation sets on the Canonical Snapcraft documentation.
+        url: https://snapcraft.io/docs/validation-sets
+      operationId: listValidationSets
+      security:
+      - PeerAuth: []
+      responses:
+        '200':
+          description: A list of validation sets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValidationSet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /v2/validation-sets/{account-id}/{name}:
+    parameters:
+    - name: account-id
+      in: path
+      required: true
+      description: The developer account ID for the validation set.
+      schema:
+        type: string
+      example: ABCDEF12345678900987654321FEDCBA
+    - name: name
+      in: path
+      required: true
+      description: The name of the validation set.
+      schema:
+        type: string
+      example: myset1
+    get:
+      tags:
+      - AuthenticationRequired
+      summary: Get a specific validation set
+      description: Retrieves a single validation set by its account ID and name.
+      operationId: getValidationSet
+      security:
+      - PeerAuth: []
+      responses:
+        '200':
+          description: A single validation set object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationSet'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Manage a specific validation set
+      description: Apply or forget a specific validation set.
+      operationId: applyValidationSet
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              properties:
+                action:
+                  type: string
+                  description: The operation to perform on the validation set.
+                  enum:
+                  - apply
+                  - forget
+                mode:
+                  type: string
+                  description: The mode to enable for the validation set. Required when action is 'apply'.
+                  enum:
+                  - monitor
+                  - enforce
+                sequence:
+                  type: integer
+                  description: 'When using ''apply'': an optional sequence number to pin. When
+
+                    using ''forget'': an optional sequence number to match before
+
+                    forgetting.'
+            example:
+              action: apply
+              mode: monitor
+              sequence: 1
+      responses:
+        '200':
+          description: The validation set was successfully updated. The updated resource is returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationSet'
+              example:
+                account-id: ABCDEF12345678900987654321FEDCBA
+                mode: monitor
+                name: myset1
+                pinned-at: 1
+                sequence: 1
+                valid: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/warnings:
+    post:
+      tags:
+      - AuthenticationRequired
+      summary: Respond to warnings
+      description: 'Warnings can only be acknowledged to clear them, but they may reoccur
+
+        Acknowledging warnings does not fix the underlying cause.'
+      operationId: respondToWarnings
+      security:
+      - PeerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - action
+              - timestamp
+              properties:
+                action:
+                  type: string
+                  enum:
+                  - okay
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: Time to clear warnings before (RFC3339 UTC format).
+                  example: '2025-09-08T17:29:40.829324752Z'
+      responses:
+        '200':
+          description: A synchronous response indicating success.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status-code:
+                    type: integer
+                    enum:
+                    - 200
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                  type:
+                    type: string
+                    enum:
+                    - sync
+                  result:
+                    type: integer
+                    description: The number of warnings cleared.
+                    example: 0
+        '400':
+          $ref: '#/components/responses/BadRequest'
+components:
+  schemas:
+    SystemActionRemove:
+      type: object
+      title: SystemActionRemove
+      description: Payload to remove a specified recovery system.
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - remove
+    ValidationSet:
+      type: object
+      properties:
+        account-id:
+          type: string
+          description: Identifier for the developer account.
+        name:
+          type: string
+          description: Name of the validation set.
+        mode:
+          type: string
+          description: Mode of validation the system will use.
+          enum:
+          - monitor
+          - enforce
+        pinned-at:
+          type: integer
+          description: The sequence number the set is pinned at (0 if not pinned).
+        sequence:
+          type: integer
+          description: The current sequence of the validation set assertion.
+        valid:
+          type: boolean
+          description: Reports whether the set is valid for currently installed snaps.
+    SystemActionCheckPin:
+      type: object
+      title: SystemActionCheckPin
+      description: Payload to check the quality of a given PIN.
+      required:
+      - action
+      - pin
+      properties:
+        action:
+          type: string
+          enum:
+          - check-pin
+        pin:
+          type: string
+          format: password
+          description: The PIN to validate.
+    Change:
+      type: object
+      description: Represents the state and progress of a background operation.
+      properties:
+        id:
+          type: string
+          description: A unique ID for this change.
+          example: '73'
+        kind:
+          type: string
+          description: A code describing what type of change this is.
+          example: auto-refresh
+        summary:
+          type: string
+          description: Human-readable description of the change.
+          example: Auto-refresh snaps "core22", "firefox"
+        status:
+          type: string
+          description: Summary status of the current combined task statuses.
+          enum:
+          - Abort
+          - Do
+          - Doing
+          - Done
+          - Error
+          - Hold
+          - Undo
+          - Undoing
+          - Wait
+        tasks:
+          type: array
+          description: An array of objects describing tasks in this change.
+          items:
+            $ref: '#/components/schemas/Task'
+        ready:
+          type: boolean
+          description: True if this change has completed.
+        spawn-time:
+          type: string
+          format: date-time
+          description: The time this change started.
+        ready-time:
+          type: string
+          format: date-time
+          description: The time this change completed (omitted if not completed).
+        err:
+          type: string
+          description: A human-readable error description if the transaction fails.
+        data:
+          type: object
+          description: Result of the change, structure depends on the 'kind'.
+          additionalProperties: true
+        log:
+          type: array
+          items:
+            type: string
+          description: A log of events that occurred during the change.
+    SystemActionInstall:
+      type: object
+      title: SystemActionInstall
+      description: Payload to perform a step in the system installation process.
+      required:
+      - action
+      - step
+      properties:
+        action:
+          type: string
+          enum:
+          - install
+        step:
+          type: string
+          description: The specific step of the installation process to execute.
+          enum:
+          - setup-storage-encryption
+          - generate-recovery-key
+          - finish
+      oneOf:
+      - type: object
+        required:
+        - step
+        properties:
+          step:
+            type: string
+            enum:
+            - setup-storage-encryption
+          on-volumes:
+            type: array
+            items:
+              type: string
+            description: A list of volume labels to operate on.
+          volumes-auth:
+            type: object
+            additionalProperties:
+              type: string
+            description: A map of volume labels to their authentication credentials (e.g., passphrase or PIN).
+      - type: object
+        required:
+        - step
+        properties:
+          step:
+            type: string
+            enum:
+            - generate-recovery-key
+      - type: object
+        required:
+        - step
+        properties:
+          step:
+            type: string
+            enum:
+            - finish
+          on-volumes:
+            type: array
+            items:
+              type: string
+            description: A list of volume labels to operate on.
+          optional-install:
+            type: object
+            properties:
+              all:
+                type: boolean
+                description: If true, install all optional snaps and components. Cannot be used if 'snaps' or 'components' are specified.
+              snaps:
+                type: array
+                items:
+                  type: string
+                description: A list of specific optional snaps to install.
+              components:
+                type: array
+                items:
+                  type: string
+                description: A list of specific optional components to install.
+    Progress:
+      type: object
+      description: Represents the progress of a task.
+      properties:
+        done:
+          type: integer
+          description: The number of units completed.
+          example: 1
+        label:
+          type: string
+          description: A descriptive label for the progress bar.
+          example: core22 (delta)
+        total:
+          type: integer
+          description: The total number of units for the task.
+          example: 3
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    Publisher:
+      type: object
+      description: Information about the publisher of the snap.
+      properties:
+        display-name:
+          type: string
+          description: The user name associated with the account.
+        id:
+          type: string
+          description: The developer ID associated with the account.
+        username:
+          type: string
+        validation:
+          type: string
+          enum:
+          - verified
+          - starred
+          - unproven
+    SystemActionDo:
+      type: object
+      title: SystemActionDo
+      description: Payload to perform a custom action defined by the system.
+      required:
+      - action
+      - mode
+      properties:
+        action:
+          type: string
+          enum:
+          - do
+        mode:
+          type: string
+          description: The mode of the action to perform (e.g., 'recover', 'run').
+        title:
+          type: string
+          description: The title of the custom action to perform.
+    SystemActionFixEncryptionSupport:
+      type: object
+      title: SystemActionFixEncryptionSupport
+      description: Payload to apply a corrective action to fix storage encryption support.
+      required:
+      - action
+      - fix-action
+      properties:
+        action:
+          type: string
+          enum:
+          - fix-encryption-support
+        fix-action:
+          type: string
+          description: The specific fix to apply.
+        args:
+          type: object
+          additionalProperties:
+            type: string
+          description: A map of key-value arguments for the fix action.
+    Media:
+      type: object
+      description: A media asset for the snap, such as an icon or screenshot.
+      properties:
+        height:
+          type: integer
+          description: The height of the asset in pixels.
+        type:
+          type: string
+          enum:
+          - icon
+          - screenshot
+        url:
+          type: string
+          format: uri
+          description: The URL of the asset.
+        width:
+          type: integer
+          description: The width of the asset in pixels.
+    SystemActionCheckPassphrase:
+      type: object
+      title: SystemActionCheckPassphrase
+      description: Payload to check the quality of a given passphrase.
+      required:
+      - action
+      - passphrase
+      properties:
+        action:
+          type: string
+          enum:
+          - check-passphrase
+        passphrase:
+          type: string
+          format: password
+          description: The passphrase to validate.
+    StoreCategory:
+      type: object
+      description: A store category associated with the snap.
+      properties:
+        featured:
+          type: boolean
+          description: Indicates if the snap is featured in this category.
+        name:
+          type: string
+          description: The name of the category.
+    Links:
+      type: object
+      description: A collection of relevant links for the snap.
+      properties:
+        contact:
+          type: array
+          items:
+            type: string
+            format: uri
+          example:
+          - mailto:user@canonical.com
+          - https://discourse.example.com/c/support
+        website:
+          type: array
+          items:
+            type: string
+            format: uri
+            example: https://canonical.com
+      additionalProperties:
+        type: array
+        description: Allows for other link collections like 'issues', 'docs', etc.
+        items:
+          type: string
+          format: uri
+          example: https://github.com/user/repo/issues
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    Snap:
+      type: object
+      description: Detailed information about a single snap.
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the snap.
+        name:
+          type: string
+          description: The name of the snap.
+        base:
+          type: string
+          description: The base snap this snap is built on.
+          example: core20
+        channel:
+          type: string
+          description: The default channel for this snap.
+        common-ids:
+          type: array
+          items:
+            type: string
+            example: code.desktop
+        confinement:
+          type: string
+          enum:
+          - classic
+          - devmode
+          - strict
+        contact:
+          type: string
+          description: The primary contact URL or email for the developer.
+        description:
+          type: string
+          description: A detailed description of the snap.
+        developer:
+          type: string
+          description: The username of the snap developer.
+        devmode:
+          type: boolean
+          description: 'If set to true, the snap needs to be installed with devmode confinement
+
+            and doesn''t, yet, work with strict confinement due to sandbox limitations
+
+            or developer unfamiliarity.'
+        download-size:
+          type: integer
+          format: int64
+          description: The size of the snap package in bytes.
+        icon:
+          type: string
+          format: uri
+          description: A URL to the snap's icon image.
+        license:
+          type: string
+        private:
+          type: boolean
+          description: Whether the snap is private.
+        revision:
+          type: string
+          description: The latest revision number of the snap in this channel.
+        status:
+          type: string
+          example: available
+        store-url:
+          type: string
+          format: uri
+          description: The URL to the snap's page in the Snap Store.
+        summary:
+          type: string
+          description: A short, one-line summary of the snap.
+        title:
+          type: string
+        type:
+          type: string
+          description: 'The type of the snap. ''os'' is deprecated, and is left for compatibility
+
+            with the ''core'' and ''ubuntu-core'' snaps.'
+          enum:
+          - app
+          - kernel
+          - os
+          - gadget
+          - base
+        version:
+          type: string
+          description: The version string of the latest revision.
+        website:
+          type: string
+          format: uri
+          description: The official website for the snap or application.
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreCategory'
+        links:
+          $ref: '#/components/schemas/Links'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/Media'
+        publisher:
+          $ref: '#/components/schemas/Publisher'
+    Task:
+      type: object
+      description: Represents a single task within a larger change.
+      properties:
+        id:
+          type: string
+          description: The unique ID for this task.
+          example: '1502'
+        kind:
+          type: string
+          description: A code describing what type of task this is.
+          enum:
+          - check-rerefresh
+          - cleanup
+          - clear-snap
+          - copy-snap-data
+          - discard-snap
+          - download-snap
+          - mount-snap
+          - prerequisites
+          - remove-aliases
+          - run-hook
+          - setup-profiles
+          - start-snap-services
+          - stop-snap-services
+          - unlink-current-snap
+          - validate-snap
+        summary:
+          type: string
+          description: A human-readable description of the task.
+          example: Download snap 'core22' (2133) from channel 'latest/stable'
+        status:
+          type: string
+          description: 'The current status of the task. The usual state
+
+            procedure is Do, Doing, Done.'
+          enum:
+          - Abort
+          - Default
+          - Do
+          - Doing
+          - Done
+          - Error
+          - Hold
+          - Undo
+          - Undoing
+          - Undone
+          - Wait
+        progress:
+          $ref: '#/components/schemas/Progress'
+        spawn-time:
+          type: string
+          format: date-time
+          description: The time this task was started.
+          example: '2024-03-28T13:00:35.505604296Z'
+        ready-time:
+          type: string
+          format: date-time
+          description: The time this task was completed.
+          example: '2024-03-28T13:00:35.547274976Z'
+        data:
+          type: object
+          properties:
+            affected-snaps:
+              type: array
+              items:
+                type: string
+              example:
+              - firefox
+              - gnome-42-2204
+              - lxd
+          additionalProperties: true
+          description: Additional data related to the task, structure depends on the 'kind'.
+        log:
+          type: array
+          description: A log of events that occurred during the task.
+          items:
+            type: string
+            example: 2025-09-18T08:43:59-02:30 INFO No re-refreshes found.
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    Log:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the log entry in RFC3339 UTC format.
+          example: '2025-09-11T15:10:22.264675Z'
+        message:
+          type: string
+          description: The content of the log message.
+          example: Failed to get https://cloud-images.ubuntu.com/releases/streams/v1/index.json
+        sid:
+          type: string
+          description: The service identifier for the log entry.
+          example: multipassd
+        pid:
+          type: string
+          description: The process ID associated with the log entry.
+          example: '2062'
+    SystemActionReboot:
+      type: object
+      title: SystemActionReboot
+      description: Payload to reboot the device into a specific system mode.
+      required:
+      - action
+      - mode
+      properties:
+        action:
+          type: string
+          enum:
+          - reboot
+        mode:
+          type: string
+          description: The mode to reboot into.
+          enum:
+          - factory-reset
+          - install
+          - recover
+          - run
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    SystemActionCreate:
+      type: object
+      title: SystemActionCreate
+      required:
+      - action
+      - label
+      properties:
+        action:
+          type: string
+          enum:
+          - create
+        label:
+          type: string
+          description: A unique label for the new recovery system.
+        validation-sets:
+          type: array
+          items:
+            type: string
+          description: A list of validation set strings to use for creating the system.
+        test-system:
+          type: boolean
+          default: false
+          description: If true, creates the system as a test system.
+        mark-default:
+          type: boolean
+          default: false
+          description: If true, marks the new system as the default recovery system.
+        offline:
+          type: boolean
+          default: false
+          description: If true, performs the creation in offline mode.
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    SystemDetails:
+      type: object
+      title: SystemDetails
+      description: Detailed information about a specific recovery system.
+      properties:
+        current:
+          type: boolean
+          description: Whether this is the currently running system.
+        label:
+          type: string
+          description: The unique label identifying the recovery system.
+        brand:
+          type: object
+          title: StoreAccount
+          properties:
+            id:
+              type: string
+            username:
+              type: string
+            display-name:
+              type: string
+            validation:
+              type: string
+        model:
+          type: object
+          description: A map of the model assertion's headers.
+          additionalProperties: true
+        actions:
+          type: array
+          description: A list of actions that can be performed on this system.
+          items:
+            type: object
+            title: SystemActionInfo
+            properties:
+              title:
+                type: string
+              mode:
+                type: string
+        available-optional:
+          type: object
+          properties:
+            snaps:
+              type: array
+              items:
+                type: string
+              description: A list of optional snaps available for installation.
+            components:
+              type: array
+              items:
+                type: string
+              description: A list of optional components available for installation.
+        volumes:
+          type: array
+          description: A list of storage volumes defined by the system's gadget snap.
+          items:
+            type: object
+            title: VolumeInfo
+            properties:
+              name:
+                type: string
+                description: The name of the volume.
+              type:
+                type: string
+                description: The filesystem type.
+              size:
+                type: string
+                description: The size of the volume.
+        storage-encryption:
+          type: object
+          title: StorageEncryptionInfo
+          description: Information about the system's storage encryption capabilities.
+          properties:
+            support:
+              type: string
+              enum:
+              - disabled
+              - available
+              - defective
+              - unavailable
+              description: The current support status for storage encryption.
+            storage-safety:
+              type: string
+              description: The required storage safety level (e.g., 'encrypted').
+            type:
+              type: string
+              description: The type of encryption (e.g., 'luks2').
+            unavailable-reason:
+              type: string
+              description: The reason why encryption is unavailable or defective.
+            availability-check-errors:
+              type: array
+              items:
+                type: string
+              description: A list of errors encountered during the availability check.
+            features:
+              type: array
+              items:
+                type: string
+                enum:
+                - passphrase-auth
+              description: A list of supported encryption features.
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+  responses:
+    Accepted:
+      description: The asynchronous request was accepted and is being processed.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response for an accepted asynchronous operation.
+            properties:
+              type:
+                type: string
+                enum:
+                - async
+              status-code:
+                type: integer
+                enum:
+                - 202
+              status:
+                type: string
+                enum:
+                - Accepted
+              change:
+                type: string
+                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
+                example: '61'
+              result:
+                type:
+                - object
+                - 'null'
+                description: For an accepted async operation, this is always null as the result is not yet available.
+                example: null
+    Forbidden:
+      description: 'Forbidden. The server understood the request but refuses to authorize it
+
+        because the authenticated user lacks the necessary permissions for the target
+
+        resource.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 403
+              status:
+                type: string
+                enum:
+                - Forbidden
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    enum:
+                    - auth-cancelled
+                  message:
+                    type: string
+                    enum:
+                    - cancelled
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    AccessDenied:
+      description: "Access Denied. The daemon/store cannot or will not process the request because \nthe user does not have the correct authorization from the system."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                description: The HTTP status code.
+                enum:
+                - 401
+              status:
+                type: string
+                description: The textual representation of the status code.
+                enum:
+                - Unauthorized
+              type:
+                type: string
+                description: The type of response.
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    description: A machine-readable string identifying the error type.
+                    enum:
+                    - login-required
+                  message:
+                    type: string
+                    description: A human-readable error message.
+                    enum:
+                    - access denied
+  securitySchemes:
+    PeerAuth:
+      type: apiKey
+      in: header
+      name: X-PEER-CREDENTIALS
+      description: '**Unix Socket Peer Authentication**
+
+
+        Authentication is not handled via traditional HTTP headers or tokens. Instead, it is managed at the operating system level using Unix domain socket peer credentials (e.g., `SO_PEERCRED` on Linux).
+
+
+        **How It Works:**
+
+
+        1.  The API server listens on a local Unix domain socket.
+
+        2.  When a client connects to this socket, the server can ask the operating system kernel for the client process''s credentials.
+
+        3.  The kernel securely provides the client''s User ID (UID), Group ID (GID), and Process ID (PID).
+
+
+        Authorization decisions are then based on this trusted, kernel-provided UID. For example, access may be restricted to only the `root` user (UID 0).'
+externalDocs:
+  url: https://snapcraft.io/docs
+  description: Snap and Snapcraft documentation
