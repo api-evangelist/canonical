@@ -262,21 +262,25 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
     Addon:
       description: Addon describes a package with additional functionality to be added to containers
       type: object
@@ -298,48 +302,32 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AddonVersion'
-    OperationResponse:
-      description: Operation
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
       type: object
       properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
-    AddonVersion:
-      description: AddonVersion describes a single version of an addon
-      type: object
-      properties:
-        created_at:
-          description: Creation timestamp of the addon
-          type: integer
-          format: int64
-          example: 1610641117
-        fingerprint:
-          description: SHA-256 fingerprint of the addon version
-          type: string
-          example: 0791cfc011f67c60b7bd0f852ddb686b79fa46083d9d43ef9845c9235c67b261
-        size:
-          description: Size (in bytes) of the addon payload
-          type: integer
-          format: int64
-          example: 529887868
-        version:
-          description: Version for the addon
+        error_code:
+          description: Error code for the operation
           type: integer
           format: int64
           example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
     Operation:
       description: Operation represents a background operation
       type: object
@@ -402,46 +390,41 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    AddonVersion:
+      description: AddonVersion describes a single version of an addon
       type: object
       properties:
-        error_code:
-          description: Error code for the operation
+        created_at:
+          description: Creation timestamp of the addon
+          type: integer
+          format: int64
+          example: 1610641117
+        fingerprint:
+          description: SHA-256 fingerprint of the addon version
+          type: string
+          example: 0791cfc011f67c60b7bd0f852ddb686b79fa46083d9d43ef9845c9235c67b261
+        size:
+          description: Size (in bytes) of the addon payload
+          type: integer
+          format: int64
+          example: 529887868
+        version:
+          description: Version for the addon
           type: integer
           format: int64
           example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
   responses:
-    ErrorAlreadyExists:
-      description: Already Exists
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: already exists
-              error_code:
-                type: integer
-                format: int64
-                example: 409
-              type:
-                type: string
-                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -494,6 +477,23 @@ components:
                 type: integer
                 format: int64
                 example: 404
+              type:
+                type: string
+                example: error
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
               type:
                 type: string
                 example: error

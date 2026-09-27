@@ -1651,6 +1651,36 @@ paths:
       - change_application
 components:
   schemas:
+    ApplicationStatus:
+      description: ApplicationStatus represents the status an application can be in
+      type: integer
+      format: int64
+    NetworkProtocol:
+      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
+      type: string
+    ApplicationVersionDelete:
+      description: ApplicationVersionDelete represents the fields used to delete an application version
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the application version should be forced
+          type: boolean
+          example: false
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    ApplicationBootstrap:
+      description: ApplicationBootstrap describes the fields used to configure the application bootstrap
+      type: object
+      properties:
+        keep:
+          description: List of files to keep after the bootstrap
+          type: array
+          items:
+            type: string
+          example:
+          - app.apk
     ApplicationPatch:
       description: ApplicationPatch represents the fields a user can modify
       type: object
@@ -1731,6 +1761,30 @@ components:
           $ref: '#/components/schemas/VideoEncoderType'
         watchdog:
           $ref: '#/components/schemas/ApplicationWatchdog'
+    ApplicationVersionPatch:
+      description: ApplicationVersionPatch represents the fields used to update an application version
+      type: object
+      properties:
+        published:
+          description: Used to publish a specific version of the application
+          type: boolean
+          example: true
+    ApplicationExtraData:
+      description: ApplicationExtraData represents an extra application data
+      type: object
+      properties:
+        owner:
+          description: Owner and group for the files
+          type: string
+          example: root:root
+        permissions:
+          description: Unix permissions for the files
+          type: string
+          example: '0644'
+        target:
+          description: Path to the target file on the android filesystem
+          type: string
+          example: /sdcard/Android/obb/com.foo.bar/
     Application:
       description: Application represents an AMS application
       type: object
@@ -1821,6 +1875,89 @@ components:
         vm:
           description: Whether the application is based on virtual machines or containers
           type: boolean
+    ApplicationResourcesPost:
+      description: ApplicationResourcesPost represents the fields used to update an application resource
+      type: object
+      properties:
+        cpus:
+          description: Number of CPUs required by the application
+          type: integer
+          format: int64
+          example: 2
+        disk-size:
+          description: Storage size required by the application
+          type: string
+          example: 3GB
+        gpu-slots:
+          description: Number of GPU slots required by the application
+          type: integer
+          format: int64
+          example: 2
+        memory:
+          description: Memory to be assigned to the application
+          type: string
+          example: 3GB
+        vpu-slots:
+          description: Number of VPU slots required by the application
+          type: integer
+          format: int64
+          example: 1
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    ImageStatus:
+      description: ImageStatus represents the status of an image
+      type: integer
+      format: int64
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
     ApplicationVersion:
       description: ApplicationVersion describes a single version of an application
       type: object
@@ -1912,199 +2049,6 @@ components:
           $ref: '#/components/schemas/VideoEncoderType'
         watchdog:
           $ref: '#/components/schemas/ApplicationWatchdog'
-    ApplicationVersionDelete:
-      description: ApplicationVersionDelete represents the fields used to delete an application version
-      type: object
-      properties:
-        force:
-          description: Whether deletion of the application version should be forced
-          type: boolean
-          example: false
-    NetworkProtocol:
-      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
-      type: string
-    ApplicationExtraData:
-      description: ApplicationExtraData represents an extra application data
-      type: object
-      properties:
-        owner:
-          description: Owner and group for the files
-          type: string
-          example: root:root
-        permissions:
-          description: Unix permissions for the files
-          type: string
-          example: '0644'
-        target:
-          description: Path to the target file on the android filesystem
-          type: string
-          example: /sdcard/Android/obb/com.foo.bar/
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
-    ApplicationResourcesPost:
-      description: ApplicationResourcesPost represents the fields used to update an application resource
-      type: object
-      properties:
-        cpus:
-          description: Number of CPUs required by the application
-          type: integer
-          format: int64
-          example: 2
-        disk-size:
-          description: Storage size required by the application
-          type: string
-          example: 3GB
-        gpu-slots:
-          description: Number of GPU slots required by the application
-          type: integer
-          format: int64
-          example: 2
-        memory:
-          description: Memory to be assigned to the application
-          type: string
-          example: 3GB
-        vpu-slots:
-          description: Number of VPU slots required by the application
-          type: integer
-          format: int64
-          example: 1
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
-    ApplicationAddon:
-      description: ApplicationAddon describes a specific version of an addon an application version uses
-      type: object
-      properties:
-        name:
-          description: Name of the application addon
-          type: string
-          example: ssh
-        version:
-          description: Version of the application addon
-          type: integer
-          format: int64
-          example: 0
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
-          type: integer
-          format: int64
-          example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
-    NetworkServiceSpec:
-      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
-      type: object
-      properties:
-        expose:
-          description: 'Expose defines wether the service is exposed on the public endpoint of the node
-
-            or if it is only available on the private endpoint. To expose the service set to
-
-            true and to false otherwise.'
-          type: boolean
-        name:
-          description: 'Name gives the container a hint what the exposed port is being used for. This
-
-            allows further tweaks inside the container to expose the service correctly.
-
-            Exampe: ssh'
-          type: string
-        port:
-          description: Port is the port the container provides a service on
-          type: integer
-          format: int64
-          example: 3000
-        port_end:
-          description: 'PortEnd is the end of the port range set for a service. If empty, only a
-
-            single port is opened'
-          type: integer
-          format: int64
-          example: 3010
-        protocols:
-          description: List of network protocols (tcp, udp) the port should be exposed for
-          type: array
-          items:
-            $ref: '#/components/schemas/NetworkProtocol'
-          example:
-          - tcp
-          - udp
-    ApplicationWatchdog:
-      description: ApplicationWatchdog describes the fields used to update an application watchdog
-      type: object
-      properties:
-        allowed-packages:
-          description: List of android packages to enable the watchdog for
-          type: array
-          items:
-            type: string
-          example:
-          - com.android.settings
-        disabled:
-          description: Whether or not to enable the watchdog for the application
-          type: boolean
-          example: true
-    ApplicationsDelete:
-      description: ApplicationsDelete represents a list of application to delete together
-      type: object
-      properties:
-        force:
-          description: Whether deletion of the applications should be forced
-          type: boolean
-          example: false
-        ids:
-          description: IDs or names of the applications to delete
-          type: array
-          items:
-            type: string
-          example:
-          - cilsreunfpfec9b1ktg0
-          - cilsreunfpfec9b1ktg1
-          - myapp
-    OperationResponse:
-      description: Operation
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
     ApplicationHooks:
       description: ApplicationHooks describes the fields used to configure the hooks of an application
       type: object
@@ -2113,63 +2057,6 @@ components:
           description: Time limit to wait for the hook to complete before timing out
           type: string
           example: 10m
-    ImageStatus:
-      description: ImageStatus represents the status of an image
-      type: integer
-      format: int64
-    ApplicationResources:
-      description: ApplicationResources describes resources allocated for an application
-      type: object
-      properties:
-        cpus:
-          description: Number of CPUs required by the application
-          type: integer
-          format: int64
-          example: 2
-        disk-size:
-          description: Storage size required by the application
-          type: string
-          example: 3GB
-        gpu-slots:
-          description: Number of GPU slots required by the application
-          type: integer
-          format: int64
-          example: 2
-        memory:
-          description: Memory to be assigned to the application
-          type: string
-          example: 3GB
-        vpu-slots:
-          description: Number of VPU slots required by the application
-          type: integer
-          format: int64
-          example: 1
-    ApplicationVersionPatch:
-      description: ApplicationVersionPatch represents the fields used to update an application version
-      type: object
-      properties:
-        published:
-          description: Used to publish a specific version of the application
-          type: boolean
-          example: true
-    ApplicationBootstrap:
-      description: ApplicationBootstrap describes the fields used to configure the application bootstrap
-      type: object
-      properties:
-        keep:
-          description: List of files to keep after the bootstrap
-          type: array
-          items:
-            type: string
-          example:
-          - app.apk
-    ApplicationStatus:
-      description: ApplicationStatus represents the status an application can be in
-      type: integer
-      format: int64
-    VideoEncoderType:
-      description: VideoEncoderType describes the type of a video encoder is used by an application
-      type: string
     Operation:
       description: Operation represents a background operation
       type: object
@@ -2232,7 +2119,132 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
-    PatchedPrometheusAlertRuleFile:
+    ApplicationAddon:
+      description: ApplicationAddon describes a specific version of an addon an application version uses
+      type: object
+      properties:
+        name:
+          description: Name of the application addon
+          type: string
+          example: ssh
+        version:
+          description: Version of the application addon
+          type: integer
+          format: int64
+          example: 0
+    VideoEncoderType:
+      description: VideoEncoderType describes the type of a video encoder is used by an application
+      type: string
+    ApplicationsDelete:
+      description: ApplicationsDelete represents a list of application to delete together
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the applications should be forced
+          type: boolean
+          example: false
+        ids:
+          description: IDs or names of the applications to delete
+          type: array
+          items:
+            type: string
+          example:
+          - cilsreunfpfec9b1ktg0
+          - cilsreunfpfec9b1ktg1
+          - myapp
+    ApplicationWatchdog:
+      description: ApplicationWatchdog describes the fields used to update an application watchdog
+      type: object
+      properties:
+        allowed-packages:
+          description: List of android packages to enable the watchdog for
+          type: array
+          items:
+            type: string
+          example:
+          - com.android.settings
+        disabled:
+          description: Whether or not to enable the watchdog for the application
+          type: boolean
+          example: true
+    ApplicationResources:
+      description: ApplicationResources describes resources allocated for an application
+      type: object
+      properties:
+        cpus:
+          description: Number of CPUs required by the application
+          type: integer
+          format: int64
+          example: 2
+        disk-size:
+          description: Storage size required by the application
+          type: string
+          example: 3GB
+        gpu-slots:
+          description: Number of GPU slots required by the application
+          type: integer
+          format: int64
+          example: 2
+        memory:
+          description: Memory to be assigned to the application
+          type: string
+          example: 3GB
+        vpu-slots:
+          description: Number of VPU slots required by the application
+          type: integer
+          format: int64
+          example: 1
+    NetworkServiceSpec:
+      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+      type: object
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the container a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the container to expose the service correctly.
+
+            Exampe: ssh'
+          type: string
+        port:
+          description: Port is the port the container provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: 'PortEnd is the end of the port range set for a service. If empty, only a
+
+            single port is opened'
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
+    PatchedLokiAlertRuleFile:
+      type: object
+      description: Loki Alert Rule Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        rules:
+          type: string
+        template:
+          type: boolean
+          title: Whether this rules file is                                    a template and must be rendered
+    PrometheusAlertRuleFile:
       type: object
       description: Prometheus Alert Rule Serializer class.
       properties:
@@ -2244,6 +2256,9 @@ components:
         template:
           type: boolean
           title: Whether this rules file is                                    a template and must be rendered
+      required:
+      - rules
+      - uid
     PatchedFoxgloveDashboard:
       type: object
       description: Foxglove Dashboard Serializer class.
@@ -2262,9 +2277,9 @@ components:
           maxLength: 200
         dashboard:
           title: Dashboard json field
-    GrafanaDashboard:
+    FoxgloveDashboard:
       type: object
-      description: Grafana Dashboard Serializer class.
+      description: Foxglove Dashboard Serializer class.
       properties:
         uid:
           type: string
@@ -2274,24 +2289,9 @@ components:
       required:
       - dashboard
       - uid
-    PrometheusAlertRuleFile:
+    PatchedPrometheusAlertRuleFile:
       type: object
       description: Prometheus Alert Rule Serializer class.
-      properties:
-        uid:
-          type: string
-          maxLength: 200
-        rules:
-          type: string
-        template:
-          type: boolean
-          title: Whether this rules file is                                    a template and must be rendered
-      required:
-      - rules
-      - uid
-    PatchedLokiAlertRuleFile:
-      type: object
-      description: Loki Alert Rule Serializer class.
       properties:
         uid:
           type: string
@@ -2316,9 +2316,9 @@ components:
       required:
       - rules
       - uid
-    FoxgloveDashboard:
+    GrafanaDashboard:
       type: object
-      description: Foxglove Dashboard Serializer class.
+      description: Grafana Dashboard Serializer class.
       properties:
         uid:
           type: string
@@ -2328,6 +2328,90 @@ components:
       required:
       - dashboard
       - uid
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ApplicationPost:
+      properties:
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+      type: object
+      required:
+      - name
+      - permissions
+      title: ApplicationPost
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApplicationResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+        api_key:
+          type: string
+          title: Api Key
+      type: object
+      required:
+      - id
+      - name
+      - permissions
+      - api_key
+      title: ApplicationResponse
+    ApplicationPatch_2:
+      properties:
+        permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Permission'
+            type: array
+          - type: 'null'
+          title: Permissions
+      type: object
+      title: ApplicationPatch
     Permission:
       type: string
       enum:
@@ -2363,91 +2447,24 @@ components:
       - change_notification
       - view_sentry_debug
       title: Permission
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ApplicationPatch_2:
-      properties:
-        permissions:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/Permission'
-            type: array
-          - type: 'null'
-          title: Permissions
-      type: object
-      title: ApplicationPatch
-    ApplicationResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        permissions:
-          items:
-            $ref: '#/components/schemas/Permission'
-          type: array
-          title: Permissions
-        api_key:
-          type: string
-          title: Api Key
-      type: object
-      required:
-      - id
-      - name
-      - permissions
-      - api_key
-      title: ApplicationResponse
-    ApplicationPost:
-      properties:
-        name:
-          type: string
-          title: Name
-        permissions:
-          items:
-            $ref: '#/components/schemas/Permission'
-          type: array
-          title: Permissions
-      type: object
-      required:
-      - name
-      - permissions
-      title: ApplicationPost
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
   responses:
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -2464,23 +2481,6 @@ components:
                 example: 500
               metadata:
                 example: '{}'
-              type:
-                type: string
-                example: error
-    ErrorNotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: not found
-              error_code:
-                type: integer
-                format: int64
-                example: 404
               type:
                 type: string
                 example: error
@@ -2503,8 +2503,8 @@ components:
               type:
                 type: string
                 example: error
-    ErrorForbidden:
-      description: Forbidden
+    ErrorNotFound:
+      description: Not found
       content:
         application/json:
           schema:
@@ -2512,11 +2512,11 @@ components:
             properties:
               error:
                 type: string
-                example: Not Authorized
+                example: not found
               error_code:
                 type: integer
                 format: int64
-                example: 403
+                example: 404
               type:
                 type: string
                 example: error

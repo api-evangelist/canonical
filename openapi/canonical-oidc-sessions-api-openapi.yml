@@ -161,87 +161,6 @@ paths:
       tags:
       - oidc_sessions
 components:
-  responses:
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
   schemas:
     OIDCSession:
       properties:
@@ -285,3 +204,84 @@ components:
       title: OIDCSession contains session details for a current login.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

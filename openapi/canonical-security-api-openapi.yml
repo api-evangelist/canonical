@@ -770,46 +770,25 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CveImpact:
+    CvePackage:
       properties:
-        baseMetricV3:
-          $ref: '#/components/schemas/CveBaseMetric'
-        baseMetricV4:
-          $ref: '#/components/schemas/CveBaseMetricV4'
-      type: object
-    CvssV4SupplementalMetrics:
-      properties:
-        automatable:
-          type:
-          - string
-          - 'null'
-        providerUrgency:
-          type:
-          - string
-          - 'null'
-        recovery:
-          type:
-          - string
-          - 'null'
-        safety:
-          type:
-          - string
-          - 'null'
-        valueDensity:
-          type:
-          - string
-          - 'null'
-        vulnerabilityResponseEffort:
-          type:
-          - string
-          - 'null'
-      type: object
-    RelatedNotices:
-      properties:
-        id:
+        debian:
           type: string
-        packages:
+        name:
           type: string
+        source:
+          type: string
+        statuses:
+          items:
+            $ref: '#/components/schemas/Status'
+          type: array
+        ubuntu:
+          type: string
+      required:
+      - debian
+      - name
+      - source
+      - ubuntu
       type: object
     CvssV4EnvironmentalMetricsImport:
       properties:
@@ -819,6 +798,482 @@ components:
         securityRequirements:
           allOf:
           - $ref: '#/components/schemas/CvssV4SecurityRequirements'
+      type: object
+    MessageWithErrors:
+      properties:
+        errors:
+          type: string
+        message:
+          type: string
+      type: object
+    RelatedNotices:
+      properties:
+        id:
+          type: string
+        packages:
+          type: string
+      type: object
+    CreateNoticeImport:
+      properties:
+        cves:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        summary:
+          type: string
+        title:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    CveImpact:
+      properties:
+        baseMetricV3:
+          $ref: '#/components/schemas/CveBaseMetric'
+        baseMetricV4:
+          $ref: '#/components/schemas/CveBaseMetricV4'
+      type: object
+    CveBaseMetricV4Import:
+      properties:
+        cvssV4:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4Import'
+      type: object
+    NoticesAPI:
+      properties:
+        limit:
+          type:
+          - integer
+          - 'null'
+        notices:
+          items:
+            $ref: '#/components/schemas/NoticeAPIDetailed'
+          type: array
+        offset:
+          type:
+          - integer
+          - 'null'
+        total_results:
+          type: integer
+      type: object
+    CvssV4VulnerableSystemImpactMetrics:
+      properties:
+        availabilityImpact:
+          type:
+          - string
+          - 'null'
+        confidentialityImpact:
+          type:
+          - string
+          - 'null'
+        integrityImpact:
+          type:
+          - string
+          - 'null'
+      type: object
+    CVEImport:
+      properties:
+        bugs:
+          items:
+            type: string
+          type: array
+        codename:
+          type:
+          - string
+          - 'null'
+        cvss3:
+          type:
+          - number
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        impact:
+          $ref: '#/components/schemas/CveImpactImport'
+        mitigation:
+          type:
+          - string
+          - 'null'
+        notes:
+          items:
+            $ref: '#/components/schemas/Note'
+          type: array
+        packages:
+          items:
+            $ref: '#/components/schemas/CvePackage'
+          type: array
+        patches:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        priority:
+          type:
+          - string
+          - 'null'
+        published:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        references:
+          items:
+            type: string
+          type: array
+        status:
+          type:
+          - string
+          - 'null'
+        tags:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type:
+          - object
+          - 'null'
+        ubuntu_description:
+          type:
+          - string
+          - 'null'
+        updated_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      type: object
+    CvssV4SecurityRequirements:
+      properties:
+        availabilityRequirements:
+          type:
+          - string
+          - 'null'
+        confidentialityRequirements:
+          type:
+          - string
+          - 'null'
+        integrityRequirements:
+          type:
+          - string
+          - 'null'
+      type: object
+    ReleaseAPI:
+      properties:
+        codename:
+          type: string
+        development:
+          type: boolean
+        esm_expires:
+          format: date-time
+          type: string
+        lts:
+          type: boolean
+        name:
+          type: string
+        release_date:
+          format: date-time
+          type: string
+        support_expires:
+          format: date-time
+          type: string
+        support_tag:
+          type: string
+        version:
+          type: string
+      required:
+      - codename
+      - development
+      - esm_expires
+      - lts
+      - name
+      - release_date
+      - support_expires
+      - version
+      type: object
+    CvssV4ThreatMetrics:
+      properties:
+        exploitMaturity:
+          type:
+          - string
+          - 'null'
+      type: object
+    NoticeAPIDetailedSchemaV2:
+      properties:
+        cves:
+          items:
+            $ref: '#/components/schemas/CVESummaryV2'
+          type: array
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        related_notices:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        releases:
+          items:
+            $ref: '#/components/schemas/NoticeReleases'
+          type: array
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    NoticeAPI:
+      properties:
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        instructions:
+          type: string
+        is_hidden:
+          type: boolean
+        published:
+          format: date-time
+          type: string
+        references:
+          items:
+            type: string
+          type: array
+        release_packages:
+          additionalProperties:
+            items:
+              $ref: '#/components/schemas/NoticePackage'
+            type: array
+          type: object
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - instructions
+      - published
+      - summary
+      - title
+      type: object
+    UpdateRelease:
+      properties:
+        codename:
+          type: string
+        development:
+          type: boolean
+        esm_expires:
+          format: date-time
+          type: string
+        lts:
+          type: boolean
+        name:
+          type: string
+        release_date:
+          format: date-time
+          type: string
+        support_expires:
+          format: date-time
+          type: string
+        version:
+          type: string
+      required:
+      - codename
+      - development
+      - esm_expires
+      - lts
+      - name
+      - release_date
+      - support_expires
+      - version
+      type: object
+    PageNoticeAPI:
+      properties:
+        cves_ids:
+          items:
+            pattern: (cve-|CVE-)\d{4}-\d{4,7}
+            type: string
+          type: array
+        description:
+          type:
+          - string
+          - 'null'
+        id:
+          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
+          type: string
+        published:
+          format: date-time
+          type: string
+        releases:
+          items:
+            $ref: '#/components/schemas/NoticeReleases'
+          type: array
+        summary:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+      required:
+      - id
+      - published
+      - summary
+      - title
+      type: object
+    NoticeReleases:
+      properties:
+        codename:
+          type: string
+        support_tag:
+          type: string
+        version:
+          type: string
+      type: object
+    CveBaseMetricV4:
+      properties:
+        cvssV4:
+          $ref: '#/components/schemas/CvssV4'
+      type: object
+    CvssV4ModifiedBaseMetrics:
+      properties:
+        exploitabilityMetrics:
+          $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
+      type: object
+    CvssV4ExploitabilityMetrics:
+      properties:
+        attackComplexity:
+          type:
+          - string
+          - 'null'
+        attackRequirements:
+          type:
+          - string
+          - 'null'
+        attackVector:
+          type:
+          - string
+          - 'null'
+        privilegesRequired:
+          type:
+          - string
+          - 'null'
+        userInteraction:
+          type:
+          - string
+          - 'null'
+      type: object
+    Release:
+      properties:
+        codename:
+          type: string
+        development:
+          type: boolean
+        esm_expires:
+          format: date-time
+          type: string
+        lts:
+          type: boolean
+        name:
+          type: string
+        release_date:
+          format: date-time
+          type: string
+        support_expires:
+          format: date-time
+          type: string
+        version:
+          type: string
+      required:
+      - codename
+      - development
+      - esm_expires
+      - lts
+      - name
+      - release_date
+      - support_expires
+      - version
       type: object
     CvssV4Import:
       properties:
@@ -875,216 +1330,17 @@ components:
           - string
           - 'null'
       type: object
-    CveImpactImport:
+    CvssV4BaseMetricsImport:
       properties:
-        baseMetricV3:
-          $ref: '#/components/schemas/CveBaseMetric'
-        baseMetricV4:
-          $ref: '#/components/schemas/CveBaseMetricV4Import'
-      type: object
-    NoticeAPI:
-      properties:
-        cves_ids:
-          items:
-            pattern: (cve-|CVE-)\d{4}-\d{4,7}
-            type: string
-          type: array
-        description:
-          type:
-          - string
-          - 'null'
-        id:
-          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
-          type: string
-        instructions:
-          type: string
-        is_hidden:
-          type: boolean
-        published:
-          format: date-time
-          type: string
-        references:
-          items:
-            type: string
-          type: array
-        release_packages:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/NoticePackage'
-            type: array
-          type: object
-        summary:
-          type: string
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - instructions
-      - published
-      - summary
-      - title
-      type: object
-    CvssV4ThreatMetrics:
-      properties:
-        exploitMaturity:
-          type:
-          - string
-          - 'null'
-      type: object
-    Release:
-      properties:
-        codename:
-          type: string
-        development:
-          type: boolean
-        esm_expires:
-          format: date-time
-          type: string
-        lts:
-          type: boolean
-        name:
-          type: string
-        release_date:
-          format: date-time
-          type: string
-        support_expires:
-          format: date-time
-          type: string
-        version:
-          type: string
-      required:
-      - codename
-      - development
-      - esm_expires
-      - lts
-      - name
-      - release_date
-      - support_expires
-      - version
-      type: object
-    CvePackage:
-      properties:
-        debian:
-          type: string
-        name:
-          type: string
-        source:
-          type: string
-        statuses:
-          items:
-            $ref: '#/components/schemas/Status'
-          type: array
-        ubuntu:
-          type: string
-      required:
-      - debian
-      - name
-      - source
-      - ubuntu
-      type: object
-    NoticeReleases:
-      properties:
-        codename:
-          type: string
-        support_tag:
-          type: string
-        version:
-          type: string
-      type: object
-    CvssV4:
-      properties:
-        baseEnvironmentalScore:
-          type:
-          - number
-          - 'null'
-        baseEnvironmentalSeverity:
-          type:
-          - string
-          - 'null'
-        baseMetrics:
-          $ref: '#/components/schemas/CvssV4BaseMetrics'
-        baseScore:
-          type:
-          - number
-          - 'null'
-        baseSeverity:
-          type:
-          - string
-          - 'null'
-        baseThreatEnvironmentalScore:
-          type:
-          - number
-          - 'null'
-        baseThreatEnvironmentalSeverity:
-          type:
-          - string
-          - 'null'
-        baseThreatScore:
-          type:
-          - number
-          - 'null'
-        baseThreatSeverity:
-          type:
-          - string
-          - 'null'
-        environmentalMetrics:
-          $ref: '#/components/schemas/CvssV4EnvironmentalMetrics'
-        supplementalMetrics:
-          $ref: '#/components/schemas/CvssV4SupplementalMetrics'
-        threatMetrics:
-          $ref: '#/components/schemas/CvssV4ThreatMetrics'
-        vectorString:
-          type:
-          - string
-          - 'null'
-        version:
-          type:
-          - string
-          - 'null'
-      type: object
-    NoticeImport:
-      properties:
-        cves:
-          items:
-            pattern: (cve-|CVE-)\d{4}-\d{4,7}
-            type: string
-          type: array
-        description:
-          type:
-          - string
-          - 'null'
-        id:
-          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
-          type: string
-        instructions:
-          type: string
-        is_hidden:
-          type: boolean
-        published:
-          format: date-time
-          type: string
-        references:
-          items:
-            type: string
-          type: array
-        release_packages:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/NoticePackage'
-            type: array
-          type: object
-        summary:
-          type: string
-        title:
-          type: string
-      required:
-      - id
-      - instructions
-      - published
-      - summary
-      - title
+        exploitabilityMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
       type: object
     CVEAPI:
       properties:
@@ -1170,101 +1426,79 @@ components:
       required:
       - id
       type: object
-    CvssV4SecurityRequirements:
+    CvssV4SupplementalMetrics:
       properties:
-        availabilityRequirements:
+        automatable:
           type:
           - string
           - 'null'
-        confidentialityRequirements:
+        providerUrgency:
           type:
           - string
           - 'null'
-        integrityRequirements:
+        recovery:
+          type:
+          - string
+          - 'null'
+        safety:
+          type:
+          - string
+          - 'null'
+        valueDensity:
+          type:
+          - string
+          - 'null'
+        vulnerabilityResponseEffort:
           type:
           - string
           - 'null'
       type: object
-    NoticesAPI:
+    NoticePackage:
       properties:
-        limit:
+        channel:
           type:
-          - integer
+          - string
           - 'null'
-        notices:
-          items:
-            $ref: '#/components/schemas/NoticeAPIDetailed'
-          type: array
-        offset:
-          type:
-          - integer
-          - 'null'
-        total_results:
-          type: integer
-      type: object
-    UpdateRelease:
-      properties:
-        codename:
+        description:
           type: string
-        development:
+        is_source:
           type: boolean
-        esm_expires:
-          format: date-time
-          type: string
-        lts:
+        is_visible:
           type: boolean
         name:
           type: string
-        release_date:
-          format: date-time
+        package_type:
           type: string
-        support_expires:
-          format: date-time
+        pocket:
           type: string
+        source_link:
+          type:
+          - string
+          - 'null'
         version:
           type: string
+        version_link:
+          type:
+          - string
+          - 'null'
       required:
-      - codename
-      - development
-      - esm_expires
-      - lts
+      - is_source
       - name
-      - release_date
-      - support_expires
       - version
       type: object
-    ReleaseAPI:
+    CvssV4BaseMetrics:
       properties:
-        codename:
+        exploitabilityMetrics:
+          $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
+      type: object
+    Message:
+      properties:
+        message:
           type: string
-        development:
-          type: boolean
-        esm_expires:
-          format: date-time
-          type: string
-        lts:
-          type: boolean
-        name:
-          type: string
-        release_date:
-          format: date-time
-          type: string
-        support_expires:
-          format: date-time
-          type: string
-        support_tag:
-          type: string
-        version:
-          type: string
-      required:
-      - codename
-      - development
-      - esm_expires
-      - lts
-      - name
-      - release_date
-      - support_expires
-      - version
       type: object
     CvssV4SubsequentSystemImpactMetrics:
       properties:
@@ -1281,46 +1515,38 @@ components:
           - string
           - 'null'
       type: object
-    PageNoticeAPI:
+    CvssV4ModifiedBaseMetricsImport:
       properties:
-        cves_ids:
-          items:
-            pattern: (cve-|CVE-)\d{4}-\d{4,7}
-            type: string
-          type: array
-        description:
-          type:
-          - string
-          - 'null'
-        id:
-          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
-          type: string
-        published:
-          format: date-time
-          type: string
-        releases:
-          items:
-            $ref: '#/components/schemas/NoticeReleases'
-          type: array
-        summary:
-          type: string
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - published
-      - summary
-      - title
+        exploitabilityMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
+        subsequentSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
+        vulnerableSystemImpactMetrics:
+          allOf:
+          - $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
       type: object
-    NoticeAPIDetailed:
+    NoticesAPISchemaV2:
+      properties:
+        limit:
+          type:
+          - integer
+          - 'null'
+        notices:
+          items:
+            $ref: '#/components/schemas/NoticeAPIDetailedSchemaV2'
+          type: array
+        offset:
+          type:
+          - integer
+          - 'null'
+        total_results:
+          type: integer
+      type: object
+    NoticeImport:
       properties:
         cves:
-          items:
-            $ref: '#/components/schemas/CVEAPI'
-          type: array
-        cves_ids:
           items:
             pattern: (cve-|CVE-)\d{4}-\d{4,7}
             type: string
@@ -1343,25 +1569,15 @@ components:
           items:
             type: string
           type: array
-        related_notices:
-          items:
-            $ref: '#/components/schemas/RelatedNotices'
-          type: array
         release_packages:
           additionalProperties:
             items:
               $ref: '#/components/schemas/NoticePackage'
             type: array
           type: object
-        releases:
-          items:
-            $ref: '#/components/schemas/NoticeReleases'
-          type: array
         summary:
           type: string
         title:
-          type: string
-        type:
           type: string
       required:
       - id
@@ -1370,70 +1586,63 @@ components:
       - summary
       - title
       type: object
-    CVESummaryV2:
+    CveImpactImport:
       properties:
-        id:
-          type: string
-        notices_ids:
-          items:
-            type: string
-          type: array
+        baseMetricV3:
+          $ref: '#/components/schemas/CveBaseMetric'
+        baseMetricV4:
+          $ref: '#/components/schemas/CveBaseMetricV4Import'
       type: object
-    NoticeAPIDetailedSchemaV2:
+    CvssV4:
       properties:
-        cves:
-          items:
-            $ref: '#/components/schemas/CVESummaryV2'
-          type: array
-        cves_ids:
-          items:
-            pattern: (cve-|CVE-)\d{4}-\d{4,7}
-            type: string
-          type: array
-        description:
+        baseEnvironmentalScore:
+          type:
+          - number
+          - 'null'
+        baseEnvironmentalSeverity:
           type:
           - string
           - 'null'
-        id:
-          pattern: (USN|LSN|SSN)-\d{1,5}-\d{1,2}
-          type: string
-        instructions:
-          type: string
-        is_hidden:
-          type: boolean
-        published:
-          format: date-time
-          type: string
-        references:
-          items:
-            type: string
-          type: array
-        related_notices:
-          items:
-            type: string
-          type: array
-        release_packages:
-          additionalProperties:
-            items:
-              $ref: '#/components/schemas/NoticePackage'
-            type: array
-          type: object
-        releases:
-          items:
-            $ref: '#/components/schemas/NoticeReleases'
-          type: array
-        summary:
-          type: string
-        title:
-          type: string
-        type:
-          type: string
-      required:
-      - id
-      - instructions
-      - published
-      - summary
-      - title
+        baseMetrics:
+          $ref: '#/components/schemas/CvssV4BaseMetrics'
+        baseScore:
+          type:
+          - number
+          - 'null'
+        baseSeverity:
+          type:
+          - string
+          - 'null'
+        baseThreatEnvironmentalScore:
+          type:
+          - number
+          - 'null'
+        baseThreatEnvironmentalSeverity:
+          type:
+          - string
+          - 'null'
+        baseThreatScore:
+          type:
+          - number
+          - 'null'
+        baseThreatSeverity:
+          type:
+          - string
+          - 'null'
+        environmentalMetrics:
+          $ref: '#/components/schemas/CvssV4EnvironmentalMetrics'
+        supplementalMetrics:
+          $ref: '#/components/schemas/CvssV4SupplementalMetrics'
+        threatMetrics:
+          $ref: '#/components/schemas/CvssV4ThreatMetrics'
+        vectorString:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
       type: object
     Note:
       properties:
@@ -1445,27 +1654,51 @@ components:
       - author
       - note
       type: object
-    CvssV4ExploitabilityMetrics:
+    PageNoticesAPI:
       properties:
-        attackComplexity:
+        limit:
           type:
-          - string
+          - integer
           - 'null'
-        attackRequirements:
+        notices:
+          items:
+            $ref: '#/components/schemas/PageNoticeAPI'
+          type: array
+        offset:
           type:
-          - string
+          - integer
           - 'null'
-        attackVector:
+        total_results:
+          type: integer
+      type: object
+    CVEsAPI:
+      properties:
+        cves:
+          items:
+            $ref: '#/components/schemas/CVEAPIDetailed'
+          type: array
+        limit:
           type:
-          - string
+          - integer
           - 'null'
-        privilegesRequired:
+        offset:
           type:
-          - string
+          - integer
           - 'null'
-        userInteraction:
+        total_results:
+          type: integer
+      type: object
+    CveBaseMetric:
+      properties:
+        cvssV3:
+          $ref: '#/components/schemas/CvssV3'
+        exploitabilityScore:
           type:
-          - string
+          - number
+          - 'null'
+        impactScore:
+          type:
+          - number
           - 'null'
       type: object
     CvssV3:
@@ -1518,69 +1751,6 @@ components:
           type:
           - string
           - 'null'
-      type: object
-    CvssV4ModifiedBaseMetricsImport:
-      properties:
-        exploitabilityMetrics:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
-        subsequentSystemImpactMetrics:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
-        vulnerableSystemImpactMetrics:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
-      type: object
-    CvssV4BaseMetricsImport:
-      properties:
-        exploitabilityMetrics:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
-        subsequentSystemImpactMetrics:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
-        vulnerableSystemImpactMetrics:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
-      type: object
-    Status:
-      properties:
-        component:
-          type:
-          - string
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        pocket:
-          type:
-          - string
-          - 'null'
-        release_codename:
-          type: string
-        status:
-          type: string
-      required:
-      - release_codename
-      - status
-      type: object
-    NoticesAPISchemaV2:
-      properties:
-        limit:
-          type:
-          - integer
-          - 'null'
-        notices:
-          items:
-            $ref: '#/components/schemas/NoticeAPIDetailedSchemaV2'
-          type: array
-        offset:
-          type:
-          - integer
-          - 'null'
-        total_results:
-          type: integer
       type: object
     CVEAPIDetailed:
       properties:
@@ -1670,34 +1840,34 @@ components:
       required:
       - id
       type: object
-    MessageWithErrors:
+    Status:
       properties:
-        errors:
-          type: string
-        message:
-          type: string
-      type: object
-    PageNoticesAPI:
-      properties:
-        limit:
+        component:
           type:
-          - integer
+          - string
           - 'null'
-        notices:
+        description:
+          type:
+          - string
+          - 'null'
+        pocket:
+          type:
+          - string
+          - 'null'
+        release_codename:
+          type: string
+        status:
+          type: string
+      required:
+      - release_codename
+      - status
+      type: object
+    ReleasesAPI:
+      properties:
+        releases:
           items:
-            $ref: '#/components/schemas/PageNoticeAPI'
+            $ref: '#/components/schemas/ReleaseAPI'
           type: array
-        offset:
-          type:
-          - integer
-          - 'null'
-        total_results:
-          type: integer
-      type: object
-    CveBaseMetricV4:
-      properties:
-        cvssV4:
-          $ref: '#/components/schemas/CvssV4'
       type: object
     CvssV4EnvironmentalMetrics:
       properties:
@@ -1706,189 +1876,13 @@ components:
         securityRequirements:
           $ref: '#/components/schemas/CvssV4SecurityRequirements'
       type: object
-    NoticePackage:
-      properties:
-        channel:
-          type:
-          - string
-          - 'null'
-        description:
-          type: string
-        is_source:
-          type: boolean
-        is_visible:
-          type: boolean
-        name:
-          type: string
-        package_type:
-          type: string
-        pocket:
-          type: string
-        source_link:
-          type:
-          - string
-          - 'null'
-        version:
-          type: string
-        version_link:
-          type:
-          - string
-          - 'null'
-      required:
-      - is_source
-      - name
-      - version
-      type: object
-    CvssV4VulnerableSystemImpactMetrics:
-      properties:
-        availabilityImpact:
-          type:
-          - string
-          - 'null'
-        confidentialityImpact:
-          type:
-          - string
-          - 'null'
-        integrityImpact:
-          type:
-          - string
-          - 'null'
-      type: object
-    CVEsAPI:
+    NoticeAPIDetailed:
       properties:
         cves:
           items:
-            $ref: '#/components/schemas/CVEAPIDetailed'
+            $ref: '#/components/schemas/CVEAPI'
           type: array
-        limit:
-          type:
-          - integer
-          - 'null'
-        offset:
-          type:
-          - integer
-          - 'null'
-        total_results:
-          type: integer
-      type: object
-    CvssV4ModifiedBaseMetrics:
-      properties:
-        exploitabilityMetrics:
-          $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
-        subsequentSystemImpactMetrics:
-          $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
-        vulnerableSystemImpactMetrics:
-          $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
-      type: object
-    CveBaseMetric:
-      properties:
-        cvssV3:
-          $ref: '#/components/schemas/CvssV3'
-        exploitabilityScore:
-          type:
-          - number
-          - 'null'
-        impactScore:
-          type:
-          - number
-          - 'null'
-      type: object
-    Message:
-      properties:
-        message:
-          type: string
-      type: object
-    CvssV4BaseMetrics:
-      properties:
-        exploitabilityMetrics:
-          $ref: '#/components/schemas/CvssV4ExploitabilityMetrics'
-        subsequentSystemImpactMetrics:
-          $ref: '#/components/schemas/CvssV4SubsequentSystemImpactMetrics'
-        vulnerableSystemImpactMetrics:
-          $ref: '#/components/schemas/CvssV4VulnerableSystemImpactMetrics'
-      type: object
-    CVEImport:
-      properties:
-        bugs:
-          items:
-            type: string
-          type: array
-        codename:
-          type:
-          - string
-          - 'null'
-        cvss3:
-          type:
-          - number
-          - 'null'
-        description:
-          type:
-          - string
-          - 'null'
-        id:
-          type: string
-        impact:
-          $ref: '#/components/schemas/CveImpactImport'
-        mitigation:
-          type:
-          - string
-          - 'null'
-        notes:
-          items:
-            $ref: '#/components/schemas/Note'
-          type: array
-        packages:
-          items:
-            $ref: '#/components/schemas/CvePackage'
-          type: array
-        patches:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          type:
-          - object
-          - 'null'
-        priority:
-          type:
-          - string
-          - 'null'
-        published:
-          format: date-time
-          type:
-          - string
-          - 'null'
-        references:
-          items:
-            type: string
-          type: array
-        status:
-          type:
-          - string
-          - 'null'
-        tags:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          type:
-          - object
-          - 'null'
-        ubuntu_description:
-          type:
-          - string
-          - 'null'
-        updated_at:
-          format: date-time
-          type:
-          - string
-          - 'null'
-      required:
-      - id
-      type: object
-    CreateNoticeImport:
-      properties:
-        cves:
+        cves_ids:
           items:
             pattern: (cve-|CVE-)\d{4}-\d{4,7}
             type: string
@@ -1911,15 +1905,25 @@ components:
           items:
             type: string
           type: array
+        related_notices:
+          items:
+            $ref: '#/components/schemas/RelatedNotices'
+          type: array
         release_packages:
           additionalProperties:
             items:
               $ref: '#/components/schemas/NoticePackage'
             type: array
           type: object
+        releases:
+          items:
+            $ref: '#/components/schemas/NoticeReleases'
+          type: array
         summary:
           type: string
         title:
+          type: string
+        type:
           type: string
       required:
       - id
@@ -1928,16 +1932,12 @@ components:
       - summary
       - title
       type: object
-    ReleasesAPI:
+    CVESummaryV2:
       properties:
-        releases:
+        id:
+          type: string
+        notices_ids:
           items:
-            $ref: '#/components/schemas/ReleaseAPI'
+            type: string
           type: array
-      type: object
-    CveBaseMetricV4Import:
-      properties:
-        cvssV4:
-          allOf:
-          - $ref: '#/components/schemas/CvssV4Import'
       type: object

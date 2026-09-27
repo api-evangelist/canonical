@@ -393,15 +393,290 @@ paths:
       - change_auto_rerun
 components:
   schemas:
-    HTTPValidationError:
+    IssuePutRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/IssueStatus'
+          - type: 'null'
+        auto_rerun_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Rerun Enabled
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
       type: object
-      title: HTTPValidationError
+      required:
+      - url
+      title: IssuePutRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MinimalIssueTestResultAttachmentRuleResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        enabled:
+          type: boolean
+          title: Enabled
+        families:
+          items:
+            $ref: '#/components/schemas/FamilyName'
+          type: array
+          title: Families
+        artefacts:
+          items:
+            type: string
+          type: array
+          title: Artefacts
+        artefact_versions:
+          items:
+            type: string
+          type: array
+          title: Artefact Versions
+        artefact_stages:
+          items:
+            type: string
+          type: array
+          title: Artefact Stages
+        artefact_tracks:
+          items:
+            type: string
+          type: array
+          title: Artefact Tracks
+        environment_names:
+          items:
+            type: string
+          type: array
+          title: Environment Names
+        test_plans:
+          items:
+            type: string
+          type: array
+          title: Test Plans
+        test_case_names:
+          items:
+            type: string
+          type: array
+          title: Test Case Names
+        template_ids:
+          items:
+            type: string
+          type: array
+          title: Template Ids
+        test_result_statuses:
+          items:
+            $ref: '#/components/schemas/TestResultStatus'
+          type: array
+          title: Test Result Statuses
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+      type: object
+      required:
+      - id
+      - enabled
+      - families
+      - artefacts
+      - artefact_versions
+      - artefact_stages
+      - artefact_tracks
+      - environment_names
+      - test_plans
+      - test_case_names
+      - template_ids
+      - test_result_statuses
+      - execution_metadata
+      title: MinimalIssueTestResultAttachmentRuleResponse
+    IssuesGetResponse:
+      properties:
+        issues:
+          items:
+            $ref: '#/components/schemas/MinimalIssueResponse'
+          type: array
+          title: Issues
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - issues
+      - count
+      - limit
+      - offset
+      title: IssuesGetResponse
+    IssueTestResultAttachmentRulePostRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          default: true
+        families:
+          items:
+            $ref: '#/components/schemas/FamilyName'
+          type: array
+          title: Families
+        artefacts:
+          items:
+            type: string
+          type: array
+          title: Artefacts
+        artefact_versions:
+          items:
+            type: string
+          type: array
+          title: Artefact Versions
+        artefact_stages:
+          items:
+            type: string
+          type: array
+          title: Artefact Stages
+        artefact_tracks:
+          items:
+            type: string
+          type: array
+          title: Artefact Tracks
+        environment_names:
+          items:
+            type: string
+          type: array
+          title: Environment Names
+        test_plans:
+          items:
+            type: string
+          type: array
+          title: Test Plans
+        test_case_names:
+          items:
+            type: string
+          type: array
+          title: Test Case Names
+        template_ids:
+          items:
+            type: string
+          type: array
+          title: Template Ids
+        test_result_statuses:
+          items:
+            $ref: '#/components/schemas/TestResultStatus'
+          type: array
+          title: Test Result Statuses
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+      type: object
+      title: IssueTestResultAttachmentRulePostRequest
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    IssueStatus:
+      type: string
+      enum:
+      - unknown
+      - open
+      - closed
+      title: IssueStatus
+    IssuePatchRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/IssueStatus'
+          - type: 'null'
+        auto_rerun_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Auto Rerun Enabled
+      type: object
+      title: IssuePatchRequest
+    IssueAttachmentRequest:
+      properties:
+        test_results:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Test Results
+        test_results_filters:
+          anyOf:
+          - $ref: '#/components/schemas/TestResultSearchFilters'
+          - type: 'null'
+        attachment_rule:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Attachment Rule
+      type: object
+      title: IssueAttachmentRequest
+    TestResultStatus:
+      type: string
+      enum:
+      - PASSED
+      - FAILED
+      - SKIPPED
+      title: TestResultStatus
     FamilyName:
       type: string
       enum:
@@ -541,281 +816,24 @@ components:
           title: Limit
       type: object
       title: TestResultSearchFilters
-    IssuePutRequest:
+    IssueTestResultAttachmentRulePatchRequest:
       properties:
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/IssueStatus'
-          - type: 'null'
-        auto_rerun_enabled:
+        enabled:
           anyOf:
           - type: boolean
           - type: 'null'
-          title: Auto Rerun Enabled
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-      type: object
-      required:
-      - url
-      title: IssuePutRequest
-    TestResultStatus:
-      type: string
-      enum:
-      - PASSED
-      - FAILED
-      - SKIPPED
-      title: TestResultStatus
-    MinimalIssueResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        source:
-          $ref: '#/components/schemas/IssueSource'
-        project:
-          type: string
-          title: Project
-        key:
-          type: string
-          title: Key
-        title:
-          type: string
-          title: Title
-        status:
-          $ref: '#/components/schemas/IssueStatus'
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        labels:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Labels
-        test_executions_count:
-          type: integer
-          title: Test Executions Count
-          default: 0
-      type: object
-      required:
-      - id
-      - source
-      - project
-      - key
-      - title
-      - status
-      - url
-      title: MinimalIssueResponse
-    IssueTestResultAttachmentRulePostRequest:
-      properties:
-        enabled:
-          type: boolean
           title: Enabled
-          default: true
-        families:
-          items:
-            $ref: '#/components/schemas/FamilyName'
-          type: array
-          title: Families
-        artefacts:
-          items:
-            type: string
-          type: array
-          title: Artefacts
-        artefact_versions:
-          items:
-            type: string
-          type: array
-          title: Artefact Versions
-        artefact_stages:
-          items:
-            type: string
-          type: array
-          title: Artefact Stages
-        artefact_tracks:
-          items:
-            type: string
-          type: array
-          title: Artefact Tracks
-        environment_names:
-          items:
-            type: string
-          type: array
-          title: Environment Names
-        test_plans:
-          items:
-            type: string
-          type: array
-          title: Test Plans
-        test_case_names:
-          items:
-            type: string
-          type: array
-          title: Test Case Names
-        template_ids:
-          items:
-            type: string
-          type: array
-          title: Template Ids
-        test_result_statuses:
-          items:
-            $ref: '#/components/schemas/TestResultStatus'
-          type: array
-          title: Test Result Statuses
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
       type: object
-      title: IssueTestResultAttachmentRulePostRequest
-    ExecutionMetadata:
-      additionalProperties:
-        items:
-          type: string
-          maxLength: 200
-          minLength: 1
-          description: Execution Metadata Value
-        type: array
-      propertyNames:
-        maxLength: 200
-        minLength: 1
-        description: Execution Metadata Category
-      type: object
-      title: Execution Metadata
-      description: A mapping of string categories to lists of string values.
-      examples:
-      - charm:
-        - postgresql-k8s
-        - mysql-k8s
-        charm:postgresql-k8s:revision:
-        - '495'
-    IssuesGetResponse:
+      title: IssueTestResultAttachmentRulePatchRequest
+    HTTPValidationError:
       properties:
-        issues:
+        detail:
           items:
-            $ref: '#/components/schemas/MinimalIssueResponse'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Issues
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
+          title: Detail
       type: object
-      required:
-      - issues
-      - count
-      - limit
-      - offset
-      title: IssuesGetResponse
-    MinimalIssueTestResultAttachmentRuleResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        enabled:
-          type: boolean
-          title: Enabled
-        families:
-          items:
-            $ref: '#/components/schemas/FamilyName'
-          type: array
-          title: Families
-        artefacts:
-          items:
-            type: string
-          type: array
-          title: Artefacts
-        artefact_versions:
-          items:
-            type: string
-          type: array
-          title: Artefact Versions
-        artefact_stages:
-          items:
-            type: string
-          type: array
-          title: Artefact Stages
-        artefact_tracks:
-          items:
-            type: string
-          type: array
-          title: Artefact Tracks
-        environment_names:
-          items:
-            type: string
-          type: array
-          title: Environment Names
-        test_plans:
-          items:
-            type: string
-          type: array
-          title: Test Plans
-        test_case_names:
-          items:
-            type: string
-          type: array
-          title: Test Case Names
-        template_ids:
-          items:
-            type: string
-          type: array
-          title: Template Ids
-        test_result_statuses:
-          items:
-            $ref: '#/components/schemas/TestResultStatus'
-          type: array
-          title: Test Result Statuses
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-      type: object
-      required:
-      - id
-      - enabled
-      - families
-      - artefacts
-      - artefact_versions
-      - artefact_stages
-      - artefact_tracks
-      - environment_names
-      - test_plans
-      - test_case_names
-      - template_ids
-      - test_result_statuses
-      - execution_metadata
-      title: MinimalIssueTestResultAttachmentRuleResponse
-    IssueStatus:
-      type: string
-      enum:
-      - unknown
-      - open
-      - closed
-      title: IssueStatus
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
+      title: HTTPValidationError
     IssueResponse:
       properties:
         id:
@@ -867,79 +885,61 @@ components:
       - auto_rerun_enabled
       - attachment_rules
       title: IssueResponse
-    ValidationError:
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
+    MinimalIssueResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        id:
+          type: integer
+          title: Id
+        source:
+          $ref: '#/components/schemas/IssueSource'
+        project:
           type: string
-          title: Message
-        type:
+          title: Project
+        key:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    IssueTestResultAttachmentRulePatchRequest:
-      properties:
-        enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Enabled
-      type: object
-      title: IssueTestResultAttachmentRulePatchRequest
-    IssuePatchRequest:
-      properties:
+          title: Key
         title:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Title
         status:
-          anyOf:
-          - $ref: '#/components/schemas/IssueStatus'
-          - type: 'null'
-        auto_rerun_enabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Auto Rerun Enabled
-      type: object
-      title: IssuePatchRequest
-    IssueAttachmentRequest:
-      properties:
-        test_results:
+          $ref: '#/components/schemas/IssueStatus'
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        labels:
           anyOf:
           - items:
-              type: integer
+              type: string
             type: array
           - type: 'null'
-          title: Test Results
-        test_results_filters:
-          anyOf:
-          - $ref: '#/components/schemas/TestResultSearchFilters'
-          - type: 'null'
-        attachment_rule:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Attachment Rule
+          title: Labels
+        test_executions_count:
+          type: integer
+          title: Test Executions Count
+          default: 0
       type: object
-      title: IssueAttachmentRequest
+      required:
+      - id
+      - source
+      - project
+      - key
+      - title
+      - status
+      - url
+      title: MinimalIssueResponse
     IssueSource:
       type: string
       enum:

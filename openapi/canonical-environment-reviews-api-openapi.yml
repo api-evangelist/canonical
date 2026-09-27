@@ -121,61 +121,6 @@ paths:
       - change_environment_review
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ArtefactBuildMinimalResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
-    ReviewerResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - email
-      - launchpad_email
-      - name
-      title: ReviewerResponse
     ValidationError:
       properties:
         loc:
@@ -202,27 +147,6 @@ components:
       - msg
       - type
       title: ValidationError
-    EnvironmentReviewPatch:
-      properties:
-        id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Id
-        review_decision:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewDecision'
-            type: array
-          - type: 'null'
-          title: Review Decision
-        review_comment:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Review Comment
-      type: object
-      title: EnvironmentReviewPatch
     EnvironmentResponse:
       properties:
         id:
@@ -271,6 +195,63 @@ components:
       - environment
       - artefact_build
       title: ArtefactBuildEnvironmentReviewResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EnvironmentReviewPatch:
+      properties:
+        id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Id
+        review_decision:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewDecision'
+            type: array
+          - type: 'null'
+          title: Review Decision
+        review_comment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Review Comment
+      type: object
+      title: EnvironmentReviewPatch
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
     ArtefactBuildEnvironmentReviewDecision:
       type: string
       enum:
@@ -281,3 +262,22 @@ components:
       - APPROVED_FAULTY_HARDWARE
       - APPROVED_ALL_TESTS_PASS
       title: ArtefactBuildEnvironmentReviewDecision
+    ArtefactBuildMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse

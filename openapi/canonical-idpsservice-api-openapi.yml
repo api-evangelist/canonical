@@ -221,6 +221,58 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    idpsGetIdpResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsRemoveIdpResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsCreateIdpResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    idpsListIdpsResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/idpsIdp'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
     idpsIdp:
       properties:
         apple_private_key:
@@ -258,64 +310,12 @@ components:
         token_url:
           type: string
       type: object
-    idpsRemoveIdpResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    idpsCreateIdpResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/idpsIdp'
-          type: array
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
     idpsUpdateIdpResp:
       properties:
         data:
           items:
             $ref: '#/components/schemas/idpsIdp'
           type: array
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    idpsGetIdpResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/idpsIdp'
-          type: array
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    idpsListIdpsResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/idpsIdp'
-          type: array
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    typesErrorResponse:
-      properties:
         message:
           type: string
         status:

@@ -40,13 +40,10 @@ paths:
       operationId: getApiV1Search
       x-operation-id-source: derived
 components:
-  responses:
+  schemas:
     Generic:
-      description: Generic JSON response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Generic'
+      type: object
+      additionalProperties: true
   parameters:
     DeviceSeries:
       in: header
@@ -56,9 +53,12 @@ components:
         type: string
         default: '16'
       description: Snap device series; required by the Device API.
-  schemas:
+  responses:
     Generic:
-      type: object
-      additionalProperties: true
+      description: Generic JSON response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Generic'
 x-generated-from: documentation
 x-provenance-note: Hand-authored by API Evangelist from the publicly documented Snap Store Device API reference at https://api.snapcraft.io/docs/ — NOT harvested from a Canonical-published machine-readable contract, because Canonical publishes none for api.snapcraft.io. Marked 2026-09-05 so this file is never mistaken for a provider artifact. The specs Canonical does publish are the other thirteen documents in openapi/, each harvested verbatim.

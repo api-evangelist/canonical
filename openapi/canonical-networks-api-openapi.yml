@@ -441,47 +441,82 @@ paths:
       - Networks
 components:
   schemas:
-    NetworkState:
-      description: NetworkState represents the network state
+    NetworkStateAddress:
+      description: NetworkStateAddress represents a network address
       properties:
-        addresses:
-          description: List of addresses
-          items:
-            $ref: '#/components/schemas/NetworkStateAddress'
-          type: array
-          x-go-name: Addresses
-        bond:
-          $ref: '#/components/schemas/NetworkStateBond'
-        bridge:
-          $ref: '#/components/schemas/NetworkStateBridge'
-        counters:
-          $ref: '#/components/schemas/NetworkStateCounters'
-        hwaddr:
-          description: MAC address
-          example: 00:16:3e:5a:83:57
+        address:
+          description: IP address
+          example: 10.0.0.1
           type: string
-          x-go-name: Hwaddr
-        mtu:
-          description: MTU
-          example: 1500
-          format: int64
+          x-go-name: Address
+        family:
+          description: Address family
+          example: inet
+          type: string
+          x-go-name: Family
+        netmask:
+          description: IP netmask (CIDR)
+          example: '24'
+          type: string
+          x-go-name: Netmask
+        scope:
+          description: Address scope
+          example: global
+          type: string
+          x-go-name: Scope
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateBond:
+      description: NetworkStateBond represents bond specific state
+      properties:
+        down_delay:
+          description: Delay on link down (ms)
+          example: 0
+          format: uint64
           type: integer
-          x-go-name: Mtu
-        ovn:
-          $ref: '#/components/schemas/NetworkStateOVN'
-        state:
-          description: Link state
+          x-go-name: DownDelay
+        lower_devices:
+          description: List of devices that are part of the bond
+          example:
+          - eth0
+          - eth1
+          items:
+            type: string
+          type: array
+          x-go-name: LowerDevices
+        mii_frequency:
+          description: How often to check for link state (ms)
+          example: 100
+          format: uint64
+          type: integer
+          x-go-name: MIIFrequency
+        mii_state:
+          description: Bond link state
           example: up
           type: string
-          x-go-name: State
-        type:
-          description: Interface type
-          example: broadcast
+          x-go-name: MIIState
+        mode:
+          description: Bonding mode
+          example: 802.3ad
           type: string
-          x-go-name: Type
-        vlan:
-          $ref: '#/components/schemas/NetworkStateVLAN'
+          x-go-name: Mode
+        transmit_policy:
+          description: Transmit balancing policy
+          example: layer3+4
+          type: string
+          x-go-name: TransmitPolicy
+        up_delay:
+          description: Delay on link up (ms)
+          example: 0
+          format: uint64
+          type: integer
+          x-go-name: UpDelay
       type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
       x-go-package: github.com/canonical/lxd/shared/api
     Network:
       description: Network represents a LXD network
@@ -577,10 +612,118 @@ components:
           x-go-name: UsedBy
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
+    NetworkPut:
+      description: NetworkPut represents the modifiable fields of a LXD network
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Network configuration map (refer to doc/networks.md)
+          example:
+            ipv4.address: 10.0.0.1/24
+            ipv4.nat: 'true'
+            ipv6.address: none
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the profile
+
+
+            API extension: entity_description'
+          example: My new LXD bridge
+          type: string
+          x-go-name: Description
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkStateVLAN:
+      description: NetworkStateVLAN represents VLAN specific state
+      properties:
+        lower_device:
+          description: Parent device
+          example: eth0
+          type: string
+          x-go-name: LowerDevice
+        vid:
+          description: VLAN ID
+          example: 100
+          format: uint64
+          type: integer
+          x-go-name: VID
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLease:
+      description: NetworkLease represents a DHCP lease
+      properties:
+        address:
+          description: The IP address
+          example: 10.0.0.98
+          type: string
+          x-go-name: Address
+        hostname:
+          description: The hostname associated with the record
+          example: c1
+          type: string
+          x-go-name: Hostname
+        hwaddr:
+          description: The MAC address
+          example: 00:16:3e:2c:89:d9
+          type: string
+          x-go-name: Hwaddr
+        location:
+          description: 'What cluster member this record was found on
+
+
+            API extension: network_leases_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        project:
+          description: 'Name of the project of the entity related to the hostname
+
+
+            API extension: network_allocations_ovn_uplink'
+          example: default
+          type: string
+          x-go-name: Project
+        type:
+          description: The type of record (static or dynamic)
+          example: dynamic
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworksPost:
+      description: NetworksPost represents the fields of a new LXD network
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Network configuration map (refer to doc/networks.md)
+          example:
+            ipv4.address: 10.0.0.1/24
+            ipv4.nat: 'true'
+            ipv6.address: none
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Description of the profile
+
+
+            API extension: entity_description'
+          example: My new LXD bridge
+          type: string
+          x-go-name: Description
+        name:
+          description: The name of the new network
+          example: lxdbr1
+          type: string
+          x-go-name: Name
+        type:
+          description: The network type (refer to doc/networks.md)
+          example: bridge
+          type: string
+          x-go-name: Type
+      type: object
       x-go-package: github.com/canonical/lxd/shared/api
     NetworkStateBridge:
       description: NetworkStateBridge represents bridge specific state
@@ -623,93 +766,6 @@ components:
           x-go-name: VLANFiltering
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkPost:
-      description: NetworkPost represents the fields required to rename a LXD network
-      properties:
-        name:
-          description: The new name for the network
-          example: lxdbr1
-          type: string
-          x-go-name: Name
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    OperationRequestor:
-      description: 'API extension: operation_requestor.'
-      properties:
-        address:
-          description: Address is the origin address of the request.
-          example: 10.0.2.15
-          type: string
-          x-go-name: Address
-        protocol:
-          description: Protocol represents the method used to authenticate the requestor.
-          example: oidc
-          type: string
-          x-go-name: Protocol
-        username:
-          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
-          example: jane.doe@example.com
-          type: string
-          x-go-name: Username
-      title: OperationRequestor represents the initial requestor of an operation
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkStateBond:
-      description: NetworkStateBond represents bond specific state
-      properties:
-        down_delay:
-          description: Delay on link down (ms)
-          example: 0
-          format: uint64
-          type: integer
-          x-go-name: DownDelay
-        lower_devices:
-          description: List of devices that are part of the bond
-          example:
-          - eth0
-          - eth1
-          items:
-            type: string
-          type: array
-          x-go-name: LowerDevices
-        mii_frequency:
-          description: How often to check for link state (ms)
-          example: 100
-          format: uint64
-          type: integer
-          x-go-name: MIIFrequency
-        mii_state:
-          description: Bond link state
-          example: up
-          type: string
-          x-go-name: MIIState
-        mode:
-          description: Bonding mode
-          example: 802.3ad
-          type: string
-          x-go-name: Mode
-        transmit_policy:
-          description: Transmit balancing policy
-          example: layer3+4
-          type: string
-          x-go-name: TransmitPolicy
-        up_delay:
-          description: Delay on link up (ms)
-          example: 0
-          format: uint64
-          type: integer
-          x-go-name: UpDelay
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkStateOVN:
-      description: NetworkStateOVN represents OVN specific state
-      properties:
-        chassis:
-          description: OVN network chassis name
-          type: string
-          x-go-name: Chassis
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     NetworkStateCounters:
       description: NetworkStateCounters represents packet counters
       properties:
@@ -737,119 +793,6 @@ components:
           format: uint64
           type: integer
           x-go-name: PacketsSent
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworksPost:
-      description: NetworksPost represents the fields of a new LXD network
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Network configuration map (refer to doc/networks.md)
-          example:
-            ipv4.address: 10.0.0.1/24
-            ipv4.nat: 'true'
-            ipv6.address: none
-          type: object
-          x-go-name: Config
-        description:
-          description: 'Description of the profile
-
-
-            API extension: entity_description'
-          example: My new LXD bridge
-          type: string
-          x-go-name: Description
-        name:
-          description: The name of the new network
-          example: lxdbr1
-          type: string
-          x-go-name: Name
-        type:
-          description: The network type (refer to doc/networks.md)
-          example: bridge
-          type: string
-          x-go-name: Type
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkStateVLAN:
-      description: NetworkStateVLAN represents VLAN specific state
-      properties:
-        lower_device:
-          description: Parent device
-          example: eth0
-          type: string
-          x-go-name: LowerDevice
-        vid:
-          description: VLAN ID
-          example: 100
-          format: uint64
-          type: integer
-          x-go-name: VID
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkPut:
-      description: NetworkPut represents the modifiable fields of a LXD network
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Network configuration map (refer to doc/networks.md)
-          example:
-            ipv4.address: 10.0.0.1/24
-            ipv4.nat: 'true'
-            ipv6.address: none
-          type: object
-          x-go-name: Config
-        description:
-          description: 'Description of the profile
-
-
-            API extension: entity_description'
-          example: My new LXD bridge
-          type: string
-          x-go-name: Description
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkLease:
-      description: NetworkLease represents a DHCP lease
-      properties:
-        address:
-          description: The IP address
-          example: 10.0.0.98
-          type: string
-          x-go-name: Address
-        hostname:
-          description: The hostname associated with the record
-          example: c1
-          type: string
-          x-go-name: Hostname
-        hwaddr:
-          description: The MAC address
-          example: 00:16:3e:2c:89:d9
-          type: string
-          x-go-name: Hwaddr
-        location:
-          description: 'What cluster member this record was found on
-
-
-            API extension: network_leases_location'
-          example: lxd01
-          type: string
-          x-go-name: Location
-        project:
-          description: 'Name of the project of the entity related to the hostname
-
-
-            API extension: network_allocations_ovn_uplink'
-          example: default
-          type: string
-          x-go-name: Project
-        type:
-          description: The type of record (static or dynamic)
-          example: dynamic
-          type: string
-          x-go-name: Type
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     Operation:
@@ -959,32 +902,109 @@ components:
           x-go-name: UpdatedAt
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkStateAddress:
-      description: NetworkStateAddress represents a network address
+    NetworkStateOVN:
+      description: NetworkStateOVN represents OVN specific state
+      properties:
+        chassis:
+          description: OVN network chassis name
+          type: string
+          x-go-name: Chassis
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkState:
+      description: NetworkState represents the network state
+      properties:
+        addresses:
+          description: List of addresses
+          items:
+            $ref: '#/components/schemas/NetworkStateAddress'
+          type: array
+          x-go-name: Addresses
+        bond:
+          $ref: '#/components/schemas/NetworkStateBond'
+        bridge:
+          $ref: '#/components/schemas/NetworkStateBridge'
+        counters:
+          $ref: '#/components/schemas/NetworkStateCounters'
+        hwaddr:
+          description: MAC address
+          example: 00:16:3e:5a:83:57
+          type: string
+          x-go-name: Hwaddr
+        mtu:
+          description: MTU
+          example: 1500
+          format: int64
+          type: integer
+          x-go-name: Mtu
+        ovn:
+          $ref: '#/components/schemas/NetworkStateOVN'
+        state:
+          description: Link state
+          example: up
+          type: string
+          x-go-name: State
+        type:
+          description: Interface type
+          example: broadcast
+          type: string
+          x-go-name: Type
+        vlan:
+          $ref: '#/components/schemas/NetworkStateVLAN'
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
       properties:
         address:
-          description: IP address
-          example: 10.0.0.1
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
           type: string
           x-go-name: Address
-        family:
-          description: Address family
-          example: inet
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
           type: string
-          x-go-name: Family
-        netmask:
-          description: IP netmask (CIDR)
-          example: '24'
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
           type: string
-          x-go-name: Netmask
-        scope:
-          description: Address scope
-          example: global
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkPost:
+      description: NetworkPost represents the fields required to rename a LXD network
+      properties:
+        name:
+          description: The new name for the network
+          example: lxdbr1
           type: string
-          x-go-name: Scope
+          x-go-name: Name
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
   responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
     InternalServerError:
       description: Internal Server Error
       content:
@@ -997,6 +1017,66 @@ components:
                 x-go-name: Error
               error_code:
                 example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -1028,86 +1108,6 @@ components:
                 x-go-name: StatusCode
               type:
                 example: async
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not found
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
                 type: string
                 x-go-name: Type
             type: object

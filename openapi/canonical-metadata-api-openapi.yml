@@ -57,27 +57,58 @@ paths:
       tags:
       - Metadata
 components:
-  schemas:
-    MetadataConfiguration:
-      properties:
-        configs:
-          additionalProperties:
-            additionalProperties:
-              $ref: '#/components/schemas/MetadataConfigurationConfigKeys'
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
             type: object
-          description: Configs contains all server configuration metadata.
-          type: object
-          x-go-name: Configs
-        entities:
-          additionalProperties:
-            $ref: '#/components/schemas/MetadataConfigurationEntity'
-          description: 'Entities contains all authorization related metadata.
-
-
-            API extension: metadata_configuration_entity_types'
-          type: object
-          x-go-name: Entities
-      title: MetadataConfiguration contains metadata about the LXD server configuration options.
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+  schemas:
+    MetadataConfigurationConfigKeys:
+      properties:
+        keys:
+          items:
+            additionalProperties:
+              $ref: '#/components/schemas/MetadataConfigurationConfigKey'
+            type: object
+          type: array
+          x-go-name: Keys
+      title: MetadataConfigurationConfigKeys contains metadata about LXD server configuration options.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     MetadataConfigurationEntityEntitlement:
@@ -109,18 +140,6 @@ components:
           type: boolean
           x-go-name: ProjectSpecific
       title: MetadataConfigurationEntity contains metadata about LXD server entities and available entitlements for authorization.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    MetadataConfigurationConfigKeys:
-      properties:
-        keys:
-          items:
-            additionalProperties:
-              $ref: '#/components/schemas/MetadataConfigurationConfigKey'
-            type: object
-          type: array
-          x-go-name: Keys
-      title: MetadataConfigurationConfigKeys contains metadata about LXD server configuration options.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     MetadataConfigurationConfigKey:
@@ -171,44 +190,25 @@ components:
       title: MetadataConfigurationConfigKey contains metadata about a LXD server configuration option.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-  responses:
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
+    MetadataConfiguration:
+      properties:
+        configs:
+          additionalProperties:
+            additionalProperties:
+              $ref: '#/components/schemas/MetadataConfigurationConfigKeys'
             type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
+          description: Configs contains all server configuration metadata.
+          type: object
+          x-go-name: Configs
+        entities:
+          additionalProperties:
+            $ref: '#/components/schemas/MetadataConfigurationEntity'
+          description: 'Entities contains all authorization related metadata.
+
+
+            API extension: metadata_configuration_entity_types'
+          type: object
+          x-go-name: Entities
+      title: MetadataConfiguration contains metadata about the LXD server configuration options.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api

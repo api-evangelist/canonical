@@ -1,0 +1,150 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Queues API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Queues
+paths:
+  /v1/queues/wait_times:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - Queues
+      summary: Get wait time metrics - optionally take a list of queues
+      operationId: getV1QueuesWaitTimes
+      x-operation-id-source: derived
+  /v1/queues/{queue_name}/jobs:
+    get:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Queues
+      summary: Get the jobs in a specified queue along with its state
+      description: ':param queue_name
+
+        String with the queue name where to perform the query.
+
+        :return:
+
+        JSON data with the jobs allocated to the specified queue.'
+      operationId: getV1QueuesByQueueNameJobs
+      x-operation-id-source: derived
+  /v1/queues/{queue_name}/agents:
+    get:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Queues
+      summary: Get the list of all data for agents listening to a specified queue
+      operationId: getV1QueuesByQueueNameAgents
+      x-operation-id-source: derived
+components:
+  schemas:
+    AgentJob:
+      type: object
+      properties:
+        job_id:
+          type: string
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        job_queue:
+          type: string
+        job_state:
+          type: string
+        job_priority:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - job_id
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    AgentOut:
+      type: object
+      properties:
+        name:
+          type: string
+        job_id:
+          type: string
+        state:
+          type: string
+        queues:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        provision_type:
+          type: string
+        comment:
+          type: string
+        restricted_to:
+          type: object
+          additionalProperties: {}
+        job:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/AgentJob'
+      required:
+      - name
+      additionalProperties: false

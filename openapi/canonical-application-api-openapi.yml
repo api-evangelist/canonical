@@ -32,22 +32,22 @@ paths:
                 $ref: '#/components/schemas/api.ApplicationsGetResponse'
 components:
   schemas:
+    api_gateway.ResponseStatus:
+      type: string
+      enum:
+      - success
+      - failed
+      - unknown
+      x-enum-varnames:
+      - ResponseStatusSuccess
+      - ResponseStatusFailed
+      - ResponseStatusUnknown
     api_gateway.Application:
       type: object
       properties:
         name:
           type: string
           example: com.foo.bar
-    api_gateway.ResponseType:
-      type: string
-      enum:
-      - sync
-      - async
-      - error
-      x-enum-varnames:
-      - ResponseTypeSync
-      - ResponseTypeAsync
-      - ResponseTypeError
     api.ApplicationsGetResponse:
       type: object
       properties:
@@ -79,13 +79,13 @@ components:
           allOf:
           - $ref: '#/components/schemas/api_gateway.ResponseType'
           example: sync
-    api_gateway.ResponseStatus:
+    api_gateway.ResponseType:
       type: string
       enum:
-      - success
-      - failed
-      - unknown
+      - sync
+      - async
+      - error
       x-enum-varnames:
-      - ResponseStatusSuccess
-      - ResponseStatusFailed
-      - ResponseStatusUnknown
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError

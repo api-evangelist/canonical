@@ -312,6 +312,78 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    PromptingRuleConstraintsCamera:
+      type: object
+      description: Details about the applicability of the existing rule to requests.
+      required:
+      - permissions
+      properties:
+        permissions:
+          type: object
+          description: A map linking the permission name to it's respective information.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionRuleEntry'
+    PromptingPromptConstraintsCamera:
+      type: object
+      description: Represents the constraints associated with a prompt for the camera interface.
+      required:
+      - requested-permissions
+      - available-permissions
+      properties:
+        requested-permissions:
+          type: array
+          description: The permissions for which access is requested.
+          items:
+            type: string
+            enum:
+            - access
+        available-permissions:
+          type: array
+          description: The complete list of permissions for the camera interface.
+          items:
+            type: string
+            enum:
+            - access
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    PromptingRuleActionAdd:
+      type: object
+      description: The schema the API uses for the 'add' action of /v2/interfaces/rules.
+      required:
+      - action
+      - rule
+      properties:
+        action:
+          type: string
+          description: The action to perform on the rules endpoint.
+          enum:
+          - add
+        rule:
+          type: object
+          properties:
+            snap:
+              type: string
+              description: The snap for which to add the rule.
+            interface:
+              type: string
+              description: The interface for which to add the rule.
+            constraints:
+              oneOf:
+              - $ref: '#/components/schemas/PromptingConstraintsCamera'
+              - $ref: '#/components/schemas/PromptingConstraintsHome'
     PromptingRule:
       type: object
       description: An object describing the structure of a rule.
@@ -346,352 +418,12 @@ components:
           oneOf:
           - $ref: '#/components/schemas/PromptingRuleConstraintsCamera'
           - $ref: '#/components/schemas/PromptingRuleConstraintsHome'
-    PromptingConstraintsCamera:
-      type: object
-      description: Details about the applicability of the new rule to requests.
-      required:
-      - permissions
-      properties:
-        permissions:
-          type: object
-          description: A map from permission name to the information about that permission.
-          additionalProperties:
-            $ref: '#/components/schemas/PromptingPermissionEntry'
-    MalformedRequestError:
+    UserNotFoundError:
       type: object
       properties:
         message:
           type: string
-          example: cannot decode request body into an alias action
-    PromptingRuleActionAdd:
-      type: object
-      description: The schema the API uses for the 'add' action of /v2/interfaces/rules.
-      required:
-      - action
-      - rule
-      properties:
-        action:
-          type: string
-          description: The action to perform on the rules endpoint.
-          enum:
-          - add
-        rule:
-          type: object
-          properties:
-            snap:
-              type: string
-              description: The snap for which to add the rule.
-            interface:
-              type: string
-              description: The interface for which to add the rule.
-            constraints:
-              oneOf:
-              - $ref: '#/components/schemas/PromptingConstraintsCamera'
-              - $ref: '#/components/schemas/PromptingConstraintsHome'
-    PromptingRuleConstraintsCamera:
-      type: object
-      description: Details about the applicability of the existing rule to requests.
-      required:
-      - permissions
-      properties:
-        permissions:
-          type: object
-          description: A map linking the permission name to it's respective information.
-          additionalProperties:
-            $ref: '#/components/schemas/PromptingPermissionRuleEntry'
-    PromptingPermissionRuleEntry:
-      type: object
-      required:
-      - outcome
-      - lifespan
-      properties:
-        outcome:
-          type: string
-          enum:
-          - allow
-          - deny
-        lifespan:
-          type: string
-          description: 'The lifespan for which the permission applies.
-
-
-            timespan: the permission applies for the given duration specified by the
-
-            duration field or until it is deleted
-
-
-            session: the permission applies until the user logs out (specifically,
-
-            until the systemd user session ends)
-
-
-            forever: the permission applies until it is deleted'
-          enum:
-          - timespan
-          - session
-          - forever
-        expiration:
-          type: string
-          format: date-time
-          description: 'The timestamp at which the permission will expire. Required if lifespan
-
-            is timespan, otherwise must be omitted.'
-        session-id:
-          type: string
-          description: 'The opaque session ID used for session-based permissions. Required if
-
-            lifespan is session, otherwise must be omitted.'
-    PromptingPermissionEntry:
-      type: object
-      required:
-      - outcome
-      - lifespan
-      properties:
-        outcome:
-          type: string
-          enum:
-          - allow
-          - deny
-        lifespan:
-          type: string
-          description: 'The lifespan for which the permission applies.
-
-
-            timespan: the permission applies for the given duration specified by the
-
-            duration field or until it is deleted
-
-
-            session: the permission applies until the user logs out (specifically,
-
-            until the systemd user session ends)
-
-
-            forever: the permission applies until it is deleted'
-          enum:
-          - timespan
-          - session
-          - forever
-        duration:
-          type: string
-          description: 'The duration for which the permission is valid. Required if lifespan is
-
-            timespan, otherwise must be omitted.'
-          format: Go duration
-          externalDocs:
-            description: 'Read more about how Go handles time and durations in the official Go
-
-              Time package documentation.'
-            url: https://pkg.go.dev/time
-          example: 7h30m
-    PromptingRuleConstraintsHome:
-      type: object
-      description: Details about the applicability of the existing rule to requests.
-      required:
-      - path-pattern
-      - permissions
-      properties:
-        path-pattern:
-          type: string
-          description: Path glob matching filepaths for which the rule applies.
-        permissions:
-          type: object
-          description: A map linking the permission name to it's respective information.
-          additionalProperties:
-            $ref: '#/components/schemas/PromptingPermissionRuleEntry'
-    PromptingPatchConstraintsCamera:
-      type: object
-      description: 'Details about the applicability of the modified rule to requests.
-
-
-        Any fields which are omitted are left unchanged from the existing rule.'
-      properties:
-        permissions:
-          type: object
-          description: 'A map from permission name to the information about that permission.
-
-
-            Any permissions omitted from this map are left unchanged from the existing rule.
-
-
-            To remove a permission from the existing rule, map the permission name to null.'
-          additionalProperties:
-            $ref: '#/components/schemas/PromptingPermissionEntry'
-    NotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: no snapshot set with the given ID
-    SnapNotInstalledError:
-      type: object
-      description: The snap does not exist on the system.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - snap-not-found
-          - snap-not-installed
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: no state entry for key
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          example: firefox
-    ConfdbError:
-      type: object
-      description: An error occured while interacting with confdb.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - option-not-available
-          - option-not-found
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
-    PromptingReplyConstraintsCamera:
-      type: object
-      description: Represents the constraints associated with a reply to a prompt for the camera interface.
-      required:
-      - permissions
-      properties:
-        permissions:
-          type: array
-          description: The permissions applied to requests to access cameras via the camera interface.
-          items:
-            type: string
-            enum:
-            - access
-    PromptingPrompt:
-      type: object
-      required:
-      - id
-      - timestamp
-      - snap
-      - interface
-      - constraints
-      properties:
-        id:
-          type: string
-          description: Unique prompt identifier.
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp at which the prompt was created or last modified (RFC3339Nano format).
-        snap:
-          type: string
-          description: The name of the snap whose action triggered the prompt.
-        interface:
-          type: string
-          description: The interface associated with the prompt.
-          enum:
-          - home
-          - camera
-        constraints:
-          oneOf:
-          - $ref: '#/components/schemas/PromptingPromptConstraintsCamera'
-          - $ref: '#/components/schemas/PromptingPromptConstraintsHome'
-    NoSerialAssertionError:
-      type: object
-      description: The serial assertion has not been created yet.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          enum:
-          - no serial assertion yet
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          enum:
-          - serial
-    PromptingRuleActionPatch:
-      type: object
-      description: The schema the API uses for the 'patch' action of /v2/interfaces/rules/{id}.
-      required:
-      - action
-      - rule
-      properties:
-        action:
-          type: string
-          description: The action to perform on the rule with the given ID.
-          enum:
-          - patch
-        rule:
-          type: object
-          properties:
-            constraints:
-              oneOf:
-              - $ref: '#/components/schemas/PromptingPatchConstraintsCamera'
-              - $ref: '#/components/schemas/PromptingPatchConstraintsHome'
-    PromptingConstraintsHome:
-      type: object
-      description: Details about the applicability of the new rule to requests.
-      required:
-      - path-pattern
-      - permissions
-      properties:
-        path-pattern:
-          type: string
-          description: Path glob matching filepaths for which the rule applies.
-        permissions:
-          type: object
-          description: A map from permission name to the information about that permission.
-          additionalProperties:
-            $ref: '#/components/schemas/PromptingPermissionEntry'
-    PromptingPromptConstraintsHome:
-      type: object
-      description: Represents the constraints associated with a prompt for the home interface.
-      required:
-      - path
-      - requested-permissions
-      - available-permissions
-      properties:
-        path:
-          type: string
-          description: The path for which access is requested.
-          example: /home/ubuntu/Downloads/image.png
-        requested-permissions:
-          type: array
-          description: The permissions for which access is requested.
-          items:
-            type: string
-            enum:
-            - read
-            - write
-            - execute
-        available-permissions:
-          type: array
-          description: The complete list of permissions for the home interface.
-          items:
-            type: string
-            enum:
-            - read
-            - write
-            - execute
-    PromptingRuleActionRemoveById:
-      type: object
-      description: The schema the API uses for the 'remove' action of /v2/interfaces/rules/{id}.
-      required:
-      - action
-      properties:
-        action:
-          type: string
-          description: The action to perform on the rule with the given ID.
-          enum:
-          - remove
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
     PromptingReplyConstraintsHome:
       type: object
       description: Represents the constraints associated with a reply to a prompt for the home interface.
@@ -722,79 +454,57 @@ components:
             - read
             - write
             - execute
-    PromptingPromptConstraintsCamera:
+    PromptingPatchConstraintsHome:
       type: object
-      description: Represents the constraints associated with a prompt for the camera interface.
-      required:
-      - requested-permissions
-      - available-permissions
+      description: 'Details about the applicability of the modified rule to requests.
+
+
+        Any fields which are omitted are left unchanged from the existing rule.'
       properties:
-        requested-permissions:
-          type: array
-          description: The permissions for which access is requested.
-          items:
-            type: string
-            enum:
-            - access
-        available-permissions:
-          type: array
-          description: The complete list of permissions for the camera interface.
-          items:
-            type: string
-            enum:
-            - access
-    PromptingReply:
+        path-pattern:
+          type: string
+          description: Path glob matching filepaths for which the rule applies.
+        permissions:
+          type: object
+          description: 'A map from permission name to the information about that permission.
+
+
+            Any permissions omitted from this map are left unchanged from the existing rule.
+
+
+            To remove a permission from the existing rule, map the permission name to null.'
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    PromptingConstraintsCamera:
       type: object
+      description: Details about the applicability of the new rule to requests.
+      required:
+      - permissions
+      properties:
+        permissions:
+          type: object
+          description: A map from permission name to the information about that permission.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    PromptingRuleActionPatch:
+      type: object
+      description: The schema the API uses for the 'patch' action of /v2/interfaces/rules/{id}.
       required:
       - action
-      - lifespan
-      - constraints
+      - rule
       properties:
         action:
           type: string
+          description: The action to perform on the rule with the given ID.
           enum:
-          - allow
-          - deny
-        lifespan:
-          type: string
-          description: 'The lifespan for which the decision applies.
-
-
-            single: the decision only applies to the prompt with the given ID
-
-
-            timespan: the decision creates a rule which applies for the duration
-
-            specified by the duration field or until it is deleted
-
-
-            session: the decision creates a rule which applies until the user logs
-
-            out (specifically, until the systemd user session ends)
-
-
-            forever: the decision creates a rule which applies until it is deleted'
-          enum:
-          - single
-          - timespan
-          - session
-          - forever
-        duration:
-          type: string
-          description: 'The duration for which the decision applies. Required if lifespan is
-
-            timespan, otherwise must be omitted.'
-          format: Go duration
-          externalDocs:
-            description: 'Read more about how Go handles time and durations in the official Go
-
-              Time package documentation.'
-            url: https://pkg.go.dev/time
-          example: 7h30m
-        constraints:
-          oneOf:
-          - $ref: '#/components/schemas/PromptingReplyConstraintsCamera'
-          - $ref: '#/components/schemas/PromptingReplyConstraintsHome'
+          - patch
+        rule:
+          type: object
+          properties:
+            constraints:
+              oneOf:
+              - $ref: '#/components/schemas/PromptingPatchConstraintsCamera'
+              - $ref: '#/components/schemas/PromptingPatchConstraintsHome'
     ConfdbControlAction:
       type: object
       description: Request to delegate or withdraw an operator's remote access to confdb views.
@@ -847,6 +557,256 @@ components:
           example:
           - bob/network/wifi-admin
           - bob/network/wifi-state
+    PromptingConstraintsHome:
+      type: object
+      description: Details about the applicability of the new rule to requests.
+      required:
+      - path-pattern
+      - permissions
+      properties:
+        path-pattern:
+          type: string
+          description: Path glob matching filepaths for which the rule applies.
+        permissions:
+          type: object
+          description: A map from permission name to the information about that permission.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    PromptingRuleConstraintsHome:
+      type: object
+      description: Details about the applicability of the existing rule to requests.
+      required:
+      - path-pattern
+      - permissions
+      properties:
+        path-pattern:
+          type: string
+          description: Path glob matching filepaths for which the rule applies.
+        permissions:
+          type: object
+          description: A map linking the permission name to it's respective information.
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionRuleEntry'
+    PromptingPrompt:
+      type: object
+      required:
+      - id
+      - timestamp
+      - snap
+      - interface
+      - constraints
+      properties:
+        id:
+          type: string
+          description: Unique prompt identifier.
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp at which the prompt was created or last modified (RFC3339Nano format).
+        snap:
+          type: string
+          description: The name of the snap whose action triggered the prompt.
+        interface:
+          type: string
+          description: The interface associated with the prompt.
+          enum:
+          - home
+          - camera
+        constraints:
+          oneOf:
+          - $ref: '#/components/schemas/PromptingPromptConstraintsCamera'
+          - $ref: '#/components/schemas/PromptingPromptConstraintsHome'
+    PromptingPromptConstraintsHome:
+      type: object
+      description: Represents the constraints associated with a prompt for the home interface.
+      required:
+      - path
+      - requested-permissions
+      - available-permissions
+      properties:
+        path:
+          type: string
+          description: The path for which access is requested.
+          example: /home/ubuntu/Downloads/image.png
+        requested-permissions:
+          type: array
+          description: The permissions for which access is requested.
+          items:
+            type: string
+            enum:
+            - read
+            - write
+            - execute
+        available-permissions:
+          type: array
+          description: The complete list of permissions for the home interface.
+          items:
+            type: string
+            enum:
+            - read
+            - write
+            - execute
+    PromptingPermissionRuleEntry:
+      type: object
+      required:
+      - outcome
+      - lifespan
+      properties:
+        outcome:
+          type: string
+          enum:
+          - allow
+          - deny
+        lifespan:
+          type: string
+          description: 'The lifespan for which the permission applies.
+
+
+            timespan: the permission applies for the given duration specified by the
+
+            duration field or until it is deleted
+
+
+            session: the permission applies until the user logs out (specifically,
+
+            until the systemd user session ends)
+
+
+            forever: the permission applies until it is deleted'
+          enum:
+          - timespan
+          - session
+          - forever
+        expiration:
+          type: string
+          format: date-time
+          description: 'The timestamp at which the permission will expire. Required if lifespan
+
+            is timespan, otherwise must be omitted.'
+        session-id:
+          type: string
+          description: 'The opaque session ID used for session-based permissions. Required if
+
+            lifespan is session, otherwise must be omitted.'
+    PromptingReply:
+      type: object
+      required:
+      - action
+      - lifespan
+      - constraints
+      properties:
+        action:
+          type: string
+          enum:
+          - allow
+          - deny
+        lifespan:
+          type: string
+          description: 'The lifespan for which the decision applies.
+
+
+            single: the decision only applies to the prompt with the given ID
+
+
+            timespan: the decision creates a rule which applies for the duration
+
+            specified by the duration field or until it is deleted
+
+
+            session: the decision creates a rule which applies until the user logs
+
+            out (specifically, until the systemd user session ends)
+
+
+            forever: the decision creates a rule which applies until it is deleted'
+          enum:
+          - single
+          - timespan
+          - session
+          - forever
+        duration:
+          type: string
+          description: 'The duration for which the decision applies. Required if lifespan is
+
+            timespan, otherwise must be omitted.'
+          format: Go duration
+          externalDocs:
+            description: 'Read more about how Go handles time and durations in the official Go
+
+              Time package documentation.'
+            url: https://pkg.go.dev/time
+          example: 7h30m
+        constraints:
+          oneOf:
+          - $ref: '#/components/schemas/PromptingReplyConstraintsCamera'
+          - $ref: '#/components/schemas/PromptingReplyConstraintsHome'
+    PromptingPatchConstraintsCamera:
+      type: object
+      description: 'Details about the applicability of the modified rule to requests.
+
+
+        Any fields which are omitted are left unchanged from the existing rule.'
+      properties:
+        permissions:
+          type: object
+          description: 'A map from permission name to the information about that permission.
+
+
+            Any permissions omitted from this map are left unchanged from the existing rule.
+
+
+            To remove a permission from the existing rule, map the permission name to null.'
+          additionalProperties:
+            $ref: '#/components/schemas/PromptingPermissionEntry'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
     NoModelAssertionError:
       type: object
       description: The model assertion has not been created yet.
@@ -866,6 +826,79 @@ components:
           description: Value passed that triggered the error.
           enum:
           - model
+    PromptingReplyConstraintsCamera:
+      type: object
+      description: Represents the constraints associated with a reply to a prompt for the camera interface.
+      required:
+      - permissions
+      properties:
+        permissions:
+          type: array
+          description: The permissions applied to requests to access cameras via the camera interface.
+          items:
+            type: string
+            enum:
+            - access
+    PromptingRuleActionRemoveById:
+      type: object
+      description: The schema the API uses for the 'remove' action of /v2/interfaces/rules/{id}.
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          description: The action to perform on the rule with the given ID.
+          enum:
+          - remove
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    PromptingPermissionEntry:
+      type: object
+      required:
+      - outcome
+      - lifespan
+      properties:
+        outcome:
+          type: string
+          enum:
+          - allow
+          - deny
+        lifespan:
+          type: string
+          description: 'The lifespan for which the permission applies.
+
+
+            timespan: the permission applies for the given duration specified by the
+
+            duration field or until it is deleted
+
+
+            session: the permission applies until the user logs out (specifically,
+
+            until the systemd user session ends)
+
+
+            forever: the permission applies until it is deleted'
+          enum:
+          - timespan
+          - session
+          - forever
+        duration:
+          type: string
+          description: 'The duration for which the permission is valid. Required if lifespan is
+
+            timespan, otherwise must be omitted.'
+          format: Go duration
+          externalDocs:
+            description: 'Read more about how Go handles time and durations in the official Go
+
+              Time package documentation.'
+            url: https://pkg.go.dev/time
+          example: 7h30m
     PromptingRuleActionRemove:
       type: object
       description: The schema the API uses for the 'remove' action of /v2/interfaces/rules.
@@ -888,49 +921,6 @@ components:
             interface:
               type: string
               description: The interface for which to remove rules.
-    UserNotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
-    PromptingPatchConstraintsHome:
-      type: object
-      description: 'Details about the applicability of the modified rule to requests.
-
-
-        Any fields which are omitted are left unchanged from the existing rule.'
-      properties:
-        path-pattern:
-          type: string
-          description: Path glob matching filepaths for which the rule applies.
-        permissions:
-          type: object
-          description: 'A map from permission name to the information about that permission.
-
-
-            Any permissions omitted from this map are left unchanged from the existing rule.
-
-
-            To remove a permission from the existing rule, map the permission name to null.'
-          additionalProperties:
-            $ref: '#/components/schemas/PromptingPermissionEntry'
-  parameters:
-    UserId:
-      name: user-id
-      in: query
-      required: false
-      description: 'Admin only: Specify a particular UID with which to identify when acting on the
-
-        API, rather than the default, which is the UID of the client.'
-      schema:
-        type: integer
   responses:
     BadRequest:
       description: 'Bad Request. The request could not be processed due to a client-side error.
@@ -958,34 +948,6 @@ components:
                 - $ref: '#/components/schemas/ConfdbError'
                 - $ref: '#/components/schemas/MalformedRequestError'
                 - $ref: '#/components/schemas/NoSSHKeysError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
-    NotFound:
-      description: 'Not Found. The requested resource could not be found.
-
-        Can refer to either a local or remote resource'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 404
-              status:
-                type: string
-                enum:
-                - Not Found
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/NoModelAssertionError'
-                - $ref: '#/components/schemas/NoSerialAssertionError'
-                - $ref: '#/components/schemas/NotFoundError'
                 - $ref: '#/components/schemas/UserNotFoundError'
                 - $ref: '#/components/schemas/SnapNotInstalledError'
     AccessDenied:
@@ -1023,6 +985,44 @@ components:
                     description: A human-readable error message.
                     enum:
                     - access denied
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+  parameters:
+    UserId:
+      name: user-id
+      in: query
+      required: false
+      description: 'Admin only: Specify a particular UID with which to identify when acting on the
+
+        API, rather than the default, which is the UID of the client.'
+      schema:
+        type: integer
   securitySchemes:
     PeerAuth:
       type: apiKey

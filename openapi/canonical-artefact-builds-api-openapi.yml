@@ -43,15 +43,6 @@ paths:
       - view_artefact
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ArtefactBuildResponse:
       properties:
         id:
@@ -77,27 +68,6 @@ components:
       - revision
       - test_executions
       title: ArtefactBuildResponse
-    ExecutionMetadata:
-      additionalProperties:
-        items:
-          type: string
-          maxLength: 200
-          minLength: 1
-          description: Execution Metadata Value
-        type: array
-      propertyNames:
-        maxLength: 200
-        minLength: 1
-        description: Execution Metadata Category
-      type: object
-      title: Execution Metadata
-      description: A mapping of string categories to lists of string values.
-      examples:
-      - charm:
-        - postgresql-k8s
-        - mysql-k8s
-        charm:postgresql-k8s:revision:
-        - '495'
     ValidationError:
       properties:
         loc:
@@ -124,6 +94,83 @@ components:
       - msg
       - type
       title: ValidationError
+    TestExecutionRelevantLinkResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
+    EnvironmentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
+      type: object
+      required:
+      - id
+      - name
+      - architecture
+      title: EnvironmentResponse
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
     TestExecutionResponse:
       properties:
         id:
@@ -184,50 +231,3 @@ components:
       - is_rerun_requested
       - rerun_priority
       title: TestExecutionResponse
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
-          type: integer
-          title: Id
-      type: object
-      required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse

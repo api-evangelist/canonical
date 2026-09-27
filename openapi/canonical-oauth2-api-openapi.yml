@@ -1,0 +1,123 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Oauth2 API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: OAuth2
+paths:
+  /v1/oauth2/token:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+      tags:
+      - OAuth2
+      summary: Issue both access token and refresh token for a client
+      description: 'Get JWT with priority and queue permissions.
+
+
+        Before being encrypted, the JWT can contain fields like:
+
+        {
+
+        exp: ,
+
+        iat: ,
+
+        sub: ,
+
+        permissions: {
+
+        max_priority: ,
+
+        allowed_queues: ,
+
+        max_reservation_time: ,
+
+        }
+
+        }'
+      operationId: postV1Oauth2Token
+      x-operation-id-source: derived
+  /v1/oauth2/revoke:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - OAuth2
+      summary: Revoke a refresh token. Only admins can perform this action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenIn'
+      operationId: postV1Oauth2Revoke
+      x-operation-id-source: derived
+  /v1/oauth2/refresh:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - OAuth2
+      summary: Refresh access token using a valid refresh token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenIn'
+      operationId: postV1Oauth2Refresh
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    RefreshTokenIn:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          minLength: 1
+      required:
+      - refresh_token
+      additionalProperties: false

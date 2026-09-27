@@ -333,10 +333,35 @@ paths:
       - Network ACLs
 components:
   schemas:
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
+    NetworkACLPut:
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: ACL configuration map (refer to doc/network-acls.md)
+          example:
+            user.mykey: foo
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the ACL
+          example: Web servers
+          type: string
+          x-go-name: Description
+        egress:
+          description: List of egress rules (order independent)
+          items:
+            $ref: '#/components/schemas/NetworkACLRule'
+          type: array
+          x-go-name: Egress
+        ingress:
+          description: List of ingress rules (order independent)
+          items:
+            $ref: '#/components/schemas/NetworkACLRule'
+          type: array
+          x-go-name: Ingress
+      title: NetworkACLPut used for updating an ACL.
+      type: object
       x-go-package: github.com/canonical/lxd/shared/api
     NetworkACLsPost:
       properties:
@@ -436,35 +461,76 @@ components:
       title: NetworkACL used for displaying an ACL.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkACLPut:
+    NetworkACLRule:
+      description: Refer to doc/network-acls.md for details.
       properties:
-        config:
-          additionalProperties:
-            type: string
-          description: ACL configuration map (refer to doc/network-acls.md)
-          example:
-            user.mykey: foo
-          type: object
-          x-go-name: Config
+        action:
+          description: Action to perform on rule match
+          example: allow
+          type: string
+          x-go-name: Action
         description:
-          description: Description of the ACL
-          example: Web servers
+          description: Description of the rule
+          example: Allow DNS queries to Google DNS
           type: string
           x-go-name: Description
-        egress:
-          description: List of egress rules (order independent)
-          items:
-            $ref: '#/components/schemas/NetworkACLRule'
-          type: array
-          x-go-name: Egress
-        ingress:
-          description: List of ingress rules (order independent)
-          items:
-            $ref: '#/components/schemas/NetworkACLRule'
-          type: array
-          x-go-name: Ingress
-      title: NetworkACLPut used for updating an ACL.
+        destination:
+          description: Destination address
+          example: 8.8.8.8/32,8.8.4.4/32
+          type: string
+          x-go-name: Destination
+        destination_port:
+          description: Destination port
+          example: '53'
+          type: string
+          x-go-name: DestinationPort
+        icmp_code:
+          description: ICMP message code (for ICMP protocol)
+          example: '0'
+          type: string
+          x-go-name: ICMPCode
+        icmp_type:
+          description: Type of ICMP message (for ICMP protocol)
+          example: '8'
+          type: string
+          x-go-name: ICMPType
+        protocol:
+          description: Protocol
+          example: udp
+          type: string
+          x-go-name: Protocol
+        source:
+          description: Source address
+          example: '@internal'
+          type: string
+          x-go-name: Source
+        source_port:
+          description: Source port
+          example: '1234'
+          type: string
+          x-go-name: SourcePort
+        state:
+          description: State of the rule
+          example: enabled
+          type: string
+          x-go-name: State
+      title: NetworkACLRule represents a single rule in an ACL ruleset.
       type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkACLPost:
+      properties:
+        name:
+          description: The new name for the ACL
+          example: bar
+          type: string
+          x-go-name: Name
+      title: NetworkACLPost used for renaming an ACL.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
       x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
@@ -594,73 +660,47 @@ components:
       title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkACLPost:
-      properties:
-        name:
-          description: The new name for the ACL
-          example: bar
-          type: string
-          x-go-name: Name
-      title: NetworkACLPost used for renaming an ACL.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkACLRule:
-      description: Refer to doc/network-acls.md for details.
-      properties:
-        action:
-          description: Action to perform on rule match
-          example: allow
-          type: string
-          x-go-name: Action
-        description:
-          description: Description of the rule
-          example: Allow DNS queries to Google DNS
-          type: string
-          x-go-name: Description
-        destination:
-          description: Destination address
-          example: 8.8.8.8/32,8.8.4.4/32
-          type: string
-          x-go-name: Destination
-        destination_port:
-          description: Destination port
-          example: '53'
-          type: string
-          x-go-name: DestinationPort
-        icmp_code:
-          description: ICMP message code (for ICMP protocol)
-          example: '0'
-          type: string
-          x-go-name: ICMPCode
-        icmp_type:
-          description: Type of ICMP message (for ICMP protocol)
-          example: '8'
-          type: string
-          x-go-name: ICMPType
-        protocol:
-          description: Protocol
-          example: udp
-          type: string
-          x-go-name: Protocol
-        source:
-          description: Source address
-          example: '@internal'
-          type: string
-          x-go-name: Source
-        source_port:
-          description: Source port
-          example: '1234'
-          type: string
-          x-go-name: SourcePort
-        state:
-          description: State of the rule
-          example: enabled
-          type: string
-          x-go-name: State
-      title: NetworkACLRule represents a single rule in an ACL ruleset.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
   responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
     BadRequest:
       description: Bad Request
       content:
@@ -693,26 +733,6 @@ components:
                 x-go-name: Error
               error_code:
                 example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -764,26 +784,6 @@ components:
                 x-go-name: StatusCode
               type:
                 example: async
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
                 type: string
                 x-go-name: Type
             type: object

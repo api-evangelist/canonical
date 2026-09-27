@@ -613,64 +613,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    groupsUpdateGroupIdentitiesResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    typesPermissions:
-      properties:
-        updates:
-          items:
-            $ref: '#/components/schemas/typesPermission'
-          type: array
-      type: object
-    typesPagination:
-      properties:
-        next:
-          type: string
-        pageToken:
-          type: string
-        prev:
-          type: string
-        size:
-          format: int32
-          type: integer
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    groupsRemoveGroupIdentityResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    groupsRemoveGroupEntitlementResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    groupsIdentities:
-      properties:
-        identities:
-          items:
-            type: string
-          type: array
-      type: object
     groupsRemoveGroupRoleResp:
       properties:
         message:
@@ -679,7 +621,29 @@ components:
           format: int32
           type: integer
       type: object
+    apigroupsListGroupsResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
     apigroupsRemoveGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsRemoveGroupEntitlementResp:
       properties:
         message:
           type: string
@@ -701,18 +665,11 @@ components:
           format: int32
           type: integer
       type: object
-    groupsRoles:
-      properties:
-        roles:
-          items:
-            type: string
-          type: array
-      type: object
-    apigroupsListGroupsResp:
+    apigroupsCreateGroupResp:
       properties:
         data:
           items:
-            type: string
+            $ref: '#/components/schemas/apigroupsGroup'
           type: array
         message:
           type: string
@@ -730,10 +687,57 @@ components:
           format: int32
           type: integer
       type: object
+    groupsRoles:
+      properties:
+        roles:
+          items:
+            type: string
+          type: array
+      type: object
+    typesPermissions:
+      properties:
+        updates:
+          items:
+            $ref: '#/components/schemas/typesPermission'
+          type: array
+      type: object
+    typesPermission:
+      properties:
+        object:
+          type: string
+        relation:
+          type: string
+      type: object
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
     groupsUpdateGroupEntitlementsResp:
       properties:
         message:
           type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsGetGroupIdentitiesResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
         status:
           format: int32
           type: integer
@@ -764,26 +768,36 @@ components:
           format: int32
           type: integer
       type: object
-    apigroupsCreateGroupResp:
+    typesErrorResponse:
       properties:
-        data:
-          items:
-            $ref: '#/components/schemas/apigroupsGroup'
-          type: array
         message:
           type: string
-        meta:
-          $ref: '#/components/schemas/typesPagination'
         status:
           format: int32
           type: integer
       type: object
-    typesPermission:
+    groupsRemoveGroupIdentityResp:
       properties:
-        object:
+        message:
           type: string
-        relation:
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsUpdateGroupIdentitiesResp:
+      properties:
+        message:
           type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    groupsIdentities:
+      properties:
+        identities:
+          items:
+            type: string
+          type: array
       type: object
     apigroupsGroup:
       properties:
@@ -791,20 +805,6 @@ components:
           type: string
         name:
           type: string
-      type: object
-    groupsGetGroupIdentitiesResp:
-      properties:
-        data:
-          items:
-            type: string
-          type: array
-        message:
-          type: string
-        meta:
-          $ref: '#/components/schemas/typesPagination'
-        status:
-          format: int32
-          type: integer
       type: object
   securitySchemes:
     OAuth2:

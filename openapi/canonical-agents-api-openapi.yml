@@ -1,0 +1,405 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Agents API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Agents
+paths:
+  /v1/agents/data:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentOut'
+          description: Successful response
+      tags:
+      - Agents
+      summary: Get all agent data
+      operationId: getV1AgentsData
+      x-operation-id-source: derived
+  /v1/agents/queues:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                example:
+                  device001: Queue for device001
+                  some-queue: some other queue
+          description: Mapping of queue names and descriptions
+      tags:
+      - Agents
+      summary: Get all advertised queues from this server
+      description: 'Returns a dict of queue names and descriptions, ex:
+
+        {
+
+        "some_queue": "A queue for testing",
+
+        "other_queue": "A queue for something else"
+
+        }'
+      operationId: getV1AgentsQueues
+      x-operation-id-source: derived
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - Agents
+      summary: Tell testflinger the queue names that are being serviced
+      description: 'Some agents may want to advertise some of the queues they listen on so that
+
+        the user can check which queues are valid to use.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueuesIn'
+      operationId: postV1AgentsQueues
+      x-operation-id-source: derived
+  /v1/agents/images:
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - Agents
+      summary: Tell testflinger about known images for a specified queue
+      description: 'images will be stored in a dict of key/value pairs as part of the queues
+
+        collection. That dict will contain image_name:provision_data mappings, ex:
+
+        {
+
+        "some_queue": {
+
+        "core22": "http://cdimage.ubuntu.com/.../core-22.tar.gz",
+
+        "jammy": "http://cdimage.ubuntu.com/.../ubuntu-22.04.tar.gz"
+
+        },
+
+        "other_queue": {
+
+        ...
+
+        }
+
+        }.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImagesIn'
+      operationId: postV1AgentsImages
+      x-operation-id-source: derived
+  /v1/agents/images/{queue}:
+    get:
+      parameters:
+      - in: path
+        name: queue
+        schema:
+          type: string
+        required: true
+      responses:
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                example:
+                  core22: 'url: http://.../core22.img.xz'
+                  server-22.04: 'url: http://.../ubuntu-22.04.img.xz'
+          description: Mapping of image names and provision data
+      tags:
+      - Agents
+      summary: Get a dict of known images for a given queue
+      operationId: getV1AgentsImagesByQueue
+      x-operation-id-source: derived
+  /v1/agents/data/{agent_name}:
+    get:
+      parameters:
+      - in: path
+        name: agent_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Agents
+      summary: Get the information from a specified agent
+      description: ':param agent_name:
+
+        String with the name of the agent to retrieve information from.
+
+        :return:
+
+        JSON data with the specified agent information.'
+      operationId: getV1AgentsDataByAgentName
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: agent_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Agents
+      summary: Post information about the agent to the server
+      description: 'The json sent to this endpoint may contain data such as the following:
+
+        {
+
+        "state": string, # State the device is in
+
+        "queues": array[string], # Queues the device is listening on
+
+        "location": string, # Location of the device
+
+        "job_id": string, # Job ID the device is running, if any
+
+        "log": array[string], # push and keep only the last 100 lines
+
+        }'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentIn'
+      operationId: postV1AgentsDataByAgentName
+      x-operation-id-source: derived
+  /v1/agents/provision_logs/{agent_name}:
+    post:
+      parameters:
+      - in: path
+        name: agent_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Agents
+      summary: Post provision logs for the agent to the server
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProvisionLogsIn'
+      operationId: postV1AgentsProvisionLogsByAgentName
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    ProvisionLogsIn:
+      type: object
+      properties:
+        job_id:
+          type: string
+        exit_code:
+          type: integer
+        detail:
+          type: string
+      required:
+      - exit_code
+      - job_id
+      additionalProperties: false
+    AgentOut:
+      type: object
+      properties:
+        name:
+          type: string
+        job_id:
+          type: string
+        state:
+          type: string
+        queues:
+          type: array
+          items:
+            type: string
+        location:
+          type: string
+        provision_type:
+          type: string
+        comment:
+          type: string
+        restricted_to:
+          type: object
+          additionalProperties: {}
+        job:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/AgentJob'
+      required:
+      - name
+      additionalProperties: false
+    AgentJob:
+      type: object
+      properties:
+        job_id:
+          type: string
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        job_queue:
+          type: string
+        job_state:
+          type: string
+        job_priority:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - job_id
+      additionalProperties: false
+    AgentIn:
+      type: object
+      properties:
+        identifier:
+          type: string
+        job_id:
+          type: string
+        location:
+          type: string
+        log:
+          type: array
+          items:
+            type: string
+        provision_type:
+          type: string
+        queues:
+          type: array
+          items:
+            type: string
+        state:
+          type: string
+        comment:
+          type: string
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    ImagesIn:
+      type: object
+      properties: {}
+      additionalProperties: true
+    QueuesIn:
+      type: object
+      properties: {}
+      additionalProperties: true

@@ -258,21 +258,6 @@ paths:
         required: true
 components:
   schemas:
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
     OperationResponse:
       description: Operation
       type: object
@@ -304,6 +289,44 @@ components:
           description: SHA-256 fingerprint of the certificate
           type: string
           example: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    CertificatesPost:
+      description: CertificatesPost represents the fields of a new auth provided certificate
+      type: object
+      properties:
+        certificate:
+          description: Base64 encoded certificate content without the header or the footer
+          type: string
+          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
+        trust-password:
+          description: TrustPassword is used to register a new client with the service
+          type: string
+          example: sUp3rs3cr3t
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
     Operation:
       description: Operation represents a background operation
       type: object
@@ -366,43 +389,29 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
-    CertificatesPost:
-      description: CertificatesPost represents the fields of a new auth provided certificate
-      type: object
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    Certificate_2:
+      description: Certificate represents a LXD certificate
       properties:
-        certificate:
-          description: Base64 encoded certificate content without the header or the footer
-          type: string
-          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
-        trust-password:
-          description: TrustPassword is used to register a new client with the service
-          type: string
-          example: sUp3rs3cr3t
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
-          type: integer
-          format: int64
-          example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
-    CertificatePut:
-      description: CertificatePut represents the modifiable fields of a LXD certificate
-      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
         certificate:
           description: 'The certificate itself, as PEM encoded X509 certificate
 
@@ -411,6 +420,12 @@ components:
           example: X509 PEM certificate
           type: string
           x-go-name: Certificate
+        fingerprint:
+          description: SHA256 fingerprint of the certificate
+          example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
+          readOnly: true
+          type: string
+          x-go-name: Fingerprint
         name:
           description: Name associated with the certificate
           example: castiana
@@ -444,18 +459,9 @@ components:
           x-go-name: Type
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    Certificate_2:
-      description: Certificate represents a LXD certificate
+    CertificatePut:
+      description: CertificatePut represents the modifiable fields of a LXD certificate
       properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
         certificate:
           description: 'The certificate itself, as PEM encoded X509 certificate
 
@@ -464,12 +470,6 @@ components:
           example: X509 PEM certificate
           type: string
           x-go-name: Certificate
-        fingerprint:
-          description: SHA256 fingerprint of the certificate
-          example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
-          readOnly: true
-          type: string
-          x-go-name: Fingerprint
         name:
           description: Name associated with the certificate
           example: castiana
@@ -573,23 +573,6 @@ components:
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
   responses:
-    ErrorAlreadyExists:
-      description: Already Exists
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: already exists
-              error_code:
-                type: integer
-                format: int64
-                example: 409
-              type:
-                type: string
-                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -645,6 +628,23 @@ components:
               type:
                 type: string
                 example: error
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error
     ErrorForbidden:
       description: Forbidden
       content:
@@ -662,26 +662,6 @@ components:
               type:
                 type: string
                 example: error
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
     EmptySyncResponse:
       description: Empty sync response
       content:
@@ -699,6 +679,26 @@ components:
                 x-go-name: StatusCode
               type:
                 example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError_2:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
                 type: string
                 x-go-name: Type
             type: object
@@ -722,6 +722,26 @@ components:
                 type: string
                 x-go-name: Type
             type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
     Forbidden:
       description: Forbidden
       content:
@@ -734,26 +754,6 @@ components:
                 x-go-name: Error
               error_code:
                 example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError_2:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
                 format: int64
                 type: integer
                 x-go-name: ErrorCode

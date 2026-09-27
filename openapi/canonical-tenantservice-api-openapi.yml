@@ -586,39 +586,10 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    tenantUpdateTenantUserResponse:
+    tenantUpdateTenantResponse:
       properties:
-        user:
-          $ref: '#/components/schemas/tenantTenantUser'
-      type: object
-    TenantServiceProvisionUserBody:
-      properties:
-        email:
-          type: string
-        role:
-          type: string
-      type: object
-    tenantListTenantsResponse:
-      properties:
-        next_page_token:
-          type: string
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    TenantServiceUpdateTenantUserBody:
-      properties:
-        role:
-          type: string
+        tenant:
+          $ref: '#/components/schemas/tenantTenant'
       type: object
     tenantTenantInput:
       properties:
@@ -626,6 +597,25 @@ components:
           type: boolean
         name:
           type: string
+      type: object
+    tenantListUserTenantsResponse:
+      properties:
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
+      type: object
+    tenantCreateTenantRequest:
+      properties:
+        name:
+          type: string
+      type: object
+    tenantListMyTenantsResponse:
+      properties:
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
       type: object
     tenantTenantUser:
       properties:
@@ -636,13 +626,6 @@ components:
         user_id:
           type: string
       type: object
-    tenantListMyTenantsResponse:
-      properties:
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
-      type: object
     tenantListTenantUsersResponse:
       properties:
         next_page_token:
@@ -652,24 +635,12 @@ components:
             $ref: '#/components/schemas/tenantTenantUser'
           type: array
       type: object
-    tenantListUserTenantsResponse:
-      properties:
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
-      type: object
     TenantServiceUpdateTenantBody:
       properties:
         tenant:
           $ref: '#/components/schemas/tenantTenantInput'
         update_mask:
           type: string
-      type: object
-    tenantUpdateTenantResponse:
-      properties:
-        tenant:
-          $ref: '#/components/schemas/tenantTenant'
       type: object
     tenantDeleteTenantResponse:
       properties:
@@ -679,12 +650,12 @@ components:
           format: int32
           type: integer
       type: object
-    tenantLookupTenantsResponse:
+    TenantServiceInviteMemberBody:
       properties:
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
+        email:
+          type: string
+        role:
+          type: string
       type: object
     tenantInviteMemberResponse:
       properties:
@@ -695,15 +666,23 @@ components:
         status:
           type: string
       type: object
+    TenantServiceUpdateTenantUserBody:
+      properties:
+        role:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
     tenantCreateTenantResponse:
       properties:
         tenant:
           $ref: '#/components/schemas/tenantTenant'
-      type: object
-    tenantProvisionUserResponse:
-      properties:
-        status:
-          type: string
       type: object
     tenantTenant:
       properties:
@@ -716,17 +695,38 @@ components:
         name:
           type: string
       type: object
-    TenantServiceInviteMemberBody:
+    tenantListTenantsResponse:
+      properties:
+        next_page_token:
+          type: string
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
+      type: object
+    tenantUpdateTenantUserResponse:
+      properties:
+        user:
+          $ref: '#/components/schemas/tenantTenantUser'
+      type: object
+    tenantProvisionUserResponse:
+      properties:
+        status:
+          type: string
+      type: object
+    TenantServiceProvisionUserBody:
       properties:
         email:
           type: string
         role:
           type: string
       type: object
-    tenantCreateTenantRequest:
+    tenantLookupTenantsResponse:
       properties:
-        name:
-          type: string
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
       type: object
   securitySchemes:
     OAuth2:

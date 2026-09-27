@@ -391,22 +391,6 @@ components:
           format: int32
           type: integer
       type: object
-    rolesRemoveRoleEntitlementResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    rolesUpdateRoleEntitlementsResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
     typesPermissions:
       properties:
         updates:
@@ -414,31 +398,7 @@ components:
             $ref: '#/components/schemas/typesPermission'
           type: array
       type: object
-    typesPagination:
-      properties:
-        next:
-          type: string
-        pageToken:
-          type: string
-        prev:
-          type: string
-        size:
-          format: int32
-          type: integer
-      type: object
-    rolesListRoleEntitlementsResp:
-      properties:
-        data:
-          items:
-            type: string
-          type: array
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    rolesGetRoleResp:
+    rolesCreateRoleResp:
       properties:
         data:
           items:
@@ -448,14 +408,6 @@ components:
           type: string
         meta:
           $ref: '#/components/schemas/typesPagination'
-        status:
-          format: int32
-          type: integer
-      type: object
-    rolesRemoveRoleResp:
-      properties:
-        message:
-          type: string
         status:
           format: int32
           type: integer
@@ -474,15 +426,7 @@ components:
           format: int32
           type: integer
       type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    rolesCreateRoleResp:
+    rolesGetRoleResp:
       properties:
         data:
           items:
@@ -496,6 +440,41 @@ components:
           format: int32
           type: integer
       type: object
+    rolesRole:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    rolesRemoveRoleResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    rolesListRoleEntitlementsResp:
+      properties:
+        data:
+          items:
+            type: string
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
     typesPermission:
       properties:
         object:
@@ -503,12 +482,33 @@ components:
         relation:
           type: string
       type: object
-    rolesRole:
+    rolesUpdateRoleEntitlementsResp:
       properties:
-        id:
+        message:
           type: string
-        name:
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesPagination:
+      properties:
+        next:
           type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    rolesRemoveRoleEntitlementResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
       type: object
   securitySchemes:
     OAuth2:

@@ -308,57 +308,6 @@ paths:
       - Profiles
 components:
   schemas:
-    ProfilePut:
-      description: ProfilePut represents the modifiable fields of a LXD profile
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Instance configuration map (refer to doc/instances.md)
-          example:
-            limits.cpu: '4'
-            limits.memory: 4GiB
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the profile
-          example: Medium size instances
-          type: string
-          x-go-name: Description
-        devices:
-          additionalProperties:
-            additionalProperties:
-              type: string
-            type: object
-          description: List of devices
-          example:
-            eth0:
-              name: eth0
-              network: lxdbr0
-              type: nic
-            root:
-              path: /
-              pool: default
-              type: disk
-          type: object
-          x-go-name: Devices
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProfilePost:
-      description: ProfilePost represents the fields required to rename a LXD profile
-      properties:
-        name:
-          description: The new name for the profile
-          example: bar
-          type: string
-          x-go-name: Name
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     ProfilesPost:
       description: ProfilesPost represents the fields of a new LXD profile
       properties:
@@ -399,6 +348,129 @@ components:
           type: string
           x-go-name: Name
       type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProfilePost:
+      description: ProfilePost represents the fields required to rename a LXD profile
+      properties:
+        name:
+          description: The new name for the profile
+          example: bar
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProfilePut:
+      description: ProfilePut represents the modifiable fields of a LXD profile
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Instance configuration map (refer to doc/instances.md)
+          example:
+            limits.cpu: '4'
+            limits.memory: 4GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the profile
+          example: Medium size instances
+          type: string
+          x-go-name: Description
+        devices:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          description: List of devices
+          example:
+            eth0:
+              name: eth0
+              network: lxdbr0
+              type: nic
+            root:
+              path: /
+              pool: default
+              type: disk
+          type: object
+          x-go-name: Devices
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Profile:
+      description: Profile represents a LXD profile
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        config:
+          additionalProperties:
+            type: string
+          description: Instance configuration map (refer to doc/instances.md)
+          example:
+            limits.cpu: '4'
+            limits.memory: 4GiB
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the profile
+          example: Medium size instances
+          type: string
+          x-go-name: Description
+        devices:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          description: List of devices
+          example:
+            eth0:
+              name: eth0
+              network: lxdbr0
+              type: nic
+            root:
+              path: /
+              pool: default
+              type: disk
+          type: object
+          x-go-name: Devices
+        name:
+          description: The profile name
+          example: foo
+          readOnly: true
+          type: string
+          x-go-name: Name
+        project:
+          description: 'Project name
+
+
+            API extension: profiles_all_projects'
+          example: project1
+          type: string
+          x-go-name: Project
+        used_by:
+          description: 'List of URLs of objects using this profile
+
+
+            API extension: profile_usedby'
+          example:
+          - /1.0/instances/c1
+          - /1.0/instances/v1
+          items:
+            type: string
+          readOnly: true
+          type: array
+          x-go-name: UsedBy
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
       x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
@@ -528,99 +600,7 @@ components:
       title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    Profile:
-      description: Profile represents a LXD profile
-      properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
-        config:
-          additionalProperties:
-            type: string
-          description: Instance configuration map (refer to doc/instances.md)
-          example:
-            limits.cpu: '4'
-            limits.memory: 4GiB
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the profile
-          example: Medium size instances
-          type: string
-          x-go-name: Description
-        devices:
-          additionalProperties:
-            additionalProperties:
-              type: string
-            type: object
-          description: List of devices
-          example:
-            eth0:
-              name: eth0
-              network: lxdbr0
-              type: nic
-            root:
-              path: /
-              pool: default
-              type: disk
-          type: object
-          x-go-name: Devices
-        name:
-          description: The profile name
-          example: foo
-          readOnly: true
-          type: string
-          x-go-name: Name
-        project:
-          description: 'Project name
-
-
-            API extension: profiles_all_projects'
-          example: project1
-          type: string
-          x-go-name: Project
-        used_by:
-          description: 'List of URLs of objects using this profile
-
-
-            API extension: profile_usedby'
-          example:
-          - /1.0/instances/c1
-          - /1.0/instances/v1
-          items:
-            type: string
-          readOnly: true
-          type: array
-          x-go-name: UsedBy
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
   responses:
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
     EmptySyncResponse:
       description: Empty sync response
       content:
@@ -641,44 +621,18 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    Operation:
-      description: Operation
-      content:
-        application/json:
-          schema:
-            properties:
-              metadata:
-                $ref: '#/components/schemas/Operation'
-              operation:
-                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-                type: string
-                x-go-name: Operation
-              status:
-                example: Operation created
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 100
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: async
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
+    InternalServerError:
+      description: Internal Server Error
       content:
         application/json:
           schema:
             properties:
               error:
-                example: not authorized
+                example: internal server error
                 type: string
                 x-go-name: Error
               error_code:
-                example: 403
+                example: 500
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -707,23 +661,69 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    InternalServerError:
-      description: Internal Server Error
+    BadRequest:
+      description: Bad Request
       content:
         application/json:
           schema:
             properties:
               error:
-                example: internal server error
+                example: bad request
                 type: string
                 x-go-name: Error
               error_code:
-                example: 500
+                example: 400
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
               type:
                 example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
                 type: string
                 x-go-name: Type
             type: object

@@ -226,7 +226,7 @@ paths:
   /1.0/operations/{id}:
     delete:
       description: Cancels the operation if supported.
-      operationId: operation_delete
+      operationId: delete10OperationsById
       responses:
         '200':
           $ref: '#/components/responses/EmptySyncResponse_2'
@@ -239,9 +239,11 @@ paths:
       summary: Cancel the operation
       tags:
       - Operations
+      x-operation-id-source: normalized
+      x-operation-id-original: operation_delete
     get:
       description: Gets the operation state.
-      operationId: operation_get
+      operationId: get10OperationsById
       responses:
         '200':
           description: Operation
@@ -272,10 +274,12 @@ paths:
       summary: Get the operation state
       tags:
       - Operations
+      x-operation-id-source: normalized
+      x-operation-id-original: operation_get
   /1.0/operations/{id}/wait:
     get:
       description: Waits for the operation to reach a final state (or timeout) and retrieve its final state.
-      operationId: operation_wait_get
+      operationId: get10OperationsByIdWait
       parameters:
       - description: Timeout in seconds (-1 means never)
         example: -1
@@ -313,6 +317,8 @@ paths:
       summary: Wait for the operation
       tags:
       - Operations
+      x-operation-id-source: normalized
+      x-operation-id-original: operation_wait_get
   /1.0/operations/{id}/wait?public:
     get:
       description: 'Waits for the operation to reach a final state (or timeout) and retrieve its final state.
@@ -372,7 +378,7 @@ paths:
         meant for LXD to LXD communication with the client only relaying the
 
         connection information to the servers.'
-      operationId: operation_websocket_get
+      operationId: get10OperationsByIdWebsocket
       parameters:
       - description: Authentication token
         example: random-string
@@ -390,6 +396,8 @@ paths:
       summary: Get the websocket stream
       tags:
       - Operations
+      x-operation-id-source: normalized
+      x-operation-id-original: operation_websocket_get
   /1.0/operations/{id}/websocket?public:
     get:
       description: 'Connects to an associated websocket stream for the operation.
@@ -423,18 +431,218 @@ paths:
       tags:
       - Operations
 components:
+  responses:
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: missing secret
+              error_code:
+                type: integer
+                format: int64
+                example: 401
+              type:
+                type: string
+                example: error
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metadata:
+                example: '{}'
+              status:
+                type: string
+                example: Success
+              status_code:
+                type: integer
+                format: int64
+                example: 200
+              type:
+                type: string
+                example: sync
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: bad request
+              error_code:
+                type: integer
+                format: int64
+                example: 400
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
+    EmptySyncResponse_2:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError_2:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
   schemas:
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
     StatusCode:
       description: StatusCode represents a valid REST operation
       type: integer
@@ -501,28 +709,17 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
-          type: integer
-          format: int64
-          example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
     StatusCode_2:
       format: int64
       title: StatusCode represents a valid LXD operation and container status.
@@ -656,195 +853,6 @@ components:
       title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-  responses:
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              metadata:
-                example: '{}'
-              status:
-                type: string
-                example: Success
-              status_code:
-                type: integer
-                format: int64
-                example: 200
-              type:
-                type: string
-                example: sync
-    ErrorUnauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: missing secret
-              error_code:
-                type: integer
-                format: int64
-                example: 401
-              type:
-                type: string
-                example: error
-    ErrorNotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: not found
-              error_code:
-                type: integer
-                format: int64
-                example: 404
-              type:
-                type: string
-                example: error
-    ErrorBadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: bad request
-              error_code:
-                type: integer
-                format: int64
-                example: 400
-              metadata:
-                example: '{}'
-              type:
-                type: string
-                example: error
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: internal server error
-              error_code:
-                type: integer
-                format: int64
-                example: 500
-              metadata:
-                example: '{}'
-              type:
-                type: string
-                example: error
-    ErrorForbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Not Authorized
-              error_code:
-                type: integer
-                format: int64
-                example: 403
-              type:
-                type: string
-                example: error
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse_2:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError_2:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
 x-refined-from:
 - canonical-anbox-cloud-ams-api-openapi.json
 - canonical-lxd-rest-api-openapi.yml

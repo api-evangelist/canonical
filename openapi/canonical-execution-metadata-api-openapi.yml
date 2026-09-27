@@ -26,6 +26,14 @@ paths:
       - view_test
 components:
   schemas:
+    ExecutionMetadataGetResponse:
+      properties:
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+      type: object
+      required:
+      - execution_metadata
+      title: ExecutionMetadataGetResponse
     ExecutionMetadata:
       additionalProperties:
         items:
@@ -47,11 +55,3 @@ components:
         - mysql-k8s
         charm:postgresql-k8s:revision:
         - '495'
-    ExecutionMetadataGetResponse:
-      properties:
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-      type: object
-      required:
-      - execution_metadata
-      title: ExecutionMetadataGetResponse

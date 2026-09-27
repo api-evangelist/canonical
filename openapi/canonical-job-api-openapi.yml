@@ -1,0 +1,608 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Job API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Job
+paths:
+  /v1/job:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+          description: Successful response
+        '204':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          description: No job found
+      tags:
+      - Job
+      summary: Request a job to run from supported queues
+      description: 'The agent must identify itself via the ``agent_name`` cookie. One or more
+
+        ``queue`` query parameters must be supplied; the server returns the first
+
+        available job across those queues.
+
+
+        Any secrets referenced in the job are resolved against the secrets store
+
+        at this point. Secrets that are inaccessible (store unreachable, path not
+
+        found, or insufficient permissions) are silently resolved to an empty
+
+        string rather than causing the request to fail. Agents must therefore
+
+        handle the possibility of empty secret values.'
+      operationId: getV1Job
+      x-operation-id-source: derived
+    post:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobId'
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - Job
+      summary: Add a job to the queue
+      description: 'The ``job_queue`` field in the submitted JSON determines which queue the
+
+        job is placed on. All other fields are passed through to the agent
+
+        unchanged.
+
+
+        Returns HTTP 422 if the job references secrets that are inaccessible at
+
+        submission time (e.g. the secrets store is unreachable or the secret path
+
+        does not exist for the submitting client).'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+      operationId: postV1Job
+      x-operation-id-source: derived
+  /v1/job/search:
+    get:
+      parameters:
+      - in: query
+        name: tags
+        description: List of tags to search for
+        schema:
+          type: array
+          items:
+            type: string
+        required: false
+        explode: true
+        style: form
+      - in: query
+        name: match
+        description: Match mode - 'all' or 'any' (default 'any')
+        schema:
+          type: string
+          enum:
+          - any
+          - all
+        required: false
+      - in: query
+        name: state
+        description: List of job states to include
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - setup
+            - provision
+            - firmware_update
+            - test
+            - allocate
+            - allocated
+            - reserve
+            - cleanup
+            - cancelled
+            - completed
+            - active
+        required: false
+        explode: true
+        style: form
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobSearchResponse'
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+      tags:
+      - Job
+      summary: Search for jobs by tags
+      operationId: getV1JobSearch
+      x-operation-id-source: derived
+  /v1/job/{job_id}:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Job
+      summary: Request the json job definition for a specified job, even if it has
+      description: 'already run.
+
+
+        :param job_id:
+
+        UUID as a string for the job
+
+        :return:
+
+        JSON data for the job or error string and http error'
+      operationId: getV1JobByJobId
+      x-operation-id-source: derived
+  /v1/job/{job_id}/action:
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Job
+      summary: Take action on the job status for a specified job ID
+      description: ':param job_id:
+
+        UUID as a string for the job'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionIn'
+      operationId: postV1JobByJobIdAction
+      x-operation-id-source: derived
+  /v1/job/{job_id}/events:
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Job
+      summary: Post status updates from the agent to the server to be forwarded
+      description: 'to the server-configured webhook url.
+
+
+        The json sent to this endpoint may contain data such as the following:
+
+        {
+
+        "agent_id": "",
+
+        "job_queue": "",
+
+        "job_status_webhook": "",
+
+        "events": [
+
+        {
+
+        "event_name": "",
+
+        "timestamp": "",
+
+        "detail": ""
+
+        },
+
+        ...
+
+        ]
+
+        }
+
+
+        :param job_id: UUID as a string for the job
+
+        :param json_data: JSON data containing the status updates and webhook URL'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusUpdate'
+      operationId: postV1JobByJobIdEvents
+      x-operation-id-source: derived
+  /v1/job/{job_id}/position:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Job
+      summary: Return the position of the specified jobid in the queue
+      operationId: getV1JobByJobIdPosition
+      x-operation-id-source: derived
+  /v1/job/{job_id}/attachments:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Job
+      summary: Return the attachments bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job
+
+        :return:
+
+        send_file stream of attachment tarball to download'
+      operationId: getV1JobByJobIdAttachments
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Job
+      summary: Post attachment bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job'
+      operationId: postV1JobByJobIdAttachments
+      x-operation-id-source: derived
+components:
+  schemas:
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    JobOut:
+      type: object
+      properties:
+        job_id:
+          type: string
+        parent_job_id:
+          type: string
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        job_queue:
+          type: string
+          minLength: 1
+        global_timeout:
+          type: integer
+        output_timeout:
+          type: integer
+        allocation_timeout:
+          type: integer
+        provision_data:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/ProvisionData'
+        firmware_update_data:
+          type: object
+          additionalProperties: {}
+        test_data:
+          $ref: '#/components/schemas/TestData'
+        allocate_data:
+          type: object
+          additionalProperties: {}
+        reserve_data:
+          $ref: '#/components/schemas/ReserveData'
+        job_status_webhook:
+          type: string
+        job_priority:
+          type: integer
+        exclude_agents:
+          type: array
+          items:
+            type: string
+        debug:
+          type: boolean
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+      required:
+      - job_queue
+      additionalProperties: false
+    ReserveData:
+      type: object
+      properties:
+        ssh_keys:
+          type: array
+          items:
+            type: string
+            pattern: ^(lp|gh):(\S+)$
+        timeout: {}
+      additionalProperties: false
+    ProvisionData:
+      type: object
+      properties: {}
+      additionalProperties: false
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: string
+        parent_job_id:
+          type: string
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        job_queue:
+          type: string
+          minLength: 1
+        global_timeout:
+          type: integer
+        output_timeout:
+          type: integer
+        allocation_timeout:
+          type: integer
+        provision_data:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/ProvisionData'
+        firmware_update_data:
+          type: object
+          additionalProperties: {}
+        test_data:
+          $ref: '#/components/schemas/TestData'
+        allocate_data:
+          type: object
+          additionalProperties: {}
+        reserve_data:
+          $ref: '#/components/schemas/ReserveData'
+        job_status_webhook:
+          type: string
+        job_priority:
+          type: integer
+        exclude_agents:
+          type: array
+          items:
+            type: string
+        debug:
+          type: boolean
+      required:
+      - job_queue
+      additionalProperties: false
+    Attachment:
+      type: object
+      properties:
+        agent:
+          type: string
+        device:
+          type: string
+      required:
+      - agent
+      additionalProperties: false
+    StatusUpdate:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        job_queue:
+          type: string
+        job_status_webhook:
+          type: string
+          format: url
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobEvent'
+      required:
+      - job_status_webhook
+      additionalProperties: false
+    JobEvent:
+      type: object
+      properties:
+        event_name:
+          type: string
+        timestamp:
+          type: string
+        detail:
+          type: string
+      required:
+      - event_name
+      - timestamp
+      additionalProperties: false
+    TestData:
+      type: object
+      properties:
+        test_cmds:
+          type: string
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        test_username:
+          type: string
+        test_password:
+          type: string
+        secrets:
+          type: object
+          additionalProperties:
+            type: string
+            pattern: ^[a-zA-Z0-9_/-]+$
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    ActionIn:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - cancel
+      required:
+      - action
+      additionalProperties: false
+    JobSearchResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+      required:
+      - jobs
+      additionalProperties: false
+    JobId:
+      type: object
+      properties:
+        job_id:
+          type: string
+      required:
+      - job_id
+      additionalProperties: false

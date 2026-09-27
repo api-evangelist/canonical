@@ -267,11 +267,6 @@ paths:
       - network-peers
 components:
   schemas:
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
     NetworkPeersPost:
       description: NetworkPeersPost represents the fields of a new LXD network peering
       properties:
@@ -322,6 +317,11 @@ components:
           type: string
           x-go-name: Description
       type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
       x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
@@ -504,18 +504,18 @@ components:
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
   responses:
-    BadRequest:
-      description: Bad Request
+    InternalServerError:
+      description: Internal Server Error
       content:
         application/json:
           schema:
             properties:
               error:
-                example: bad request
+                example: internal server error
                 type: string
                 x-go-name: Error
               error_code:
-                example: 400
+                example: 500
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -536,6 +536,26 @@ components:
                 x-go-name: Error
               error_code:
                 example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -587,26 +607,6 @@ components:
                 x-go-name: StatusCode
               type:
                 example: async
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
                 type: string
                 x-go-name: Type
             type: object

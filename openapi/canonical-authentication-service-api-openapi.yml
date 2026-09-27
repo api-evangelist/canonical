@@ -159,14 +159,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
     authenticationMeResp:
       properties:
         email:
@@ -179,6 +171,14 @@ components:
           type: string
         sub:
           type: string
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
       type: object
   securitySchemes:
     OAuth2:

@@ -164,38 +164,60 @@ paths:
       - change_user
 components:
   schemas:
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    UsersResponse:
-      properties:
-        users:
-          items:
-            $ref: '#/components/schemas/UserResponse'
-          type: array
-          title: Users
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - users
-      - count
-      - limit
-      - offset
-      title: UsersResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TeamMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            type: string
+          type: array
+          title: Permissions
+      type: object
+      required:
+      - id
+      - name
+      - permissions
+      title: TeamMinimalResponse
+    UserPatch:
+      properties:
+        is_admin:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Admin
+      type: object
+      title: UserPatch
     UserResponse:
       properties:
         id:
@@ -228,57 +250,35 @@ components:
       - teams
       - is_admin
       title: UserResponse
-    TeamMinimalResponse:
+    HTTPValidationError:
       properties:
-        id:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UsersResponse:
+      properties:
+        users:
+          items:
+            $ref: '#/components/schemas/UserResponse'
+          type: array
+          title: Users
+        count:
           type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        permissions:
-          items:
-            type: string
-          type: array
-          title: Permissions
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
       type: object
       required:
-      - id
-      - name
-      - permissions
-      title: TeamMinimalResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    UserPatch:
-      properties:
-        is_admin:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Admin
-      type: object
-      title: UserPatch
+      - users
+      - count
+      - limit
+      - offset
+      title: UsersResponse

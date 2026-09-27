@@ -230,194 +230,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    NodeVPU:
-      description: NodeVPU describes a single independent VPU available on a node
-      type: object
-      properties:
-        allocations:
-          description: Map of current allocations on the VPU
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/NodeVPUAllocation'
-        id:
-          description: ID of the VPU
-          type: integer
-          format: uint64
-        model:
-          description: Model name of the VPU
-          type: string
-        numa_node:
-          description: NUMA node the card sits on
-          type: integer
-          format: uint64
-        slots:
-          description: Number of slots available on the VPU
-          type: integer
-          format: int64
-        type:
-          description: 'Type of the VPU. Valid values are: unknown, netint'
-          type: string
-    NodesPost:
-      description: NodesPost describes a request to create a new node on AMS
-      type: object
-      properties:
-        address:
-          description: Internal IP address of the node
-          type: string
-          format: ipv4
-          example: 10.0.0.1
-        cpu_allocation_rate:
-          description: CPU allocation rate for the node
-          type: number
-          format: float
-          example: 4
-        cpus:
-          description: Number of CPUs on the node
-          type: integer
-          format: int64
-          example: 4
-        gpu_encoder_slots:
-          description: Number of GPU encoder slots to configure on the node
-          type: integer
-          format: int64
-          example: 4
-        gpu_slots:
-          description: Number of GPU slots to configure on the node
-          type: integer
-          format: int64
-          example: 2
-        memory:
-          description: Memory (in GB) of the node
-          type: string
-          example: 8GB
-        memory_allocation_rate:
-          description: Memory allocation rate for the node
-          type: number
-          format: float
-          example: 2
-        name:
-          description: Name of the node
-          type: string
-          example: lxd0
-        network_acl_name:
-          description: Name of the network ACL to create on the LXD node
-          type: string
-          example: ams0
-        network_bridge_mtu:
-          description: MTU for the configured network bridge on LXD
-          type: integer
-          format: int64
-          example: 1500
-        network_name:
-          description: Name of the network bridge to create on the LXD node
-          type: string
-          example: amsbr0
-        network_subnet:
-          description: CIDR of the subnet to configure for the network bridge on LXD
-          type: string
-          format: ipv4
-          example: 10.0.0.0/24
-        public_address:
-          description: Public IP address of the node
-          type: string
-          format: ipv4
-          example: 10.0.0.1
-        storage_device:
-          description: Storage device to use for configuring LXD storage pools
-          type: string
-          example: /dev/sdb
-        storage_pool:
-          description: Name of the storage pool to use for configuring the LXD node
-          type: string
-          example: default
-        tags:
-          description: Tags to attach to the node
-          type: array
-          items:
-            type: string
-          example:
-          - created_by=anbox
-          - gpu=nvidia
-        trust_password:
-          description: Trust password for the LXD instance
-          type: string
-          example: sUp3rs3cr3t
-        unmanaged:
-          description: Flag used to control if AMS can manage the LXD node
-          type: boolean
-          example: false
-    NodeDelete:
-      description: NodeDelete describes a request used to delete a node
-      type: object
-      properties:
-        force:
-          description: Use this to force deletion of a node from AMS and LXD cluster
-          type: boolean
-          example: true
-        keep_in_cluster:
-          description: Use this to remove the node from the LXD cluster as well
-          type: boolean
-          example: true
-    NodeGPUAllocation:
-      description: NodeGPUAllocation describes a single allocation on a GPU
-      type: object
-      properties:
-        encoder_slots:
-          description: Number of Encoder Slots allocated to the container
-          type: integer
-          format: int64
-          example: 1
-        gpus:
-          description: List of GPU IDs allocated to the container
-          type: array
-          items:
-            type: integer
-            format: uint64
-          example:
-          - 0
-          - 1
-        slots:
-          description: Number of GPU Slots allocated to the container
-          type: integer
-          format: int64
-          example: 1
-    NodeGPU:
-      description: NodeGPU describes a single GPU available on a node
-      type: object
-      properties:
-        allocations:
-          description: Map of current allocations and containers on the GPU
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/NodeGPUAllocation'
-        encoder_slots:
-          description: Number of the encoder slots available on the GPU
-          type: integer
-          format: int64
-          example: 20
-        id:
-          description: ID of the GPU configured on the node
-          type: integer
-          format: uint64
-          example: 0
-        numa_node:
-          description: NUMA Node number for the GPU
-          type: integer
-          format: uint64
-          example: 0
-        pci_address:
-          description: PCI Bus Address used by the GPU
-          type: string
-          example: '00:08.0'
-        render_name:
-          description: PCI Bus Address used by the GPU
-          type: string
-          example: D129
-        slots:
-          description: Number of the GPU slots available
-          type: integer
-          format: int64
-          example: 20
     Node:
       description: Node describes a single node of the underlying LXD cluster AMS manages
       type: object
@@ -522,29 +334,241 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/NodeVPU'
-    NodeGPUPatch:
-      description: NodeGPUPatch allows changing configuration for individual GPUs
+    NodeDelete:
+      description: NodeDelete describes a request used to delete a node
+      type: object
+      properties:
+        force:
+          description: Use this to force deletion of a node from AMS and LXD cluster
+          type: boolean
+          example: true
+        keep_in_cluster:
+          description: Use this to remove the node from the LXD cluster as well
+          type: boolean
+          example: true
+    NodeGPUAllocation:
+      description: NodeGPUAllocation describes a single allocation on a GPU
       type: object
       properties:
         encoder_slots:
-          description: Update the number of GPU encoder slots
+          description: Number of Encoder Slots allocated to the container
+          type: integer
+          format: int64
+          example: 1
+        gpus:
+          description: List of GPU IDs allocated to the container
+          type: array
+          items:
+            type: integer
+            format: uint64
+          example:
+          - 0
+          - 1
+        slots:
+          description: Number of GPU Slots allocated to the container
+          type: integer
+          format: int64
+          example: 1
+    NodesPost:
+      description: NodesPost describes a request to create a new node on AMS
+      type: object
+      properties:
+        address:
+          description: Internal IP address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        cpu_allocation_rate:
+          description: CPU allocation rate for the node
+          type: number
+          format: float
+          example: 4
+        cpus:
+          description: Number of CPUs on the node
           type: integer
           format: int64
           example: 4
+        gpu_encoder_slots:
+          description: Number of GPU encoder slots to configure on the node
+          type: integer
+          format: int64
+          example: 4
+        gpu_slots:
+          description: Number of GPU slots to configure on the node
+          type: integer
+          format: int64
+          example: 2
+        memory:
+          description: Memory (in GB) of the node
+          type: string
+          example: 8GB
+        memory_allocation_rate:
+          description: Memory allocation rate for the node
+          type: number
+          format: float
+          example: 2
+        name:
+          description: Name of the node
+          type: string
+          example: lxd0
+        network_acl_name:
+          description: Name of the network ACL to create on the LXD node
+          type: string
+          example: ams0
+        network_bridge_mtu:
+          description: MTU for the configured network bridge on LXD
+          type: integer
+          format: int64
+          example: 1500
+        network_name:
+          description: Name of the network bridge to create on the LXD node
+          type: string
+          example: amsbr0
+        network_subnet:
+          description: CIDR of the subnet to configure for the network bridge on LXD
+          type: string
+          format: ipv4
+          example: 10.0.0.0/24
+        public_address:
+          description: Public IP address of the node
+          type: string
+          format: ipv4
+          example: 10.0.0.1
+        storage_device:
+          description: Storage device to use for configuring LXD storage pools
+          type: string
+          example: /dev/sdb
+        storage_pool:
+          description: Name of the storage pool to use for configuring the LXD node
+          type: string
+          example: default
+        tags:
+          description: Tags to attach to the node
+          type: array
+          items:
+            type: string
+          example:
+          - created_by=anbox
+          - gpu=nvidia
+        trust_password:
+          description: Trust password for the LXD instance
+          type: string
+          example: sUp3rs3cr3t
+        unmanaged:
+          description: Flag used to control if AMS can manage the LXD node
+          type: boolean
+          example: false
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    NodeStatus:
+      description: NodeStatus describes the current status of a node
+      type: integer
+      format: int64
+    NodeVPUAllocation:
+      description: NodeVPUAllocation describes a single allocation for a VPU
+      type: object
+      properties:
+        ids:
+          description: VPU IDs the allocation is for
+          type: array
+          items:
+            type: integer
+            format: uint64
+        slots:
+          description: Number of slots used by this allocation
+          type: integer
+          format: int64
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    NodeGPU:
+      description: NodeGPU describes a single GPU available on a node
+      type: object
+      properties:
+        allocations:
+          description: Map of current allocations and containers on the GPU
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NodeGPUAllocation'
+        encoder_slots:
+          description: Number of the encoder slots available on the GPU
+          type: integer
+          format: int64
+          example: 20
         id:
           description: ID of the GPU configured on the node
           type: integer
           format: uint64
           example: 0
+        numa_node:
+          description: NUMA Node number for the GPU
+          type: integer
+          format: uint64
+          example: 0
+        pci_address:
+          description: PCI Bus Address used by the GPU
+          type: string
+          example: '00:08.0'
+        render_name:
+          description: PCI Bus Address used by the GPU
+          type: string
+          example: D129
         slots:
-          description: Update the number of the GPU slots available on the Node
+          description: Number of the GPU slots available
           type: integer
           format: int64
           example: 20
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
     NodePatch:
       description: NodePatch describes a request to update an existing node
       type: object
@@ -608,76 +632,25 @@ components:
           description: Flag used to remove the node from scheduler and not schedule containers on it
           type: boolean
           example: true
-    NodeVPUAllocation:
-      description: NodeVPUAllocation describes a single allocation for a VPU
+    NodeGPUPatch:
+      description: NodeGPUPatch allows changing configuration for individual GPUs
       type: object
       properties:
-        ids:
-          description: VPU IDs the allocation is for
-          type: array
-          items:
-            type: integer
-            format: uint64
-        slots:
-          description: Number of slots used by this allocation
+        encoder_slots:
+          description: Update the number of GPU encoder slots
           type: integer
           format: int64
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
+          example: 4
+        id:
+          description: ID of the GPU configured on the node
           type: integer
-          format: int64
+          format: uint64
           example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
+        slots:
+          description: Update the number of the GPU slots available on the Node
           type: integer
           format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
-    NodeStatus:
-      description: NodeStatus describes the current status of a node
-      type: integer
-      format: int64
-    OperationResponse:
-      description: Operation
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
+          example: 20
     Operation:
       description: Operation represents a background operation
       type: object
@@ -740,6 +713,33 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
+    NodeVPU:
+      description: NodeVPU describes a single independent VPU available on a node
+      type: object
+      properties:
+        allocations:
+          description: Map of current allocations on the VPU
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NodeVPUAllocation'
+        id:
+          description: ID of the VPU
+          type: integer
+          format: uint64
+        model:
+          description: Model name of the VPU
+          type: string
+        numa_node:
+          description: NUMA node the card sits on
+          type: integer
+          format: uint64
+        slots:
+          description: Number of slots available on the VPU
+          type: integer
+          format: int64
+        type:
+          description: 'Type of the VPU. Valid values are: unknown, netint'
+          type: string
   responses:
     InternalServerError:
       description: Internal Server Error
@@ -760,23 +760,6 @@ components:
               type:
                 type: string
                 example: error
-    ErrorNotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: not found
-              error_code:
-                type: integer
-                format: int64
-                example: 404
-              type:
-                type: string
-                example: error
     ErrorBadRequest:
       description: Bad Request
       content:
@@ -793,6 +776,23 @@ components:
                 example: 400
               metadata:
                 example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
               type:
                 type: string
                 example: error

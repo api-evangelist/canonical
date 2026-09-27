@@ -316,6 +316,169 @@ paths:
       - view_test
 components:
   schemas:
+    TestResultResponseWithContext:
+      properties:
+        test_result:
+          $ref: '#/components/schemas/TestResultResponse'
+        test_execution:
+          $ref: '#/components/schemas/TestExecutionResponse'
+        artefact:
+          $ref: '#/components/schemas/ArtefactResponse'
+        artefact_build:
+          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+      type: object
+      required:
+      - test_result
+      - test_execution
+      - artefact
+      - artefact_build
+      title: TestResultResponseWithContext
+      description: Test result response with artefact and test execution context
+    TestExecutionRelevantLinkResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    IssueStatus:
+      type: string
+      enum:
+      - unknown
+      - open
+      - closed
+      title: IssueStatus
+    TestResultStatus:
+      type: string
+      enum:
+      - PASSED
+      - FAILED
+      - SKIPPED
+      title: TestResultStatus
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    MinimalIssueTestResultAttachmentResponse:
+      properties:
+        issue:
+          $ref: '#/components/schemas/MinimalIssueResponse'
+        attachment_rule:
+          anyOf:
+          - $ref: '#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse'
+          - type: 'null'
+      type: object
+      required:
+      - issue
+      - attachment_rule
+      title: MinimalIssueTestResultAttachmentResponse
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
+    EnvironmentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
+      type: object
+      required:
+      - id
+      - name
+      - architecture
+      title: EnvironmentResponse
+    PreviousTestResult:
+      properties:
+        status:
+          $ref: '#/components/schemas/TestResultStatus'
+        version:
+          type: string
+          title: Version
+        artefact_id:
+          type: integer
+          title: Artefact Id
+        test_execution_id:
+          type: integer
+          title: Test Execution Id
+        test_result_id:
+          type: integer
+          title: Test Result Id
+      type: object
+      required:
+      - status
+      - version
+      - artefact_id
+      - test_execution_id
+      - test_result_id
+      title: PreviousTestResult
     HTTPValidationError:
       properties:
         detail:
@@ -325,6 +488,206 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    MinimalIssueResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        source:
+          $ref: '#/components/schemas/IssueSource'
+        project:
+          type: string
+          title: Project
+        key:
+          type: string
+          title: Key
+        title:
+          type: string
+          title: Title
+        status:
+          $ref: '#/components/schemas/IssueStatus'
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        labels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Labels
+        test_executions_count:
+          type: integer
+          title: Test Executions Count
+          default: 0
+      type: object
+      required:
+      - id
+      - source
+      - project
+      - key
+      - title
+      - status
+      - url
+      title: MinimalIssueResponse
+    MinimalIssueTestResultAttachmentRuleResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        enabled:
+          type: boolean
+          title: Enabled
+        families:
+          items:
+            $ref: '#/components/schemas/FamilyName'
+          type: array
+          title: Families
+        artefacts:
+          items:
+            type: string
+          type: array
+          title: Artefacts
+        artefact_versions:
+          items:
+            type: string
+          type: array
+          title: Artefact Versions
+        artefact_stages:
+          items:
+            type: string
+          type: array
+          title: Artefact Stages
+        artefact_tracks:
+          items:
+            type: string
+          type: array
+          title: Artefact Tracks
+        environment_names:
+          items:
+            type: string
+          type: array
+          title: Environment Names
+        test_plans:
+          items:
+            type: string
+          type: array
+          title: Test Plans
+        test_case_names:
+          items:
+            type: string
+          type: array
+          title: Test Case Names
+        template_ids:
+          items:
+            type: string
+          type: array
+          title: Template Ids
+        test_result_statuses:
+          items:
+            $ref: '#/components/schemas/TestResultStatus'
+          type: array
+          title: Test Result Statuses
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+      type: object
+      required:
+      - id
+      - enabled
+      - families
+      - artefacts
+      - artefact_versions
+      - artefact_stages
+      - artefact_tracks
+      - environment_names
+      - test_plans
+      - test_case_names
+      - template_ids
+      - test_result_statuses
+      - execution_metadata
+      title: MinimalIssueTestResultAttachmentRuleResponse
+    TestExecutionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        ci_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ci Link
+        c3_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C3 Link
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
+          type: array
+          title: Relevant Links
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+        test_plan:
+          type: string
+          title: Test Plan
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+        is_triaged:
+          type: boolean
+          title: Is Triaged
+        is_rerun_requested:
+          type: boolean
+          title: Is Rerun Requested
+          readOnly: true
+        rerun_priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Rerun Priority
+          readOnly: true
+      type: object
+      required:
+      - id
+      - ci_link
+      - c3_link
+      - environment
+      - status
+      - test_plan
+      - created_at
+      - execution_metadata
+      - is_triaged
+      - is_rerun_requested
+      - rerun_priority
+      title: TestExecutionResponse
+    ArtefactBuildMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse
     TestResultSearchResponseWithContext:
       properties:
         count:
@@ -349,6 +712,32 @@ components:
       - test_results
       title: TestResultSearchResponseWithContext
       description: Response model for test results search endpoint with full context
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ArtefactResponse:
       properties:
         id:
@@ -477,369 +866,16 @@ components:
       - completed_environment_reviews_count
       - assignee
       title: ArtefactResponse
-    ArtefactStatus:
+    TestExecutionStatus:
       type: string
       enum:
-      - APPROVED
-      - MARKED_AS_FAILED
-      - UNDECIDED
-      title: ArtefactStatus
-    IssueSource:
-      type: string
-      enum:
-      - jira
-      - github
-      - launchpad
-      title: IssueSource
-    MinimalIssueResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        source:
-          $ref: '#/components/schemas/IssueSource'
-        project:
-          type: string
-          title: Project
-        key:
-          type: string
-          title: Key
-        title:
-          type: string
-          title: Title
-        status:
-          $ref: '#/components/schemas/IssueStatus'
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        labels:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Labels
-        test_executions_count:
-          type: integer
-          title: Test Executions Count
-          default: 0
-      type: object
-      required:
-      - id
-      - source
-      - project
-      - key
-      - title
-      - status
-      - url
-      title: MinimalIssueResponse
-    IssueStatus:
-      type: string
-      enum:
-      - unknown
-      - open
-      - closed
-      title: IssueStatus
-    TestExecutionResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        ci_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ci Link
-        c3_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C3 Link
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
-          type: array
-          title: Relevant Links
-        environment:
-          $ref: '#/components/schemas/EnvironmentResponse'
-        status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-        test_plan:
-          type: string
-          title: Test Plan
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-        is_triaged:
-          type: boolean
-          title: Is Triaged
-        is_rerun_requested:
-          type: boolean
-          title: Is Rerun Requested
-          readOnly: true
-        rerun_priority:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Rerun Priority
-          readOnly: true
-      type: object
-      required:
-      - id
-      - ci_link
-      - c3_link
-      - environment
-      - status
-      - test_plan
-      - created_at
-      - execution_metadata
-      - is_triaged
-      - is_rerun_requested
-      - rerun_priority
-      title: TestExecutionResponse
-    TestResultStatus:
-      type: string
-      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
       - PASSED
       - FAILED
-      - SKIPPED
-      title: TestResultStatus
-    PreviousTestResult:
-      properties:
-        status:
-          $ref: '#/components/schemas/TestResultStatus'
-        version:
-          type: string
-          title: Version
-        artefact_id:
-          type: integer
-          title: Artefact Id
-        test_execution_id:
-          type: integer
-          title: Test Execution Id
-        test_result_id:
-          type: integer
-          title: Test Result Id
-      type: object
-      required:
-      - status
-      - version
-      - artefact_id
-      - test_execution_id
-      - test_result_id
-      title: PreviousTestResult
-    ExecutionMetadata:
-      additionalProperties:
-        items:
-          type: string
-          maxLength: 200
-          minLength: 1
-          description: Execution Metadata Value
-        type: array
-      propertyNames:
-        maxLength: 200
-        minLength: 1
-        description: Execution Metadata Category
-      type: object
-      title: Execution Metadata
-      description: A mapping of string categories to lists of string values.
-      examples:
-      - charm:
-        - postgresql-k8s
-        - mysql-k8s
-        charm:postgresql-k8s:revision:
-        - '495'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MinimalIssueTestResultAttachmentRuleResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        enabled:
-          type: boolean
-          title: Enabled
-        families:
-          items:
-            $ref: '#/components/schemas/FamilyName'
-          type: array
-          title: Families
-        artefacts:
-          items:
-            type: string
-          type: array
-          title: Artefacts
-        artefact_versions:
-          items:
-            type: string
-          type: array
-          title: Artefact Versions
-        artefact_stages:
-          items:
-            type: string
-          type: array
-          title: Artefact Stages
-        artefact_tracks:
-          items:
-            type: string
-          type: array
-          title: Artefact Tracks
-        environment_names:
-          items:
-            type: string
-          type: array
-          title: Environment Names
-        test_plans:
-          items:
-            type: string
-          type: array
-          title: Test Plans
-        test_case_names:
-          items:
-            type: string
-          type: array
-          title: Test Case Names
-        template_ids:
-          items:
-            type: string
-          type: array
-          title: Template Ids
-        test_result_statuses:
-          items:
-            $ref: '#/components/schemas/TestResultStatus'
-          type: array
-          title: Test Result Statuses
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-      type: object
-      required:
-      - id
-      - enabled
-      - families
-      - artefacts
-      - artefact_versions
-      - artefact_stages
-      - artefact_tracks
-      - environment_names
-      - test_plans
-      - test_case_names
-      - template_ids
-      - test_result_statuses
-      - execution_metadata
-      title: MinimalIssueTestResultAttachmentRuleResponse
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
-          type: integer
-          title: Id
-      type: object
-      required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
-    TestResultResponseWithContext:
-      properties:
-        test_result:
-          $ref: '#/components/schemas/TestResultResponse'
-        test_execution:
-          $ref: '#/components/schemas/TestExecutionResponse'
-        artefact:
-          $ref: '#/components/schemas/ArtefactResponse'
-        artefact_build:
-          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
-      type: object
-      required:
-      - test_result
-      - test_execution
-      - artefact
-      - artefact_build
-      title: TestResultResponseWithContext
-      description: Test result response with artefact and test execution context
-    ArtefactBuildMinimalResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
     TestResultResponse:
       properties:
         id:
@@ -890,53 +926,17 @@ components:
       - io_log
       - issues
       title: TestResultResponse
-    ReviewerResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - email
-      - launchpad_email
-      - name
-      title: ReviewerResponse
-    TestExecutionStatus:
+    IssueSource:
       type: string
       enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
-    MinimalIssueTestResultAttachmentResponse:
-      properties:
-        issue:
-          $ref: '#/components/schemas/MinimalIssueResponse'
-        attachment_rule:
-          anyOf:
-          - $ref: '#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse'
-          - type: 'null'
-      type: object
-      required:
-      - issue
-      - attachment_rule
-      title: MinimalIssueTestResultAttachmentResponse
+      - jira
+      - github
+      - launchpad
+      title: IssueSource
+    ArtefactStatus:
+      type: string
+      enum:
+      - APPROVED
+      - MARKED_AS_FAILED
+      - UNDECIDED
+      title: ArtefactStatus

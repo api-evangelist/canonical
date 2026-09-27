@@ -41,63 +41,13 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    NetworkAdapterValidator:
-      properties:
-        bus:
-          type: string
-          title: Bus
-        identifier:
-          type: string
-          title: Identifier
-        model:
-          type: string
-          title: Model
-        vendor:
-          type: string
-          title: Vendor
-        capacity:
-          type: integer
-          title: Capacity
-      type: object
-      required:
-      - bus
-      - identifier
-      - model
-      - vendor
-      - capacity
-      title: NetworkAdapterValidator
-      description: Validator for ethernet network adapters
-    WirelessAdapterValidator:
-      properties:
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/DeviceStatus'
-          - type: 'null'
-        model:
-          type: string
-          title: Model
-        vendor:
-          type: string
-          title: Vendor
-        identifier:
-          type: string
-          title: Identifier
-      type: object
-      required:
-      - model
-      - vendor
-      - identifier
-      title: WirelessAdapterValidator
-      description: Validator model for wireless network adapters
+    DeviceStatus:
+      type: string
+      enum:
+      - known-working
+      - known-breaking
+      - unknown
+      title: DeviceStatus
     VideoCaptureValidator:
       properties:
         status:
@@ -120,75 +70,6 @@ components:
       - identifier
       title: VideoCaptureValidator
       description: Validator model for video capture devices
-    BoardValidator:
-      properties:
-        manufacturer:
-          type: string
-          title: Manufacturer
-        product_name:
-          type: string
-          title: Product Name
-        version:
-          type: string
-          title: Version
-      type: object
-      required:
-      - manufacturer
-      - product_name
-      - version
-      title: BoardValidator
-    ChassisValidator:
-      properties:
-        chassis_type:
-          type: string
-          title: Chassis Type
-        manufacturer:
-          type: string
-          title: Manufacturer
-        sku:
-          type: string
-          title: Sku
-        version:
-          type: string
-          title: Version
-      type: object
-      required:
-      - chassis_type
-      - manufacturer
-      - sku
-      - version
-      title: ChassisValidator
-    BiosValidator:
-      properties:
-        vendor:
-          type: string
-          title: Vendor
-        version:
-          type: string
-          title: Version
-        revision:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Revision
-        firmware_revision:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Firmware Revision
-        release_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Release Date
-      type: object
-      required:
-      - vendor
-      - version
-      - revision
-      - firmware_revision
-      - release_date
-      title: BiosValidator
     USBPeripheralValidator:
       properties:
         status:
@@ -210,53 +91,28 @@ components:
       - name
       - vendor
       title: USBPeripheralValidator
-    KernelPackageValidator:
+    WirelessAdapterValidator:
       properties:
-        name:
+        status:
           anyOf:
-          - type: string
+          - $ref: '#/components/schemas/DeviceStatus'
           - type: 'null'
-          title: Name
-        version:
+        model:
           type: string
-          title: Version
-        signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Signature
-        loaded_modules:
-          items:
-            type: string
-          type: array
-          title: Loaded Modules
-          default: []
+          title: Model
+        vendor:
+          type: string
+          title: Vendor
+        identifier:
+          type: string
+          title: Identifier
       type: object
       required:
-      - name
-      - version
-      - signature
-      title: KernelPackageValidator
-    OSValidator:
-      properties:
-        distributor:
-          type: string
-          title: Distributor
-        version:
-          type: string
-          title: Version
-        codename:
-          type: string
-          title: Codename
-        kernel:
-          $ref: '#/components/schemas/KernelPackageValidator'
-      type: object
-      required:
-      - distributor
-      - version
-      - codename
-      - kernel
-      title: OSValidator
+      - model
+      - vendor
+      - identifier
+      title: WirelessAdapterValidator
+      description: Validator model for wireless network adapters
     RelatedCertifiedSystemExistsResponse:
       properties:
         status:
@@ -342,6 +198,45 @@ components:
       - bios
       - available_releases
       title: RelatedCertifiedSystemExistsResponse
+    ChassisValidator:
+      properties:
+        chassis_type:
+          type: string
+          title: Chassis Type
+        manufacturer:
+          type: string
+          title: Manufacturer
+        sku:
+          type: string
+          title: Sku
+        version:
+          type: string
+          title: Version
+      type: object
+      required:
+      - chassis_type
+      - manufacturer
+      - sku
+      - version
+      title: ChassisValidator
+    AudioValidator:
+      properties:
+        model:
+          type: string
+          title: Model
+        vendor:
+          type: string
+          title: Vendor
+        identifier:
+          type: string
+          title: Identifier
+      type: object
+      required:
+      - model
+      - vendor
+      - identifier
+      title: AudioValidator
+      description: Validator model for audio devices
     ProcessorValidator:
       properties:
         identifier:
@@ -367,32 +262,123 @@ components:
       - manufacturer
       - version
       title: ProcessorValidator
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BoardValidator:
+      properties:
+        manufacturer:
           type: string
-          title: Message
-        type:
+          title: Manufacturer
+        product_name:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Product Name
+        version:
+          type: string
+          title: Version
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - manufacturer
+      - product_name
+      - version
+      title: BoardValidator
+    GPUValidator:
+      properties:
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/DeviceStatus'
+          - type: 'null'
+        codename:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Codename
+        manufacturer:
+          type: string
+          title: Manufacturer
+        version:
+          type: string
+          title: Version
+        identifier:
+          type: string
+          title: Identifier
+      type: object
+      required:
+      - manufacturer
+      - version
+      - identifier
+      title: GPUValidator
+    KernelPackageValidator:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        version:
+          type: string
+          title: Version
+        signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signature
+        loaded_modules:
+          items:
+            type: string
+          type: array
+          title: Loaded Modules
+          default: []
+      type: object
+      required:
+      - name
+      - version
+      - signature
+      title: KernelPackageValidator
+    CertifiedImageExistsResponse:
+      properties:
+        status:
+          type: string
+          const: Certified Image Exists
+          title: Status
+          default: Certified Image Exists
+        certified_url:
+          type: string
+          title: Certified URL
+        architecture:
+          type: string
+          title: Architecture
+        bios:
+          anyOf:
+          - $ref: '#/components/schemas/BiosValidator'
+          - type: 'null'
+        board:
+          anyOf:
+          - $ref: '#/components/schemas/BoardValidator'
+          - type: 'null'
+        chassis:
+          anyOf:
+          - $ref: '#/components/schemas/ChassisValidator'
+          - type: 'null'
+        available_releases:
+          items:
+            $ref: '#/components/schemas/OSValidator'
+          type: array
+          title: Available Releases
+      type: object
+      required:
+      - certified_url
+      - architecture
+      - bios
+      - board
+      - available_releases
+      title: CertifiedImageExistsResponse
     CertifiedResponse:
       properties:
         status:
@@ -431,6 +417,53 @@ components:
       - board
       - available_releases
       title: CertifiedResponse
+    PCIPeripheralValidator:
+      properties:
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/DeviceStatus'
+          - type: 'null'
+        pci_id:
+          type: string
+          title: Pci Id
+        name:
+          type: string
+          title: Name
+        vendor:
+          type: string
+          title: Vendor
+      type: object
+      required:
+      - pci_id
+      - name
+      - vendor
+      title: PCIPeripheralValidator
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CertificationStatusRequest:
       properties:
         vendor:
@@ -478,39 +511,6 @@ components:
       - processor
       title: CertificationStatusRequest
       description: Request body validator for status check endpoint
-    GPUValidator:
-      properties:
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/DeviceStatus'
-          - type: 'null'
-        codename:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Codename
-        manufacturer:
-          type: string
-          title: Manufacturer
-        version:
-          type: string
-          title: Version
-        identifier:
-          type: string
-          title: Identifier
-      type: object
-      required:
-      - manufacturer
-      - version
-      - identifier
-      title: GPUValidator
-    DeviceStatus:
-      type: string
-      enum:
-      - known-working
-      - known-breaking
-      - unknown
-      title: DeviceStatus
     NotCertifiedResponse:
       properties:
         status:
@@ -520,80 +520,80 @@ components:
           default: Not Seen
       type: object
       title: NotCertifiedResponse
-    CertifiedImageExistsResponse:
+    NetworkAdapterValidator:
       properties:
-        status:
+        bus:
           type: string
-          const: Certified Image Exists
-          title: Status
-          default: Certified Image Exists
-        certified_url:
+          title: Bus
+        identifier:
           type: string
-          title: Certified URL
-        architecture:
-          type: string
-          title: Architecture
-        bios:
-          anyOf:
-          - $ref: '#/components/schemas/BiosValidator'
-          - type: 'null'
-        board:
-          anyOf:
-          - $ref: '#/components/schemas/BoardValidator'
-          - type: 'null'
-        chassis:
-          anyOf:
-          - $ref: '#/components/schemas/ChassisValidator'
-          - type: 'null'
-        available_releases:
-          items:
-            $ref: '#/components/schemas/OSValidator'
-          type: array
-          title: Available Releases
-      type: object
-      required:
-      - certified_url
-      - architecture
-      - bios
-      - board
-      - available_releases
-      title: CertifiedImageExistsResponse
-    PCIPeripheralValidator:
-      properties:
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/DeviceStatus'
-          - type: 'null'
-        pci_id:
-          type: string
-          title: Pci Id
-        name:
-          type: string
-          title: Name
-        vendor:
-          type: string
-          title: Vendor
-      type: object
-      required:
-      - pci_id
-      - name
-      - vendor
-      title: PCIPeripheralValidator
-    AudioValidator:
-      properties:
+          title: Identifier
         model:
           type: string
           title: Model
         vendor:
           type: string
           title: Vendor
-        identifier:
-          type: string
-          title: Identifier
+        capacity:
+          type: integer
+          title: Capacity
       type: object
       required:
+      - bus
+      - identifier
       - model
       - vendor
-      - identifier
-      title: AudioValidator
-      description: Validator model for audio devices
+      - capacity
+      title: NetworkAdapterValidator
+      description: Validator for ethernet network adapters
+    BiosValidator:
+      properties:
+        vendor:
+          type: string
+          title: Vendor
+        version:
+          type: string
+          title: Version
+        revision:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Revision
+        firmware_revision:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Firmware Revision
+        release_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release Date
+      type: object
+      required:
+      - vendor
+      - version
+      - revision
+      - firmware_revision
+      - release_date
+      title: BiosValidator
+    OSValidator:
+      properties:
+        distributor:
+          type: string
+          title: Distributor
+        version:
+          type: string
+          title: Version
+        codename:
+          type: string
+          title: Codename
+        kernel:
+          $ref: '#/components/schemas/KernelPackageValidator'
+      type: object
+      required:
+      - distributor
+      - version
+      - codename
+      - kernel
+      title: OSValidator

@@ -54,23 +54,6 @@ paths:
       - Microceph
 components:
   schemas:
-    Level:
-      type: string
-      oneOf:
-      - title: PANIC
-        const: 0
-      - title: FATAL
-        const: 1
-      - title: ERROR
-        const: 2
-      - title: WARNING
-        const: 3
-      - title: INFO
-        const: 4
-      - title: DEBUG
-        const: 5
-      - title: TRACE
-        const: 6
     Response:
       type: object
       properties:
@@ -107,3 +90,20 @@ components:
           - type: object
           - type: 'null'
           description: Response payload, could be null, or a valid json object.
+    Level:
+      type: string
+      oneOf:
+      - title: PANIC
+        const: 0
+      - title: FATAL
+        const: 1
+      - title: ERROR
+        const: 2
+      - title: WARNING
+        const: 3
+      - title: INFO
+        const: 4
+      - title: DEBUG
+        const: 5
+      - title: TRACE
+        const: 6

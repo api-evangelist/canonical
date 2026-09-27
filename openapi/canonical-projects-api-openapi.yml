@@ -311,33 +311,18 @@ paths:
       - Projects
 components:
   schemas:
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectState:
-      description: ProjectState represents the current running state of a LXD project
+    Project:
+      description: Project represents a LXD project
       properties:
-        resources:
-          additionalProperties:
-            $ref: '#/components/schemas/ProjectStateResource'
-          description: Allocated and used resources
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
           example:
-            containers:
-              limit: 10
-              usage: 4
-            cpu:
-              limit: 20
-              usage: 16
-          readOnly: true
-          type: object
-          x-go-name: Resources
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectPut:
-      description: ProjectPut represents the modifiable fields of a LXD project
-      properties:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
         config:
           additionalProperties:
             type: string
@@ -352,6 +337,36 @@ components:
           example: My new project
           type: string
           x-go-name: Description
+        name:
+          description: The project name
+          example: foo
+          readOnly: true
+          type: string
+          x-go-name: Name
+        replica_mode:
+          description: 'Replica mode for the project (leader, standby, or empty)
+
+            This field is updated via PUT /1.0/projects/<name>/state
+
+
+            API extension: project_replica_mode'
+          example: leader
+          readOnly: true
+          type: string
+          x-go-name: ReplicaMode
+        used_by:
+          description: List of URLs of objects using this project
+          example:
+          - /1.0/images/0e60015346f06627f10580d56ac7fffd9ea775f6d4f25987217d5eed94910a20
+          - /1.0/instances/c1
+          - /1.0/networks/lxdbr0
+          - /1.0/profiles/default
+          - /1.0/storage-pools/default/volumes/custom/blah
+          items:
+            type: string
+          readOnly: true
+          type: array
+          x-go-name: UsedBy
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     ProjectPost:
@@ -397,6 +412,74 @@ components:
           type: string
           x-go-name: StoragePool
       type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProjectState:
+      description: ProjectState represents the current running state of a LXD project
+      properties:
+        resources:
+          additionalProperties:
+            $ref: '#/components/schemas/ProjectStateResource'
+          description: Allocated and used resources
+          example:
+            containers:
+              limit: 10
+              usage: 4
+            cpu:
+              limit: 20
+              usage: 16
+          readOnly: true
+          type: object
+          x-go-name: Resources
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProjectStateResource:
+      description: ProjectStateResource represents the state of a particular resource in a LXD project
+      properties:
+        Limit:
+          description: Limit for the resource (-1 if none)
+          example: 10
+          format: int64
+          type: integer
+        Usage:
+          description: Current usage for the resource
+          example: 4
+          format: int64
+          type: integer
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProjectPut:
+      description: ProjectPut represents the modifiable fields of a LXD project
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Project configuration map (refer to doc/projects.md)
+          example:
+            features.networks: 'false'
+            features.profiles: 'true'
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the project
+          example: My new project
+          type: string
+          x-go-name: Description
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProjectStatePut:
+      description: ProjectStatePut represents the fields for updating project replica state
+      properties:
+        replica_mode:
+          description: 'Replica mode to set: "leader", "standby", or "" to clear the replica mode'
+          example: leader
+          type: string
+          x-go-name: ReplicaMode
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
       x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
@@ -526,90 +609,67 @@ components:
       title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    Project:
-      description: Project represents a LXD project
-      properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
-        config:
-          additionalProperties:
-            type: string
-          description: Project configuration map (refer to doc/projects.md)
-          example:
-            features.networks: 'false'
-            features.profiles: 'true'
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the project
-          example: My new project
-          type: string
-          x-go-name: Description
-        name:
-          description: The project name
-          example: foo
-          readOnly: true
-          type: string
-          x-go-name: Name
-        replica_mode:
-          description: 'Replica mode for the project (leader, standby, or empty)
-
-            This field is updated via PUT /1.0/projects/<name>/state
-
-
-            API extension: project_replica_mode'
-          example: leader
-          readOnly: true
-          type: string
-          x-go-name: ReplicaMode
-        used_by:
-          description: List of URLs of objects using this project
-          example:
-          - /1.0/images/0e60015346f06627f10580d56ac7fffd9ea775f6d4f25987217d5eed94910a20
-          - /1.0/instances/c1
-          - /1.0/networks/lxdbr0
-          - /1.0/profiles/default
-          - /1.0/storage-pools/default/volumes/custom/blah
-          items:
-            type: string
-          readOnly: true
-          type: array
-          x-go-name: UsedBy
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectStateResource:
-      description: ProjectStateResource represents the state of a particular resource in a LXD project
-      properties:
-        Limit:
-          description: Limit for the resource (-1 if none)
-          example: 10
-          format: int64
-          type: integer
-        Usage:
-          description: Current usage for the resource
-          example: 4
-          format: int64
-          type: integer
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectStatePut:
-      description: ProjectStatePut represents the fields for updating project replica state
-      properties:
-        replica_mode:
-          description: 'Replica mode to set: "leader", "standby", or "" to clear the replica mode'
-          example: leader
-          type: string
-          x-go-name: ReplicaMode
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
   responses:
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
     BadRequest:
       description: Bad Request
       content:
@@ -650,23 +710,23 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    EmptySyncResponse:
-      description: Empty sync response
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:
             properties:
-              status:
-                example: Success
+              error:
+                example: not authorized
                 type: string
-                x-go-name: Status
-              status_code:
-                example: 200
+                x-go-name: Error
+              error_code:
+                example: 403
                 format: int64
                 type: integer
-                x-go-name: StatusCode
+                x-go-name: ErrorCode
               type:
-                example: sync
+                example: error
                 type: string
                 x-go-name: Type
             type: object
@@ -693,66 +753,6 @@ components:
                 x-go-name: StatusCode
               type:
                 example: async
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
                 type: string
                 x-go-name: Type
             type: object

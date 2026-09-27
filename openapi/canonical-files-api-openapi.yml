@@ -198,24 +198,6 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/fileResult'
-    fileResult:
-      type: object
-      properties:
-        path:
-          type: string
-        error:
-          $ref: '#/components/schemas/errorResult'
-    removePathsItem:
-      type: object
-      properties:
-        path:
-          type: string
-          description: The path to the file or directory to remove.
-        recursive:
-          type: boolean
-          description: Whether to remove recursively (for directories).
-      required:
-      - path
     PostFilesRemovePathsRequest:
       type: object
       properties:
@@ -230,23 +212,95 @@ components:
       required:
       - action
       - paths
-    BaseResponse:
+    makeDirsItem:
       type: object
       properties:
-        type:
+        path:
           type: string
-          description: Response type, "sync".
-        status-code:
+          description: The directory path to create.
+        make-parents:
+          type: boolean
+          description: Whether to create parent directories as needed.
+        permissions:
+          type: string
+          description: Permissions for the created directory (octal format, e.g., "755").
+        user-id:
           type: integer
-          description: HTTP response status code.
-        status:
+          description: User ID of the owner.
+        user:
           type: string
-          description: 'The description of the HTTP status code.
-
-
-            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
-
-            '
+          description: Username of the owner.
+        group-id:
+          type: integer
+          description: Group ID of the owner.
+        group:
+          type: string
+          description: Group name of the owner.
+      required:
+      - path
+    errorResult:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message.
+        kind:
+          type: string
+          description: Type of error.
+          enum:
+          - daemon-restart
+          - generic-file-error
+          - login-required
+          - no-default-services
+          - not-found
+          - permission-denied
+          - system-restart
+        value:
+          type: object
+          description: Additional error information, if any.
+      required:
+      - message
+    ReadFilesResponse:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+          description: Array of files. Each file part will have its own headers.
+        response:
+          $ref: '#/components/schemas/PostFilesResponse'
+    ListFilesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/FileInfo'
+    PostFilesMakeDirsRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - make-dirs
+        dirs:
+          type: array
+          items:
+            $ref: '#/components/schemas/makeDirsItem'
+      required:
+      - action
+      - dirs
+    fileResult:
+      type: object
+      properties:
+        path:
+          type: string
+        error:
+          $ref: '#/components/schemas/errorResult'
     FileInfo:
       type: object
       properties:
@@ -296,85 +350,31 @@ components:
       - type
       - permissions
       - last-modified
-    PostFilesMakeDirsRequest:
+    BaseResponse:
       type: object
       properties:
-        action:
+        type:
           type: string
-          enum:
-          - make-dirs
-        dirs:
-          type: array
-          items:
-            $ref: '#/components/schemas/makeDirsItem'
-      required:
-      - action
-      - dirs
-    ListFilesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/FileInfo'
-    ReadFilesResponse:
-      type: object
-      properties:
-        files:
-          type: array
-          items:
-            type: string
-            format: binary
-          description: Array of files. Each file part will have its own headers.
-        response:
-          $ref: '#/components/schemas/PostFilesResponse'
-    errorResult:
-      type: object
-      properties:
-        message:
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
           type: string
-          description: Error message.
-        kind:
-          type: string
-          description: Type of error.
-          enum:
-          - daemon-restart
-          - generic-file-error
-          - login-required
-          - no-default-services
-          - not-found
-          - permission-denied
-          - system-restart
-        value:
-          type: object
-          description: Additional error information, if any.
-      required:
-      - message
-    makeDirsItem:
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
+    removePathsItem:
       type: object
       properties:
         path:
           type: string
-          description: The directory path to create.
-        make-parents:
+          description: The path to the file or directory to remove.
+        recursive:
           type: boolean
-          description: Whether to create parent directories as needed.
-        permissions:
-          type: string
-          description: Permissions for the created directory (octal format, e.g., "755").
-        user-id:
-          type: integer
-          description: User ID of the owner.
-        user:
-          type: string
-          description: Username of the owner.
-        group-id:
-          type: integer
-          description: Group ID of the owner.
-        group:
-          type: string
-          description: Group name of the owner.
+          description: Whether to remove recursively (for directories).
       required:
       - path

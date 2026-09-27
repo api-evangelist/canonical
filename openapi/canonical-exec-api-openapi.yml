@@ -49,14 +49,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    BaseAsyncResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          change:
-            type: string
-            description: The Change ID of the asynchronous change.
     BaseResponse:
       type: object
       properties:
@@ -125,6 +117,14 @@ components:
           description: The height of the terminal (if applicable).
       required:
       - command
+    BaseAsyncResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          change:
+            type: string
+            description: The Change ID of the asynchronous change.
     PostExecResponse:
       allOf:
       - $ref: '#/components/schemas/BaseAsyncResponse'

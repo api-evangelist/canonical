@@ -286,73 +286,6 @@ paths:
           description: Device not found
 components:
   schemas:
-    PatchedDevice:
-      type: object
-      description: Device Serializer class.
-      properties:
-        uid:
-          type: string
-          maxLength: 200
-        creation_date:
-          type: string
-          format: date-time
-          readOnly: true
-        address:
-          type: string
-          title: Device IP
-        public_ssh_key:
-          type: string
-          title: Device public SSH key
-        grafana_dashboards:
-          type: array
-          items:
-            type: string
-        foxglove_dashboards:
-          type: array
-          items:
-            type: string
-        prometheus_alert_rule_files:
-          type: array
-          items:
-            type: string
-        loki_alert_rule_files:
-          type: array
-          items:
-            type: string
-        certificate:
-          allOf:
-          - $ref: '#/components/schemas/DeviceCertificate'
-          readOnly: true
-    PatchedDeviceCertificate:
-      type: object
-      description: Device Certificate Serializer class.
-      properties:
-        csr:
-          type: string
-          title: Device Certificate Signing Request
-        certificate:
-          type: string
-          title: Signed Device Certificate
-        ca:
-          type: string
-          title: Device Certificate Authority
-        chain:
-          type: string
-          title: Device Certificate Chain
-        status:
-          oneOf:
-          - $ref: '#/components/schemas/StatusEnum'
-          - $ref: '#/components/schemas/BlankEnum'
-        created_at:
-          type: string
-          format: date-time
-          readOnly: true
-          title: Device Certificate request created
-        updated_at:
-          type: string
-          format: date-time
-          readOnly: true
-          title: Device Certificate last updated
     Device:
       type: object
       description: Device Serializer class.
@@ -395,6 +328,87 @@ components:
       - certificate
       - creation_date
       - uid
+    PatchedDevice:
+      type: object
+      description: Device Serializer class.
+      properties:
+        uid:
+          type: string
+          maxLength: 200
+        creation_date:
+          type: string
+          format: date-time
+          readOnly: true
+        address:
+          type: string
+          title: Device IP
+        public_ssh_key:
+          type: string
+          title: Device public SSH key
+        grafana_dashboards:
+          type: array
+          items:
+            type: string
+        foxglove_dashboards:
+          type: array
+          items:
+            type: string
+        prometheus_alert_rule_files:
+          type: array
+          items:
+            type: string
+        loki_alert_rule_files:
+          type: array
+          items:
+            type: string
+        certificate:
+          allOf:
+          - $ref: '#/components/schemas/DeviceCertificate'
+          readOnly: true
+    StatusEnum:
+      enum:
+      - pending
+      - signed
+      - denied
+      type: string
+      description: '* `pending` - Pending
+
+        * `signed` - Signed
+
+        * `denied` - Denied'
+    PatchedDeviceCertificate:
+      type: object
+      description: Device Certificate Serializer class.
+      properties:
+        csr:
+          type: string
+          title: Device Certificate Signing Request
+        certificate:
+          type: string
+          title: Signed Device Certificate
+        ca:
+          type: string
+          title: Device Certificate Authority
+        chain:
+          type: string
+          title: Device Certificate Chain
+        status:
+          oneOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Device Certificate request created
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Device Certificate last updated
+    BlankEnum:
+      enum:
+      - ''
     DeviceCertificate:
       type: object
       description: Device Certificate Serializer class.
@@ -429,17 +443,3 @@ components:
       - created_at
       - csr
       - updated_at
-    BlankEnum:
-      enum:
-      - ''
-    StatusEnum:
-      enum:
-      - pending
-      - signed
-      - denied
-      type: string
-      description: '* `pending` - Pending
-
-        * `signed` - Signed
-
-        * `denied` - Denied'

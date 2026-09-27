@@ -269,20 +269,7 @@ paths:
       - AppAuthorizationService
 components:
   schemas:
-    authorizationApp:
-      properties:
-        client_id:
-          type: string
-      type: object
     authorizationRemoveAllowedAppFromGroupResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    authorizationRemoveAllowedAppsFromGroupResp:
       properties:
         message:
           type: string
@@ -296,6 +283,19 @@ components:
           items:
             $ref: '#/components/schemas/authorizationApp'
           type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    apiauthorizationGroup:
+      properties:
+        group_id:
+          type: string
+      type: object
+    typesErrorResponse:
+      properties:
         message:
           type: string
         status:
@@ -322,6 +322,14 @@ components:
           format: int32
           type: integer
       type: object
+    authorizationRemoveAllowedAppsFromGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
     authorizationAddAllowedAppToGroupResp:
       properties:
         message:
@@ -330,18 +338,10 @@ components:
           format: int32
           type: integer
       type: object
-    apiauthorizationGroup:
+    authorizationApp:
       properties:
-        group_id:
+        client_id:
           type: string
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
       type: object
   securitySchemes:
     OAuth2:

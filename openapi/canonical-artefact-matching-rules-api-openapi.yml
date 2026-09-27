@@ -159,59 +159,100 @@ paths:
       - change_team
 components:
   schemas:
-    Permission:
-      type: string
-      enum:
-      - view_user
-      - change_user
-      - view_team
-      - change_team
-      - add_application
-      - change_application
-      - view_application
-      - view_permission
-      - view_issue
-      - change_issue
-      - change_issue_attachment
-      - change_issue_attachment_bulk
-      - change_attachment_rule
-      - change_auto_rerun
-      - view_test
-      - change_test
-      - view_rerun
-      - change_rerun
-      - change_rerun_bulk
-      - view_artefact
-      - change_artefact
-      - view_environment_review
-      - change_environment_review
-      - view_report
-      - view_test_case_reported_issue
-      - change_test_case_reported_issue
-      - view_environment_reported_issue
-      - change_environment_reported_issue
-      - view_notification
-      - change_notification
-      - view_sentry_debug
-      title: Permission
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ArtefactMatchingRulePatch:
+      properties:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+        family:
+          anyOf:
+          - $ref: '#/components/schemas/FamilyName'
+          - type: 'null'
+        stage:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stage
+        track:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Track
+        branch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch
+        store:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Store
+        series:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Series
+        os:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Os
+        release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release
+        owner:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+        team_ids:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Team Ids
+        grant_permissions:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/Permission'
+            type: array
+          - type: 'null'
+          title: Grant Permissions
+      type: object
+      title: ArtefactMatchingRulePatch
+      description: Patch request for artefact matching rule
     ArtefactMatchingRuleResponse:
       properties:
         id:
@@ -291,6 +332,37 @@ components:
       - grant_permissions
       title: ArtefactMatchingRuleResponse
       description: Artefact matching rule with associated teams
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TeamMinimal:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - name
+      title: TeamMinimal
     ArtefactMatchingRuleRequest:
       properties:
         name:
@@ -347,110 +419,38 @@ components:
       - team_ids
       title: ArtefactMatchingRuleRequest
       description: Request to create an artefact matching rule (extends base with team_ids)
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TeamMinimal:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - name
-      title: TeamMinimal
-    ArtefactMatchingRulePatch:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-        family:
-          anyOf:
-          - $ref: '#/components/schemas/FamilyName'
-          - type: 'null'
-        stage:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stage
-        track:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Track
-        branch:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Branch
-        store:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Store
-        series:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Series
-        os:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Os
-        release:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Release
-        owner:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Owner
-        team_ids:
-          anyOf:
-          - items:
-              type: integer
-            type: array
-          - type: 'null'
-          title: Team Ids
-        grant_permissions:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/Permission'
-            type: array
-          - type: 'null'
-          title: Grant Permissions
-      type: object
-      title: ArtefactMatchingRulePatch
-      description: Patch request for artefact matching rule
+    Permission:
+      type: string
+      enum:
+      - view_user
+      - change_user
+      - view_team
+      - change_team
+      - add_application
+      - change_application
+      - view_application
+      - view_permission
+      - view_issue
+      - change_issue
+      - change_issue_attachment
+      - change_issue_attachment_bulk
+      - change_attachment_rule
+      - change_auto_rerun
+      - view_test
+      - change_test
+      - view_rerun
+      - change_rerun
+      - change_rerun_bulk
+      - view_artefact
+      - change_artefact
+      - view_environment_review
+      - change_environment_review
+      - view_report
+      - view_test_case_reported_issue
+      - change_test_case_reported_issue
+      - view_environment_reported_issue
+      - change_environment_reported_issue
+      - view_notification
+      - change_notification
+      - view_sentry_debug
+      title: Permission

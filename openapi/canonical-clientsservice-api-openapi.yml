@@ -354,10 +354,8 @@ components:
         userinfo_signed_response_alg:
           type: string
       type: object
-    clientsUpdateClientResp:
+    clientsRemoveClientResp:
       properties:
-        data:
-          $ref: '#/components/schemas/clientsClient'
         message:
           type: string
         status:
@@ -374,8 +372,10 @@ components:
           format: int32
           type: integer
       type: object
-    clientsRemoveClientResp:
+    clientsCreateClientResp:
       properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
         message:
           type: string
         status:
@@ -396,10 +396,8 @@ components:
           format: int32
           type: integer
       type: object
-    clientsCreateClientResp:
+    typesErrorResponse:
       properties:
-        data:
-          $ref: '#/components/schemas/clientsClient'
         message:
           type: string
         status:
@@ -418,8 +416,10 @@ components:
           format: int32
           type: integer
       type: object
-    typesErrorResponse:
+    clientsUpdateClientResp:
       properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
         message:
           type: string
         status:

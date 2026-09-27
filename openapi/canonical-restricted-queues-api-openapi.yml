@@ -1,0 +1,165 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Restricted Queues API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Restricted Queues
+paths:
+  /v1/restricted-queues:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestrictedQueueOut'
+          description: Successful response
+      tags:
+      - Restricted Queues
+      summary: List all agent's restricted queues and its owners
+      operationId: getV1RestrictedQueues
+      x-operation-id-source: derived
+  /v1/restricted-queues/{queue_name}:
+    get:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestrictedQueueOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Restricted Queues
+      summary: Get restricted queues for a specific agent
+      operationId: getV1RestrictedQueuesByQueueName
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Restricted Queues
+      summary: Add an owner to the specific restricted queue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestrictedQueueIn'
+      operationId: postV1RestrictedQueuesByQueueName
+      x-operation-id-source: derived
+    delete:
+      parameters:
+      - in: path
+        name: queue_name
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Restricted Queues
+      summary: Delete an owner from the specific restricted queue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RestrictedQueueIn'
+      operationId: deleteV1RestrictedQueuesByQueueName
+      x-operation-id-source: derived
+components:
+  schemas:
+    RestrictedQueueIn:
+      type: object
+      properties:
+        client_id:
+          type: string
+      required:
+      - client_id
+      additionalProperties: false
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    RestrictedQueueOut:
+      type: object
+      properties:
+        queue:
+          type: string
+        owners:
+          type: array
+          items:
+            type: string
+      required:
+      - owners
+      - queue
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object

@@ -431,6 +431,100 @@ paths:
       - view_artefact
 components:
   schemas:
+    TestExecutionRelevantLinkResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
+    EnvironmentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
+      type: object
+      required:
+      - id
+      - name
+      - architecture
+      title: EnvironmentResponse
     HTTPValidationError:
       properties:
         detail:
@@ -440,6 +534,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ArtefactVersionResponse:
+      properties:
+        version:
+          type: string
+          title: Version
+        artefact_id:
+          type: integer
+          title: Artefact Id
+      type: object
+      required:
+      - version
+      - artefact_id
+      title: ArtefactVersionResponse
+    ArtefactBuildEnvironmentReviewDecision:
+      type: string
+      enum:
+      - REJECTED
+      - APPROVED_INCONSISTENT_TEST
+      - APPROVED_UNSTABLE_PHYSICAL_INFRA
+      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
+      - APPROVED_FAULTY_HARDWARE
+      - APPROVED_ALL_TESTS_PASS
+      title: ArtefactBuildEnvironmentReviewDecision
     ArtefactBuildEnvironmentReviewResponse:
       properties:
         id:
@@ -471,6 +588,163 @@ components:
       - environment
       - artefact_build
       title: ArtefactBuildEnvironmentReviewResponse
+    ArtefactHistoryResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+        items:
+          items:
+            $ref: '#/components/schemas/ArtefactHistoryItemResponse'
+          type: array
+          title: Items
+      type: object
+      required:
+      - count
+      - items
+      title: ArtefactHistoryResponse
+    StageName:
+      type: string
+      enum:
+      - proposed
+      - updates
+      - edge
+      - beta
+      - candidate
+      - stable
+      - pending
+      - current
+      title: StageName
+    TestExecutionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        ci_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ci Link
+        c3_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C3 Link
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
+          type: array
+          title: Relevant Links
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+        test_plan:
+          type: string
+          title: Test Plan
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+        is_triaged:
+          type: boolean
+          title: Is Triaged
+        is_rerun_requested:
+          type: boolean
+          title: Is Rerun Requested
+          readOnly: true
+        rerun_priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Rerun Priority
+          readOnly: true
+      type: object
+      required:
+      - id
+      - ci_link
+      - c3_link
+      - environment
+      - status
+      - test_plan
+      - created_at
+      - execution_metadata
+      - is_triaged
+      - is_rerun_requested
+      - rerun_priority
+      title: TestExecutionResponse
+    ArtefactBuildMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse
+    ArtefactBuildResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+        test_executions:
+          items:
+            $ref: '#/components/schemas/TestExecutionResponse'
+          type: array
+          title: Test Executions
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      - test_executions
+      title: ArtefactBuildResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ArtefactPatch:
       properties:
         status:
@@ -662,25 +936,6 @@ components:
       - completed_environment_reviews_count
       - assignee
       title: ArtefactResponse
-    ArtefactStatus:
-      type: string
-      enum:
-      - APPROVED
-      - MARKED_AS_FAILED
-      - UNDECIDED
-      title: ArtefactStatus
-    StageName:
-      type: string
-      enum:
-      - proposed
-      - updates
-      - edge
-      - beta
-      - candidate
-      - stable
-      - pending
-      - current
-      title: StageName
     ArtefactHistoryItemResponse:
       properties:
         artefact_id:
@@ -728,66 +983,16 @@ components:
           title: Review Comment
       type: object
       title: EnvironmentReviewPatch
-    TestExecutionResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        ci_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ci Link
-        c3_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C3 Link
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
-          type: array
-          title: Relevant Links
-        environment:
-          $ref: '#/components/schemas/EnvironmentResponse'
-        status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-        test_plan:
-          type: string
-          title: Test Plan
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-        is_triaged:
-          type: boolean
-          title: Is Triaged
-        is_rerun_requested:
-          type: boolean
-          title: Is Rerun Requested
-          readOnly: true
-        rerun_priority:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Rerun Priority
-          readOnly: true
-      type: object
-      required:
-      - id
-      - ci_link
-      - c3_link
-      - environment
-      - status
-      - test_plan
-      - created_at
-      - execution_metadata
-      - is_triaged
-      - is_rerun_requested
-      - rerun_priority
-      title: TestExecutionResponse
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
     ArtefactSearchResponse:
       properties:
         artefacts:
@@ -811,215 +1016,10 @@ components:
       - limit
       - offset
       title: ArtefactSearchResponse
-    ArtefactBuildResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-        test_executions:
-          items:
-            $ref: '#/components/schemas/TestExecutionResponse'
-          type: array
-          title: Test Executions
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      - test_executions
-      title: ArtefactBuildResponse
-    ArtefactVersionResponse:
-      properties:
-        version:
-          type: string
-          title: Version
-        artefact_id:
-          type: integer
-          title: Artefact Id
-      type: object
-      required:
-      - version
-      - artefact_id
-      title: ArtefactVersionResponse
-    ExecutionMetadata:
-      additionalProperties:
-        items:
-          type: string
-          maxLength: 200
-          minLength: 1
-          description: Execution Metadata Value
-        type: array
-      propertyNames:
-        maxLength: 200
-        minLength: 1
-        description: Execution Metadata Category
-      type: object
-      title: Execution Metadata
-      description: A mapping of string categories to lists of string values.
-      examples:
-      - charm:
-        - postgresql-k8s
-        - mysql-k8s
-        charm:postgresql-k8s:revision:
-        - '495'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
-          type: integer
-          title: Id
-      type: object
-      required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse
-    ArtefactBuildEnvironmentReviewDecision:
+    ArtefactStatus:
       type: string
       enum:
-      - REJECTED
-      - APPROVED_INCONSISTENT_TEST
-      - APPROVED_UNSTABLE_PHYSICAL_INFRA
-      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
-      - APPROVED_FAULTY_HARDWARE
-      - APPROVED_ALL_TESTS_PASS
-      title: ArtefactBuildEnvironmentReviewDecision
-    ArtefactHistoryResponse:
-      properties:
-        count:
-          type: integer
-          title: Count
-        items:
-          items:
-            $ref: '#/components/schemas/ArtefactHistoryItemResponse'
-          type: array
-          title: Items
-      type: object
-      required:
-      - count
-      - items
-      title: ArtefactHistoryResponse
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
-    ArtefactBuildMinimalResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
-    ReviewerResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - email
-      - launchpad_email
-      - name
-      title: ReviewerResponse
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
+      - APPROVED
+      - MARKED_AS_FAILED
+      - UNDECIDED
+      title: ArtefactStatus

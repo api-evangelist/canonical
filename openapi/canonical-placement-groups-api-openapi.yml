@@ -301,18 +301,18 @@ paths:
       - Placement Groups
 components:
   responses:
-    BadRequest:
-      description: Bad Request
+    InternalServerError:
+      description: Internal Server Error
       content:
         application/json:
           schema:
             properties:
               error:
-                example: bad request
+                example: internal server error
                 type: string
                 x-go-name: Error
               error_code:
-                example: 400
+                example: 500
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -361,6 +361,26 @@ components:
                 type: string
                 x-go-name: Type
             type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
     Forbidden:
       description: Forbidden
       content:
@@ -373,26 +393,6 @@ components:
                 x-go-name: Error
               error_code:
                 example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
                 format: int64
                 type: integer
                 x-go-name: ErrorCode

@@ -1,0 +1,194 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Client Permissions API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Client Permissions
+paths:
+  /v1/client-permissions:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientPermissionsOut'
+          description: Successful response
+      tags:
+      - Client Permissions
+      summary: Retrieve all client permissions from database
+      operationId: getV1ClientPermissions
+      x-operation-id-source: derived
+  /v1/client-permissions/{client_id}:
+    get:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientPermissionsOut'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Client Permissions
+      summary: Retrieve single client-permissions from database
+      operationId: getV1ClientPermissionsByClientId
+      x-operation-id-source: derived
+    put:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Client Permissions
+      summary: Add or create client permissions for a specified user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientPermissionsIn'
+      operationId: putV1ClientPermissionsByClientId
+      x-operation-id-source: derived
+    delete:
+      parameters:
+      - in: path
+        name: client_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Client Permissions
+      summary: Delete client id along with its permissions
+      operationId: deleteV1ClientPermissionsByClientId
+      x-operation-id-source: derived
+components:
+  schemas:
+    ClientPermissionsIn:
+      type: object
+      properties:
+        client_secret:
+          type: string
+          minLength: 15
+        max_priority:
+          type: object
+          additionalProperties:
+            type: integer
+        max_reservation_time:
+          type: object
+          additionalProperties:
+            type: integer
+        role:
+          type: string
+          enum:
+          - admin
+          - manager
+          - contributor
+          - agent
+        email:
+          type: string
+          format: email
+      additionalProperties: false
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    ClientPermissionsOut:
+      type: object
+      properties:
+        client_id:
+          type: string
+        max_priority:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: integer
+        allowed_queues:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        max_reservation_time:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+        role:
+          type: string
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+      required:
+      - allowed_queues
+      - client_id
+      - max_priority
+      - max_reservation_time
+      - role
+      additionalProperties: false

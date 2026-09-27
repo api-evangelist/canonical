@@ -104,14 +104,6 @@ components:
           description: Name of the subcluster the AMS instance is part of
           type: string
           example: prod0
-    VersionResponse:
-      description: VersionResponse shows the version for the running service
-      type: object
-      properties:
-        version:
-          description: Version of the service
-          type: string
-          example: 1.18.2
     NoMetaSyncResponse:
       description: Swagger Synchronous response without metadata field
       type: object
@@ -134,6 +126,14 @@ components:
           description: Type of operation response
           type: string
           example: sync
+    VersionResponse:
+      description: VersionResponse shows the version for the running service
+      type: object
+      properties:
+        version:
+          description: Version of the service
+          type: string
+          example: 1.18.2
   responses:
     InternalServerError:
       description: Internal Server Error

@@ -31,21 +31,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    systemInfo:
-      type: object
-      properties:
-        boot-id:
-          type: string
-          description: A unique string that represents this boot of the server.
-        http-address:
-          type: string
-          description: Address the HTTP server is listening on, for example `:4000`. Only present if the daemon was started with the `--http` argument.
-        version:
-          type: string
-          description: Version of the Pebble daemon.
-      required:
-      - boot-id
-      - version
     BaseResponse:
       type: object
       properties:
@@ -70,3 +55,18 @@ components:
         properties:
           result:
             $ref: '#/components/schemas/systemInfo'
+    systemInfo:
+      type: object
+      properties:
+        boot-id:
+          type: string
+          description: A unique string that represents this boot of the server.
+        http-address:
+          type: string
+          description: Address the HTTP server is listening on, for example `:4000`. Only present if the daemon was started with the `--http` argument.
+        version:
+          type: string
+          description: Version of the Pebble daemon.
+      required:
+      - boot-id
+      - version

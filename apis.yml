@@ -4,15 +4,23 @@ url: >-
   https://raw.githubusercontent.com/api-evangelist/canonical/refs/heads/main/apis.yml
 deliveryModel:
   model: saas
-  open_source: false
+  license_evidence:
+    not_product:
+    - canonical/cos-registration-server
+    - canonical/hardware-api
+    - canonical/identity-platform-api
+    - canonical/lxd
+    - canonical/microceph
+  open_source: unknown
   commercial: true
   callable_host: true
   label: Hosted service · you call their endpoint
-  confidence: high
+  confidence: low
   source:
   - openapi
   - pricing
-  generated: '2026-08-28'
+  - repository-not-product
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: freemium
@@ -35,7 +43,7 @@ tags:
   - Canonical
   - Cloud
   - Linux
-  - Open-Source
+  - Open Source
   - Ubuntu
   - Containers
   - Bare Metal
@@ -51,6 +59,7 @@ tags_raw:
   - Bare Metal
   - Charms
   - Identity
+  - Open-Source
 access: Open
 created: '2026-03-16'
 modified: '2026-09-05'
@@ -155,12 +164,13 @@ apis:
   baseURL: https://api.launchpad.net/
   tags:
   - Authentication
-  - Open-Source
+  - Open Source
   - Project Hosting
   tags_raw:
   - OAuth
   - Open Source
   - Project Hosting
+  - Open-Source
   properties:
   - type: Documentation
     url: https://documentation.ubuntu.com/launchpad/user/how-to/launchpad-api/
@@ -6056,66 +6066,6 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
-- aid: canonical:canonical-v1-api
-  name: Canonical V1 API
-  description: The V1 API from Canonical — 29 operation(s) for v1.
-  humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
-  tags:
-  - v1
-  tags_raw:
-  - V1
-  properties:
-  - type: OpenAPI
-    url: openapi/canonical-v1-api-openapi.yml
-  - type: Documentation
-    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
-  - type: HowTo
-    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
-  - type: Documentation
-    url: https://ubuntu.com/landscape/docs
-  - type: APIReference
-    url: https://documentation.ubuntu.com/landscape/reference/api/
-  - type: ReleaseNotes
-    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
-  - type: Portal
-    url: https://ubuntu.com/landscape
-  - type: Documentation
-    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
-  - type: APIReference
-    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
-  - type: SourceCode
-    url: https://github.com/canonical/lxd
-  - type: Portal
-    url: https://canonical.com/lxd
-  - type: Documentation
-    url: https://ubuntu.com/security/api/docs
-  - type: APIReference
-    url: https://ubuntu.com/security/api/spec.json
-  - type: Portal
-    url: https://ubuntu.com/security
-  - type: Documentation
-    url: https://documentation.ubuntu.com/pebble/
-  - type: SourceCode
-    url: https://github.com/canonical/pebble
-  - type: Documentation
-    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
-  - type: SourceCode
-    url: https://github.com/canonical/testflinger
-  - type: SourceCode
-    url: https://github.com/canonical/hardware-api
-  - type: Portal
-    url: https://ubuntu.com/certified
-  - type: SourceCode
-    url: https://github.com/canonical/identity-platform-api
-  - type: SourceCode
-    url: https://github.com/canonical/test_observer
-  - type: Documentation
-    url: https://documentation.ubuntu.com/anbox-cloud/
-  - type: Portal
-    url: https://canonical.com/anbox-cloud
-  - type: SourceCode
-    url: https://github.com/canonical/cos-registration-server
 - aid: canonical:canonical-version-api
   name: Canonical Version API
   description: The Version API from Canonical — 1 operation(s) for version.
@@ -6234,14 +6184,534 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-agents-api
+  name: Canonical Agents API
+  description: The Agents API from Canonical — 6 operation(s) for agents.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-agents-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-client-permissions-api
+  name: Canonical Client Permissions API
+  description: The Client Permissions API from Canonical — 2 operation(s) for client permissions.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Client Permissions
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-client-permissions-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-job-api
+  name: Canonical Job API
+  description: The Job API from Canonical — 7 operation(s) for job.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Job
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-job-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-oauth2-api
+  name: Canonical Oauth2 API
+  description: The Oauth2 API from Canonical — 3 operation(s) for oauth2.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Oauth2
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-oauth2-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-queues-api
+  name: Canonical Queues API
+  description: The Queues API from Canonical — 3 operation(s) for queues.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Queues
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-queues-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-restricted-queues-api
+  name: Canonical Restricted Queues API
+  description: The Restricted Queues API from Canonical — 2 operation(s) for restricted queues.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Restricted Queues
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-restricted-queues-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-result-api
+  name: Canonical Result API
+  description: The Result API from Canonical — 4 operation(s) for result.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Result
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-result-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-secrets-api
+  name: Canonical Secrets API
+  description: The Secrets API from Canonical — 1 operation(s) for secrets.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Secrets
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-secrets-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
+- aid: canonical:canonical-testflinger-api-api
+  name: Canonical Testflinger API
+  description: The Testflinger API API from Canonical — 1 operation(s) for testflinger api.
+  humanURL: https://api.snapcraft.io/docs/
+  baseURL: https://api.snapcraft.io
+  tags:
+  - Testflinger API
+  properties:
+  - type: OpenAPI
+    url: openapi/canonical-testflinger-api-api-openapi.yml
+  - type: Documentation
+    url: https://snapcraft.io/docs/reference/development/snapd-rest-api/
+  - type: HowTo
+    url: https://snapcraft.io/docs/how-to-guides/snap-development/use-the-rest-api/
+  - type: Documentation
+    url: https://ubuntu.com/landscape/docs
+  - type: APIReference
+    url: https://documentation.ubuntu.com/landscape/reference/api/
+  - type: ReleaseNotes
+    url: https://documentation.ubuntu.com/landscape/reference/release-notes/
+  - type: Portal
+    url: https://ubuntu.com/landscape
+  - type: Documentation
+    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+  - type: APIReference
+    url: https://documentation.ubuntu.com/lxd/latest/api-extensions/
+  - type: SourceCode
+    url: https://github.com/canonical/lxd
+  - type: Portal
+    url: https://canonical.com/lxd
+  - type: Documentation
+    url: https://ubuntu.com/security/api/docs
+  - type: APIReference
+    url: https://ubuntu.com/security/api/spec.json
+  - type: Portal
+    url: https://ubuntu.com/security
+  - type: Documentation
+    url: https://documentation.ubuntu.com/pebble/
+  - type: SourceCode
+    url: https://github.com/canonical/pebble
+  - type: Documentation
+    url: https://canonical-testflinger.readthedocs-hosted.com/en/latest/
+  - type: SourceCode
+    url: https://github.com/canonical/testflinger
+  - type: SourceCode
+    url: https://github.com/canonical/hardware-api
+  - type: Portal
+    url: https://ubuntu.com/certified
+  - type: SourceCode
+    url: https://github.com/canonical/identity-platform-api
+  - type: SourceCode
+    url: https://github.com/canonical/test_observer
+  - type: Documentation
+    url: https://documentation.ubuntu.com/anbox-cloud/
+  - type: Portal
+    url: https://canonical.com/anbox-cloud
+  - type: SourceCode
+    url: https://github.com/canonical/cos-registration-server
 - aid: canonical:canonical-add-ons-api
   name: Canonical Add Ons API
   description: The Add Ons API from Canonical — 4 operation(s) for add ons.
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
-  - Addons
-  tags_raw:
   - Add Ons
   properties:
   - type: OpenAPI
@@ -6301,8 +6771,6 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
-  - AuthenticationService
-  tags_raw:
   - Authentication Service
   properties:
   - type: OpenAPI

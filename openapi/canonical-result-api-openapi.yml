@@ -1,0 +1,480 @@
+openapi: 3.2.0
+info:
+  title: Testflinger Result API
+  version: 1.0.0
+servers:
+- url: https://testflinger.ps7.canonical.com/
+tags:
+- name: Result
+paths:
+  /v1/result/{job_id}:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultGet'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '204':
+          content: {}
+          description: No result found
+      tags:
+      - Result
+      summary: Return results for a specified job_id
+      description: 'Results are reconstructed from the log storage system to maintain
+
+        backward compatibility. Phase exit codes are combined with captured
+
+        log data and returned as a flat structure:
+
+
+        - ``{phase}_status``: exit code for each phase
+
+        - ``{phase}_output``: stdout log for that phase (if available)
+
+        - ``{phase}_serial``: serial console log for that phase (if available)
+
+        - Additional metadata fields such as ``device_info`` and ``job_state``
+
+
+        :param job_id: UUID as a string for the job
+
+        :raises HTTPError: If the job_id is not a valid UUID'
+      operationId: getV1ResultByJobId
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Result
+      summary: Post a result for a specified job_id
+      description: ':param job_id: UUID as a string for the job
+
+        :raises HTTPError: If the job_id is not a valid UUID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResultPost'
+      operationId: postV1ResultByJobId
+      x-operation-id-source: derived
+  /v1/result/{job_id}/status:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultStatus'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+        '204':
+          content: {}
+          description: No result found
+      tags:
+      - Result
+      summary: Return job state and phase exit codes for a specified job_id
+      description: 'This is a lightweight alternative to GET /result/ that omits
+
+        log data (output and serial). Use this when only the job state or
+
+        phase statuses are needed.
+
+
+        :param job_id: UUID as a string for the job
+
+        :raises HTTPError: If the job_id is not a valid UUID'
+      operationId: getV1ResultByJobIdStatus
+      x-operation-id-source: derived
+  /v1/result/{job_id}/artifact:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Result
+      summary: Return artifact bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job
+
+        :return:
+
+        send_file stream of artifact tarball to download'
+      operationId: getV1ResultByJobIdArtifact
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Result
+      summary: Post artifact bundle for a specified job_id
+      description: ':param job_id:
+
+        UUID as a string for the job'
+      operationId: postV1ResultByJobIdArtifact
+      x-operation-id-source: derived
+  /v1/result/{job_id}/log/{log_type}:
+    get:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: log_type
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogGet'
+          description: Successful response
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Result
+      summary: Get logs for a specified job_id
+      description: 'Logs are persistent and may be retrieved multiple times. Results are
+
+        organised by phase. Each phase entry contains:
+
+
+        - ``last_fragment_number``: highest fragment number stored for that phase
+
+        - ``log_data``: combined log text from all matching fragments
+
+
+        Optional query parameters for filtering:
+
+
+        - ``phase``: restrict results to a single test phase
+
+        - ``start_fragment``: return only fragments from this number onwards
+
+        - ``start_timestamp``: return only fragments created after this
+
+        ISO 8601 timestamp
+
+
+        :param job_id: UUID as a string for the job
+
+        :param log_type: LogType enum value for the type of log requested
+
+        :raises HTTPError: If the job_id is not a valid UUID or if invalid query
+
+        :return: Dictionary with log data'
+      operationId: getV1ResultByJobIdLogByLogType
+      x-operation-id-source: derived
+    post:
+      parameters:
+      - in: path
+        name: job_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: log_type
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: Successful response
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+          description: Validation error
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+          description: Not found
+      tags:
+      - Result
+      summary: Post logs for a specified job ID
+      description: 'Agents stream log data in sequential fragments. Each request must
+
+        include:
+
+
+        - ``fragment_number``: sequential integer starting from 0
+
+        - ``timestamp``: ISO 8601 timestamp when the fragment was created
+
+        - ``phase``: test phase name (setup, provision, firmware_update, test,
+
+        allocate, reserve, cleanup)
+
+        - ``log_data``: the log content for this fragment
+
+
+        :param job_id: UUID as a string for the job
+
+        :param log_type: LogType enum value for the type of log being posted
+
+        :raises HTTPError: If the job_id is not a valid UUID
+
+        :param json_data: Dictionary with log data'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogPost'
+      operationId: postV1ResultByJobIdLogByLogType
+      x-operation-id-source: derived
+components:
+  schemas:
+    LogPost:
+      type: object
+      properties:
+        fragment_number:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        phase:
+          type: string
+          enum:
+          - setup
+          - provision
+          - firmware_update
+          - test
+          - allocate
+          - reserve
+          - cleanup
+        log_data:
+          type: string
+      required:
+      - fragment_number
+      - log_data
+      - phase
+      - timestamp
+      additionalProperties: false
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
+    ResultPost:
+      type: object
+      properties:
+        status:
+          type: object
+          additionalProperties:
+            type: integer
+        agent_id:
+          type: string
+        device_info:
+          type: object
+          additionalProperties: {}
+        job_state:
+          type: string
+      additionalProperties: false
+    LogGetItem:
+      type: object
+      properties:
+        last_fragment_number:
+          type: integer
+        log_data:
+          type: string
+      required:
+      - last_fragment_number
+      - log_data
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    ResultStatus:
+      type: object
+      properties:
+        setup_status:
+          type: integer
+        provision_status:
+          type: integer
+        firmware_update_status:
+          type: integer
+        test_status:
+          type: integer
+        allocate_status:
+          type: integer
+        reserve_status:
+          type: integer
+        cleanup_status:
+          type: integer
+        job_state:
+          type: string
+      additionalProperties: false
+    ResultGet:
+      type: object
+      properties:
+        setup_status:
+          type: integer
+        provision_status:
+          type: integer
+        firmware_update_status:
+          type: integer
+        test_status:
+          type: integer
+        allocate_status:
+          type: integer
+        reserve_status:
+          type: integer
+        cleanup_status:
+          type: integer
+        job_state:
+          type: string
+        setup_output:
+          type: string
+        setup_serial:
+          type: string
+        provision_output:
+          type: string
+        provision_serial:
+          type: string
+        firmware_update_output:
+          type: string
+        firmware_update_serial:
+          type: string
+        test_output:
+          type: string
+        test_serial:
+          type: string
+        allocate_output:
+          type: string
+        allocate_serial:
+          type: string
+        reserve_output:
+          type: string
+        reserve_serial:
+          type: string
+        cleanup_output:
+          type: string
+        cleanup_serial:
+          type: string
+        device_info:
+          type: object
+          additionalProperties: {}
+        cancelled_by:
+          type:
+          - string
+          - 'null'
+          default: null
+      additionalProperties: false
+    LogGet:
+      type: object
+      properties:
+        output:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LogGetItem'
+        serial:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/LogGetItem'
+      additionalProperties: false

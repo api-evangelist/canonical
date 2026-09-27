@@ -104,12 +104,6 @@ paths:
           $ref: '#/components/responses/MethodNotAllowed'
 components:
   schemas:
-    MalformedRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: cannot decode request body into an alias action
     User:
       type: object
       description: Represents a user account on the system.
@@ -132,6 +126,36 @@ components:
           format: email
           description: The email address associated with the launchpad account.
           example: first-name.last-name@example.com
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
     ConfdbError:
       type: object
       description: An error occured while interacting with confdb.
@@ -153,31 +177,32 @@ components:
         message:
           type: string
           example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
-    SnapNotInstalledError:
-      type: object
-      description: The snap does not exist on the system.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - snap-not-found
-          - snap-not-installed
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: no state entry for key
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          example: firefox
   responses:
+    MethodNotAllowed:
+      description: The requested method is not allowed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 405
+              status:
+                type: string
+                enum:
+                - Method Not Allowed
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: system user administration via snapd is not allowed on this system
     BadRequest:
       description: 'Bad Request. The request could not be processed due to a client-side error.
 
@@ -206,31 +231,6 @@ components:
                 - $ref: '#/components/schemas/NoSSHKeysError'
                 - $ref: '#/components/schemas/UserNotFoundError'
                 - $ref: '#/components/schemas/SnapNotInstalledError'
-    MethodNotAllowed:
-      description: The requested method is not allowed.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 405
-              status:
-                type: string
-                enum:
-                - Method Not Allowed
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: system user administration via snapd is not allowed on this system
     Forbidden:
       description: 'Forbidden. The server understood the request but refuses to authorize it
 
