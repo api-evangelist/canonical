@@ -48,13 +48,6 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
-    GetSystemInfoResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            $ref: '#/components/schemas/systemInfo'
     systemInfo:
       type: object
       properties:
@@ -70,3 +63,10 @@ components:
       required:
       - boot-id
       - version
+    GetSystemInfoResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            $ref: '#/components/schemas/systemInfo'

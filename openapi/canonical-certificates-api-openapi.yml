@@ -258,71 +258,6 @@ paths:
         required: true
 components:
   schemas:
-    OperationResponse:
-      description: Operation
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
-    Certificate:
-      description: Certificate represents an available client certificate
-      type: object
-      properties:
-        certificate:
-          description: Base64 encoded certificate content without the header or the footer
-          type: string
-          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
-        fingerprint:
-          description: SHA-256 fingerprint of the certificate
-          type: string
-          example: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
-          type: integer
-          format: int64
-          example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
-    CertificatesPost:
-      description: CertificatesPost represents the fields of a new auth provided certificate
-      type: object
-      properties:
-        certificate:
-          description: Base64 encoded certificate content without the header or the footer
-          type: string
-          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
-        trust-password:
-          description: TrustPassword is used to register a new client with the service
-          type: string
-          example: sUp3rs3cr3t
     StatusCode:
       description: StatusCode represents a valid REST operation
       type: integer
@@ -389,6 +324,52 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    Certificate:
+      description: Certificate represents an available client certificate
+      type: object
+      properties:
+        certificate:
+          description: Base64 encoded certificate content without the header or the footer
+          type: string
+          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
+        fingerprint:
+          description: SHA-256 fingerprint of the certificate
+          type: string
+          example: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+    CertificatesPost:
+      description: CertificatesPost represents the fields of a new auth provided certificate
+      type: object
+      properties:
+        certificate:
+          description: Base64 encoded certificate content without the header or the footer
+          type: string
+          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
+        trust-password:
+          description: TrustPassword is used to register a new client with the service
+          type: string
+          example: sUp3rs3cr3t
     CollectionResponse:
       description: Collection Response
       allOf:
@@ -400,109 +381,25 @@ components:
             type: integer
             format: int64
             example: 99
-    Certificate_2:
-      description: Certificate represents a LXD certificate
-      properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
-        certificate:
-          description: 'The certificate itself, as PEM encoded X509 certificate
-
-
-            API extension: certificate_self_renewal'
-          example: X509 PEM certificate
-          type: string
-          x-go-name: Certificate
-        fingerprint:
-          description: SHA256 fingerprint of the certificate
-          example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
-          readOnly: true
-          type: string
-          x-go-name: Fingerprint
-        name:
-          description: Name associated with the certificate
-          example: castiana
-          type: string
-          x-go-name: Name
-        projects:
-          description: 'List of allowed projects (applies when restricted)
-
-
-            API extension: certificate_project'
-          example:
-          - default
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Projects
-        restricted:
-          description: 'Whether to limit the certificate to listed projects
-
-
-            API extension: certificate_project'
-          example: true
-          type: boolean
-          x-go-name: Restricted
-        type:
-          description: Usage type for the certificate
-          example: client
-          type: string
-          x-go-name: Type
+    OperationResponse:
+      description: Operation
       type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    CertificatePut:
-      description: CertificatePut represents the modifiable fields of a LXD certificate
       properties:
-        certificate:
-          description: 'The certificate itself, as PEM encoded X509 certificate
-
-
-            API extension: certificate_self_renewal'
-          example: X509 PEM certificate
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
           type: string
-          x-go-name: Certificate
-        name:
-          description: Name associated with the certificate
-          example: castiana
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
           type: string
-          x-go-name: Name
-        projects:
-          description: 'List of allowed projects (applies when restricted)
-
-
-            API extension: certificate_project'
-          example:
-          - default
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Projects
-        restricted:
-          description: 'Whether to limit the certificate to listed projects
-
-
-            API extension: certificate_project'
-          example: true
-          type: boolean
-          x-go-name: Restricted
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
         type:
-          description: Usage type for the certificate
-          example: client
           type: string
-          x-go-name: Type
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
+          example: async
     CertificatesPost_2:
       description: CertificatesPost represents the fields of a new LXD certificate
       properties:
@@ -572,7 +469,127 @@ components:
           x-go-name: Type
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    CertificatePut:
+      description: CertificatePut represents the modifiable fields of a LXD certificate
+      properties:
+        certificate:
+          description: 'The certificate itself, as PEM encoded X509 certificate
+
+
+            API extension: certificate_self_renewal'
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        name:
+          description: Name associated with the certificate
+          example: castiana
+          type: string
+          x-go-name: Name
+        projects:
+          description: 'List of allowed projects (applies when restricted)
+
+
+            API extension: certificate_project'
+          example:
+          - default
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Projects
+        restricted:
+          description: 'Whether to limit the certificate to listed projects
+
+
+            API extension: certificate_project'
+          example: true
+          type: boolean
+          x-go-name: Restricted
+        type:
+          description: Usage type for the certificate
+          example: client
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Certificate_2:
+      description: Certificate represents a LXD certificate
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        certificate:
+          description: 'The certificate itself, as PEM encoded X509 certificate
+
+
+            API extension: certificate_self_renewal'
+          example: X509 PEM certificate
+          type: string
+          x-go-name: Certificate
+        fingerprint:
+          description: SHA256 fingerprint of the certificate
+          example: fd200419b271f1dc2a5591b693cc5774b7f234e1ff8c6b78ad703b6888fe2b69
+          readOnly: true
+          type: string
+          x-go-name: Fingerprint
+        name:
+          description: Name associated with the certificate
+          example: castiana
+          type: string
+          x-go-name: Name
+        projects:
+          description: 'List of allowed projects (applies when restricted)
+
+
+            API extension: certificate_project'
+          example:
+          - default
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Projects
+        restricted:
+          description: 'Whether to limit the certificate to listed projects
+
+
+            API extension: certificate_project'
+          example: true
+          type: boolean
+          x-go-name: Restricted
+        type:
+          description: Usage type for the certificate
+          example: client
+          type: string
+          x-go-name: Type
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
   responses:
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -589,6 +606,23 @@ components:
                 example: 500
               metadata:
                 example: '{}'
+              type:
+                type: string
+                example: error
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
               type:
                 type: string
                 example: error
@@ -611,40 +645,6 @@ components:
               type:
                 type: string
                 example: error
-    ErrorNotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: not found
-              error_code:
-                type: integer
-                format: int64
-                example: 404
-              type:
-                type: string
-                example: error
-    ErrorAlreadyExists:
-      description: Already Exists
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: already exists
-              error_code:
-                type: integer
-                format: int64
-                example: 409
-              type:
-                type: string
-                example: error
     ErrorForbidden:
       description: Forbidden
       content:
@@ -662,23 +662,43 @@ components:
               type:
                 type: string
                 example: error
-    EmptySyncResponse:
-      description: Empty sync response
+    BadRequest:
+      description: Bad Request
       content:
         application/json:
           schema:
             properties:
-              status:
-                example: Success
+              error:
+                example: bad request
                 type: string
-                x-go-name: Status
-              status_code:
-                example: 200
+                x-go-name: Error
+              error_code:
+                example: 400
                 format: int64
                 type: integer
-                x-go-name: StatusCode
+                x-go-name: ErrorCode
               type:
-                example: sync
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
                 type: string
                 x-go-name: Type
             type: object
@@ -722,43 +742,23 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    BadRequest:
-      description: Bad Request
+    EmptySyncResponse:
+      description: Empty sync response
       content:
         application/json:
           schema:
             properties:
-              error:
-                example: bad request
+              status:
+                example: Success
                 type: string
-                x-go-name: Error
-              error_code:
-                example: 400
+                x-go-name: Status
+              status_code:
+                example: 200
                 format: int64
                 type: integer
-                x-go-name: ErrorCode
+                x-go-name: StatusCode
               type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
+                example: sync
                 type: string
                 x-go-name: Type
             type: object

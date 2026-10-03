@@ -80,6 +80,30 @@ paths:
       - view_test
 components:
   schemas:
+    TestPlansResponse:
+      properties:
+        test_plans:
+          items:
+            type: string
+          type: array
+          title: Test Plans
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - test_plans
+      - count
+      - limit
+      - offset
+      title: TestPlansResponse
+      description: Response model for test plans endpoint
     HTTPValidationError:
       properties:
         detail:
@@ -115,30 +139,6 @@ components:
       - msg
       - type
       title: ValidationError
-    TestPlansResponse:
-      properties:
-        test_plans:
-          items:
-            type: string
-          type: array
-          title: Test Plans
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-      type: object
-      required:
-      - test_plans
-      - count
-      - limit
-      - offset
-      title: TestPlansResponse
-      description: Response model for test plans endpoint
     FamilyName:
       type: string
       enum:

@@ -199,31 +199,18 @@ paths:
       operationId: postApiV1SnapsAuthRequestId
       x-operation-id-source: derived
 components:
+  parameters:
+    DeviceSeries:
+      in: header
+      name: Snap-Device-Series
+      required: true
+      schema:
+        type: string
+        default: '16'
+      description: Snap device series; required by the Device API.
   schemas:
-    SnapInfo:
+    Generic:
       type: object
-      properties:
-        name:
-          type: string
-        snap-id:
-          type: string
-        channel-map:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
-        snap:
-          type: object
-          additionalProperties: true
-      additionalProperties: true
-    RefreshResponse:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            type: object
-            additionalProperties: true
       additionalProperties: true
     RefreshRequest:
       type: object
@@ -256,6 +243,15 @@ components:
                 type: integer
             additionalProperties: true
       additionalProperties: true
+    RefreshResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+      additionalProperties: true
     FindResults:
       type: object
       properties:
@@ -272,8 +268,21 @@ components:
                 type: object
                 additionalProperties: true
             additionalProperties: true
-    Generic:
+    SnapInfo:
       type: object
+      properties:
+        name:
+          type: string
+        snap-id:
+          type: string
+        channel-map:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        snap:
+          type: object
+          additionalProperties: true
       additionalProperties: true
   responses:
     Generic:
@@ -282,14 +291,5 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Generic'
-  parameters:
-    DeviceSeries:
-      in: header
-      name: Snap-Device-Series
-      required: true
-      schema:
-        type: string
-        default: '16'
-      description: Snap device series; required by the Device API.
 x-generated-from: documentation
 x-provenance-note: Hand-authored by API Evangelist from the publicly documented Snap Store Device API reference at https://api.snapcraft.io/docs/ — NOT harvested from a Canonical-published machine-readable contract, because Canonical publishes none for api.snapcraft.io. Marked 2026-09-05 so this file is never mistaken for a provider artifact. The specs Canonical does publish are the other thirteen documents in openapi/, each harvested verbatim.

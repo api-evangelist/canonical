@@ -276,21 +276,43 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ValidationError:
-      properties:
-        detail:
-          type: object
-          properties:
-            <location>:
-              type: object
-              properties:
-                <field_name>:
-                  type: array
-                  items:
-                    type: string
-        message:
-          type: string
+    ImagesIn:
       type: object
+      properties: {}
+      additionalProperties: true
+    AgentJob:
+      type: object
+      properties:
+        job_id:
+          type: string
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        job_queue:
+          type: string
+        job_state:
+          type: string
+        job_priority:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - job_id
+      additionalProperties: false
+    QueuesIn:
+      type: object
+      properties: {}
+      additionalProperties: true
     ProvisionLogsIn:
       type: object
       properties:
@@ -335,35 +357,13 @@ components:
       required:
       - name
       additionalProperties: false
-    AgentJob:
-      type: object
+    HTTPError:
       properties:
-        job_id:
+        detail:
+          type: object
+        message:
           type: string
-        submitted_by:
-          type:
-          - string
-          - 'null'
-          default: null
-        created_at:
-          type: string
-          format: date-time
-        started_at:
-          type: string
-          format: date-time
-        job_queue:
-          type: string
-        job_state:
-          type: string
-        job_priority:
-          type: integer
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - job_id
-      additionalProperties: false
+      type: object
     AgentIn:
       type: object
       properties:
@@ -388,18 +388,18 @@ components:
         comment:
           type: string
       additionalProperties: false
-    HTTPError:
+    ValidationError:
       properties:
         detail:
           type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
         message:
           type: string
       type: object
-    ImagesIn:
-      type: object
-      properties: {}
-      additionalProperties: true
-    QueuesIn:
-      type: object
-      properties: {}
-      additionalProperties: true

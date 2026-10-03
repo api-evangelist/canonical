@@ -49,23 +49,34 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    BaseResponse:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Response type, "sync".
-        status-code:
-          type: integer
-          description: HTTP response status code.
-        status:
-          type: string
-          description: 'The description of the HTTP status code.
-
-
-            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
-
-            '
+    PostExecResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseAsyncResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              environment:
+                type: object
+                additionalProperties:
+                  type: string
+                description: The environment variables.
+              task-id:
+                type: string
+                format: uuid
+                description: The ID of the executed task.
+              working-dir:
+                type: string
+                description: The working directory.
+    BaseAsyncResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          change:
+            type: string
+            description: The Change ID of the asynchronous change.
     PostExecRequest:
       type: object
       properties:
@@ -117,31 +128,20 @@ components:
           description: The height of the terminal (if applicable).
       required:
       - command
-    BaseAsyncResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          change:
-            type: string
-            description: The Change ID of the asynchronous change.
-    PostExecResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseAsyncResponse'
-      - type: object
-        properties:
-          result:
-            type: object
-            properties:
-              environment:
-                type: object
-                additionalProperties:
-                  type: string
-                description: The environment variables.
-              task-id:
-                type: string
-                format: uuid
-                description: The ID of the executed task.
-              working-dir:
-                type: string
-                description: The working directory.
+    BaseResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
+          type: string
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '

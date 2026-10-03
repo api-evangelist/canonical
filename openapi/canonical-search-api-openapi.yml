@@ -40,10 +40,6 @@ paths:
       operationId: getApiV1Search
       x-operation-id-source: derived
 components:
-  schemas:
-    Generic:
-      type: object
-      additionalProperties: true
   parameters:
     DeviceSeries:
       in: header
@@ -53,6 +49,10 @@ components:
         type: string
         default: '16'
       description: Snap device series; required by the Device API.
+  schemas:
+    Generic:
+      type: object
+      additionalProperties: true
   responses:
     Generic:
       description: Generic JSON response.

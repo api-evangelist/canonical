@@ -376,6 +376,76 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Attachment:
+      type: object
+      properties:
+        agent:
+          type: string
+        device:
+          type: string
+      required:
+      - agent
+      additionalProperties: false
+    ActionIn:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - cancel
+      required:
+      - action
+      additionalProperties: false
+    JobSearchResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+      required:
+      - jobs
+      additionalProperties: false
+    JobEvent:
+      type: object
+      properties:
+        event_name:
+          type: string
+        timestamp:
+          type: string
+        detail:
+          type: string
+      required:
+      - event_name
+      - timestamp
+      additionalProperties: false
+    TestData:
+      type: object
+      properties:
+        test_cmds:
+          type: string
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        test_username:
+          type: string
+        test_password:
+          type: string
+        secrets:
+          type: object
+          additionalProperties:
+            type: string
+            pattern: ^[a-zA-Z0-9_/-]+$
+      additionalProperties: false
+    JobId:
+      type: object
+      properties:
+        job_id:
+          type: string
+      required:
+      - job_id
+      additionalProperties: false
     ValidationError:
       properties:
         detail:
@@ -388,6 +458,95 @@ components:
                   type: array
                   items:
                     type: string
+        message:
+          type: string
+      type: object
+    ProvisionData:
+      type: object
+      properties: {}
+      additionalProperties: false
+    StatusUpdate:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        job_queue:
+          type: string
+        job_status_webhook:
+          type: string
+          format: url
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobEvent'
+      required:
+      - job_status_webhook
+      additionalProperties: false
+    ReserveData:
+      type: object
+      properties:
+        ssh_keys:
+          type: array
+          items:
+            type: string
+            pattern: ^(lp|gh):(\S+)$
+        timeout: {}
+      additionalProperties: false
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: string
+        parent_job_id:
+          type: string
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        job_queue:
+          type: string
+          minLength: 1
+        global_timeout:
+          type: integer
+        output_timeout:
+          type: integer
+        allocation_timeout:
+          type: integer
+        provision_data:
+          anyOf:
+          - type:
+            - object
+            - 'null'
+          - $ref: '#/components/schemas/ProvisionData'
+        firmware_update_data:
+          type: object
+          additionalProperties: {}
+        test_data:
+          $ref: '#/components/schemas/TestData'
+        allocate_data:
+          type: object
+          additionalProperties: {}
+        reserve_data:
+          $ref: '#/components/schemas/ReserveData'
+        job_status_webhook:
+          type: string
+        job_priority:
+          type: integer
+        exclude_agents:
+          type: array
+          items:
+            type: string
+        debug:
+          type: boolean
+      required:
+      - job_queue
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
         message:
           type: string
       type: object
@@ -446,163 +605,4 @@ components:
           default: null
       required:
       - job_queue
-      additionalProperties: false
-    ReserveData:
-      type: object
-      properties:
-        ssh_keys:
-          type: array
-          items:
-            type: string
-            pattern: ^(lp|gh):(\S+)$
-        timeout: {}
-      additionalProperties: false
-    ProvisionData:
-      type: object
-      properties: {}
-      additionalProperties: false
-    Job:
-      type: object
-      properties:
-        job_id:
-          type: string
-        parent_job_id:
-          type: string
-        name:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-        job_queue:
-          type: string
-          minLength: 1
-        global_timeout:
-          type: integer
-        output_timeout:
-          type: integer
-        allocation_timeout:
-          type: integer
-        provision_data:
-          anyOf:
-          - type:
-            - object
-            - 'null'
-          - $ref: '#/components/schemas/ProvisionData'
-        firmware_update_data:
-          type: object
-          additionalProperties: {}
-        test_data:
-          $ref: '#/components/schemas/TestData'
-        allocate_data:
-          type: object
-          additionalProperties: {}
-        reserve_data:
-          $ref: '#/components/schemas/ReserveData'
-        job_status_webhook:
-          type: string
-        job_priority:
-          type: integer
-        exclude_agents:
-          type: array
-          items:
-            type: string
-        debug:
-          type: boolean
-      required:
-      - job_queue
-      additionalProperties: false
-    Attachment:
-      type: object
-      properties:
-        agent:
-          type: string
-        device:
-          type: string
-      required:
-      - agent
-      additionalProperties: false
-    StatusUpdate:
-      type: object
-      properties:
-        agent_id:
-          type: string
-        job_queue:
-          type: string
-        job_status_webhook:
-          type: string
-          format: url
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/JobEvent'
-      required:
-      - job_status_webhook
-      additionalProperties: false
-    JobEvent:
-      type: object
-      properties:
-        event_name:
-          type: string
-        timestamp:
-          type: string
-        detail:
-          type: string
-      required:
-      - event_name
-      - timestamp
-      additionalProperties: false
-    TestData:
-      type: object
-      properties:
-        test_cmds:
-          type: string
-        attachments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Attachment'
-        test_username:
-          type: string
-        test_password:
-          type: string
-        secrets:
-          type: object
-          additionalProperties:
-            type: string
-            pattern: ^[a-zA-Z0-9_/-]+$
-      additionalProperties: false
-    HTTPError:
-      properties:
-        detail:
-          type: object
-        message:
-          type: string
-      type: object
-    ActionIn:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - cancel
-      required:
-      - action
-      additionalProperties: false
-    JobSearchResponse:
-      type: object
-      properties:
-        jobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Job'
-      required:
-      - jobs
-      additionalProperties: false
-    JobId:
-      type: object
-      properties:
-        job_id:
-          type: string
-      required:
-      - job_id
       additionalProperties: false

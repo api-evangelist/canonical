@@ -528,6 +528,219 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
+    NetworkServiceSpec:
+      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+      type: object
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the container a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the container to expose the service correctly.
+
+            Exampe: ssh'
+          type: string
+        port:
+          description: Port is the port the container provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: 'PortEnd is the end of the port range set for a service. If empty, only a
+
+            single port is opened'
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
+    ContainerType:
+      description: 'Possible values are: regular, base, unknown'
+      type: string
+      title: ContainerType describes the type of a container.
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    Operation:
+      description: Operation represents a background operation
+      type: object
+      properties:
+        class:
+          description: Class of the operation
+          type: string
+          enum:
+          - task
+          - websocket
+          - token
+          example: task
+        created_at:
+          description: When the operation was created
+          type: string
+          format: date-time
+        description:
+          description: Human readable description of the operation
+          type: string
+          example: updating addon 3apqo5te
+        err:
+          description: The error string if the operation failed
+          type: string
+        id:
+          description: UUID of the operation
+          type: string
+          example: c6832c58-0867-467e-b245-2962d6527876
+        may_cancel:
+          description: Whether this operation can be canceled (DELETE over REST)
+          type: boolean
+          example: false
+        metadata:
+          description: Metadata related to the operation and affected resources
+          type: object
+          additionalProperties: {}
+          example: {}
+        resources:
+          description: 'Dictionnary of resource types (containers, snapshots, images)
+
+            and affected resources'
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            applications:
+            - /1.0/applications/my-app
+        server_address:
+          description: The address of the server where the operation ran
+          type: string
+          format: ipv4
+        status:
+          description: String version of the operation status
+          type: string
+          example: Running
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: When the operation was updated
+          type: string
+          format: date-time
+    ContainersDelete:
+      description: ContainersDelete represents a list of containers to delete together
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the containers should be forced
+          type: boolean
+        ids:
+          description: IDs of the containers to delete
+          type: array
+          items:
+            type: string
+          example:
+          - cilsreunfpfec9b1ktg0
+          - cilsreunfpfec9b1ktg1
+    ContainerStatus:
+      description: ContainerStatus represents the status a container can be in
+      type: integer
+      format: int64
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
+          type: integer
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
+          type: integer
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    ContainerDelete:
+      description: ContainerDelete describes a request used to delete a container
+      type: object
+      properties:
+        force:
+          description: Whether deletion of the container should be forced
+          type: boolean
+    ContainerExecPost:
+      description: ContainerExecPost represents an container execution request
+      type: object
+      properties:
+        command:
+          description: Command inside the container to execute
+          type: array
+          items:
+            type: string
+          example: /bin/ls
+        environment:
+          description: Environment to setup when the command is executed.
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            FOO: bar
+        height:
+          description: Height of the terminal. Only required when `interactive` is set to `true`.
+          type: integer
+          format: int64
+        interactive:
+          description: Whether the command is executed interactively or not
+          type: boolean
+        width:
+          description: Width of the terminal. Only required when `interactive` is set to `true`.
+          type: integer
+          format: int64
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    ContainerPatch:
+      description: ContainerPatch describes the fields which can be changed for an existing container
+      type: object
+      properties:
+        desired_status:
+          description: Desired status of the container
+          type: string
+    NetworkProtocol:
+      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
+      type: string
     Container:
       description: Container represents a single container
       type: object
@@ -680,113 +893,6 @@ components:
           - bar
         type:
           $ref: '#/components/schemas/ContainerType'
-    OperationResponse:
-      description: Operation
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
-    ContainerService:
-      description: 'While NetworkServiceSpec defines what the user requests, ContainerService is what is actually
-
-        opened on the container.'
-      type: object
-      title: ContainerService describes a single service the container exposes to the outside world.
-      properties:
-        expose:
-          description: 'Expose defines wether the service is exposed on the public endpoint of the node
-
-            or if it is only available on the private endpoint. To expose the service set to
-
-            true and to false otherwise.'
-          type: boolean
-        name:
-          description: 'Name gives the container a hint what the exposed port is being used for. This
-
-            allows further tweaks inside the container to expose the service correctly.'
-          type: string
-          example: myservice
-        node_port:
-          description: 'NodePort is the port used on the LXD node to map to the service port
-
-            If left empty the node port is automatically selected.'
-          type: integer
-          format: int64
-          example: 4000
-        node_port_end:
-          description: 'NodePortEnd, if specified, denotes the end of the port range on the node starting
-
-            at NodePort'
-          type: integer
-          format: int64
-          example: 4010
-        port:
-          description: Port is the port the container provides a service on
-          type: integer
-          format: int64
-          example: 3000
-        port_end:
-          description: PortEnd, if specified, denotes the end of the port range starting at Port
-          type: integer
-          format: int64
-          example: 3010
-        protocols:
-          description: List of network protocols (tcp, udp) the port should be exposed for
-          type: array
-          items:
-            $ref: '#/components/schemas/NetworkProtocol'
-          example:
-          - tcp
-          - udp
-    NetworkProtocol:
-      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
-      type: string
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
-          type: integer
-          format: int64
-          example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
-    ContainerPatch:
-      description: ContainerPatch describes the fields which can be changed for an existing container
-      type: object
-      properties:
-        desired_status:
-          description: Desired status of the container
-          type: string
-    ContainerStatus:
-      description: ContainerStatus represents the status a container can be in
-      type: integer
-      format: int64
     ContainersPost:
       description: 'ContainersPost represents the fields required to launch a new container for
 
@@ -902,101 +1008,12 @@ components:
           type: integer
           format: int64
           example: 1
-    ContainersDelete:
-      description: ContainersDelete represents a list of containers to delete together
-      type: object
-      properties:
-        force:
-          description: Whether deletion of the containers should be forced
-          type: boolean
-        ids:
-          description: IDs of the containers to delete
-          type: array
-          items:
-            type: string
-          example:
-          - cilsreunfpfec9b1ktg0
-          - cilsreunfpfec9b1ktg1
-    ContainerDelete:
-      description: ContainerDelete describes a request used to delete a container
-      type: object
-      properties:
-        force:
-          description: Whether deletion of the container should be forced
-          type: boolean
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
-    ContainerType:
-      description: 'Possible values are: regular, base, unknown'
-      type: string
-      title: ContainerType describes the type of a container.
-    Operation:
-      description: Operation represents a background operation
-      type: object
-      properties:
-        class:
-          description: Class of the operation
-          type: string
-          enum:
-          - task
-          - websocket
-          - token
-          example: task
-        created_at:
-          description: When the operation was created
-          type: string
-          format: date-time
-        description:
-          description: Human readable description of the operation
-          type: string
-          example: updating addon 3apqo5te
-        err:
-          description: The error string if the operation failed
-          type: string
-        id:
-          description: UUID of the operation
-          type: string
-          example: c6832c58-0867-467e-b245-2962d6527876
-        may_cancel:
-          description: Whether this operation can be canceled (DELETE over REST)
-          type: boolean
-          example: false
-        metadata:
-          description: Metadata related to the operation and affected resources
-          type: object
-          additionalProperties: {}
-          example: {}
-        resources:
-          description: 'Dictionnary of resource types (containers, snapshots, images)
+    ContainerService:
+      description: 'While NetworkServiceSpec defines what the user requests, ContainerService is what is actually
 
-            and affected resources'
-          type: object
-          additionalProperties:
-            type: array
-            items:
-              type: string
-          example:
-            applications:
-            - /1.0/applications/my-app
-        server_address:
-          description: The address of the server where the operation ran
-          type: string
-          format: ipv4
-        status:
-          description: String version of the operation status
-          type: string
-          example: Running
-        status_code:
-          $ref: '#/components/schemas/StatusCode'
-        updated_at:
-          description: When the operation was updated
-          type: string
-          format: date-time
-    NetworkServiceSpec:
-      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+        opened on the container.'
       type: object
+      title: ContainerService describes a single service the container exposes to the outside world.
       properties:
         expose:
           description: 'Expose defines wether the service is exposed on the public endpoint of the node
@@ -1008,19 +1025,30 @@ components:
         name:
           description: 'Name gives the container a hint what the exposed port is being used for. This
 
-            allows further tweaks inside the container to expose the service correctly.
-
-            Exampe: ssh'
+            allows further tweaks inside the container to expose the service correctly.'
           type: string
+          example: myservice
+        node_port:
+          description: 'NodePort is the port used on the LXD node to map to the service port
+
+            If left empty the node port is automatically selected.'
+          type: integer
+          format: int64
+          example: 4000
+        node_port_end:
+          description: 'NodePortEnd, if specified, denotes the end of the port range on the node starting
+
+            at NodePort'
+          type: integer
+          format: int64
+          example: 4010
         port:
           description: Port is the port the container provides a service on
           type: integer
           format: int64
           example: 3000
         port_end:
-          description: 'PortEnd is the end of the port range set for a service. If empty, only a
-
-            single port is opened'
+          description: PortEnd, if specified, denotes the end of the port range starting at Port
           type: integer
           format: int64
           example: 3010
@@ -1032,35 +1060,24 @@ components:
           example:
           - tcp
           - udp
-    ContainerExecPost:
-      description: ContainerExecPost represents an container execution request
-      type: object
-      properties:
-        command:
-          description: Command inside the container to execute
-          type: array
-          items:
-            type: string
-          example: /bin/ls
-        environment:
-          description: Environment to setup when the command is executed.
-          type: object
-          additionalProperties:
-            type: string
-          example:
-            FOO: bar
-        height:
-          description: Height of the terminal. Only required when `interactive` is set to `true`.
-          type: integer
-          format: int64
-        interactive:
-          description: Whether the command is executed interactively or not
-          type: boolean
-        width:
-          description: Width of the terminal. Only required when `interactive` is set to `true`.
-          type: integer
-          format: int64
   responses:
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -1096,23 +1113,6 @@ components:
                 example: 400
               metadata:
                 example: '{}'
-              type:
-                type: string
-                example: error
-    ErrorNotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: not found
-              error_code:
-                type: integer
-                format: int64
-                example: 404
               type:
                 type: string
                 example: error

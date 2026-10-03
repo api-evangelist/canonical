@@ -236,26 +236,6 @@ paths:
       - network-load-balancer-pools
 components:
   responses:
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
     BadRequest:
       description: Bad Request
       content:
@@ -296,6 +276,26 @@ components:
                 type: string
                 x-go-name: Type
             type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
     Operation:
       description: Operation
       content:
@@ -323,196 +323,10 @@ components:
                 x-go-name: Type
             type: object
   schemas:
-    NetworkLoadBalancerPoolState:
-      properties:
-        targets:
-          description: Actual targets in the pool with their status.
-          items:
-            $ref: '#/components/schemas/NetworkLoadBalancerPoolTarget'
-          type: array
-          x-go-name: Targets
-      title: NetworkLoadBalancerPoolState represents the state of a network load balancer pool.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkLoadBalancerPool:
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)
-          example:
-            protocol: tcp
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the load balancer pool.
-          example: My HTTPS load balancer pool
-          type: string
-          x-go-name: Description
-        instances:
-          description: Instances included in the pool.
-          example:
-          - name: i1
-          - name: i2
-            target_port: '8443'
-          items:
-            $ref: '#/components/schemas/NetworkLoadBalancerPoolInstance'
-          type: array
-          x-go-name: Instances
-        name:
-          description: The name of the load balancer pool.
-          example: https
-          type: string
-          x-go-name: Name
-        used_by:
-          description: UsedBy is a list of LXD entity URLs that reference this load balancer pool.
-          example:
-          - /1.0/networks/default/load-balancers/192.0.2.1
-          items:
-            type: string
-          type: array
-          x-go-name: UsedBy
-      title: NetworkLoadBalancerPool used for displaying a network load balancer pool.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkLoadBalancerPoolTarget:
-      description: 'If an instance has both IPv4 and IPv6 addresses on the same network interface,
-
-        those are represented as two targets inside the pool.
-
-        Each target has its own health check with its own status.'
-      properties:
-        address:
-          description: Address represents the address of the target.
-          example: 198.51.100.2
-          type: string
-          x-go-name: Address
-        device:
-          description: Device represents the target instance's network device.
-          example: eth0
-          type: string
-          x-go-name: Device
-        listen_address:
-          description: ListenAddress represents the address of the target's parent load balancer.
-          example: 1.2.3.4
-          type: string
-          x-go-name: ListenAddress
-        listen_port:
-          description: ListenPort represents the port of the target's parent load balancer.
-          example: '443'
-          type: string
-          x-go-name: ListenPort
-        name:
-          description: Name represents the target instance's name.
-          example: c1
-          type: string
-          x-go-name: Name
-        port:
-          description: Port represents the port probed on the target's address.
-          example: '8443'
-          type: string
-          x-go-name: Port
-        status:
-          description: 'Status represents the status of the target address.
-
-            It can be one of:
-
-            error   indicates an error occurred while probing the target address.
-
-            offline indicates the target address is not responding to probes.
-
-            online  indicates the target address is responding to probes.
-
-            pending indicates the target address is pending to being probed.
-
-            unknown indicates that the targeted instance is not running and there is no service monitor configured, or that health checks are disabled on the pool.'
-          example: online
-          type: string
-          x-go-name: Status
-      title: NetworkLoadBalancerPoolTarget represents the actual targets on a pool's instance.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     StatusCode:
       format: int64
       title: StatusCode represents a valid LXD operation and container status.
       type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkLoadBalancerPoolPut:
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)
-          example:
-            protocol: tcp
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the load balancer pool.
-          example: My HTTPS load balancer pool
-          type: string
-          x-go-name: Description
-        instances:
-          description: List of instances in the pool.
-          example:
-          - name: c1
-          - name: c2
-            target_port: '8443'
-          items:
-            $ref: '#/components/schemas/NetworkLoadBalancerPoolInstance'
-          type: array
-          x-go-name: Instances
-      title: NetworkLoadBalancerPoolPut represents the modifiable fields of a LXD network load balancer pool.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkLoadBalancerPoolInstance:
-      description: An instance can have multiple targets depending on how many addresses it has in the pool's network.
-      properties:
-        name:
-          description: The name of the instance in the pool.
-          example: i1
-          type: string
-          x-go-name: Name
-        target_port:
-          description: Optional target port to override the pool's default target port.
-          example: '8443'
-          type: string
-          x-go-name: TargetPort
-      title: NetworkLoadBalancerPoolInstance represents an instance in a load balancer pool.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkLoadBalancerPoolsPost:
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)
-          example:
-            protocol: tcp
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the load balancer pool.
-          example: My HTTPS load balancer pool
-          type: string
-          x-go-name: Description
-        instances:
-          description: List of instances in the pool.
-          example:
-          - name: c1
-          - name: c2
-            target_port: '8443'
-          items:
-            $ref: '#/components/schemas/NetworkLoadBalancerPoolInstance'
-          type: array
-          x-go-name: Instances
-        name:
-          description: The name of the load balancer pool.
-          example: https
-          type: string
-          x-go-name: Name
-      title: NetworkLoadBalancerPoolsPost represents the fields of a new LXD network load balancer pool.
-      type: object
       x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
@@ -621,6 +435,91 @@ components:
           x-go-name: UpdatedAt
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLoadBalancerPoolTarget:
+      description: 'If an instance has both IPv4 and IPv6 addresses on the same network interface,
+
+        those are represented as two targets inside the pool.
+
+        Each target has its own health check with its own status.'
+      properties:
+        address:
+          description: Address represents the address of the target.
+          example: 198.51.100.2
+          type: string
+          x-go-name: Address
+        device:
+          description: Device represents the target instance's network device.
+          example: eth0
+          type: string
+          x-go-name: Device
+        listen_address:
+          description: ListenAddress represents the address of the target's parent load balancer.
+          example: 1.2.3.4
+          type: string
+          x-go-name: ListenAddress
+        listen_port:
+          description: ListenPort represents the port of the target's parent load balancer.
+          example: '443'
+          type: string
+          x-go-name: ListenPort
+        name:
+          description: Name represents the target instance's name.
+          example: c1
+          type: string
+          x-go-name: Name
+        port:
+          description: Port represents the port probed on the target's address.
+          example: '8443'
+          type: string
+          x-go-name: Port
+        status:
+          description: 'Status represents the status of the target address.
+
+            It can be one of:
+
+            error   indicates an error occurred while probing the target address.
+
+            offline indicates the target address is not responding to probes.
+
+            online  indicates the target address is responding to probes.
+
+            pending indicates the target address is pending to being probed.
+
+            unknown indicates that the targeted instance is not running and there is no service monitor configured, or that health checks are disabled on the pool.'
+          example: online
+          type: string
+          x-go-name: Status
+      title: NetworkLoadBalancerPoolTarget represents the actual targets on a pool's instance.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLoadBalancerPoolPut:
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)
+          example:
+            protocol: tcp
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the load balancer pool.
+          example: My HTTPS load balancer pool
+          type: string
+          x-go-name: Description
+        instances:
+          description: List of instances in the pool.
+          example:
+          - name: c1
+          - name: c2
+            target_port: '8443'
+          items:
+            $ref: '#/components/schemas/NetworkLoadBalancerPoolInstance'
+          type: array
+          x-go-name: Instances
+      title: NetworkLoadBalancerPoolPut represents the modifiable fields of a LXD network load balancer pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     OperationRequestor:
       description: 'API extension: operation_requestor.'
       properties:
@@ -640,5 +539,106 @@ components:
           type: string
           x-go-name: Username
       title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLoadBalancerPoolInstance:
+      description: An instance can have multiple targets depending on how many addresses it has in the pool's network.
+      properties:
+        name:
+          description: The name of the instance in the pool.
+          example: i1
+          type: string
+          x-go-name: Name
+        target_port:
+          description: Optional target port to override the pool's default target port.
+          example: '8443'
+          type: string
+          x-go-name: TargetPort
+      title: NetworkLoadBalancerPoolInstance represents an instance in a load balancer pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLoadBalancerPool:
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)
+          example:
+            protocol: tcp
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the load balancer pool.
+          example: My HTTPS load balancer pool
+          type: string
+          x-go-name: Description
+        instances:
+          description: Instances included in the pool.
+          example:
+          - name: i1
+          - name: i2
+            target_port: '8443'
+          items:
+            $ref: '#/components/schemas/NetworkLoadBalancerPoolInstance'
+          type: array
+          x-go-name: Instances
+        name:
+          description: The name of the load balancer pool.
+          example: https
+          type: string
+          x-go-name: Name
+        used_by:
+          description: UsedBy is a list of LXD entity URLs that reference this load balancer pool.
+          example:
+          - /1.0/networks/default/load-balancers/192.0.2.1
+          items:
+            type: string
+          type: array
+          x-go-name: UsedBy
+      title: NetworkLoadBalancerPool used for displaying a network load balancer pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLoadBalancerPoolState:
+      properties:
+        targets:
+          description: Actual targets in the pool with their status.
+          items:
+            $ref: '#/components/schemas/NetworkLoadBalancerPoolTarget'
+          type: array
+          x-go-name: Targets
+      title: NetworkLoadBalancerPoolState represents the state of a network load balancer pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkLoadBalancerPoolsPost:
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)
+          example:
+            protocol: tcp
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the load balancer pool.
+          example: My HTTPS load balancer pool
+          type: string
+          x-go-name: Description
+        instances:
+          description: List of instances in the pool.
+          example:
+          - name: c1
+          - name: c2
+            target_port: '8443'
+          items:
+            $ref: '#/components/schemas/NetworkLoadBalancerPoolInstance'
+          type: array
+          x-go-name: Instances
+        name:
+          description: The name of the load balancer pool.
+          example: https
+          type: string
+          x-go-name: Name
+      title: NetworkLoadBalancerPoolsPost represents the fields of a new LXD network load balancer pool.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api

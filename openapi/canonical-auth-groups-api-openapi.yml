@@ -233,20 +233,55 @@ paths:
       - Auth Groups
 components:
   schemas:
-    AuthGroupPut:
+    Permission:
+      properties:
+        entitlement:
+          description: Entitlement is the entitlement define for the entity type.
+          example: can_view
+          type: string
+          x-go-name: Entitlement
+        entity_type:
+          description: EntityType is the string representation of the entity type.
+          example: instance
+          type: string
+          x-go-name: EntityType
+        url:
+          description: EntityReference is the URL of the entity that the permission applies to.
+          example: /1.0/instances/c1?project=default
+          type: string
+          x-go-name: EntityReference
+      title: Permission represents a permission that may be granted to a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    AuthGroupPost:
+      properties:
+        name:
+          description: Name is the name of the group.
+          example: default-c1-viewers
+          type: string
+          x-go-name: Name
+      title: AuthGroupPost is used for renaming a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    AuthGroupsPost:
       properties:
         description:
           description: Description is a short description of the group.
           example: Viewers of instance c1 in the default project
           type: string
           x-go-name: Description
+        name:
+          description: Name is the name of the group.
+          example: default-c1-viewers
+          type: string
+          x-go-name: Name
         permissions:
           description: Permissions are a list of permissions.
           items:
             $ref: '#/components/schemas/Permission'
           type: array
           x-go-name: Permissions
-      title: AuthGroupPut contains the editable fields of a group.
+      title: AuthGroupsPost is used for creating a new group.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     AuthGroup:
@@ -298,98 +333,23 @@ components:
       title: AuthGroup is the type for a LXD group.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    AuthGroupsPost:
+    AuthGroupPut:
       properties:
         description:
           description: Description is a short description of the group.
           example: Viewers of instance c1 in the default project
           type: string
           x-go-name: Description
-        name:
-          description: Name is the name of the group.
-          example: default-c1-viewers
-          type: string
-          x-go-name: Name
         permissions:
           description: Permissions are a list of permissions.
           items:
             $ref: '#/components/schemas/Permission'
           type: array
           x-go-name: Permissions
-      title: AuthGroupsPost is used for creating a new group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    AuthGroupPost:
-      properties:
-        name:
-          description: Name is the name of the group.
-          example: default-c1-viewers
-          type: string
-          x-go-name: Name
-      title: AuthGroupPost is used for renaming a group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    Permission:
-      properties:
-        entitlement:
-          description: Entitlement is the entitlement define for the entity type.
-          example: can_view
-          type: string
-          x-go-name: Entitlement
-        entity_type:
-          description: EntityType is the string representation of the entity type.
-          example: instance
-          type: string
-          x-go-name: EntityType
-        url:
-          description: EntityReference is the URL of the entity that the permission applies to.
-          example: /1.0/instances/c1?project=default
-          type: string
-          x-go-name: EntityReference
-      title: Permission represents a permission that may be granted to a group.
+      title: AuthGroupPut contains the editable fields of a group.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
   responses:
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
     BadRequest:
       description: Bad Request
       content:
@@ -427,6 +387,46 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
                 type: string
                 x-go-name: Type
             type: object

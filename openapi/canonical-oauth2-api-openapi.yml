@@ -97,6 +97,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    RefreshTokenIn:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          minLength: 1
+      required:
+      - refresh_token
+      additionalProperties: false
     ValidationError:
       properties:
         detail:
@@ -112,12 +121,3 @@ components:
         message:
           type: string
       type: object
-    RefreshTokenIn:
-      type: object
-      properties:
-        refresh_token:
-          type: string
-          minLength: 1
-      required:
-      - refresh_token
-      additionalProperties: false

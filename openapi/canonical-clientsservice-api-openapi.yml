@@ -238,6 +238,44 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    clientsUpdateClientResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    clientsCreateClientResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    clientsGetClientResp:
+      properties:
+        data:
+          $ref: '#/components/schemas/clientsClient'
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
     clientsClient:
       properties:
         access_token_strategy:
@@ -354,34 +392,6 @@ components:
         userinfo_signed_response_alg:
           type: string
       type: object
-    clientsRemoveClientResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    clientsGetClientResp:
-      properties:
-        data:
-          $ref: '#/components/schemas/clientsClient'
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    clientsCreateClientResp:
-      properties:
-        data:
-          $ref: '#/components/schemas/clientsClient'
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
     clientsListClientsResp:
       properties:
         data:
@@ -396,7 +406,7 @@ components:
           format: int32
           type: integer
       type: object
-    typesErrorResponse:
+    clientsRemoveClientResp:
       properties:
         message:
           type: string
@@ -413,16 +423,6 @@ components:
         prev:
           type: string
         size:
-          format: int32
-          type: integer
-      type: object
-    clientsUpdateClientResp:
-      properties:
-        data:
-          $ref: '#/components/schemas/clientsClient'
-        message:
-          type: string
-        status:
           format: int32
           type: integer
       type: object

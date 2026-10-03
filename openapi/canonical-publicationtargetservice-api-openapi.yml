@@ -197,36 +197,50 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BatchGetPublicationTargetsRequest:
+    SwiftTarget:
       required:
-      - names
+      - container
+      - username
+      - password
+      - authUrl
       type: object
       properties:
-        names:
-          type: array
-          items:
-            type: string
-          description: "The names of the publication targets to retrieve.\n A maximum of 100 publication targets can be retrieved in a batch.\n Format: publicationTargets/{publication_target}"
-        returnPartialSuccess:
-          type: boolean
-          description: "Setting this field to `true` will opt the request into returning the\n publication targets that are reachable, and into including the names of\n those that were unreachable in the\n [BatchGetPublicationTargetsResponse.unreachable] field."
-      description: The request message for retrieving a batch of publication targets.
-    Status:
-      type: object
-      properties:
-        code:
-          type: integer
-          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
-          format: int32
-        message:
+        container:
           type: string
-          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
-        details:
-          type: array
-          items:
-            $ref: '#/components/schemas/GoogleProtobufAny'
-          description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
-      description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+          description: The name of the container.
+        username:
+          writeOnly: true
+          type: string
+          description: OpenStack username for Keystone access.
+        password:
+          writeOnly: true
+          type: string
+          description: OpenStack password for Keystone access.
+        prefix:
+          type: string
+          description: "Path prefix under which artifacts will be published.\n Defaults to the container root if not specified."
+        authUrl:
+          type: string
+          description: The full URL of the Keystone server (including port and version).
+        tenant:
+          type: string
+          description: The OpenStack tenant name.
+        tenantId:
+          type: string
+          description: The OpenStack tenant ID.
+        domain:
+          type: string
+          description: The OpenStack domain name.
+        domainId:
+          type: string
+          description: The OpenStack domain ID.
+        tenantDomain:
+          type: string
+          description: The OpenStack domain name the tenant/project belongs to.
+        tenantDomainId:
+          type: string
+          description: The OpenStack domain ID the tenant/project belongs to.
+      description: A Swift (OpenStack) storage destination.
     FilesystemTarget:
       required:
       - path
@@ -244,6 +258,32 @@ components:
           description: The link method to use for published files. Defaults to `HARDLINK`.
           format: enum
       description: A local filesystem storage destination.
+    BatchGetPublicationTargetsRequest:
+      required:
+      - names
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string
+          description: "The names of the publication targets to retrieve.\n A maximum of 100 publication targets can be retrieved in a batch.\n Format: publicationTargets/{publication_target}"
+        returnPartialSuccess:
+          type: boolean
+          description: "Setting this field to `true` will opt the request into returning the\n publication targets that are reachable, and into including the names of\n those that were unreachable in the\n [BatchGetPublicationTargetsResponse.unreachable] field."
+      description: The request message for retrieving a batch of publication targets.
+    ListPublicationTargetsResponse:
+      type: object
+      properties:
+        publicationTargets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicationTarget'
+          description: The publication targets.
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing publication targets.
     PublicationTarget:
       required:
       - displayName
@@ -286,6 +326,30 @@ components:
             type: string
           description: "Unreachable publication targets. Populated when the request opts into\n `return_partial_success` and reading across collections."
       description: The response message for retrieving a batch of publication targets.
+    GoogleProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: The type of the serialized message.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+    Status:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+          format: int32
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoogleProtobufAny'
+          description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+      description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
     S3Target:
       required:
       - region
@@ -336,67 +400,3 @@ components:
           type: boolean
           description: Enables debug logging for S3 operations.
       description: An S3 publication target destination.
-    ListPublicationTargetsResponse:
-      type: object
-      properties:
-        publicationTargets:
-          type: array
-          items:
-            $ref: '#/components/schemas/PublicationTarget'
-          description: The publication targets.
-        nextPageToken:
-          type: string
-          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
-      description: The response message for listing publication targets.
-    GoogleProtobufAny:
-      type: object
-      properties:
-        '@type':
-          type: string
-          description: The type of the serialized message.
-      additionalProperties: true
-      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-    SwiftTarget:
-      required:
-      - container
-      - username
-      - password
-      - authUrl
-      type: object
-      properties:
-        container:
-          type: string
-          description: The name of the container.
-        username:
-          writeOnly: true
-          type: string
-          description: OpenStack username for Keystone access.
-        password:
-          writeOnly: true
-          type: string
-          description: OpenStack password for Keystone access.
-        prefix:
-          type: string
-          description: "Path prefix under which artifacts will be published.\n Defaults to the container root if not specified."
-        authUrl:
-          type: string
-          description: The full URL of the Keystone server (including port and version).
-        tenant:
-          type: string
-          description: The OpenStack tenant name.
-        tenantId:
-          type: string
-          description: The OpenStack tenant ID.
-        domain:
-          type: string
-          description: The OpenStack domain name.
-        domainId:
-          type: string
-          description: The OpenStack domain ID.
-        tenantDomain:
-          type: string
-          description: The OpenStack domain name the tenant/project belongs to.
-        tenantDomainId:
-          type: string
-          description: The OpenStack domain ID the tenant/project belongs to.
-      description: A Swift (OpenStack) storage destination.

@@ -857,148 +857,131 @@ paths:
       operationId: postV1Identities
       x-operation-id-source: derived
 components:
-  responses:
-    NotImplemented:
-      description: Not implemented
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not implemented
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 501
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not found
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
   schemas:
+    Permission:
+      properties:
+        entitlement:
+          description: Entitlement is the entitlement define for the entity type.
+          example: can_view
+          type: string
+          x-go-name: Entitlement
+        entity_type:
+          description: EntityType is the string representation of the entity type.
+          example: instance
+          type: string
+          x-go-name: EntityType
+        url:
+          description: EntityReference is the URL of the entity that the permission applies to.
+          example: /1.0/instances/c1?project=default
+          type: string
+          x-go-name: EntityReference
+      title: Permission represents a permission that may be granted to a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityInfo:
+      description: These fields can only be evaluated for the currently authenticated identity.
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        authentication_method:
+          description: 'AuthenticationMethod is the authentication method that the identity
+
+            authenticates to LXD with.'
+          example: tls
+          type: string
+          x-go-name: AuthenticationMethod
+        effective_groups:
+          description: 'Effective groups is the combined and deduplicated list of LXD groups that the identity is a direct member of, and
+
+            the LXD groups that the identity is an effective member of via identity provider group mappings.'
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: EffectiveGroups
+        effective_permissions:
+          description: 'Effective permissions is the combined and deduplicated list of permissions that the identity has by virtue of
+
+            direct membership to a LXD group, or effective membership of a LXD group via identity provider group mappings.'
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          x-go-name: EffectivePermissions
+        expires_at:
+          description: 'ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the
+
+            expiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.
+
+            It is unset for identities whose credential has no expiry, that have no credential yet (pending identities),
+
+            or whose token has been revoked.
+
+
+            API extension: access_management_expiry.'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        fine_grained:
+          description: 'FineGrained is a boolean indicating whether the identity is fine-grained,
+
+            meaning that permissions are managed via group membership.'
+          type: boolean
+          x-go-name: FineGrained
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        id:
+          description: Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Identifier
+        name:
+          description: 'Name is the Name claim of the identity if authenticated via OIDC, or the name
+
+            of the certificate if authenticated with TLS.'
+          example: Jane Doe
+          type: string
+          x-go-name: Name
+        tls_certificate:
+          description: 'TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.
+
+
+            API extension: access_management_tls.'
+          type: string
+          x-go-name: TLSCertificate
+        type:
+          description: Type is the type of identity.
+          example: oidc-service-account
+          type: string
+          x-go-name: Type
+      title: IdentityInfo expands an Identity to include effective group membership and effective permissions.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityBearerToken:
+      description: 'IdentityBearerToken contains a token issued for an identity whose authentication method is
+
+        api.AuthenticationMethodBearer.'
+      properties:
+        token:
+          type: string
+          x-go-name: Token
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     IdentitiesTLSPost:
       properties:
         certificate:
@@ -1030,40 +1013,6 @@ components:
           type: string
           x-go-name: TrustToken
       title: IdentitiesTLSPost contains required information for the creation of a TLS identity.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    IdentityBearerToken:
-      description: 'IdentityBearerToken contains a token issued for an identity whose authentication method is
-
-        api.AuthenticationMethodBearer.'
-      properties:
-        token:
-          type: string
-          x-go-name: Token
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    IdentitiesBearerPost:
-      properties:
-        groups:
-          description: Groups is the list of groups for which the identity is a member.
-          example:
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Groups
-        name:
-          description: Name associated with the identity
-          example: foo
-          type: string
-          x-go-name: Name
-        type:
-          description: Type of identity
-          example: DevLXD token bearer
-          type: string
-          x-go-name: Type
-      title: IdentitiesBearerPost contains required information for the creation of a token identity.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     IdentityPut:
@@ -1163,64 +1112,8 @@ components:
       title: IdentityBearerTokenPost contains parameters used when issuing a token for a bearer identity.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    IdentityInfo:
-      description: These fields can only be evaluated for the currently authenticated identity.
+    IdentitiesBearerPost:
       properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
-        authentication_method:
-          description: 'AuthenticationMethod is the authentication method that the identity
-
-            authenticates to LXD with.'
-          example: tls
-          type: string
-          x-go-name: AuthenticationMethod
-        effective_groups:
-          description: 'Effective groups is the combined and deduplicated list of LXD groups that the identity is a direct member of, and
-
-            the LXD groups that the identity is an effective member of via identity provider group mappings.'
-          example:
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: EffectiveGroups
-        effective_permissions:
-          description: 'Effective permissions is the combined and deduplicated list of permissions that the identity has by virtue of
-
-            direct membership to a LXD group, or effective membership of a LXD group via identity provider group mappings.'
-          items:
-            $ref: '#/components/schemas/Permission'
-          type: array
-          x-go-name: EffectivePermissions
-        expires_at:
-          description: 'ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the
-
-            expiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.
-
-            It is unset for identities whose credential has no expiry, that have no credential yet (pending identities),
-
-            or whose token has been revoked.
-
-
-            API extension: access_management_expiry.'
-          format: date-time
-          type: string
-          x-go-name: ExpiresAt
-        fine_grained:
-          description: 'FineGrained is a boolean indicating whether the identity is fine-grained,
-
-            meaning that permissions are managed via group membership.'
-          type: boolean
-          x-go-name: FineGrained
         groups:
           description: Groups is the list of groups for which the identity is a member.
           example:
@@ -1230,62 +1123,36 @@ components:
             type: string
           type: array
           x-go-name: Groups
-        id:
-          description: Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).
-          example: jane.doe@example.com
-          type: string
-          x-go-name: Identifier
         name:
-          description: 'Name is the Name claim of the identity if authenticated via OIDC, or the name
-
-            of the certificate if authenticated with TLS.'
-          example: Jane Doe
+          description: Name associated with the identity
+          example: foo
           type: string
           x-go-name: Name
-        tls_certificate:
-          description: 'TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.
-
-
-            API extension: access_management_tls.'
-          type: string
-          x-go-name: TLSCertificate
         type:
-          description: Type is the type of identity.
-          example: oidc-service-account
+          description: Type of identity
+          example: DevLXD token bearer
           type: string
           x-go-name: Type
-      title: IdentityInfo expands an Identity to include effective group membership and effective permissions.
+      title: IdentitiesBearerPost contains required information for the creation of a token identity.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    Permission:
+    BaseResponse:
+      type: object
       properties:
-        entitlement:
-          description: Entitlement is the entitlement define for the entity type.
-          example: can_view
+        type:
           type: string
-          x-go-name: Entitlement
-        entity_type:
-          description: EntityType is the string representation of the entity type.
-          example: instance
+          description: Response type, "sync".
+        status-code:
+          type: integer
+          description: HTTP response status code.
+        status:
           type: string
-          x-go-name: EntityType
-        url:
-          description: EntityReference is the URL of the entity that the permission applies to.
-          example: /1.0/instances/c1?project=default
-          type: string
-          x-go-name: EntityReference
-      title: Permission represents a permission that may be granted to a group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    GetIdentitiesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/identity'
+          description: 'The description of the HTTP status code.
+
+
+            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
+
+            '
     identity:
       type: object
       properties:
@@ -1305,23 +1172,156 @@ components:
             user-id:
               type: integer
               description: The user ID associated with the local identity.
-    BaseResponse:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Response type, "sync".
-        status-code:
-          type: integer
-          description: HTTP response status code.
-        status:
-          type: string
-          description: 'The description of the HTTP status code.
-
-
-            See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
-
-            '
+    GetIdentitiesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/identity'
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotImplemented:
+      description: Not implemented
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not implemented
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 501
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
 x-refined-from:
 - canonical-lxd-rest-api-openapi.yml
 - canonical-pebble-api-openapi.yml

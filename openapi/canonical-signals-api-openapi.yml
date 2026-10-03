@@ -50,14 +50,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PostSignalsResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: boolean
-            const: true
     BaseResponse:
       type: object
       properties:
@@ -75,3 +67,11 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
+    PostSignalsResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: boolean
+            const: true

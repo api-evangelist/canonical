@@ -199,32 +199,39 @@ paths:
       - view_test
 components:
   schemas:
-    ValidationError:
+    HTTPValidationError:
       properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EnvironmentsResponse:
+      properties:
+        environments:
+          items:
+            type: string
+          type: array
+          title: Environments
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - environments
+      - count
+      - limit
+      - offset
+      title: EnvironmentsResponse
+      description: Response model for environments endpoint
     EnvironmentReportedIssueResponse:
       properties:
         id:
@@ -265,15 +272,6 @@ components:
       - created_at
       - updated_at
       title: EnvironmentReportedIssueResponse
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
     EnvironmentReportedIssueRequest:
       properties:
         environment_name:
@@ -299,36 +297,38 @@ components:
       - description
       - is_confirmed
       title: EnvironmentReportedIssueRequest
-    HTTPValidationError:
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    EnvironmentsResponse:
-      properties:
-        environments:
-          items:
-            type: string
-          type: array
-          title: Environments
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - environments
-      - count
-      - limit
-      - offset
-      title: EnvironmentsResponse
-      description: Response model for environments endpoint
+      - loc
+      - msg
+      - type
+      title: ValidationError

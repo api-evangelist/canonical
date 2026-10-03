@@ -266,135 +266,114 @@ paths:
       tags:
       - network-forwards
 components:
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
   schemas:
-    NetworkForwardPut:
-      description: NetworkForwardPut represents the modifiable fields of a LXD network address forward
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Forward configuration map (refer to doc/network-forwards.md)
-          example:
-            target_address: 198.51.100.99
-            user.mykey: foo
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the forward listen IP
-          example: My public IP forward
-          type: string
-          x-go-name: Description
-        ports:
-          description: Port forwards (optional)
-          items:
-            $ref: '#/components/schemas/NetworkForwardPort'
-          type: array
-          x-go-name: Ports
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkForward:
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Forward configuration map (refer to doc/network-forwards.md)
-          example:
-            target_address: 198.51.100.99
-            user.mykey: foo
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the forward listen IP
-          example: My public IP forward
-          type: string
-          x-go-name: Description
-        listen_address:
-          description: The listen address of the forward
-          example: 192.0.2.1
-          type: string
-          x-go-name: ListenAddress
-        location:
-          description: What cluster member this record was found on
-          example: lxd01
-          type: string
-          x-go-name: Location
-        ports:
-          description: Port forwards (optional)
-          items:
-            $ref: '#/components/schemas/NetworkForwardPort'
-          type: array
-          x-go-name: Ports
-      title: NetworkForward used for displaying an network address forward.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkForwardsPost:
-      description: NetworkForwardsPost represents the fields of a new LXD network address forward
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Forward configuration map (refer to doc/network-forwards.md)
-          example:
-            target_address: 198.51.100.99
-            user.mykey: foo
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the forward listen IP
-          example: My public IP forward
-          type: string
-          x-go-name: Description
-        listen_address:
-          description: 'The listen address of the forward
-
-            For OVN networks only, you can dynamically allocate the listen address from a pre-defined range.
-
-            To do so for an IPv4 address, provide a listen_address of `0.0.0.0`.
-
-            For an IPv6 address, provide a listen_address of `::`.
-
-            These are equivalent to the `allocate=ipv{4|6}` flag used to create a network forward via the CLI.'
-          example: 192.0.2.1
-          type: string
-          x-go-name: ListenAddress
-        ports:
-          description: Port forwards (optional)
-          items:
-            $ref: '#/components/schemas/NetworkForwardPort'
-          type: array
-          x-go-name: Ports
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    NetworkForwardPort:
-      description: NetworkForwardPort represents a port specification in a network address forward
-      properties:
-        description:
-          description: Description of the forward port
-          example: My web server forward
-          type: string
-          x-go-name: Description
-        listen_port:
-          description: ListenPort(s) to forward (comma delimited ranges)
-          example: 80,81,8080-8090
-          type: string
-          x-go-name: ListenPort
-        protocol:
-          description: Protocol for port forward (either tcp or udp)
-          example: tcp
-          type: string
-          x-go-name: Protocol
-        target_address:
-          description: TargetAddress to forward ListenPorts to
-          example: 198.51.100.2
-          type: string
-          x-go-name: TargetAddress
-        target_port:
-          description: TargetPort(s) to forward ListenPorts to (allows for many-to-one)
-          example: 80,81,8080-8090
-          type: string
-          x-go-name: TargetPort
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     StatusCode:
       format: int64
       title: StatusCode represents a valid LXD operation and container status.
@@ -528,110 +507,131 @@ components:
       title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-  responses:
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Operation:
-      description: Operation
-      content:
-        application/json:
-          schema:
-            properties:
-              metadata:
-                $ref: '#/components/schemas/Operation'
-              operation:
-                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-                type: string
-                x-go-name: Operation
-              status:
-                example: Operation created
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 100
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: async
-                type: string
-                x-go-name: Type
-            type: object
+    NetworkForwardPort:
+      description: NetworkForwardPort represents a port specification in a network address forward
+      properties:
+        description:
+          description: Description of the forward port
+          example: My web server forward
+          type: string
+          x-go-name: Description
+        listen_port:
+          description: ListenPort(s) to forward (comma delimited ranges)
+          example: 80,81,8080-8090
+          type: string
+          x-go-name: ListenPort
+        protocol:
+          description: Protocol for port forward (either tcp or udp)
+          example: tcp
+          type: string
+          x-go-name: Protocol
+        target_address:
+          description: TargetAddress to forward ListenPorts to
+          example: 198.51.100.2
+          type: string
+          x-go-name: TargetAddress
+        target_port:
+          description: TargetPort(s) to forward ListenPorts to (allows for many-to-one)
+          example: 80,81,8080-8090
+          type: string
+          x-go-name: TargetPort
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkForwardsPost:
+      description: NetworkForwardsPost represents the fields of a new LXD network address forward
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Forward configuration map (refer to doc/network-forwards.md)
+          example:
+            target_address: 198.51.100.99
+            user.mykey: foo
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the forward listen IP
+          example: My public IP forward
+          type: string
+          x-go-name: Description
+        listen_address:
+          description: 'The listen address of the forward
+
+            For OVN networks only, you can dynamically allocate the listen address from a pre-defined range.
+
+            To do so for an IPv4 address, provide a listen_address of `0.0.0.0`.
+
+            For an IPv6 address, provide a listen_address of `::`.
+
+            These are equivalent to the `allocate=ipv{4|6}` flag used to create a network forward via the CLI.'
+          example: 192.0.2.1
+          type: string
+          x-go-name: ListenAddress
+        ports:
+          description: Port forwards (optional)
+          items:
+            $ref: '#/components/schemas/NetworkForwardPort'
+          type: array
+          x-go-name: Ports
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkForward:
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Forward configuration map (refer to doc/network-forwards.md)
+          example:
+            target_address: 198.51.100.99
+            user.mykey: foo
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the forward listen IP
+          example: My public IP forward
+          type: string
+          x-go-name: Description
+        listen_address:
+          description: The listen address of the forward
+          example: 192.0.2.1
+          type: string
+          x-go-name: ListenAddress
+        location:
+          description: What cluster member this record was found on
+          example: lxd01
+          type: string
+          x-go-name: Location
+        ports:
+          description: Port forwards (optional)
+          items:
+            $ref: '#/components/schemas/NetworkForwardPort'
+          type: array
+          x-go-name: Ports
+      title: NetworkForward used for displaying an network address forward.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkForwardPut:
+      description: NetworkForwardPut represents the modifiable fields of a LXD network address forward
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Forward configuration map (refer to doc/network-forwards.md)
+          example:
+            target_address: 198.51.100.99
+            user.mykey: foo
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the forward listen IP
+          example: My public IP forward
+          type: string
+          x-go-name: Description
+        ports:
+          description: Port forwards (optional)
+          items:
+            $ref: '#/components/schemas/NetworkForwardPort'
+          type: array
+          x-go-name: Ports
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api

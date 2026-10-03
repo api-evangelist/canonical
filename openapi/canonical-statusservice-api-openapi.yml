@@ -54,13 +54,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    apistatusStatus:
-      properties:
-        buildInfo:
-          $ref: '#/components/schemas/statusBuildInfo'
-        status:
-          type: string
-      type: object
     statusBuildInfo:
       properties:
         commit_hash:
@@ -68,6 +61,13 @@ components:
         name:
           type: string
         version:
+          type: string
+      type: object
+    apistatusStatus:
+      properties:
+        buildInfo:
+          $ref: '#/components/schemas/statusBuildInfo'
+        status:
           type: string
       type: object
     typesErrorResponse:

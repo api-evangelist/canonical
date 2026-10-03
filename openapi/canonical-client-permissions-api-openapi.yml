@@ -109,6 +109,28 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
     ClientPermissionsIn:
       type: object
       properties:
@@ -134,28 +156,6 @@ components:
           type: string
           format: email
       additionalProperties: false
-    ValidationError:
-      properties:
-        detail:
-          type: object
-          properties:
-            <location>:
-              type: object
-              properties:
-                <field_name>:
-                  type: array
-                  items:
-                    type: string
-        message:
-          type: string
-      type: object
-    HTTPError:
-      properties:
-        detail:
-          type: object
-        message:
-          type: string
-      type: object
     ClientPermissionsOut:
       type: object
       properties:

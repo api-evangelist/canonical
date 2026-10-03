@@ -496,7 +496,7 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    authz_groupsAddUsersToGroupResp:
+    apiauthz_groupsRemoveGroupResp:
       properties:
         message:
           type: string
@@ -504,11 +504,11 @@ components:
           format: int32
           type: integer
       type: object
-    authz_groupsListUsersInGroupResp:
+    apiauthz_groupsListGroupsResp:
       properties:
         data:
           items:
-            $ref: '#/components/schemas/authz_groupsUser'
+            $ref: '#/components/schemas/apiauthz_groupsGroup'
           type: array
         message:
           type: string
@@ -518,12 +518,16 @@ components:
           format: int32
           type: integer
       type: object
-    apiauthz_groupsUpdateGroupResp:
+    authz_groupsRemoveUserFromGroupResp:
       properties:
-        data:
-          items:
-            $ref: '#/components/schemas/apiauthz_groupsGroup'
-          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authz_groupsAddUserToGroupsResp:
+      properties:
         message:
           type: string
         status:
@@ -542,12 +546,39 @@ components:
           format: int32
           type: integer
       type: object
-    apiauthz_groupsGetGroupResp:
+    authz_groupsGroupInput:
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+      type: object
+    authz_groupsListUserGroupsResp:
       properties:
         data:
           items:
             $ref: '#/components/schemas/apiauthz_groupsGroup'
           type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    authz_groupsAddUsersToGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
         message:
           type: string
         status:
@@ -573,7 +604,7 @@ components:
           format: date-time
           type: string
       type: object
-    authz_groupsListUserGroupsResp:
+    apiauthz_groupsUpdateGroupResp:
       properties:
         data:
           items:
@@ -581,68 +612,7 @@ components:
           type: array
         message:
           type: string
-        meta:
-          $ref: '#/components/schemas/typesPagination'
         status:
-          format: int32
-          type: integer
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    authz_groupsGroupInput:
-      properties:
-        description:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-      type: object
-    apiauthz_groupsListGroupsResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/apiauthz_groupsGroup'
-          type: array
-        message:
-          type: string
-        meta:
-          $ref: '#/components/schemas/typesPagination'
-        status:
-          format: int32
-          type: integer
-      type: object
-    authz_groupsRemoveUserFromGroupResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    apiauthz_groupsRemoveGroupResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    typesPagination:
-      properties:
-        next:
-          type: string
-        pageToken:
-          type: string
-        prev:
-          type: string
-        size:
           format: int32
           type: integer
       type: object
@@ -659,8 +629,38 @@ components:
           format: date-time
           type: string
       type: object
-    authz_groupsAddUserToGroupsResp:
+    typesPagination:
       properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    authz_groupsListUsersInGroupResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/authz_groupsUser'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    apiauthz_groupsGetGroupResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apiauthz_groupsGroup'
+          type: array
         message:
           type: string
         status:

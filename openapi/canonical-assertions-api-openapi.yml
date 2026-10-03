@@ -544,208 +544,7 @@ paths:
     - url: unix:///run/snapd-snap.socket
       description: Snapd socket access for snaps
 components:
-  schemas:
-    NoSerialAssertionError:
-      type: object
-      description: The serial assertion has not been created yet.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          enum:
-          - no serial assertion yet
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          enum:
-          - serial
-    AssertionResult:
-      type: object
-      properties:
-        result:
-          type: array
-          description: A list of assertion results.
-          items:
-            type: object
-            properties:
-              headers:
-                type: object
-                description: A key-value map of the assertion headers.
-                additionalProperties:
-                  type: string
-        status:
-          type: string
-          example: OK
-        status-code:
-          type: integer
-          example: 200
-        type:
-          type: string
-          example: sync
-      example:
-        result:
-        - headers:
-            account-id: canonical
-            authority-id: canonical
-            display-name: Canonical
-            sign-key-sha3-384: -CvQKAwRQ5h3Ffn10FILJoEZUXOv6km9FwA80-Rcj-f-6jadQ89VRswHNiEB9Lxk
-            timestamp: '2016-04-01T00:00:00.0Z'
-            type: account
-            username: canonical
-            validation: certified
-        - headers:
-            account-id: generic
-            authority-id: canonical
-            display-name: Generic
-            sign-key-sha3-384: -CvQKAwRQ5h3Ffn10FILJoEZUXOv6km9FwA80-Rcj-f-6jadQ89VRswHNiEB9Lxk
-            timestamp: '2017-07-27T00:00:00.0Z'
-            type: account
-            username: generic
-            validation: certified
-        status: OK
-        status-code: 200
-        type: sync
-    SnapNotInstalledError:
-      type: object
-      description: The snap does not exist on the system.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - snap-not-found
-          - snap-not-installed
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: no state entry for key
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          example: firefox
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
-    NoModelAssertionError:
-      type: object
-      description: The model assertion has not been created yet.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          enum:
-          - no model assertion yet
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          enum:
-          - model
-    MalformedRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: cannot decode request body into an alias action
-    ConfdbError:
-      type: object
-      description: An error occured while interacting with confdb.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - option-not-available
-          - option-not-found
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
-    InternalServerError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A human-readable error message.
-          enum:
-          - internal server error
-    NotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: no snapshot set with the given ID
-    UserNotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
   responses:
-    Accepted:
-      description: The asynchronous request was accepted and is being processed.
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The response for an accepted asynchronous operation.
-            properties:
-              type:
-                type: string
-                enum:
-                - async
-              status-code:
-                type: integer
-                enum:
-                - 202
-              status:
-                type: string
-                enum:
-                - Accepted
-              change:
-                type: string
-                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
-                example: '61'
-              result:
-                type:
-                - object
-                - 'null'
-                description: For an accepted async operation, this is always null as the result is not yet available.
-                example: null
-    InternalError:
-      description: An internal error occurred on the server. This is a generic response for server-side issues.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 500
-              status:
-                type: string
-                enum:
-                - Internal Server Error
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                $ref: '#/components/schemas/InternalServerError'
     BadRequest:
       description: 'Bad Request. The request could not be processed due to a client-side error.
 
@@ -802,6 +601,207 @@ components:
                 - $ref: '#/components/schemas/NotFoundError'
                 - $ref: '#/components/schemas/UserNotFoundError'
                 - $ref: '#/components/schemas/SnapNotInstalledError'
+    Accepted:
+      description: The asynchronous request was accepted and is being processed.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response for an accepted asynchronous operation.
+            properties:
+              type:
+                type: string
+                enum:
+                - async
+              status-code:
+                type: integer
+                enum:
+                - 202
+              status:
+                type: string
+                enum:
+                - Accepted
+              change:
+                type: string
+                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
+                example: '61'
+              result:
+                type:
+                - object
+                - 'null'
+                description: For an accepted async operation, this is always null as the result is not yet available.
+                example: null
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
+  schemas:
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+          enum:
+          - internal server error
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    AssertionResult:
+      type: object
+      properties:
+        result:
+          type: array
+          description: A list of assertion results.
+          items:
+            type: object
+            properties:
+              headers:
+                type: object
+                description: A key-value map of the assertion headers.
+                additionalProperties:
+                  type: string
+        status:
+          type: string
+          example: OK
+        status-code:
+          type: integer
+          example: 200
+        type:
+          type: string
+          example: sync
+      example:
+        result:
+        - headers:
+            account-id: canonical
+            authority-id: canonical
+            display-name: Canonical
+            sign-key-sha3-384: -CvQKAwRQ5h3Ffn10FILJoEZUXOv6km9FwA80-Rcj-f-6jadQ89VRswHNiEB9Lxk
+            timestamp: '2016-04-01T00:00:00.0Z'
+            type: account
+            username: canonical
+            validation: certified
+        - headers:
+            account-id: generic
+            authority-id: canonical
+            display-name: Generic
+            sign-key-sha3-384: -CvQKAwRQ5h3Ffn10FILJoEZUXOv6km9FwA80-Rcj-f-6jadQ89VRswHNiEB9Lxk
+            timestamp: '2017-07-27T00:00:00.0Z'
+            type: account
+            username: generic
+            validation: certified
+        status: OK
+        status-code: 200
+        type: sync
   securitySchemes:
     PeerAuth:
       type: apiKey

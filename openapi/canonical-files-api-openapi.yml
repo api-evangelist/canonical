@@ -188,30 +188,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PostFilesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        description: JSON metadata about the file read operation.
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/fileResult'
-    PostFilesRemovePathsRequest:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - remove
-        paths:
-          type: array
-          items:
-            $ref: '#/components/schemas/removePathsItem'
-      required:
-      - action
-      - paths
     makeDirsItem:
       type: object
       properties:
@@ -238,6 +214,15 @@ components:
           description: Group name of the owner.
       required:
       - path
+    ListFilesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/FileInfo'
     errorResult:
       type: object
       properties:
@@ -271,36 +256,6 @@ components:
           description: Array of files. Each file part will have its own headers.
         response:
           $ref: '#/components/schemas/PostFilesResponse'
-    ListFilesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/FileInfo'
-    PostFilesMakeDirsRequest:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - make-dirs
-        dirs:
-          type: array
-          items:
-            $ref: '#/components/schemas/makeDirsItem'
-      required:
-      - action
-      - dirs
-    fileResult:
-      type: object
-      properties:
-        path:
-          type: string
-        error:
-          $ref: '#/components/schemas/errorResult'
     FileInfo:
       type: object
       properties:
@@ -350,6 +305,62 @@ components:
       - type
       - permissions
       - last-modified
+    removePathsItem:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The path to the file or directory to remove.
+        recursive:
+          type: boolean
+          description: Whether to remove recursively (for directories).
+      required:
+      - path
+    PostFilesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        description: JSON metadata about the file read operation.
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/fileResult'
+    PostFilesRemovePathsRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - remove
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/removePathsItem'
+      required:
+      - action
+      - paths
+    PostFilesMakeDirsRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - make-dirs
+        dirs:
+          type: array
+          items:
+            $ref: '#/components/schemas/makeDirsItem'
+      required:
+      - action
+      - dirs
+    fileResult:
+      type: object
+      properties:
+        path:
+          type: string
+        error:
+          $ref: '#/components/schemas/errorResult'
     BaseResponse:
       type: object
       properties:
@@ -367,14 +378,3 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
-    removePathsItem:
-      type: object
-      properties:
-        path:
-          type: string
-          description: The path to the file or directory to remove.
-        recursive:
-          type: boolean
-          description: Whether to remove recursively (for directories).
-      required:
-      - path

@@ -416,17 +416,13 @@ paths:
         required: true
 components:
   schemas:
-    api.SessionConnectGetResponse:
+    api_gateway.Response:
       type: object
       properties:
         error:
           description: Error is an optional error message
           type: string
           example: invalid body format
-        metadata:
-          description: Metadata contains session connection response data
-          allOf:
-          - $ref: '#/components/schemas/api.SessionConnectGetResponseData'
         status:
           description: Status of the response
           enum:
@@ -447,7 +443,88 @@ components:
           allOf:
           - $ref: '#/components/schemas/api_gateway.ResponseType'
           example: sync
-    api.SessionGetResponse:
+    api.SessionJoinPost:
+      type: object
+      properties:
+        screen:
+          description: 'Definition of the screen dimensions. Allows changing the dimensions the containers are configured
+
+            with to match client expectation for the video stream. The maximum allowd screen resolution is
+
+            4k (3840 x 2160).'
+          allOf:
+          - $ref: '#/components/schemas/api.Screen'
+    api.Session:
+      type: object
+      properties:
+        app:
+          description: 'App that will be run in the session.
+
+            Applications are listed from AMS if they have been configured for streaming.'
+          type: string
+        cluster_id:
+          description: ID of the cluster which the instance is deployed to
+          type: string
+          example: cluster0
+        container_id:
+          description: 'ID of the container powering the session. If no container was created yet
+
+            or the container is destroyed, the ID will be empty.'
+          type: string
+          example: c05h1jj3pn6a8q46taug
+        id:
+          description: ID of the session.
+          type: string
+          example: e25f3e3bcead096461d89d8ab7043f14bdb1ecd39
+        joinable:
+          description: Marks wether the session is joinable or not
+          type: boolean
+        region:
+          description: Region on which the instance is located.
+          type: string
+          example: eu-west-1
+        status:
+          description: "Status of the session.\n created: sent creation request to an available agent.\n active: container is up and running.\n error: an error occurred and the container is stopped.\n terminated: the container has stopped gracefully, either by manual command or timeout."
+          enum:
+          - created
+          - active
+          - error
+          - terminating
+          - terminated
+          allOf:
+          - $ref: '#/components/schemas/api.SessionStatus'
+        status_message:
+          description: Message giving more information about the current status
+          type: string
+          example: Container failed to start
+    api.SessionsDelete:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+    api.SessionJoinResponseData:
+      type: object
+      properties:
+        stun_servers:
+          description: 'StunServers is a list of STUN servers with their optional credentials.
+
+            They are passed to the client to figure out the best route to the
+
+            actual android instance.
+
+            They are used within the WebRTC protocol to negotiation a peer to peer transport
+
+            between the Android instance and the connecting client.'
+          type: array
+          items:
+            $ref: '#/components/schemas/api_gateway.StunServer'
+        url:
+          description: URL is the endpoint to reach to start the WebRTC signaling process.
+          type: string
+          example: https://api.example.com/1.0/session/e25fcd39/sockets/slave?token=foobar
+    api.SessionPostResponse:
       type: object
       properties:
         error:
@@ -455,7 +532,7 @@ components:
           type: string
           example: invalid body format
         metadata:
-          $ref: '#/components/schemas/api.Session'
+          $ref: '#/components/schemas/api.SessionPostResponseData'
         status:
           description: Status of the response
           enum:
@@ -476,6 +553,160 @@ components:
           allOf:
           - $ref: '#/components/schemas/api_gateway.ResponseType'
           example: sync
+    api.SessionsDeleteError:
+      type: object
+      properties:
+        error_message:
+          description: ErrorMessage contains information about the failure
+          type: string
+        session_id:
+          description: SessionID is the id of the session that failed to be deleted
+          type: string
+        status_code:
+          description: StatusCode relevant to the error
+          type: integer
+    api.SessionsDeleteResponse:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          type: object
+          properties:
+            deleted_sessions:
+              description: DeletedSessions is the list of sessions IDs that were successfully deleted
+              type: array
+              items:
+                type: string
+            errors:
+              description: Errors, if not empty, contains the list of sessions that failed to be deleted
+              type: array
+              items:
+                $ref: '#/components/schemas/api.SessionsDeleteError'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api.SessionStatus:
+      type: string
+      enum:
+      - created
+      - active
+      - error
+      - terminating
+      - terminated
+      x-enum-varnames:
+      - SessionStatusCreated
+      - SessionStatusActive
+      - SessionStatusError
+      - SessionStatusTerminating
+      - SessionStatusTerminated
+    api.SessionsGetResponse:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          type: array
+          items:
+            type: string
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        total_size:
+          description: TotalSize specifies how many session objects are available in total
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api_gateway.ResponseType:
+      type: string
+      enum:
+      - sync
+      - async
+      - error
+      x-enum-varnames:
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError
+    api.SessionSharePostResponse:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          description: Metadata contains a URL that a client can connect to interact with a session
+          allOf:
+          - $ref: '#/components/schemas/api.SessionSharePostResponseData'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api.SessionSharePost:
+      type: object
+      properties:
+        expiry_min:
+          description: ExpiryMin is the expiration time in minutes for the share URL
+          type: integer
+          default: 5
+          maximum: 1
+          example: 5
+        type:
+          description: Type is the type of the session to be shared
+          type: string
+          example: adb
     api.SessionPost:
       type: object
       properties:
@@ -530,71 +761,16 @@ components:
             4k (3840 x 2160).'
           allOf:
           - $ref: '#/components/schemas/api.Screen'
-    api.SessionSharePostResponse:
-      type: object
-      properties:
-        error:
-          description: Error is an optional error message
-          type: string
-          example: invalid body format
-        metadata:
-          description: Metadata contains a URL that a client can connect to interact with a session
-          allOf:
-          - $ref: '#/components/schemas/api.SessionSharePostResponseData'
-        status:
-          description: Status of the response
-          enum:
-          - success
-          - failed
-          - unknown
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
-        status_code:
-          description: StatusCode is the HTTP code of the response
-          type: integer
-        type:
-          description: Type of the operation
-          enum:
-          - sync
-          - async
-          - error
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseType'
-          example: sync
-    api.SessionsGetResponse:
-      type: object
-      properties:
-        error:
-          description: Error is an optional error message
-          type: string
-          example: invalid body format
-        metadata:
-          type: array
-          items:
-            type: string
-        status:
-          description: Status of the response
-          enum:
-          - success
-          - failed
-          - unknown
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
-        status_code:
-          description: StatusCode is the HTTP code of the response
-          type: integer
-        total_size:
-          description: TotalSize specifies how many session objects are available in total
-          type: integer
-        type:
-          description: Type of the operation
-          enum:
-          - sync
-          - async
-          - error
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseType'
-          example: sync
+    api_gateway.ResponseStatus:
+      type: string
+      enum:
+      - success
+      - failed
+      - unknown
+      x-enum-varnames:
+      - ResponseStatusSuccess
+      - ResponseStatusFailed
+      - ResponseStatusUnknown
     api.SessionPostResponseData:
       type: object
       properties:
@@ -639,6 +815,60 @@ components:
         url:
           description: URL is the endpoint to reach to start the WebRTC signaling process.
           type: string
+    api_gateway.StunServer:
+      type: object
+      properties:
+        password:
+          description: 'Password is the optional password to authenticate on the STUN/TURN server.
+
+            It is usually unique to a session.'
+          type: string
+          example: 3f14bdb1ecd3
+        urls:
+          description: URLs is the list of endpoints the STUN/TURN server can be reached on.
+          type: array
+          items:
+            type: string
+          example:
+          - https://stun.foo.com
+          - https://turn.foo.com
+        username:
+          description: 'Username is the optional username to authenticate on the STUN/TURN server.
+
+            It is usually unique to a session.'
+          type: string
+          example: f3e3bcead096461d8
+    api.SessionConnectGetResponse:
+      type: object
+      properties:
+        error:
+          description: Error is an optional error message
+          type: string
+          example: invalid body format
+        metadata:
+          description: Metadata contains session connection response data
+          allOf:
+          - $ref: '#/components/schemas/api.SessionConnectGetResponseData'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
     api.SessionJoinResponse:
       type: object
       properties:
@@ -668,265 +898,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/api_gateway.ResponseType'
           example: sync
-    api.Session:
-      type: object
-      properties:
-        app:
-          description: 'App that will be run in the session.
-
-            Applications are listed from AMS if they have been configured for streaming.'
-          type: string
-        cluster_id:
-          description: ID of the cluster which the instance is deployed to
-          type: string
-          example: cluster0
-        container_id:
-          description: 'ID of the container powering the session. If no container was created yet
-
-            or the container is destroyed, the ID will be empty.'
-          type: string
-          example: c05h1jj3pn6a8q46taug
-        id:
-          description: ID of the session.
-          type: string
-          example: e25f3e3bcead096461d89d8ab7043f14bdb1ecd39
-        joinable:
-          description: Marks wether the session is joinable or not
-          type: boolean
-        region:
-          description: Region on which the instance is located.
-          type: string
-          example: eu-west-1
-        status:
-          description: "Status of the session.\n created: sent creation request to an available agent.\n active: container is up and running.\n error: an error occurred and the container is stopped.\n terminated: the container has stopped gracefully, either by manual command or timeout."
-          enum:
-          - created
-          - active
-          - error
-          - terminating
-          - terminated
-          allOf:
-          - $ref: '#/components/schemas/api.SessionStatus'
-        status_message:
-          description: Message giving more information about the current status
-          type: string
-          example: Container failed to start
-    api.SessionsDelete:
-      type: object
-      properties:
-        ids:
-          type: array
-          items:
-            type: string
-    api.SessionJoinPost:
-      type: object
-      properties:
-        screen:
-          description: 'Definition of the screen dimensions. Allows changing the dimensions the containers are configured
-
-            with to match client expectation for the video stream. The maximum allowd screen resolution is
-
-            4k (3840 x 2160).'
-          allOf:
-          - $ref: '#/components/schemas/api.Screen'
-    api_gateway.ResponseType:
-      type: string
-      enum:
-      - sync
-      - async
-      - error
-      x-enum-varnames:
-      - ResponseTypeSync
-      - ResponseTypeAsync
-      - ResponseTypeError
-    api.SessionsDeleteResponse:
-      type: object
-      properties:
-        error:
-          description: Error is an optional error message
-          type: string
-          example: invalid body format
-        metadata:
-          type: object
-          properties:
-            deleted_sessions:
-              description: DeletedSessions is the list of sessions IDs that were successfully deleted
-              type: array
-              items:
-                type: string
-            errors:
-              description: Errors, if not empty, contains the list of sessions that failed to be deleted
-              type: array
-              items:
-                $ref: '#/components/schemas/api.SessionsDeleteError'
-        status:
-          description: Status of the response
-          enum:
-          - success
-          - failed
-          - unknown
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
-        status_code:
-          description: StatusCode is the HTTP code of the response
-          type: integer
-        type:
-          description: Type of the operation
-          enum:
-          - sync
-          - async
-          - error
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseType'
-          example: sync
-    api_gateway.StunServer:
-      type: object
-      properties:
-        password:
-          description: 'Password is the optional password to authenticate on the STUN/TURN server.
-
-            It is usually unique to a session.'
-          type: string
-          example: 3f14bdb1ecd3
-        urls:
-          description: URLs is the list of endpoints the STUN/TURN server can be reached on.
-          type: array
-          items:
-            type: string
-          example:
-          - https://stun.foo.com
-          - https://turn.foo.com
-        username:
-          description: 'Username is the optional username to authenticate on the STUN/TURN server.
-
-            It is usually unique to a session.'
-          type: string
-          example: f3e3bcead096461d8
-    api.SessionStatus:
-      type: string
-      enum:
-      - created
-      - active
-      - error
-      - terminating
-      - terminated
-      x-enum-varnames:
-      - SessionStatusCreated
-      - SessionStatusActive
-      - SessionStatusError
-      - SessionStatusTerminating
-      - SessionStatusTerminated
-    api.SessionPostResponse:
-      type: object
-      properties:
-        error:
-          description: Error is an optional error message
-          type: string
-          example: invalid body format
-        metadata:
-          $ref: '#/components/schemas/api.SessionPostResponseData'
-        status:
-          description: Status of the response
-          enum:
-          - success
-          - failed
-          - unknown
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
-        status_code:
-          description: StatusCode is the HTTP code of the response
-          type: integer
-        type:
-          description: Type of the operation
-          enum:
-          - sync
-          - async
-          - error
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseType'
-          example: sync
-    api.SessionSharePost:
-      type: object
-      properties:
-        expiry_min:
-          description: ExpiryMin is the expiration time in minutes for the share URL
-          type: integer
-          default: 5
-          maximum: 1
-          example: 5
-        type:
-          description: Type is the type of the session to be shared
-          type: string
-          example: adb
-    api.SessionsDeleteError:
-      type: object
-      properties:
-        error_message:
-          description: ErrorMessage contains information about the failure
-          type: string
-        session_id:
-          description: SessionID is the id of the session that failed to be deleted
-          type: string
-        status_code:
-          description: StatusCode relevant to the error
-          type: integer
-    api_gateway.Response:
-      type: object
-      properties:
-        error:
-          description: Error is an optional error message
-          type: string
-          example: invalid body format
-        status:
-          description: Status of the response
-          enum:
-          - success
-          - failed
-          - unknown
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
-        status_code:
-          description: StatusCode is the HTTP code of the response
-          type: integer
-        type:
-          description: Type of the operation
-          enum:
-          - sync
-          - async
-          - error
-          allOf:
-          - $ref: '#/components/schemas/api_gateway.ResponseType'
-          example: sync
-    api_gateway.ResponseStatus:
-      type: string
-      enum:
-      - success
-      - failed
-      - unknown
-      x-enum-varnames:
-      - ResponseStatusSuccess
-      - ResponseStatusFailed
-      - ResponseStatusUnknown
-    api.SessionConnectGetResponseData:
-      type: object
-      properties:
-        stun_servers:
-          description: 'StunServers is a list of STUN servers with their optional credentials.
-
-            They are passed to the client to figure out the best route to the
-
-            actual android instance.
-
-            They are used within the WebRTC protocol to negotiation a peer to peer transport
-
-            between the Anbox instance and the connecting client.'
-          type: array
-          items:
-            $ref: '#/components/schemas/api_gateway.StunServer'
-        url:
-          description: URL is the endpoint to reach to start the WebRTC signaling process.
-          type: string
-          example: wss://api.example.com/1.0/session/e25fcd39/sockets/adb?token=foobar
     api.Screen:
       type: object
       properties:
@@ -953,18 +924,36 @@ components:
           type: integer
           minimum: 1
           example: 1280
-    api.SessionSharePostResponseData:
+    api.SessionGetResponse:
       type: object
       properties:
-        expiry_min:
-          description: The expiration time in minutes for the share URL
-          type: integer
-          example: 5
-        url:
-          description: URL is the endpoint to reach to start the WebRTC signaling process.
+        error:
+          description: Error is an optional error message
           type: string
-          example: https://api.example.com/1.0/session/e25fcd39/connect?type=adb&token=foobar
-    api.SessionJoinResponseData:
+          example: invalid body format
+        metadata:
+          $ref: '#/components/schemas/api.Session'
+        status:
+          description: Status of the response
+          enum:
+          - success
+          - failed
+          - unknown
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseStatus'
+        status_code:
+          description: StatusCode is the HTTP code of the response
+          type: integer
+        type:
+          description: Type of the operation
+          enum:
+          - sync
+          - async
+          - error
+          allOf:
+          - $ref: '#/components/schemas/api_gateway.ResponseType'
+          example: sync
+    api.SessionConnectGetResponseData:
       type: object
       properties:
         stun_servers:
@@ -976,11 +965,22 @@ components:
 
             They are used within the WebRTC protocol to negotiation a peer to peer transport
 
-            between the Android instance and the connecting client.'
+            between the Anbox instance and the connecting client.'
           type: array
           items:
             $ref: '#/components/schemas/api_gateway.StunServer'
         url:
           description: URL is the endpoint to reach to start the WebRTC signaling process.
           type: string
-          example: https://api.example.com/1.0/session/e25fcd39/sockets/slave?token=foobar
+          example: wss://api.example.com/1.0/session/e25fcd39/sockets/adb?token=foobar
+    api.SessionSharePostResponseData:
+      type: object
+      properties:
+        expiry_min:
+          description: The expiration time in minutes for the share URL
+          type: integer
+          example: 5
+        url:
+          description: URL is the endpoint to reach to start the WebRTC signaling process.
+          type: string
+          example: https://api.example.com/1.0/session/e25fcd39/connect?type=adb&token=foobar

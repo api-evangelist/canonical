@@ -120,6 +120,13 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
     RestrictedQueueIn:
       type: object
       properties:
@@ -156,10 +163,3 @@ components:
       - owners
       - queue
       additionalProperties: false
-    HTTPError:
-      properties:
-        detail:
-          type: object
-        message:
-          type: string
-      type: object

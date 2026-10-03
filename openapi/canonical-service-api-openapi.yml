@@ -65,6 +65,14 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
+    VersionResponse:
+      description: VersionResponse shows the version for the running service
+      type: object
+      properties:
+        version:
+          description: Version of the service
+          type: string
+          example: 1.18.2
     ServiceStatus:
       description: ServiceStatus represents the status of the AMS service
       type: object
@@ -126,14 +134,6 @@ components:
           description: Type of operation response
           type: string
           example: sync
-    VersionResponse:
-      description: VersionResponse shows the version for the running service
-      type: object
-      properties:
-        version:
-          description: Version of the service
-          type: string
-          example: 1.18.2
   responses:
     InternalServerError:
       description: Internal Server Error

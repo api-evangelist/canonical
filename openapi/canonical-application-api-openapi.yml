@@ -48,6 +48,16 @@ components:
         name:
           type: string
           example: com.foo.bar
+    api_gateway.ResponseType:
+      type: string
+      enum:
+      - sync
+      - async
+      - error
+      x-enum-varnames:
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError
     api.ApplicationsGetResponse:
       type: object
       properties:
@@ -79,13 +89,3 @@ components:
           allOf:
           - $ref: '#/components/schemas/api_gateway.ResponseType'
           example: sync
-    api_gateway.ResponseType:
-      type: string
-      enum:
-      - sync
-      - async
-      - error
-      x-enum-varnames:
-      - ResponseTypeSync
-      - ResponseTypeAsync
-      - ResponseTypeError

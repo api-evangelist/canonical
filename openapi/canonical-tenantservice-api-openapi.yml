@@ -586,18 +586,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    tenantUpdateTenantResponse:
-      properties:
-        tenant:
-          $ref: '#/components/schemas/tenantTenant'
-      type: object
-    tenantTenantInput:
-      properties:
-        enabled:
-          type: boolean
-        name:
-          type: string
-      type: object
     tenantListUserTenantsResponse:
       properties:
         tenants:
@@ -605,17 +593,18 @@ components:
             $ref: '#/components/schemas/tenantTenant'
           type: array
       type: object
-    tenantCreateTenantRequest:
+    typesErrorResponse:
       properties:
-        name:
+        message:
           type: string
+        status:
+          format: int32
+          type: integer
       type: object
-    tenantListMyTenantsResponse:
+    tenantProvisionUserResponse:
       properties:
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
+        status:
+          type: string
       type: object
     tenantTenantUser:
       properties:
@@ -626,13 +615,48 @@ components:
         user_id:
           type: string
       type: object
-    tenantListTenantUsersResponse:
+    TenantServiceInviteMemberBody:
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+      type: object
+    tenantListMyTenantsResponse:
+      properties:
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
+      type: object
+    tenantTenant:
+      properties:
+        created_at:
+          type: string
+        enabled:
+          type: boolean
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    tenantUpdateTenantUserResponse:
+      properties:
+        user:
+          $ref: '#/components/schemas/tenantTenantUser'
+      type: object
+    tenantCreateTenantResponse:
+      properties:
+        tenant:
+          $ref: '#/components/schemas/tenantTenant'
+      type: object
+    tenantListTenantsResponse:
       properties:
         next_page_token:
           type: string
-        users:
+        tenants:
           items:
-            $ref: '#/components/schemas/tenantTenantUser'
+            $ref: '#/components/schemas/tenantTenant'
           type: array
       type: object
     TenantServiceUpdateTenantBody:
@@ -650,12 +674,38 @@ components:
           format: int32
           type: integer
       type: object
-    TenantServiceInviteMemberBody:
+    TenantServiceProvisionUserBody:
       properties:
         email:
           type: string
         role:
           type: string
+      type: object
+    tenantListTenantUsersResponse:
+      properties:
+        next_page_token:
+          type: string
+        users:
+          items:
+            $ref: '#/components/schemas/tenantTenantUser'
+          type: array
+      type: object
+    tenantTenantInput:
+      properties:
+        enabled:
+          type: boolean
+        name:
+          type: string
+      type: object
+    TenantServiceUpdateTenantUserBody:
+      properties:
+        role:
+          type: string
+      type: object
+    tenantUpdateTenantResponse:
+      properties:
+        tenant:
+          $ref: '#/components/schemas/tenantTenant'
       type: object
     tenantInviteMemberResponse:
       properties:
@@ -666,59 +716,9 @@ components:
         status:
           type: string
       type: object
-    TenantServiceUpdateTenantUserBody:
+    tenantCreateTenantRequest:
       properties:
-        role:
-          type: string
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    tenantCreateTenantResponse:
-      properties:
-        tenant:
-          $ref: '#/components/schemas/tenantTenant'
-      type: object
-    tenantTenant:
-      properties:
-        created_at:
-          type: string
-        enabled:
-          type: boolean
-        id:
-          type: string
         name:
-          type: string
-      type: object
-    tenantListTenantsResponse:
-      properties:
-        next_page_token:
-          type: string
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
-      type: object
-    tenantUpdateTenantUserResponse:
-      properties:
-        user:
-          $ref: '#/components/schemas/tenantTenantUser'
-      type: object
-    tenantProvisionUserResponse:
-      properties:
-        status:
-          type: string
-      type: object
-    TenantServiceProvisionUserBody:
-      properties:
-        email:
-          type: string
-        role:
           type: string
       type: object
     tenantLookupTenantsResponse:

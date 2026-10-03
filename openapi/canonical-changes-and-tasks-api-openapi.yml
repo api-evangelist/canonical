@@ -265,6 +265,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    GetChangesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/changeInfo'
     GetChangeByIDResponse:
       allOf:
       - $ref: '#/components/schemas/BaseResponse'
@@ -272,36 +281,6 @@ components:
         properties:
           result:
             $ref: '#/components/schemas/changeInfo'
-    taskInfo:
-      type: object
-      properties:
-        id:
-          type: string
-        kind:
-          type: string
-        summary:
-          type: string
-        status:
-          type: string
-        log:
-          type: array
-          items:
-            type: string
-        progress:
-          $ref: '#/components/schemas/taskInfoProgress'
-        spawn-time:
-          type: string
-          format: date-time
-          description: spawn-time is a [time](#time).
-        ready-time:
-          type: string
-          format: date-time
-          description: ready-time is a [time](#time).
-        data:
-          type: object
-          additionalProperties:
-            type: string
-            format: json-string
     changeInfo:
       type: object
       properties:
@@ -334,6 +313,45 @@ components:
           additionalProperties:
             type: string
             format: json-string
+    taskInfoProgress:
+      type: object
+      properties:
+        label:
+          type: string
+        done:
+          type: integer
+        total:
+          type: integer
+    taskInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        kind:
+          type: string
+        summary:
+          type: string
+        status:
+          type: string
+        log:
+          type: array
+          items:
+            type: string
+        progress:
+          $ref: '#/components/schemas/taskInfoProgress'
+        spawn-time:
+          type: string
+          format: date-time
+          description: spawn-time is a [time](#time).
+        ready-time:
+          type: string
+          format: date-time
+          description: ready-time is a [time](#time).
+        data:
+          type: object
+          additionalProperties:
+            type: string
+            format: json-string
     BaseResponse:
       type: object
       properties:
@@ -351,21 +369,3 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
-    GetChangesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/changeInfo'
-    taskInfoProgress:
-      type: object
-      properties:
-        label:
-          type: string
-        done:
-          type: integer
-        total:
-          type: integer

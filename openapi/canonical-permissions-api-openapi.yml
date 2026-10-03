@@ -122,6 +122,26 @@ paths:
       - view_permission
 components:
   schemas:
+    Permission:
+      properties:
+        entitlement:
+          description: Entitlement is the entitlement define for the entity type.
+          example: can_view
+          type: string
+          x-go-name: Entitlement
+        entity_type:
+          description: EntityType is the string representation of the entity type.
+          example: instance
+          type: string
+          x-go-name: EntityType
+        url:
+          description: EntityReference is the URL of the entity that the permission applies to.
+          example: /1.0/instances/c1?project=default
+          type: string
+          x-go-name: EntityReference
+      title: Permission represents a permission that may be granted to a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     PermissionInfo:
       properties:
         entitlement:
@@ -149,26 +169,6 @@ components:
           type: string
           x-go-name: EntityReference
       title: PermissionInfo expands a Permission to include any groups that may have the specified Permission.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    Permission:
-      properties:
-        entitlement:
-          description: Entitlement is the entitlement define for the entity type.
-          example: can_view
-          type: string
-          x-go-name: Entitlement
-        entity_type:
-          description: EntityType is the string representation of the entity type.
-          example: instance
-          type: string
-          x-go-name: EntityType
-        url:
-          description: EntityReference is the URL of the entity that the permission applies to.
-          example: /1.0/instances/c1?project=default
-          type: string
-          x-go-name: EntityReference
-      title: Permission represents a permission that may be granted to a group.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
   responses:

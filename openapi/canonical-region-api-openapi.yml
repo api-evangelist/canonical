@@ -53,16 +53,6 @@ components:
         name:
           type: string
           example: eu-west-1
-    api_gateway.ResponseType:
-      type: string
-      enum:
-      - sync
-      - async
-      - error
-      x-enum-varnames:
-      - ResponseTypeSync
-      - ResponseTypeAsync
-      - ResponseTypeError
     api.RegionsGetResponse:
       type: object
       properties:
@@ -94,3 +84,13 @@ components:
           allOf:
           - $ref: '#/components/schemas/api_gateway.ResponseType'
           example: sync
+    api_gateway.ResponseType:
+      type: string
+      enum:
+      - sync
+      - async
+      - error
+      x-enum-varnames:
+      - ResponseTypeSync
+      - ResponseTypeAsync
+      - ResponseTypeError

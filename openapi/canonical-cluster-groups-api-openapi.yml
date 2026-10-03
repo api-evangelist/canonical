@@ -218,23 +218,43 @@ paths:
       - cluster groups
 components:
   responses:
-    EmptySyncResponse:
-      description: Empty sync response
+    BadRequest:
+      description: Bad Request
       content:
         application/json:
           schema:
             properties:
-              status:
-                example: Success
+              error:
+                example: bad request
                 type: string
-                x-go-name: Status
-              status_code:
-                example: 200
+                x-go-name: Error
+              error_code:
+                example: 400
                 format: int64
                 type: integer
-                x-go-name: StatusCode
+                x-go-name: ErrorCode
               type:
-                example: sync
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
                 type: string
                 x-go-name: Type
             type: object
@@ -278,47 +298,46 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    BadRequest:
-      description: Bad Request
+    EmptySyncResponse:
+      description: Empty sync response
       content:
         application/json:
           schema:
             properties:
-              error:
-                example: bad request
+              status:
+                example: Success
                 type: string
-                x-go-name: Error
-              error_code:
-                example: 400
+                x-go-name: Status
+              status_code:
+                example: 200
                 format: int64
                 type: integer
-                x-go-name: ErrorCode
+                x-go-name: StatusCode
               type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
+                example: sync
                 type: string
                 x-go-name: Type
             type: object
   schemas:
+    ClusterGroupPut:
+      properties:
+        description:
+          description: The description of the cluster group
+          example: amd64 servers
+          type: string
+          x-go-name: Description
+        members:
+          description: List of members in this group
+          example:
+          - node1
+          - node3
+          items:
+            type: string
+          type: array
+          x-go-name: Members
+      title: ClusterGroupPut represents the modifiable fields of a cluster group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     ClusterGroupPost:
       properties:
         name:
@@ -360,24 +379,5 @@ components:
           type: array
           x-go-name: UsedBy
       title: ClusterGroup represents a cluster group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterGroupPut:
-      properties:
-        description:
-          description: The description of the cluster group
-          example: amd64 servers
-          type: string
-          x-go-name: Description
-        members:
-          description: List of members in this group
-          example:
-          - node1
-          - node3
-          items:
-            type: string
-          type: array
-          x-go-name: Members
-      title: ClusterGroupPut represents the modifiable fields of a cluster group.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api

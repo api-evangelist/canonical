@@ -121,49 +121,34 @@ paths:
       - change_environment_review
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EnvironmentResponse:
+    ArtefactBuildMinimalResponse:
       properties:
         id:
           type: integer
           title: Id
-        name:
-          type: string
-          title: Name
         architecture:
           type: string
           title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
       type: object
       required:
       - id
-      - name
       - architecture
-      title: EnvironmentResponse
+      - revision
+      title: ArtefactBuildMinimalResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ArtefactBuildEnvironmentReviewResponse:
       properties:
         id:
@@ -195,15 +180,6 @@ components:
       - environment
       - artefact_build
       title: ArtefactBuildEnvironmentReviewResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     EnvironmentReviewPatch:
       properties:
         id:
@@ -225,6 +201,42 @@ components:
           title: Review Comment
       type: object
       title: EnvironmentReviewPatch
+    ArtefactBuildEnvironmentReviewDecision:
+      type: string
+      enum:
+      - REJECTED
+      - APPROVED_INCONSISTENT_TEST
+      - APPROVED_UNSTABLE_PHYSICAL_INFRA
+      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
+      - APPROVED_FAULTY_HARDWARE
+      - APPROVED_ALL_TESTS_PASS
+      title: ArtefactBuildEnvironmentReviewDecision
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ReviewerResponse:
       properties:
         id:
@@ -252,32 +264,20 @@ components:
       - launchpad_email
       - name
       title: ReviewerResponse
-    ArtefactBuildEnvironmentReviewDecision:
-      type: string
-      enum:
-      - REJECTED
-      - APPROVED_INCONSISTENT_TEST
-      - APPROVED_UNSTABLE_PHYSICAL_INFRA
-      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
-      - APPROVED_FAULTY_HARDWARE
-      - APPROVED_ALL_TESTS_PASS
-      title: ArtefactBuildEnvironmentReviewDecision
-    ArtefactBuildMinimalResponse:
+    EnvironmentResponse:
       properties:
         id:
           type: integer
           title: Id
+        name:
+          type: string
+          title: Name
         architecture:
           type: string
           title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
       type: object
       required:
       - id
+      - name
       - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
+      title: EnvironmentResponse

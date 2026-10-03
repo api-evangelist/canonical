@@ -151,7 +151,86 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 components:
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
   schemas:
+    LegacyInterfaceObject:
+      type: object
+      description: The legacy interface object.
+      properties:
+        plugs:
+          type: array
+          description: A list of plugs on the system matching the search criteria.
+          items:
+            $ref: '#/components/schemas/Plug'
+        slots:
+          type: array
+          description: A list of slots on the system matching the search criteria.
+          items:
+            $ref: '#/components/schemas/Slot'
+    ModernInterfaceObject:
+      type: array
+      description: Modernized interface object.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: The name of the interface.
+          summary:
+            type: string
+            description: The summary providing information regarding the interface.
+          doc-url:
+            type: string
+            format: url
+            description: The url to the interfaces documentation.
+          plugs:
+            type: array
+            description: A list of plugs on the system matching the search criteria.
+            items:
+              $ref: '#/components/schemas/Plug'
+          slots:
+            type: array
+            description: A list of slots on the system matching the search criteria.
+            items:
+              $ref: '#/components/schemas/Slot'
+    PlugRef:
+      type: object
+      description: A reference to a specific plug.
+      properties:
+        snap:
+          type: string
+          description: The name of the snap providing the plug.
+        plug:
+          type: string
+          description: The name of the plug.
     SnapNotInstalledError:
       type: object
       description: The snap does not exist on the system.
@@ -170,79 +249,6 @@ components:
           type: string
           description: Value passed that triggered the error.
           example: firefox
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
-    LegacyInterfaceObject:
-      type: object
-      description: The legacy interface object.
-      properties:
-        plugs:
-          type: array
-          description: A list of plugs on the system matching the search criteria.
-          items:
-            $ref: '#/components/schemas/Plug'
-        slots:
-          type: array
-          description: A list of slots on the system matching the search criteria.
-          items:
-            $ref: '#/components/schemas/Slot'
-    Plug:
-      type: object
-      description: Detailed information about a plug.
-      properties:
-        snap:
-          type: string
-          description: The name of the snap providing the plug.
-        plug:
-          type: string
-          description: The name of the plug itself.
-        interface:
-          type: string
-          description: The interface name for the plug.
-        attrs:
-          type: object
-          additionalProperties: true
-          description: 'A static map of the plug''s attributes.
-
-            These are attributes that belong to the plug'
-        apps:
-          type: array
-          items:
-            type: string
-          description: A list of apps associated with this plug.
-        label:
-          type: string
-          description: The display label for the plug.
-        connections:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlotRef'
-          description: A list of slots this plug is connected to.
-    MalformedRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: cannot decode request body into an alias action
-    ConfdbError:
-      type: object
-      description: An error occured while interacting with confdb.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - option-not-available
-          - option-not-found
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
     ConnectionStatus:
       type: object
       description: The overall connection status of plugs and slots on the system.
@@ -267,16 +273,47 @@ components:
           description: A list of all available slots.
           items:
             $ref: '#/components/schemas/Slot'
-    SlotRef:
+    MalformedRequestError:
       type: object
-      description: A reference to a specific slot.
       properties:
-        snap:
+        message:
           type: string
-          description: The name of the snap providing the slot.
+          example: cannot decode request body into an alias action
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    Connection:
+      type: object
+      description: Represents a connection between a specific plug and slot.
+      properties:
         slot:
+          $ref: '#/components/schemas/SlotRef'
+        plug:
+          $ref: '#/components/schemas/PlugRef'
+        interface:
           type: string
-          description: The name of the slot.
+          description: The name of the interface governing the connection.
+        manual:
+          type: boolean
+          description: True if the connection was established manually.
+        gadget:
+          type: boolean
+          description: True if the connection is defined by the gadget snap.
+        slot-attrs:
+          type: object
+          additionalProperties: true
+          description: 'A map of the slot''s attributes.
+
+            These are negotiated by and belong to the connection.'
+        plug-attrs:
+          type: object
+          additionalProperties: true
+          description: 'A map of the plug''s attributes.
+
+            These are negotiated by and belong to the connection.'
     Slot:
       type: object
       description: Detailed information about a slot.
@@ -309,106 +346,69 @@ components:
           items:
             $ref: '#/components/schemas/PlugRef'
           description: A list of plugs connected to this slot.
-    Connection:
+    SlotRef:
       type: object
-      description: Represents a connection between a specific plug and slot.
+      description: A reference to a specific slot.
       properties:
-        slot:
-          $ref: '#/components/schemas/SlotRef'
-        plug:
-          $ref: '#/components/schemas/PlugRef'
-        interface:
+        snap:
           type: string
-          description: The name of the interface governing the connection.
-        manual:
-          type: boolean
-          description: True if the connection was established manually.
-        gadget:
-          type: boolean
-          description: True if the connection is defined by the gadget snap.
-        slot-attrs:
-          type: object
-          additionalProperties: true
-          description: 'A map of the slot''s attributes.
-
-            These are negotiated by and belong to the connection.'
-        plug-attrs:
-          type: object
-          additionalProperties: true
-          description: 'A map of the plug''s attributes.
-
-            These are negotiated by and belong to the connection.'
+          description: The name of the snap providing the slot.
+        slot:
+          type: string
+          description: The name of the slot.
     UserNotFoundError:
       type: object
       properties:
         message:
           type: string
           example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
-    PlugRef:
+    ConfdbError:
       type: object
-      description: A reference to a specific plug.
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    Plug:
+      type: object
+      description: Detailed information about a plug.
       properties:
         snap:
           type: string
           description: The name of the snap providing the plug.
         plug:
           type: string
-          description: The name of the plug.
-    ModernInterfaceObject:
-      type: array
-      description: Modernized interface object.
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            description: The name of the interface.
-          summary:
-            type: string
-            description: The summary providing information regarding the interface.
-          doc-url:
-            type: string
-            format: url
-            description: The url to the interfaces documentation.
-          plugs:
-            type: array
-            description: A list of plugs on the system matching the search criteria.
-            items:
-              $ref: '#/components/schemas/Plug'
-          slots:
-            type: array
-            description: A list of slots on the system matching the search criteria.
-            items:
-              $ref: '#/components/schemas/Slot'
-  responses:
-    BadRequest:
-      description: 'Bad Request. The request could not be processed due to a client-side error.
+          description: The name of the plug itself.
+        interface:
+          type: string
+          description: The interface name for the plug.
+        attrs:
+          type: object
+          additionalProperties: true
+          description: 'A static map of the plug''s attributes.
 
-        This can be due to malformed syntax or providing an entity that does not exist.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 400
-              status:
-                type: string
-                enum:
-                - Bad Request
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/ConfdbError'
-                - $ref: '#/components/schemas/MalformedRequestError'
-                - $ref: '#/components/schemas/NoSSHKeysError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
+            These are attributes that belong to the plug'
+        apps:
+          type: array
+          items:
+            type: string
+          description: A list of apps associated with this plug.
+        label:
+          type: string
+          description: The display label for the plug.
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlotRef'
+          description: A list of slots this plug is connected to.
   securitySchemes:
     PeerAuth:
       type: apiKey

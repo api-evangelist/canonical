@@ -135,7 +135,7 @@
     "canonical-microceph-api-openapi.yml"
   ],
   "archived": [
-    "deleted 4 superseded output(s) from the previous generation"
+    "deleted 3 superseded output(s) from the previous generation"
   ],
   "errors": [
     "canonical-lxd-rest-api-openapi.yml: dangling $ref: #/definitions/IdentitiesPostTLS",
@@ -356,11 +356,12 @@
     "tag 'permissions' spans 2 source specs (canonical-lxd-rest-api-openapi.yml, canonical-test-observer-api-openapi.json): per-path servers applied",
     "tag 'Assertions' spans 2 source specs (canonical-openapi.yml, canonical-snapd-rest-api-openapi.yml): per-path servers applied",
     "tag 'notices' spans 2 source specs (canonical-pebble-api-openapi.yml, canonical-snapd-rest-api-openapi.yml): per-path servers applied",
-    "superseded outputs removed: canonical-add-ons-api-openapi.yml, canonical-authentication-service-api-openapi.yml, canonical-open-access-api-openapi.yml, canonical-v1-api-openapi.yml",
-    "apis.yml register: written (+12 apis, 122 total)"
+    "superseded outputs removed: canonical-add-ons-api-openapi.yml, canonical-authentication-service-api-openapi.yml, canonical-open-access-api-openapi.yml",
+    "apis.yml register: written (+3 apis, 122 total)"
   ],
   "skipped": [
     "canonical-add-ons-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-agents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-appauthorizationservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-application-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-applications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -379,6 +380,7 @@
     "canonical-certification-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-changes-and-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-checks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-client-permissions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-clientsservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-cluster-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-cluster-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -405,6 +407,7 @@
     "canonical-interfaces-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-internal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-issues-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-job-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-layers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-localservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-logs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -423,6 +426,7 @@
     "canonical-nodes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-notices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-notifications-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-oauth2-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-oidc-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-oidc-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-open-access-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -435,14 +439,18 @@
     "canonical-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-publicationservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-publicationtargetservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-queues-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-region-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-replicators-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-restricted-queues-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-result-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-rolesservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-root-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-schema-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-schemasservice-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-secrets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-security-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-sentry-debug-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-server-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -463,8 +471,8 @@
     "canonical-test-observer-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-test-plans-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-test-results-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "canonical-testflinger-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "canonical-v1-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-version-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "canonical-warnings-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]

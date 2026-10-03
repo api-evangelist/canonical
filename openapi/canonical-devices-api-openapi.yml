@@ -328,6 +328,17 @@ components:
       - certificate
       - creation_date
       - uid
+    StatusEnum:
+      enum:
+      - pending
+      - signed
+      - denied
+      type: string
+      description: '* `pending` - Pending
+
+        * `signed` - Signed
+
+        * `denied` - Denied'
     PatchedDevice:
       type: object
       description: Device Serializer class.
@@ -365,17 +376,6 @@ components:
           allOf:
           - $ref: '#/components/schemas/DeviceCertificate'
           readOnly: true
-    StatusEnum:
-      enum:
-      - pending
-      - signed
-      - denied
-      type: string
-      description: '* `pending` - Pending
-
-        * `signed` - Signed
-
-        * `denied` - Denied'
     PatchedDeviceCertificate:
       type: object
       description: Device Certificate Serializer class.

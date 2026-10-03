@@ -288,6 +288,107 @@ paths:
       tags:
       - cluster-links
 components:
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
   schemas:
     ClusterLinkPut:
       properties:
@@ -305,82 +406,6 @@ components:
           type: string
           x-go-name: Description
       title: ClusterLinkPut represents the modifiable fields of a cluster link.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterLinkPost:
-      properties:
-        name:
-          description: Name of the cluster link.
-          example: lxd02
-          type: string
-          x-go-name: Name
-      title: ClusterLinkPost represents the fields available for renaming a cluster link.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterLinkState:
-      properties:
-        cluster_link_members:
-          description: ClusterLinkMembers represents the state of cluster members on a linked cluster.
-          example:
-          - address: 10.0.0.1:8443
-            server_name: lxd01
-            status: Active
-          - address: 10.0.0.2:8443
-            server_name: lxd02
-            status: Unreachable
-          items:
-            $ref: '#/components/schemas/ClusterLinkMemberState'
-          type: array
-          x-go-name: ClusterLinkMembersState
-      title: ClusterLinkState represents the state of a linked cluster.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterLink:
-      properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
-        config:
-          additionalProperties:
-            type: string
-          description: Cluster link configuration map (refer to doc/clustering.md).
-          example:
-            user.*: ''
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the cluster link.
-          example: Backup LXD cluster
-          type: string
-          x-go-name: Description
-        name:
-          description: Name of the cluster link.
-          example: lxd02
-          type: string
-          x-go-name: Name
-        type:
-          description: Type of cluster link.
-          example: bidirectional
-          type: string
-          x-go-name: Type
-        used_by:
-          description: 'UsedBy is a list of LXD entity URLs that reference the cluster link.
-
-
-            API extension: cluster_links_used_by'
-          example:
-          - /1.0/replicators/my-replicator?project=default
-          items:
-            type: string
-          type: array
-          x-go-name: UsedBy
-      title: ClusterLink represents high-level information about a cluster link.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     ClusterLinkMemberState:
@@ -477,104 +502,79 @@ components:
       title: ClusterLinksPost represents the fields available for a new cluster link.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-  responses:
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
+    ClusterLinkState:
+      properties:
+        cluster_link_members:
+          description: ClusterLinkMembers represents the state of cluster members on a linked cluster.
+          example:
+          - address: 10.0.0.1:8443
+            server_name: lxd01
+            status: Active
+          - address: 10.0.0.2:8443
+            server_name: lxd02
+            status: Unreachable
+          items:
+            $ref: '#/components/schemas/ClusterLinkMemberState'
+          type: array
+          x-go-name: ClusterLinkMembersState
+      title: ClusterLinkState represents the state of a linked cluster.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterLink:
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        config:
+          additionalProperties:
+            type: string
+          description: Cluster link configuration map (refer to doc/clustering.md).
+          example:
+            user.*: ''
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the cluster link.
+          example: Backup LXD cluster
+          type: string
+          x-go-name: Description
+        name:
+          description: Name of the cluster link.
+          example: lxd02
+          type: string
+          x-go-name: Name
+        type:
+          description: Type of cluster link.
+          example: bidirectional
+          type: string
+          x-go-name: Type
+        used_by:
+          description: 'UsedBy is a list of LXD entity URLs that reference the cluster link.
+
+
+            API extension: cluster_links_used_by'
+          example:
+          - /1.0/replicators/my-replicator?project=default
+          items:
+            type: string
+          type: array
+          x-go-name: UsedBy
+      title: ClusterLink represents high-level information about a cluster link.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterLinkPost:
+      properties:
+        name:
+          description: Name of the cluster link.
+          example: lxd02
+          type: string
+          x-go-name: Name
+      title: ClusterLinkPost represents the fields available for renaming a cluster link.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api

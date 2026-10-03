@@ -2248,12 +2248,44 @@ paths:
       - Instances
 components:
   schemas:
-    NetworkProtocol:
-      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
-      type: string
-    InstanceType:
-      description: InstanceType describes the type of an instance (container, vm)
-      type: string
+    NetworkServiceSpec:
+      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+      type: object
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the container a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the container to expose the service correctly.
+
+            Exampe: ssh'
+          type: string
+        port:
+          description: Port is the port the container provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: 'PortEnd is the end of the port range set for a service. If empty, only a
+
+            single port is opened'
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
     InstanceExecPost:
       description: InstanceExecPost represents an instance execution request
       type: object
@@ -2282,202 +2314,10 @@ components:
           description: Width of the terminal. Only required when `interactive` is set to `true`.
           type: integer
           format: int64
-    InstancePatch:
-      description: InstancePatch describes the fields which can be changed for an existing instance
-      type: object
-      properties:
-        desired_status:
-          description: Desired status of the instance
-          type: string
-    InstancesPost:
-      description: 'InstancesPost represents the fields required to launch a new instance for
-
-        a specific application'
-      type: object
-      properties:
-        addons:
-          description: Addons to enable for the instance
-          type: array
-          items:
-            type: string
-          example:
-          - addon0
-          - addon1
-        app_id:
-          description: ID of the application to use. Can be empty if an image ID is specified instead
-          type: string
-          example: cilsiomnfpfec9b1kteg
-        app_version:
-          description: Version of the application to use. If not specified, the latest version is used.
-          type: integer
-          format: int64
-          example: 0
-        config:
-          type: object
-          properties:
-            boot_activity:
-              description: BootActivity specifies the Android activity which is started by default
-              type: string
-              example: com.android.settings/.DevSettings
-            boot_package:
-              description: BootPackage specifies the Android application package name which is started by default
-              type: string
-              example: com.android.settings
-            devmode:
-              description: DevMode specifies if development mode has been turned on for the instance
-              type: boolean
-            disable_watchdog:
-              description: DisableWatchdog defines whether the watchdog is disabled
-              type: boolean
-            display:
-              description: Display specifies the configuration of the virutal display of the instance
-              type: object
-              properties:
-                density:
-                  description: Density is the piel density of the virtual display
-                  type: integer
-                  format: int64
-                fps:
-                  description: FPS is the frame rate of the virtual display
-                  type: integer
-                  format: int64
-                height:
-                  description: Height is the height of the virtual display
-                  type: integer
-                  format: int64
-                width:
-                  description: Width is the width of the virtual display
-                  type: integer
-                  format: int64
-            enable_streaming:
-              description: EnableStreaming specifies if streaming should be enabled for the instance or not
-              type: boolean
-            features:
-              description: Feature flags to enable for the instance.
-              type: string
-              example: feature0, feature1
-            metrics_server:
-              description: MetricsServer specifies a metrics server the instance will use
-              type: string
-              example: 10.0.0.45:8086
-            platform:
-              description: Platform specifies the Anbox platform the instance is running with
-              type: string
-              example: webrtc
-        image_id:
-          description: ID of the image to use. Can be empty if an application ID is specified instead.
-          type: string
-          example: cilshrmnfpfec9b1kte0
-        image_version:
-          description: Version of the image to use. If not specified, the latest version is used.
-          type: integer
-          format: int64
-          example: 0
-        name:
-          description: 'Name of the instance. Will be automatically assigned if not specified. Names
-
-            must be unique.'
-          type: string
-        no_start:
-          description: Do not start the instance after creation.
-          type: boolean
-        node:
-          description: Node to start the instance on. If empty node will be automatically selected.
-          type: string
-          example: lxd0
-        resources:
-          description: Resources specifies the resources allocated for the instance
-          type: object
-          properties:
-            cpus:
-              description: Number of CPU cores the instance should get assigned.
-              type: integer
-              format: int64
-              example: 4
-            disk_size:
-              description: Disk size the instance should get allocated in bytes
-              type: integer
-              format: int64
-              example: 3221225472
-            gpu-slots:
-              description: Number of GPU slots the instance should get assigned.
-              type: integer
-              format: int64
-              example: 1
-            memory:
-              description: Memory the instance should get assigned in bytes.
-              type: integer
-              format: int64
-              example: 3221225472
-            vpu-slots:
-              description: Number of VPU slots the instance should get assigned
-              type: integer
-              format: int64
-              example: 1
-        services:
-          description: Services to enable for the instance
-          type: array
-          items:
-            $ref: '#/components/schemas/NetworkServiceSpec'
-        tags:
-          description: Tags which will be assigned to the instance
-          type: array
-          items:
-            type: string
-          example:
-          - tag0
-          - tag1
-        type:
-          $ref: '#/components/schemas/InstanceType'
-        user_data:
-          description: User data to pass to the instance.
-          type: string
-          example: '{\"key\":\"value\"}'
-    StatusCode:
-      description: StatusCode represents a valid REST operation
+    InstanceStatus:
+      description: InstanceStatus represents the status a instance can be in
       type: integer
       format: int64
-    NoMetaSyncResponse:
-      description: Swagger Synchronous response without metadata field
-      type: object
-      properties:
-        error_code:
-          description: Error code for the operation
-          type: integer
-          format: int64
-          example: 0
-        status:
-          description: Status of requested operation
-          type: string
-          example: Success
-        status_code:
-          description: Status code of the request
-          type: integer
-          format: int64
-          example: 200
-        type:
-          description: Type of operation response
-          type: string
-          example: sync
-    OperationResponse:
-      description: Operation
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
     Instance:
       description: Instance represents a single instance
       type: object
@@ -2635,28 +2475,256 @@ components:
           - bar
         type:
           $ref: '#/components/schemas/InstanceType'
-    InstancesDelete:
-      description: InstancesDelete represents a list of instances to delete together
+    InstanceResources:
+      description: InstanceResources represents resources assigned to an instance
       type: object
       properties:
-        force:
-          description: Whether deletion of the instances should be forced
-          type: boolean
-        ids:
-          description: IDs of the instances to delete
+        cpus:
+          description: CPUs cores assigned to the instance
+          type: integer
+          format: int64
+          example: 2
+        disk-size:
+          description: DiskSize specifies the amount of storage assigned to the instance in bytes
+          type: integer
+          format: int64
+          example: 3221225472
+        gpu-slots:
+          description: GPUSlots specifies the number of GPU slots the instance got allocated
+          type: integer
+          format: int64
+          example: 1
+        memory:
+          description: Memory assigned to the instance in bytes
+          type: integer
+          format: int64
+          example: 3221225472
+        vpu-slots:
+          description: VPUSlots specifies the number of VPU slots the instance
+          type: integer
+          format: int64
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
+    InstanceType:
+      description: InstanceType describes the type of an instance (container, vm)
+      type: string
+    InstancesPost:
+      description: 'InstancesPost represents the fields required to launch a new instance for
+
+        a specific application'
+      type: object
+      properties:
+        addons:
+          description: Addons to enable for the instance
           type: array
           items:
             type: string
           example:
-          - cilsreunfpfec9b1ktg0
-          - cilsreunfpfec9b1ktg1
-    InstanceDelete:
-      description: InstanceDelete describes a request used to delete a instance
-      type: object
-      properties:
-        force:
-          description: Whether deletion of the instance should be forced
+          - addon0
+          - addon1
+        app_id:
+          description: ID of the application to use. Can be empty if an image ID is specified instead
+          type: string
+          example: cilsiomnfpfec9b1kteg
+        app_version:
+          description: Version of the application to use. If not specified, the latest version is used.
+          type: integer
+          format: int64
+          example: 0
+        config:
+          type: object
+          properties:
+            boot_activity:
+              description: BootActivity specifies the Android activity which is started by default
+              type: string
+              example: com.android.settings/.DevSettings
+            boot_package:
+              description: BootPackage specifies the Android application package name which is started by default
+              type: string
+              example: com.android.settings
+            devmode:
+              description: DevMode specifies if development mode has been turned on for the instance
+              type: boolean
+            disable_watchdog:
+              description: DisableWatchdog defines whether the watchdog is disabled
+              type: boolean
+            display:
+              description: Display specifies the configuration of the virutal display of the instance
+              type: object
+              properties:
+                density:
+                  description: Density is the piel density of the virtual display
+                  type: integer
+                  format: int64
+                fps:
+                  description: FPS is the frame rate of the virtual display
+                  type: integer
+                  format: int64
+                height:
+                  description: Height is the height of the virtual display
+                  type: integer
+                  format: int64
+                width:
+                  description: Width is the width of the virtual display
+                  type: integer
+                  format: int64
+            enable_streaming:
+              description: EnableStreaming specifies if streaming should be enabled for the instance or not
+              type: boolean
+            features:
+              description: Feature flags to enable for the instance.
+              type: string
+              example: feature0, feature1
+            metrics_server:
+              description: MetricsServer specifies a metrics server the instance will use
+              type: string
+              example: 10.0.0.45:8086
+            platform:
+              description: Platform specifies the Anbox platform the instance is running with
+              type: string
+              example: webrtc
+        image_id:
+          description: ID of the image to use. Can be empty if an application ID is specified instead.
+          type: string
+          example: cilshrmnfpfec9b1kte0
+        image_version:
+          description: Version of the image to use. If not specified, the latest version is used.
+          type: integer
+          format: int64
+          example: 0
+        name:
+          description: 'Name of the instance. Will be automatically assigned if not specified. Names
+
+            must be unique.'
+          type: string
+        no_start:
+          description: Do not start the instance after creation.
           type: boolean
+        node:
+          description: Node to start the instance on. If empty node will be automatically selected.
+          type: string
+          example: lxd0
+        resources:
+          description: Resources specifies the resources allocated for the instance
+          type: object
+          properties:
+            cpus:
+              description: Number of CPU cores the instance should get assigned.
+              type: integer
+              format: int64
+              example: 4
+            disk_size:
+              description: Disk size the instance should get allocated in bytes
+              type: integer
+              format: int64
+              example: 3221225472
+            gpu-slots:
+              description: Number of GPU slots the instance should get assigned.
+              type: integer
+              format: int64
+              example: 1
+            memory:
+              description: Memory the instance should get assigned in bytes.
+              type: integer
+              format: int64
+              example: 3221225472
+            vpu-slots:
+              description: Number of VPU slots the instance should get assigned
+              type: integer
+              format: int64
+              example: 1
+        services:
+          description: Services to enable for the instance
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkServiceSpec'
+        tags:
+          description: Tags which will be assigned to the instance
+          type: array
+          items:
+            type: string
+          example:
+          - tag0
+          - tag1
+        type:
+          $ref: '#/components/schemas/InstanceType'
+        user_data:
+          description: User data to pass to the instance.
+          type: string
+          example: '{\"key\":\"value\"}'
+    InstanceService:
+      description: 'While NetworkServiceSpec defines what the user requests, InstanceService is what is actually
+
+        opened on the instance.'
+      type: object
+      title: InstanceService describes a single service the instance exposes to the outside world.
+      properties:
+        expose:
+          description: 'Expose defines wether the service is exposed on the public endpoint of the node
+
+            or if it is only available on the private endpoint. To expose the service set to
+
+            true and to false otherwise.'
+          type: boolean
+        name:
+          description: 'Name gives the instance a hint what the exposed port is being used for. This
+
+            allows further tweaks inside the instance to expose the service correctly.'
+          type: string
+          example: myservice
+        node_port:
+          description: 'NodePort is the port used on the LXD node to map to the service port
+
+            If left empty the node port is automatically selected.'
+          type: integer
+          format: int64
+          example: 4000
+        node_port_end:
+          description: 'NodePortEnd, if specified, denotes the end of the port range on the node starting
+
+            at NodePort'
+          type: integer
+          format: int64
+          example: 4010
+        port:
+          description: Port is the port the instance provides a service on
+          type: integer
+          format: int64
+          example: 3000
+        port_end:
+          description: PortEnd, if specified, denotes the end of the port range starting at Port
+          type: integer
+          format: int64
+          example: 3010
+        protocols:
+          description: List of network protocols (tcp, udp) the port should be exposed for
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkProtocol'
+          example:
+          - tcp
+          - udp
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
     Operation:
       description: Operation represents a background operation
       type: object
@@ -2719,214 +2787,222 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
-    InstanceStatus:
-      description: InstanceStatus represents the status a instance can be in
-      type: integer
-      format: int64
-    InstanceService:
-      description: 'While NetworkServiceSpec defines what the user requests, InstanceService is what is actually
-
-        opened on the instance.'
+    InstancesDelete:
+      description: InstancesDelete represents a list of instances to delete together
       type: object
-      title: InstanceService describes a single service the instance exposes to the outside world.
       properties:
-        expose:
-          description: 'Expose defines wether the service is exposed on the public endpoint of the node
-
-            or if it is only available on the private endpoint. To expose the service set to
-
-            true and to false otherwise.'
+        force:
+          description: Whether deletion of the instances should be forced
           type: boolean
-        name:
-          description: 'Name gives the instance a hint what the exposed port is being used for. This
-
-            allows further tweaks inside the instance to expose the service correctly.'
-          type: string
-          example: myservice
-        node_port:
-          description: 'NodePort is the port used on the LXD node to map to the service port
-
-            If left empty the node port is automatically selected.'
-          type: integer
-          format: int64
-          example: 4000
-        node_port_end:
-          description: 'NodePortEnd, if specified, denotes the end of the port range on the node starting
-
-            at NodePort'
-          type: integer
-          format: int64
-          example: 4010
-        port:
-          description: Port is the port the instance provides a service on
-          type: integer
-          format: int64
-          example: 3000
-        port_end:
-          description: PortEnd, if specified, denotes the end of the port range starting at Port
-          type: integer
-          format: int64
-          example: 3010
-        protocols:
-          description: List of network protocols (tcp, udp) the port should be exposed for
+        ids:
+          description: IDs of the instances to delete
           type: array
           items:
-            $ref: '#/components/schemas/NetworkProtocol'
+            type: string
           example:
-          - tcp
-          - udp
-    InstanceResources:
-      description: InstanceResources represents resources assigned to an instance
+          - cilsreunfpfec9b1ktg0
+          - cilsreunfpfec9b1ktg1
+    InstancePatch:
+      description: InstancePatch describes the fields which can be changed for an existing instance
       type: object
       properties:
-        cpus:
-          description: CPUs cores assigned to the instance
-          type: integer
-          format: int64
-          example: 2
-        disk-size:
-          description: DiskSize specifies the amount of storage assigned to the instance in bytes
-          type: integer
-          format: int64
-          example: 3221225472
-        gpu-slots:
-          description: GPUSlots specifies the number of GPU slots the instance got allocated
-          type: integer
-          format: int64
-          example: 1
-        memory:
-          description: Memory assigned to the instance in bytes
-          type: integer
-          format: int64
-          example: 3221225472
-        vpu-slots:
-          description: VPUSlots specifies the number of VPU slots the instance
-          type: integer
-          format: int64
-    NetworkServiceSpec:
-      description: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
-      type: object
-      properties:
-        expose:
-          description: 'Expose defines wether the service is exposed on the public endpoint of the node
-
-            or if it is only available on the private endpoint. To expose the service set to
-
-            true and to false otherwise.'
-          type: boolean
-        name:
-          description: 'Name gives the container a hint what the exposed port is being used for. This
-
-            allows further tweaks inside the container to expose the service correctly.
-
-            Exampe: ssh'
+        desired_status:
+          description: Desired status of the instance
           type: string
-        port:
-          description: Port is the port the container provides a service on
-          type: integer
-          format: int64
-          example: 3000
-        port_end:
-          description: 'PortEnd is the end of the port range set for a service. If empty, only a
-
-            single port is opened'
-          type: integer
-          format: int64
-          example: 3010
-        protocols:
-          description: List of network protocols (tcp, udp) the port should be exposed for
-          type: array
-          items:
-            $ref: '#/components/schemas/NetworkProtocol'
-          example:
-          - tcp
-          - udp
-    InstanceStateNetworkCounters:
-      description: 'InstanceStateNetworkCounters represents packet counters as part of the network section of a LXD
-
-        instance''s state.'
+    InstanceDelete:
+      description: InstanceDelete describes a request used to delete a instance
+      type: object
       properties:
-        bytes_received:
-          description: Number of bytes received
-          example: 192021
-          format: uint64
+        force:
+          description: Whether deletion of the instance should be forced
+          type: boolean
+    NetworkProtocol:
+      description: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
+      type: string
+    NoMetaSyncResponse:
+      description: Swagger Synchronous response without metadata field
+      type: object
+      properties:
+        error_code:
+          description: Error code for the operation
           type: integer
-          x-go-name: BytesReceived
-        bytes_sent:
-          description: Number of bytes sent
-          example: 10888579
-          format: uint64
+          format: int64
+          example: 0
+        status:
+          description: Status of requested operation
+          type: string
+          example: Success
+        status_code:
+          description: Status code of the request
           type: integer
-          x-go-name: BytesSent
-        errors_received:
-          description: Number of errors received
-          example: 14
-          format: uint64
+          format: int64
+          example: 200
+        type:
+          description: Type of operation response
+          type: string
+          example: sync
+    InstanceUEFIVariable:
+      description: InstanceUEFIVariable represents an EFI variable entry
+      properties:
+        attr:
+          description: UEFI variable attributes
+          example: 7
+          format: uint32
           type: integer
-          x-go-name: ErrorsReceived
-        errors_sent:
-          description: Number of errors sent
-          example: 41
-          format: uint64
-          type: integer
-          x-go-name: ErrorsSent
-        packets_dropped_inbound:
-          description: Number of inbound packets dropped
-          example: 179
-          format: uint64
-          type: integer
-          x-go-name: PacketsDroppedInbound
-        packets_dropped_outbound:
-          description: Number of outbound packets dropped
-          example: 541
-          format: uint64
-          type: integer
-          x-go-name: PacketsDroppedOutbound
-        packets_received:
-          description: Number of packets received
-          example: 1748
-          format: uint64
-          type: integer
-          x-go-name: PacketsReceived
-        packets_sent:
-          description: Number of packets sent
-          example: 964
-          format: uint64
-          type: integer
-          x-go-name: PacketsSent
+          x-go-name: Attr
+        data:
+          description: UEFI variable data (HEX-encoded)
+          example: '01'
+          type: string
+          x-go-name: Data
+        digest:
+          description: UEFI variable digest (HEX-encoded)
+          type: string
+          x-go-name: Digest
+        timestamp:
+          description: UEFI variable timestamp (HEX-encoded)
+          type: string
+          x-go-name: Timestamp
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceStateCPU:
+    InstanceUEFIVars:
       properties:
+        variables:
+          additionalProperties:
+            $ref: '#/components/schemas/InstanceUEFIVariable'
+          description: 'UEFI variables map
+
+            Hashmap key format is <uefi-variable-name>-<UUID>'
+          example:
+            SecureBootEnable-f0a30bc7-af08-4556-99c4-001009c93a44:
+              attr: 3
+              data: '01'
+          type: object
+          x-go-name: Variables
+      title: InstanceUEFIVars represents the UEFI variables of a LXD virtual machine.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceBackupsPost:
+      properties:
+        compression_algorithm:
+          description: 'What compression algorithm to use
+
+
+            API extension: backup_compression_algorithm'
+          example: gzip
+          type: string
+          x-go-name: CompressionAlgorithm
+        container_only:
+          description: 'Whether to ignore snapshots (deprecated, use instance_only)
+
+
+            Deprecated: Use InstanceOnly.'
+          example: false
+          type: boolean
+          x-deprecated: true
+          x-go-name: ContainerOnly
+        expires_at:
+          description: When the backup expires (gets auto-deleted)
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        instance_only:
+          description: Whether to ignore snapshots
+          example: false
+          type: boolean
+          x-go-name: InstanceOnly
+        name:
+          description: Backup name
+          example: backup0
+          type: string
+          x-go-name: Name
+        optimized_storage:
+          description: Whether to use a pool-optimized binary format (instead of plain tarball)
+          example: true
+          type: boolean
+          x-go-name: OptimizedStorage
+        version:
+          description: 'What backup format version to use
+
+
+            API extension: backup_metadata_version'
+          example: 1
+          format: uint32
+          type: integer
+          x-go-name: Version
+      title: InstanceBackupsPost represents the fields available for a new LXD instance backup.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceRebuildPost:
+      properties:
+        source:
+          $ref: '#/components/schemas/InstanceSource'
+      title: InstanceRebuildPost indicates how to rebuild an instance.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    SourceType:
+      title: SourceType represents source of the instance creation.
+      type: string
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceState:
+      properties:
+        cpu:
+          $ref: '#/components/schemas/InstanceStateCPU'
+        disk:
+          additionalProperties:
+            $ref: '#/components/schemas/InstanceStateDisk'
+          description: Disk usage key/value pairs
+          type: object
+          x-go-name: Disk
+        memory:
+          $ref: '#/components/schemas/InstanceStateMemory'
+        network:
+          additionalProperties:
+            $ref: '#/components/schemas/InstanceStateNetwork'
+          description: Network usage key/value pairs
+          type: object
+          x-go-name: Network
+        pid:
+          description: PID of the runtime
+          example: 7281
+          format: int64
+          type: integer
+          x-go-name: Pid
+        processes:
+          description: Number of processes in the instance
+          example: 50
+          format: int64
+          type: integer
+          x-go-name: Processes
+        status:
+          description: Current status (Running, Stopped, Frozen or Error)
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode_2'
+      title: InstanceState represents a LXD instance's state.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceStateDisk:
+      properties:
+        total:
+          description: 'Total size in bytes. Uses 0 to convey that the instance has access to the entire pool''s storage.
+
+
+            API extension: instances_state_total'
+          example: 502239232
+          format: int64
+          type: integer
+          x-go-name: Total
         usage:
-          description: CPU usage in nanoseconds
-          example: 3637691016
+          description: Disk usage in bytes. Uses 0 to indicate that the storage driver for the pool does not support retrieving disk usage.
+          example: 502239232
           format: int64
           type: integer
           x-go-name: Usage
-      title: InstanceStateCPU represents the cpu information section of a LXD instance's state.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceSnapshotPost:
-      properties:
-        live:
-          description: Whether to perform a live migration (requires migration)
-          example: false
-          type: boolean
-          x-go-name: Live
-        migration:
-          description: Whether this is a migration request
-          example: false
-          type: boolean
-          x-go-name: Migration
-        name:
-          description: New name for the snapshot
-          example: foo
-          type: string
-          x-go-name: Name
-        target:
-          $ref: '#/components/schemas/InstancePostTarget'
-      title: InstanceSnapshotPost represents the fields required to rename/move a LXD instance snapshot.
+      title: InstanceStateDisk represents the disk information section of a LXD instance's state.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     InstanceExecPost_2:
@@ -2993,51 +3069,136 @@ components:
       title: InstanceExecPost represents a LXD instance exec request.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceStateNetwork:
+    InstanceStateNetworkAddress:
+      description: 'InstanceStateNetworkAddress represents a network address as part of the network section of a LXD
+
+        instance''s state.'
       properties:
-        addresses:
-          description: List of IP addresses
-          items:
-            $ref: '#/components/schemas/InstanceStateNetworkAddress'
-          type: array
-          x-go-name: Addresses
-        counters:
-          $ref: '#/components/schemas/InstanceStateNetworkCounters'
-        host_name:
-          description: Name of the interface on the host
-          example: vethbbcd39c7
+        address:
+          description: IP address
+          example: fd42:4c81:5770:1eaf:216:3eff:fe0c:eedd
           type: string
-          x-go-name: HostName
-        hwaddr:
-          description: MAC address
-          example: 00:16:3e:0c:ee:dd
+          x-go-name: Address
+        family:
+          description: Network family (inet or inet6)
+          example: inet6
           type: string
-          x-go-name: Hwaddr
-        mtu:
-          description: MTU (maximum transmit unit) for the interface
-          example: 1500
-          format: int64
-          type: integer
-          x-go-name: Mtu
-        state:
-          description: Administrative state of the interface (up/down)
-          example: up
+          x-go-name: Family
+        netmask:
+          description: Network mask
+          example: '64'
           type: string
-          x-go-name: State
-        type:
-          description: Type of interface (broadcast, loopback, point-to-point, ...)
-          example: broadcast
+          x-go-name: Netmask
+        scope:
+          description: Address scope (local, link or global)
+          example: global
           type: string
-          x-go-name: Type
-      title: InstanceStateNetwork represents the network information section of a LXD instance's state.
+          x-go-name: Scope
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    StatusCode_2:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
+    InstanceSnapshot:
+      properties:
+        architecture:
+          description: Architecture name
+          example: x86_64
+          type: string
+          x-go-name: Architecture
+        config:
+          additionalProperties:
+            type: string
+          description: Instance configuration (see doc/instances.md)
+          example:
+            security.nesting: 'true'
+          type: object
+          x-go-name: Config
+        created_at:
+          description: Instance creation timestamp
+          example: '2021-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        devices:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          description: Instance devices (see doc/instances.md)
+          example:
+            root:
+              path: /
+              pool: default
+              type: disk
+          type: object
+          x-go-name: Devices
+        ephemeral:
+          description: Whether the instance is ephemeral (deleted on shutdown)
+          example: false
+          type: boolean
+          x-go-name: Ephemeral
+        expanded_config:
+          additionalProperties:
+            type: string
+          description: Expanded configuration (all profiles and local config merged)
+          example:
+            security.nesting: 'true'
+          type: object
+          x-go-name: ExpandedConfig
+        expanded_devices:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          description: Expanded devices (all profiles and local devices merged)
+          example:
+            root:
+              path: /
+              pool: default
+              type: disk
+          type: object
+          x-go-name: ExpandedDevices
+        expires_at:
+          description: When the snapshot expires (gets auto-deleted)
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        last_used_at:
+          description: Last start timestamp
+          example: '2021-03-23T20:00:00-04:00'
+          format: date-time
+          type: string
+          x-go-name: LastUsedAt
+        name:
+          description: Snapshot name
+          example: foo
+          type: string
+          x-go-name: Name
+        profiles:
+          description: List of profiles applied to the instance
+          example:
+          - default
+          items:
+            type: string
+          type: array
+          x-go-name: Profiles
+        size:
+          description: 'Size of the snapshot in bytes
+
+
+            API extension: snapshot_disk_usage'
+          example: 143360
+          format: int64
+          type: integer
+          x-go-name: Size
+        stateful:
+          description: Whether the instance currently has saved state on disk
+          example: false
+          type: boolean
+          x-go-name: Stateful
+      title: InstanceSnapshot represents a LXD instance snapshot.
+      type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceFull:
+    Instance_2:
       properties:
         access_entitlements:
           description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
@@ -3053,12 +3214,6 @@ components:
           example: x86_64
           type: string
           x-go-name: Architecture
-        backups:
-          description: List of backups.
-          items:
-            $ref: '#/components/schemas/InstanceBackup'
-          type: array
-          x-go-name: Backups
         config:
           additionalProperties:
             type: string
@@ -3149,14 +3304,6 @@ components:
           example: foo
           type: string
           x-go-name: Project
-        snapshots:
-          description: List of snapshots.
-          items:
-            $ref: '#/components/schemas/InstanceSnapshot'
-          type: array
-          x-go-name: Snapshots
-        state:
-          $ref: '#/components/schemas/InstanceState'
         stateful:
           description: Whether the instance currently has saved state on disk
           example: false
@@ -3174,7 +3321,430 @@ components:
           example: container
           type: string
           x-go-name: Type
-      title: InstanceFull is a combination of Instance, InstanceBackup, InstanceState and InstanceSnapshot.
+      title: Instance represents a LXD instance.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceSnapshotPost:
+      properties:
+        live:
+          description: Whether to perform a live migration (requires migration)
+          example: false
+          type: boolean
+          x-go-name: Live
+        migration:
+          description: Whether this is a migration request
+          example: false
+          type: boolean
+          x-go-name: Migration
+        name:
+          description: New name for the snapshot
+          example: foo
+          type: string
+          x-go-name: Name
+        target:
+          $ref: '#/components/schemas/InstancePostTarget'
+      title: InstanceSnapshotPost represents the fields required to rename/move a LXD instance snapshot.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceStateNetworkCounters:
+      description: 'InstanceStateNetworkCounters represents packet counters as part of the network section of a LXD
+
+        instance''s state.'
+      properties:
+        bytes_received:
+          description: Number of bytes received
+          example: 192021
+          format: uint64
+          type: integer
+          x-go-name: BytesReceived
+        bytes_sent:
+          description: Number of bytes sent
+          example: 10888579
+          format: uint64
+          type: integer
+          x-go-name: BytesSent
+        errors_received:
+          description: Number of errors received
+          example: 14
+          format: uint64
+          type: integer
+          x-go-name: ErrorsReceived
+        errors_sent:
+          description: Number of errors sent
+          example: 41
+          format: uint64
+          type: integer
+          x-go-name: ErrorsSent
+        packets_dropped_inbound:
+          description: Number of inbound packets dropped
+          example: 179
+          format: uint64
+          type: integer
+          x-go-name: PacketsDroppedInbound
+        packets_dropped_outbound:
+          description: Number of outbound packets dropped
+          example: 541
+          format: uint64
+          type: integer
+          x-go-name: PacketsDroppedOutbound
+        packets_received:
+          description: Number of packets received
+          example: 1748
+          format: uint64
+          type: integer
+          x-go-name: PacketsReceived
+        packets_sent:
+          description: Number of packets sent
+          example: 964
+          format: uint64
+          type: integer
+          x-go-name: PacketsSent
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceStatePut:
+      properties:
+        action:
+          description: State change action (start, stop, restart, freeze, unfreeze)
+          example: start
+          type: string
+          x-go-name: Action
+        force:
+          description: Whether to force the action (for stop and restart)
+          example: false
+          type: boolean
+          x-go-name: Force
+        stateful:
+          description: Whether to store the runtime state (for stop)
+          example: false
+          type: boolean
+          x-go-name: Stateful
+        timeout:
+          description: How long to wait (in s) before giving up (when force isn't set)
+          example: 30
+          format: int64
+          type: integer
+          x-go-name: Timeout
+      title: InstanceStatePut represents the modifiable fields of a LXD instance's state.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceBackupPost:
+      properties:
+        name:
+          description: New backup name
+          example: backup1
+          type: string
+          x-go-name: Name
+      title: InstanceBackupPost represents the fields available for the renaming of a instance backup.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceSnapshotsPost:
+      properties:
+        disk_volumes_mode:
+          description: 'Which disk volumes to include in instance snapshot. Possible values are "root" or "all-exclusive".
+
+
+            API extension: instance_snapshot_multi_volume'
+          example: all-exclusive
+          type: string
+          x-go-name: DiskVolumesMode
+        expires_at:
+          description: 'When the snapshot expires (gets auto-deleted)
+
+
+            API extension: snapshot_expiry_creation'
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        name:
+          description: Snapshot name
+          example: snap0
+          type: string
+          x-go-name: Name
+        stateful:
+          description: Whether the snapshot should include runtime state
+          example: false
+          type: boolean
+          x-go-name: Stateful
+      title: InstanceSnapshotsPost represents the fields available for a new LXD instance snapshot.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode_2:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceStateCPU:
+      properties:
+        usage:
+          description: CPU usage in nanoseconds
+          example: 3637691016
+          format: int64
+          type: integer
+          x-go-name: Usage
+      title: InstanceStateCPU represents the cpu information section of a LXD instance's state.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceBackup:
+      properties:
+        container_only:
+          description: 'Whether to ignore snapshots (deprecated, use instance_only)
+
+
+            Deprecated: Use InstanceOnly.'
+          example: false
+          type: boolean
+          x-deprecated: true
+          x-go-name: ContainerOnly
+        created_at:
+          description: When the backup was created
+          example: '2021-03-23T16:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        expires_at:
+          description: When the backup expires (gets auto-deleted)
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        instance_only:
+          description: Whether to ignore snapshots
+          example: false
+          type: boolean
+          x-go-name: InstanceOnly
+        name:
+          description: Backup name
+          example: backup0
+          type: string
+          x-go-name: Name
+        optimized_storage:
+          description: Whether to use a pool-optimized binary format (instead of plain tarball)
+          example: true
+          type: boolean
+          x-go-name: OptimizedStorage
+      title: InstanceBackup represents a LXD instance backup.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Operation_2:
+      description: Operation represents a LXD background operation
+      properties:
+        child_count:
+          description: 'Number of child operations.
+
+
+            API extension: operation_child_count'
+          example: 2
+          format: int64
+          type: integer
+          x-go-name: ChildCount
+        class:
+          description: Type of operation (task, token or websocket)
+          example: websocket
+          type: string
+          x-go-name: Class
+        created_at:
+          description: Operation creation time
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the operation
+          example: Executing command
+          type: string
+          x-go-name: Description
+        err:
+          description: Operation error message
+          example: Some error message
+          type: string
+          x-go-name: Err
+        err_code:
+          description: 'Operation error code
+
+
+            API extension: bulk_operations'
+          example: 404
+          format: int64
+          type: integer
+          x-go-name: ErrCode
+        id:
+          description: UUID of the operation
+          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
+          type: string
+          x-go-name: ID
+        location:
+          description: 'Which cluster member this record was found on
+
+
+            API extension: operation_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        may_cancel:
+          description: Whether the operation can be canceled
+          example: false
+          type: boolean
+          x-go-name: MayCancel
+        metadata:
+          additionalProperties: {}
+          description: Operation specific metadata
+          example:
+            command:
+            - bash
+            environment:
+              HOME: /root
+              LANG: C.UTF-8
+              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              TERM: xterm
+              USER: root
+            fds:
+              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
+              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
+            interactive: true
+          type: object
+          x-go-name: Metadata
+        requestor:
+          $ref: '#/components/schemas/OperationRequestor'
+        resources:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Affected resources
+          example:
+            instances:
+            - /1.0/instances/foo
+            - /1.0/instances/bar
+          type: object
+          x-go-name: Resources
+        status:
+          description: Status name
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode_2'
+        updated_at:
+          description: Operation last change
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: UpdatedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstancePost:
+      properties:
+        Config:
+          additionalProperties:
+            type: string
+          description: 'Instance configuration file.
+
+
+            API extension: instance_move_config'
+          example:
+            security.nesting: 'true'
+          type: object
+        Devices:
+          additionalProperties:
+            additionalProperties:
+              type: string
+            type: object
+          description: 'Instance devices.
+
+
+            API extension: instance_move_config'
+          example:
+            root:
+              path: /
+              pool: default
+              type: disk
+          type: object
+        Profiles:
+          description: 'List of profiles applied to the instance.
+
+
+            API extension: instance_move_config'
+          example:
+          - default
+          items:
+            type: string
+          type: array
+        allow_inconsistent:
+          description: 'AllowInconsistent allow inconsistent copies when migrating.
+
+
+            API extension: instance_allow_inconsistent_copy'
+          example: false
+          type: boolean
+          x-go-name: AllowInconsistent
+        container_only:
+          description: 'Whether snapshots should be discarded (migration only, deprecated, use instance_only)
+
+
+            Deprecated: use InstanceOnly.'
+          example: false
+          type: boolean
+          x-deprecated: true
+          x-go-name: ContainerOnly
+        instance_only:
+          description: Whether snapshots should be discarded (migration only)
+          example: false
+          type: boolean
+          x-go-name: InstanceOnly
+        live:
+          description: Whether to perform a live migration (migration only)
+          example: false
+          type: boolean
+          x-go-name: Live
+        migration:
+          description: Whether the instance is being migrated to another server
+          example: false
+          type: boolean
+          x-go-name: Migration
+        name:
+          description: New name for the instance
+          example: bar
+          type: string
+          x-go-name: Name
+        override_snapshot_profiles:
+          description: 'Whether the instances''s snapshot should receive target instances profile on copy
+
+
+            API extension: override_snapshot_profiles_on_copy'
+          example: true
+          type: boolean
+          x-go-name: OverrideSnapshotProfiles
+        pool:
+          description: 'Target pool for local cross-pool move
+
+
+            API extension: instance_pool_move'
+          example: baz
+          type: string
+          x-go-name: Pool
+        project:
+          description: 'Target project for local cross-project move
+
+
+            API extension: instance_project_move'
+          example: foo
+          type: string
+          x-go-name: Project
+        target:
+          $ref: '#/components/schemas/InstancePostTarget'
+      title: InstancePost represents the fields required to rename/move a LXD instance.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceSnapshotPut:
+      properties:
+        expires_at:
+          description: When the snapshot expires (gets auto-deleted)
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+      title: InstanceSnapshotPut represents the modifiable fields of a LXD instance snapshot.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     InstanceSource:
@@ -3328,125 +3898,63 @@ components:
       title: InstanceSource represents the creation source for a new instance.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceSnapshotPut:
+    ImageMetadata:
+      description: ImageMetadata represents LXD image metadata (used in image tarball)
       properties:
-        expires_at:
-          description: When the snapshot expires (gets auto-deleted)
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
+        architecture:
+          description: Architecture name
+          example: x86_64
           type: string
-          x-go-name: ExpiresAt
-      title: InstanceSnapshotPut represents the modifiable fields of a LXD instance snapshot.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstancesPut:
-      properties:
-        state:
-          $ref: '#/components/schemas/InstanceStatePut'
-      title: InstancesPut represents the fields available for a mass update.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstancePost:
-      properties:
-        Config:
+          x-go-name: Architecture
+        creation_date:
+          description: Image creation data (as UNIX epoch)
+          example: 1620655439
+          format: int64
+          type: integer
+          x-go-name: CreationDate
+        expiry_date:
+          description: Image expiry data (as UNIX epoch)
+          example: 1620685757
+          format: int64
+          type: integer
+          x-go-name: ExpiryDate
+        properties:
           additionalProperties:
             type: string
-          description: 'Instance configuration file.
-
-
-            API extension: instance_move_config'
+          description: Descriptive properties
           example:
-            security.nesting: 'true'
+            os: Ubuntu
+            release: jammy
+            variant: cloud
           type: object
-        Devices:
+          x-go-name: Properties
+        templates:
           additionalProperties:
-            additionalProperties:
-              type: string
-            type: object
-          description: 'Instance devices.
-
-
-            API extension: instance_move_config'
-          example:
-            root:
-              path: /
-              pool: default
-              type: disk
+            $ref: '#/components/schemas/ImageMetadataTemplate'
+          description: Template for files in the image
           type: object
-        Profiles:
-          description: 'List of profiles applied to the instance.
-
-
-            API extension: instance_move_config'
-          example:
-          - default
-          items:
-            type: string
-          type: array
-        allow_inconsistent:
-          description: 'AllowInconsistent allow inconsistent copies when migrating.
-
-
-            API extension: instance_allow_inconsistent_copy'
-          example: false
-          type: boolean
-          x-go-name: AllowInconsistent
-        container_only:
-          description: 'Whether snapshots should be discarded (migration only, deprecated, use instance_only)
-
-
-            Deprecated: use InstanceOnly.'
-          example: false
-          type: boolean
-          x-deprecated: true
-          x-go-name: ContainerOnly
-        instance_only:
-          description: Whether snapshots should be discarded (migration only)
-          example: false
-          type: boolean
-          x-go-name: InstanceOnly
-        live:
-          description: Whether to perform a live migration (migration only)
-          example: false
-          type: boolean
-          x-go-name: Live
-        migration:
-          description: Whether the instance is being migrated to another server
-          example: false
-          type: boolean
-          x-go-name: Migration
-        name:
-          description: New name for the instance
-          example: bar
+          x-go-name: Templates
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
+      properties:
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
           type: string
-          x-go-name: Name
-        override_snapshot_profiles:
-          description: 'Whether the instances''s snapshot should receive target instances profile on copy
-
-
-            API extension: override_snapshot_profiles_on_copy'
-          example: true
-          type: boolean
-          x-go-name: OverrideSnapshotProfiles
-        pool:
-          description: 'Target pool for local cross-pool move
-
-
-            API extension: instance_pool_move'
-          example: baz
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
           type: string
-          x-go-name: Pool
-        project:
-          description: 'Target project for local cross-project move
-
-
-            API extension: instance_project_move'
-          example: foo
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
           type: string
-          x-go-name: Project
-        target:
-          $ref: '#/components/schemas/InstancePostTarget'
-      title: InstancePost represents the fields required to rename/move a LXD instance.
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     InstancePostTarget:
@@ -3472,69 +3980,84 @@ components:
       title: InstancePostTarget represents the migration target host and operation.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    OperationRequestor:
-      description: 'API extension: operation_requestor.'
+    InstanceStateNetwork:
       properties:
-        address:
-          description: Address is the origin address of the request.
-          example: 10.0.2.15
+        addresses:
+          description: List of IP addresses
+          items:
+            $ref: '#/components/schemas/InstanceStateNetworkAddress'
+          type: array
+          x-go-name: Addresses
+        counters:
+          $ref: '#/components/schemas/InstanceStateNetworkCounters'
+        host_name:
+          description: Name of the interface on the host
+          example: vethbbcd39c7
           type: string
-          x-go-name: Address
-        protocol:
-          description: Protocol represents the method used to authenticate the requestor.
-          example: oidc
+          x-go-name: HostName
+        hwaddr:
+          description: MAC address
+          example: 00:16:3e:0c:ee:dd
           type: string
-          x-go-name: Protocol
-        username:
-          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
-          example: jane.doe@example.com
+          x-go-name: Hwaddr
+        mtu:
+          description: MTU (maximum transmit unit) for the interface
+          example: 1500
+          format: int64
+          type: integer
+          x-go-name: Mtu
+        state:
+          description: Administrative state of the interface (up/down)
+          example: up
           type: string
-          x-go-name: Username
-      title: OperationRequestor represents the initial requestor of an operation
+          x-go-name: State
+        type:
+          description: Type of interface (broadcast, loopback, point-to-point, ...)
+          example: broadcast
+          type: string
+          x-go-name: Type
+      title: InstanceStateNetwork represents the network information section of a LXD instance's state.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceBackup:
+    InstanceStateMemory:
       properties:
-        container_only:
-          description: 'Whether to ignore snapshots (deprecated, use instance_only)
+        swap_usage:
+          description: SWAP usage in bytes
+          example: 12297557
+          format: int64
+          type: integer
+          x-go-name: SwapUsage
+        swap_usage_peak:
+          description: Peak SWAP usage in bytes
+          example: 12297557
+          format: int64
+          type: integer
+          x-go-name: SwapUsagePeak
+        total:
+          description: 'Total memory size in bytes
 
 
-            Deprecated: Use InstanceOnly.'
-          example: false
-          type: boolean
-          x-deprecated: true
-          x-go-name: ContainerOnly
-        created_at:
-          description: When the backup was created
-          example: '2021-03-23T16:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: CreatedAt
-        expires_at:
-          description: When the backup expires (gets auto-deleted)
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: ExpiresAt
-        instance_only:
-          description: Whether to ignore snapshots
-          example: false
-          type: boolean
-          x-go-name: InstanceOnly
-        name:
-          description: Backup name
-          example: backup0
-          type: string
-          x-go-name: Name
-        optimized_storage:
-          description: Whether to use a pool-optimized binary format (instead of plain tarball)
-          example: true
-          type: boolean
-          x-go-name: OptimizedStorage
-      title: InstanceBackup represents a LXD instance backup.
+            API extension: instances_state_total'
+          example: 12297557
+          format: int64
+          type: integer
+          x-go-name: Total
+        usage:
+          description: Memory usage in bytes
+          example: 73248768
+          format: int64
+          type: integer
+          x-go-name: Usage
+        usage_peak:
+          description: Peak memory usage in bytes
+          example: 73785344
+          format: int64
+          type: integer
+          x-go-name: UsagePeak
+      title: InstanceStateMemory represents the memory information section of a LXD instance's state.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    Instance_2:
+    InstanceFull:
       properties:
         access_entitlements:
           description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
@@ -3550,6 +4073,12 @@ components:
           example: x86_64
           type: string
           x-go-name: Architecture
+        backups:
+          description: List of backups.
+          items:
+            $ref: '#/components/schemas/InstanceBackup'
+          type: array
+          x-go-name: Backups
         config:
           additionalProperties:
             type: string
@@ -3640,6 +4169,14 @@ components:
           example: foo
           type: string
           x-go-name: Project
+        snapshots:
+          description: List of snapshots.
+          items:
+            $ref: '#/components/schemas/InstanceSnapshot'
+          type: array
+          x-go-name: Snapshots
+        state:
+          $ref: '#/components/schemas/InstanceState'
         stateful:
           description: Whether the instance currently has saved state on disk
           example: false
@@ -3657,27 +4194,69 @@ components:
           example: container
           type: string
           x-go-name: Type
-      title: Instance represents a LXD instance.
+      title: InstanceFull is a combination of Instance, InstanceBackup, InstanceState and InstanceSnapshot.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceStateDisk:
+    InstancesPut:
       properties:
-        total:
-          description: 'Total size in bytes. Uses 0 to convey that the instance has access to the entire pool''s storage.
-
-
-            API extension: instances_state_total'
-          example: 502239232
+        state:
+          $ref: '#/components/schemas/InstanceStatePut'
+      title: InstancesPut represents the fields available for a mass update.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    InstanceConsolePost:
+      properties:
+        height:
+          description: Console height in rows (console type only)
+          example: 24
           format: int64
           type: integer
-          x-go-name: Total
-        usage:
-          description: Disk usage in bytes. Uses 0 to indicate that the storage driver for the pool does not support retrieving disk usage.
-          example: 502239232
+          x-go-name: Height
+        type:
+          description: 'Type of console to attach to (console or vga)
+
+
+            API extension: console_vga_type'
+          example: console
+          type: string
+          x-go-name: Type
+        width:
+          description: Console width in columns (console type only)
+          example: 80
           format: int64
           type: integer
-          x-go-name: Usage
-      title: InstanceStateDisk represents the disk information section of a LXD instance's state.
+          x-go-name: Width
+      title: InstanceConsolePost represents a LXD instance console request.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ImageMetadataTemplate:
+      description: ImageMetadataTemplate represents a template entry in image metadata (used in image tarball)
+      properties:
+        create_only:
+          description: Whether to trigger only if the file is missing
+          example: false
+          type: boolean
+          x-go-name: CreateOnly
+        properties:
+          additionalProperties:
+            type: string
+          description: Key/value properties to pass to the template
+          example:
+            foo: bar
+          type: object
+          x-go-name: Properties
+        template:
+          description: The template itself as a valid pongo2 template
+          example: pongo2-template
+          type: string
+          x-go-name: Template
+        when:
+          description: When to trigger the template (create, copy or start)
+          example: create
+          items:
+            type: string
+          type: array
+          x-go-name: When
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     InstancePut:
@@ -3747,586 +4326,24 @@ components:
       title: InstancePut represents the modifiable fields of a LXD instance.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    InstanceSnapshotsPost:
-      properties:
-        disk_volumes_mode:
-          description: 'Which disk volumes to include in instance snapshot. Possible values are "root" or "all-exclusive".
-
-
-            API extension: instance_snapshot_multi_volume'
-          example: all-exclusive
-          type: string
-          x-go-name: DiskVolumesMode
-        expires_at:
-          description: 'When the snapshot expires (gets auto-deleted)
-
-
-            API extension: snapshot_expiry_creation'
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: ExpiresAt
-        name:
-          description: Snapshot name
-          example: snap0
-          type: string
-          x-go-name: Name
-        stateful:
-          description: Whether the snapshot should include runtime state
-          example: false
-          type: boolean
-          x-go-name: Stateful
-      title: InstanceSnapshotsPost represents the fields available for a new LXD instance snapshot.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceRebuildPost:
-      properties:
-        source:
-          $ref: '#/components/schemas/InstanceSource'
-      title: InstanceRebuildPost indicates how to rebuild an instance.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceStateMemory:
-      properties:
-        swap_usage:
-          description: SWAP usage in bytes
-          example: 12297557
-          format: int64
-          type: integer
-          x-go-name: SwapUsage
-        swap_usage_peak:
-          description: Peak SWAP usage in bytes
-          example: 12297557
-          format: int64
-          type: integer
-          x-go-name: SwapUsagePeak
-        total:
-          description: 'Total memory size in bytes
-
-
-            API extension: instances_state_total'
-          example: 12297557
-          format: int64
-          type: integer
-          x-go-name: Total
-        usage:
-          description: Memory usage in bytes
-          example: 73248768
-          format: int64
-          type: integer
-          x-go-name: Usage
-        usage_peak:
-          description: Peak memory usage in bytes
-          example: 73785344
-          format: int64
-          type: integer
-          x-go-name: UsagePeak
-      title: InstanceStateMemory represents the memory information section of a LXD instance's state.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    Operation_2:
-      description: Operation represents a LXD background operation
-      properties:
-        child_count:
-          description: 'Number of child operations.
-
-
-            API extension: operation_child_count'
-          example: 2
-          format: int64
-          type: integer
-          x-go-name: ChildCount
-        class:
-          description: Type of operation (task, token or websocket)
-          example: websocket
-          type: string
-          x-go-name: Class
-        created_at:
-          description: Operation creation time
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: CreatedAt
-        description:
-          description: Description of the operation
-          example: Executing command
-          type: string
-          x-go-name: Description
-        err:
-          description: Operation error message
-          example: Some error message
-          type: string
-          x-go-name: Err
-        err_code:
-          description: 'Operation error code
-
-
-            API extension: bulk_operations'
-          example: 404
-          format: int64
-          type: integer
-          x-go-name: ErrCode
-        id:
-          description: UUID of the operation
-          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
-          type: string
-          x-go-name: ID
-        location:
-          description: 'Which cluster member this record was found on
-
-
-            API extension: operation_location'
-          example: lxd01
-          type: string
-          x-go-name: Location
-        may_cancel:
-          description: Whether the operation can be canceled
-          example: false
-          type: boolean
-          x-go-name: MayCancel
-        metadata:
-          additionalProperties: {}
-          description: Operation specific metadata
-          example:
-            command:
-            - bash
-            environment:
-              HOME: /root
-              LANG: C.UTF-8
-              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-              TERM: xterm
-              USER: root
-            fds:
-              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
-              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
-            interactive: true
-          type: object
-          x-go-name: Metadata
-        requestor:
-          $ref: '#/components/schemas/OperationRequestor'
-        resources:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          description: Affected resources
-          example:
-            instances:
-            - /1.0/instances/foo
-            - /1.0/instances/bar
-          type: object
-          x-go-name: Resources
-        status:
-          description: Status name
-          example: Running
-          type: string
-          x-go-name: Status
-        status_code:
-          $ref: '#/components/schemas/StatusCode_2'
-        updated_at:
-          description: Operation last change
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: UpdatedAt
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceBackupsPost:
-      properties:
-        compression_algorithm:
-          description: 'What compression algorithm to use
-
-
-            API extension: backup_compression_algorithm'
-          example: gzip
-          type: string
-          x-go-name: CompressionAlgorithm
-        container_only:
-          description: 'Whether to ignore snapshots (deprecated, use instance_only)
-
-
-            Deprecated: Use InstanceOnly.'
-          example: false
-          type: boolean
-          x-deprecated: true
-          x-go-name: ContainerOnly
-        expires_at:
-          description: When the backup expires (gets auto-deleted)
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: ExpiresAt
-        instance_only:
-          description: Whether to ignore snapshots
-          example: false
-          type: boolean
-          x-go-name: InstanceOnly
-        name:
-          description: Backup name
-          example: backup0
-          type: string
-          x-go-name: Name
-        optimized_storage:
-          description: Whether to use a pool-optimized binary format (instead of plain tarball)
-          example: true
-          type: boolean
-          x-go-name: OptimizedStorage
-        version:
-          description: 'What backup format version to use
-
-
-            API extension: backup_metadata_version'
-          example: 1
-          format: uint32
-          type: integer
-          x-go-name: Version
-      title: InstanceBackupsPost represents the fields available for a new LXD instance backup.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceBackupPost:
-      properties:
-        name:
-          description: New backup name
-          example: backup1
-          type: string
-          x-go-name: Name
-      title: InstanceBackupPost represents the fields available for the renaming of a instance backup.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceSnapshot:
-      properties:
-        architecture:
-          description: Architecture name
-          example: x86_64
-          type: string
-          x-go-name: Architecture
-        config:
-          additionalProperties:
-            type: string
-          description: Instance configuration (see doc/instances.md)
-          example:
-            security.nesting: 'true'
-          type: object
-          x-go-name: Config
-        created_at:
-          description: Instance creation timestamp
-          example: '2021-03-23T20:00:00-04:00'
-          format: date-time
-          type: string
-          x-go-name: CreatedAt
-        devices:
-          additionalProperties:
-            additionalProperties:
-              type: string
-            type: object
-          description: Instance devices (see doc/instances.md)
-          example:
-            root:
-              path: /
-              pool: default
-              type: disk
-          type: object
-          x-go-name: Devices
-        ephemeral:
-          description: Whether the instance is ephemeral (deleted on shutdown)
-          example: false
-          type: boolean
-          x-go-name: Ephemeral
-        expanded_config:
-          additionalProperties:
-            type: string
-          description: Expanded configuration (all profiles and local config merged)
-          example:
-            security.nesting: 'true'
-          type: object
-          x-go-name: ExpandedConfig
-        expanded_devices:
-          additionalProperties:
-            additionalProperties:
-              type: string
-            type: object
-          description: Expanded devices (all profiles and local devices merged)
-          example:
-            root:
-              path: /
-              pool: default
-              type: disk
-          type: object
-          x-go-name: ExpandedDevices
-        expires_at:
-          description: When the snapshot expires (gets auto-deleted)
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: ExpiresAt
-        last_used_at:
-          description: Last start timestamp
-          example: '2021-03-23T20:00:00-04:00'
-          format: date-time
-          type: string
-          x-go-name: LastUsedAt
-        name:
-          description: Snapshot name
-          example: foo
-          type: string
-          x-go-name: Name
-        profiles:
-          description: List of profiles applied to the instance
-          example:
-          - default
-          items:
-            type: string
-          type: array
-          x-go-name: Profiles
-        size:
-          description: 'Size of the snapshot in bytes
-
-
-            API extension: snapshot_disk_usage'
-          example: 143360
-          format: int64
-          type: integer
-          x-go-name: Size
-        stateful:
-          description: Whether the instance currently has saved state on disk
-          example: false
-          type: boolean
-          x-go-name: Stateful
-      title: InstanceSnapshot represents a LXD instance snapshot.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceConsolePost:
-      properties:
-        height:
-          description: Console height in rows (console type only)
-          example: 24
-          format: int64
-          type: integer
-          x-go-name: Height
-        type:
-          description: 'Type of console to attach to (console or vga)
-
-
-            API extension: console_vga_type'
-          example: console
-          type: string
-          x-go-name: Type
-        width:
-          description: Console width in columns (console type only)
-          example: 80
-          format: int64
-          type: integer
-          x-go-name: Width
-      title: InstanceConsolePost represents a LXD instance console request.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ImageMetadata:
-      description: ImageMetadata represents LXD image metadata (used in image tarball)
-      properties:
-        architecture:
-          description: Architecture name
-          example: x86_64
-          type: string
-          x-go-name: Architecture
-        creation_date:
-          description: Image creation data (as UNIX epoch)
-          example: 1620655439
-          format: int64
-          type: integer
-          x-go-name: CreationDate
-        expiry_date:
-          description: Image expiry data (as UNIX epoch)
-          example: 1620685757
-          format: int64
-          type: integer
-          x-go-name: ExpiryDate
-        properties:
-          additionalProperties:
-            type: string
-          description: Descriptive properties
-          example:
-            os: Ubuntu
-            release: jammy
-            variant: cloud
-          type: object
-          x-go-name: Properties
-        templates:
-          additionalProperties:
-            $ref: '#/components/schemas/ImageMetadataTemplate'
-          description: Template for files in the image
-          type: object
-          x-go-name: Templates
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceUEFIVariable:
-      description: InstanceUEFIVariable represents an EFI variable entry
-      properties:
-        attr:
-          description: UEFI variable attributes
-          example: 7
-          format: uint32
-          type: integer
-          x-go-name: Attr
-        data:
-          description: UEFI variable data (HEX-encoded)
-          example: '01'
-          type: string
-          x-go-name: Data
-        digest:
-          description: UEFI variable digest (HEX-encoded)
-          type: string
-          x-go-name: Digest
-        timestamp:
-          description: UEFI variable timestamp (HEX-encoded)
-          type: string
-          x-go-name: Timestamp
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceStatePut:
-      properties:
-        action:
-          description: State change action (start, stop, restart, freeze, unfreeze)
-          example: start
-          type: string
-          x-go-name: Action
-        force:
-          description: Whether to force the action (for stop and restart)
-          example: false
-          type: boolean
-          x-go-name: Force
-        stateful:
-          description: Whether to store the runtime state (for stop)
-          example: false
-          type: boolean
-          x-go-name: Stateful
-        timeout:
-          description: How long to wait (in s) before giving up (when force isn't set)
-          example: 30
-          format: int64
-          type: integer
-          x-go-name: Timeout
-      title: InstanceStatePut represents the modifiable fields of a LXD instance's state.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceUEFIVars:
-      properties:
-        variables:
-          additionalProperties:
-            $ref: '#/components/schemas/InstanceUEFIVariable'
-          description: 'UEFI variables map
-
-            Hashmap key format is <uefi-variable-name>-<UUID>'
-          example:
-            SecureBootEnable-f0a30bc7-af08-4556-99c4-001009c93a44:
-              attr: 3
-              data: '01'
-          type: object
-          x-go-name: Variables
-      title: InstanceUEFIVars represents the UEFI variables of a LXD virtual machine.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceState:
-      properties:
-        cpu:
-          $ref: '#/components/schemas/InstanceStateCPU'
-        disk:
-          additionalProperties:
-            $ref: '#/components/schemas/InstanceStateDisk'
-          description: Disk usage key/value pairs
-          type: object
-          x-go-name: Disk
-        memory:
-          $ref: '#/components/schemas/InstanceStateMemory'
-        network:
-          additionalProperties:
-            $ref: '#/components/schemas/InstanceStateNetwork'
-          description: Network usage key/value pairs
-          type: object
-          x-go-name: Network
-        pid:
-          description: PID of the runtime
-          example: 7281
-          format: int64
-          type: integer
-          x-go-name: Pid
-        processes:
-          description: Number of processes in the instance
-          example: 50
-          format: int64
-          type: integer
-          x-go-name: Processes
-        status:
-          description: Current status (Running, Stopped, Frozen or Error)
-          example: Running
-          type: string
-          x-go-name: Status
-        status_code:
-          $ref: '#/components/schemas/StatusCode_2'
-      title: InstanceState represents a LXD instance's state.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    SourceType:
-      title: SourceType represents source of the instance creation.
-      type: string
-      x-go-package: github.com/canonical/lxd/shared/api
-    InstanceStateNetworkAddress:
-      description: 'InstanceStateNetworkAddress represents a network address as part of the network section of a LXD
-
-        instance''s state.'
-      properties:
-        address:
-          description: IP address
-          example: fd42:4c81:5770:1eaf:216:3eff:fe0c:eedd
-          type: string
-          x-go-name: Address
-        family:
-          description: Network family (inet or inet6)
-          example: inet6
-          type: string
-          x-go-name: Family
-        netmask:
-          description: Network mask
-          example: '64'
-          type: string
-          x-go-name: Netmask
-        scope:
-          description: Address scope (local, link or global)
-          example: global
-          type: string
-          x-go-name: Scope
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ImageMetadataTemplate:
-      description: ImageMetadataTemplate represents a template entry in image metadata (used in image tarball)
-      properties:
-        create_only:
-          description: Whether to trigger only if the file is missing
-          example: false
-          type: boolean
-          x-go-name: CreateOnly
-        properties:
-          additionalProperties:
-            type: string
-          description: Key/value properties to pass to the template
-          example:
-            foo: bar
-          type: object
-          x-go-name: Properties
-        template:
-          description: The template itself as a valid pongo2 template
-          example: pongo2-template
-          type: string
-          x-go-name: Template
-        when:
-          description: When to trigger the template (create, copy or start)
-          example: create
-          items:
-            type: string
-          type: array
-          x-go-name: When
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
   responses:
+    ErrorNotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: not found
+              error_code:
+                type: integer
+                format: int64
+                example: 404
+              type:
+                type: string
+                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -4365,43 +4382,6 @@ components:
               type:
                 type: string
                 example: error
-    ErrorNotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: not found
-              error_code:
-                type: integer
-                format: int64
-                example: 404
-              type:
-                type: string
-                example: error
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
     BadRequest:
       description: Bad Request
       content:
@@ -4422,6 +4402,26 @@ components:
                 type: string
                 x-go-name: Type
             type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
     InternalServerError_2:
       description: Internal Server Error
       content:
@@ -4434,66 +4434,6 @@ components:
                 x-go-name: Error
               error_code:
                 example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not found
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -4525,6 +4465,66 @@ components:
                 x-go-name: StatusCode
               type:
                 example: async
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
                 type: string
                 x-go-name: Type
             type: object
