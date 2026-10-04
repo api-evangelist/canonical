@@ -140,46 +140,50 @@ components:
       - architecture
       - revision
       title: ArtefactBuildMinimalResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ArtefactBuildEnvironmentReviewResponse:
+    EnvironmentResponse:
       properties:
         id:
           type: integer
           title: Id
-        review_decision:
-          items:
-            $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewDecision'
-          type: array
-          title: Review Decision
-        review_comment:
+        name:
           type: string
-          title: Review Comment
-        environment:
-          $ref: '#/components/schemas/EnvironmentResponse'
-        artefact_build:
-          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
-        reviewers:
-          items:
-            $ref: '#/components/schemas/ReviewerResponse'
-          type: array
-          title: Reviewers
-          default: []
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
       type: object
       required:
       - id
-      - review_decision
-      - review_comment
-      - environment
-      - artefact_build
-      title: ArtefactBuildEnvironmentReviewResponse
+      - name
+      - architecture
+      title: EnvironmentResponse
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
     EnvironmentReviewPatch:
       properties:
         id:
@@ -237,47 +241,43 @@ components:
       - msg
       - type
       title: ValidationError
-    ReviewerResponse:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ArtefactBuildEnvironmentReviewResponse:
       properties:
         id:
           type: integer
           title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
+        review_decision:
+          items:
+            $ref: '#/components/schemas/ArtefactBuildEnvironmentReviewDecision'
+          type: array
+          title: Review Decision
+        review_comment:
           type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
-        name:
-          type: string
-          title: Name
+          title: Review Comment
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        artefact_build:
+          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+        reviewers:
+          items:
+            $ref: '#/components/schemas/ReviewerResponse'
+          type: array
+          title: Reviewers
+          default: []
       type: object
       required:
       - id
-      - email
-      - launchpad_email
-      - name
-      title: ReviewerResponse
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
+      - review_decision
+      - review_comment
+      - environment
+      - artefact_build
+      title: ArtefactBuildEnvironmentReviewResponse

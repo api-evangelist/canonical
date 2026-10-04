@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-prompting-prompt-schema.json",
+  "title": "PromptingPrompt",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-experimental-api-openapi.yml#/components/schemas/PromptingPrompt",
+  "type": "object",
+  "required": [
+    "id",
+    "timestamp",
+    "snap",
+    "interface",
+    "constraints"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique prompt identifier."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp at which the prompt was created or last modified (RFC3339Nano format)."
+    },
+    "snap": {
+      "type": "string",
+      "description": "The name of the snap whose action triggered the prompt."
+    },
+    "interface": {
+      "type": "string",
+      "description": "The interface associated with the prompt.",
+      "enum": [
+        "home",
+        "camera"
+      ]
+    },
+    "constraints": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PromptingPromptConstraintsCamera"
+        },
+        {
+          "$ref": "#/$defs/PromptingPromptConstraintsHome"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "PromptingPromptConstraintsCamera": {
+      "type": "object",
+      "description": "Represents the constraints associated with a prompt for the camera interface.",
+      "required": [
+        "requested-permissions",
+        "available-permissions"
+      ],
+      "properties": {
+        "requested-permissions": {
+          "type": "array",
+          "description": "The permissions for which access is requested.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "access"
+            ]
+          }
+        },
+        "available-permissions": {
+          "type": "array",
+          "description": "The complete list of permissions for the camera interface.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "access"
+            ]
+          }
+        }
+      }
+    },
+    "PromptingPromptConstraintsHome": {
+      "type": "object",
+      "description": "Represents the constraints associated with a prompt for the home interface.",
+      "required": [
+        "path",
+        "requested-permissions",
+        "available-permissions"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The path for which access is requested."
+        },
+        "requested-permissions": {
+          "type": "array",
+          "description": "The permissions for which access is requested.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "read",
+              "write",
+              "execute"
+            ]
+          }
+        },
+        "available-permissions": {
+          "type": "array",
+          "description": "The complete list of permissions for the home interface.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "read",
+              "write",
+              "execute"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -258,10 +258,6 @@ paths:
         required: true
 components:
   schemas:
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
     Operation:
       description: Operation represents a background operation
       type: object
@@ -324,6 +320,52 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    CertificatesPost:
+      description: CertificatesPost represents the fields of a new auth provided certificate
+      type: object
+      properties:
+        certificate:
+          description: Base64 encoded certificate content without the header or the footer
+          type: string
+          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
+        trust-password:
+          description: TrustPassword is used to register a new client with the service
+          type: string
+          example: sUp3rs3cr3t
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
+    OperationResponse:
+      description: Operation
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Operation'
+        operation:
+          type: string
+          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+        status:
+          type: string
+          example: Operation created
+        status_code:
+          type: integer
+          format: int64
+          example: 100
+        type:
+          type: string
+          example: async
     NoMetaSyncResponse:
       description: Swagger Synchronous response without metadata field
       type: object
@@ -358,48 +400,6 @@ components:
           description: SHA-256 fingerprint of the certificate
           type: string
           example: b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
-    CertificatesPost:
-      description: CertificatesPost represents the fields of a new auth provided certificate
-      type: object
-      properties:
-        certificate:
-          description: Base64 encoded certificate content without the header or the footer
-          type: string
-          example: MIIFUTCCAzmgAw...xjKoUEEQOzJ9
-        trust-password:
-          description: TrustPassword is used to register a new client with the service
-          type: string
-          example: sUp3rs3cr3t
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
-    OperationResponse:
-      description: Operation
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/Operation'
-        operation:
-          type: string
-          example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-        status:
-          type: string
-          example: Operation created
-        status_code:
-          type: integer
-          format: int64
-          example: 100
-        type:
-          type: string
-          example: async
     CertificatesPost_2:
       description: CertificatesPost represents the fields of a new LXD certificate
       properties:
@@ -590,6 +590,40 @@ components:
               type:
                 type: string
                 example: error
+    ErrorAlreadyExists:
+      description: Already Exists
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: already exists
+              error_code:
+                type: integer
+                format: int64
+                example: 409
+              type:
+                type: string
+                example: error
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -606,23 +640,6 @@ components:
                 example: 500
               metadata:
                 example: '{}'
-              type:
-                type: string
-                example: error
-    ErrorAlreadyExists:
-      description: Already Exists
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: already exists
-              error_code:
-                type: integer
-                format: int64
-                example: 409
               type:
                 type: string
                 example: error
@@ -645,23 +662,6 @@ components:
               type:
                 type: string
                 example: error
-    ErrorForbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Not Authorized
-              error_code:
-                type: integer
-                format: int64
-                example: 403
-              type:
-                type: string
-                example: error
     BadRequest:
       description: Bad Request
       content:
@@ -679,6 +679,26 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
                 type: string
                 x-go-name: Type
             type: object
@@ -739,26 +759,6 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
                 type: string
                 x-go-name: Type
             type: object

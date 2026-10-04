@@ -316,136 +316,6 @@ paths:
       - view_test
 components:
   schemas:
-    ArtefactBuildMinimalResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
-    TestResultSearchResponseWithContext:
-      properties:
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        test_results:
-          items:
-            $ref: '#/components/schemas/TestResultResponseWithContext'
-          type: array
-          title: Test Results
-      type: object
-      required:
-      - count
-      - limit
-      - offset
-      - test_results
-      title: TestResultSearchResponseWithContext
-      description: Response model for test results search endpoint with full context
-    ArtefactStatus:
-      type: string
-      enum:
-      - APPROVED
-      - MARKED_AS_FAILED
-      - UNDECIDED
-      title: ArtefactStatus
-    TestResultResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        category:
-          type: string
-          title: Category
-        template_id:
-          type: string
-          title: Template Id
-        status:
-          $ref: '#/components/schemas/TestResultStatus'
-        comment:
-          type: string
-          title: Comment
-        io_log:
-          type: string
-          title: Io Log
-        previous_results:
-          items:
-            $ref: '#/components/schemas/PreviousTestResult'
-          type: array
-          title: Previous Results
-          description: The last 10 test results matched with the current test execution. The items are sorted in descending order, the first test result is the most recent, while the last one is the oldest one.
-          default: []
-        issues:
-          items:
-            $ref: '#/components/schemas/MinimalIssueTestResultAttachmentResponse'
-          type: array
-          title: Issues
-      type: object
-      required:
-      - id
-      - name
-      - created_at
-      - category
-      - template_id
-      - status
-      - comment
-      - io_log
-      - issues
-      title: TestResultResponse
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
-    MinimalIssueTestResultAttachmentResponse:
-      properties:
-        issue:
-          $ref: '#/components/schemas/MinimalIssueResponse'
-        attachment_rule:
-          anyOf:
-          - $ref: '#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse'
-          - type: 'null'
-      type: object
-      required:
-      - issue
-      - attachment_rule
-      title: MinimalIssueTestResultAttachmentResponse
     ArtefactResponse:
       properties:
         id:
@@ -574,25 +444,64 @@ components:
       - completed_environment_reviews_count
       - assignee
       title: ArtefactResponse
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
+    MinimalIssueTestResultAttachmentResponse:
+      properties:
+        issue:
+          $ref: '#/components/schemas/MinimalIssueResponse'
+        attachment_rule:
+          anyOf:
+          - $ref: '#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse'
+          - type: 'null'
+      type: object
+      required:
+      - issue
+      - attachment_rule
+      title: MinimalIssueTestResultAttachmentResponse
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
+    TestResultResponseWithContext:
+      properties:
+        test_result:
+          $ref: '#/components/schemas/TestResultResponse'
+        test_execution:
+          $ref: '#/components/schemas/TestExecutionResponse'
+        artefact:
+          $ref: '#/components/schemas/ArtefactResponse'
+        artefact_build:
+          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+      type: object
+      required:
+      - test_result
+      - test_execution
+      - artefact
+      - artefact_build
+      title: TestResultResponseWithContext
+      description: Test result response with artefact and test execution context
     MinimalIssueResponse:
       properties:
         id:
@@ -659,52 +568,6 @@ components:
         - mysql-k8s
         charm:postgresql-k8s:revision:
         - '495'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
-          type: integer
-          title: Id
-      type: object
-      required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse
     MinimalIssueTestResultAttachmentRuleResponse:
       properties:
         id:
@@ -781,13 +644,120 @@ components:
       - test_result_statuses
       - execution_metadata
       title: MinimalIssueTestResultAttachmentRuleResponse
-    IssueStatus:
+    TestResultResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        category:
+          type: string
+          title: Category
+        template_id:
+          type: string
+          title: Template Id
+        status:
+          $ref: '#/components/schemas/TestResultStatus'
+        comment:
+          type: string
+          title: Comment
+        io_log:
+          type: string
+          title: Io Log
+        previous_results:
+          items:
+            $ref: '#/components/schemas/PreviousTestResult'
+          type: array
+          title: Previous Results
+          description: The last 10 test results matched with the current test execution. The items are sorted in descending order, the first test result is the most recent, while the last one is the oldest one.
+          default: []
+        issues:
+          items:
+            $ref: '#/components/schemas/MinimalIssueTestResultAttachmentResponse'
+          type: array
+          title: Issues
+      type: object
+      required:
+      - id
+      - name
+      - created_at
+      - category
+      - template_id
+      - status
+      - comment
+      - io_log
+      - issues
+      title: TestResultResponse
+    PreviousTestResult:
+      properties:
+        status:
+          $ref: '#/components/schemas/TestResultStatus'
+        version:
+          type: string
+          title: Version
+        artefact_id:
+          type: integer
+          title: Artefact Id
+        test_execution_id:
+          type: integer
+          title: Test Execution Id
+        test_result_id:
+          type: integer
+          title: Test Result Id
+      type: object
+      required:
+      - status
+      - version
+      - artefact_id
+      - test_execution_id
+      - test_result_id
+      title: PreviousTestResult
+    IssueSource:
       type: string
       enum:
-      - unknown
-      - open
-      - closed
-      title: IssueStatus
+      - jira
+      - github
+      - launchpad
+      title: IssueSource
+    TestResultStatus:
+      type: string
+      enum:
+      - PASSED
+      - FAILED
+      - SKIPPED
+      title: TestResultStatus
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    EnvironmentResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        architecture:
+          type: string
+          title: Architecture
+      type: object
+      required:
+      - id
+      - name
+      - architecture
+      title: EnvironmentResponse
     TestExecutionResponse:
       properties:
         id:
@@ -848,24 +818,93 @@ components:
       - is_rerun_requested
       - rerun_priority
       title: TestExecutionResponse
-    TestResultResponseWithContext:
+    TestExecutionRelevantLinkResponse:
       properties:
-        test_result:
-          $ref: '#/components/schemas/TestResultResponse'
-        test_execution:
-          $ref: '#/components/schemas/TestExecutionResponse'
-        artefact:
-          $ref: '#/components/schemas/ArtefactResponse'
-        artefact_build:
-          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
       type: object
       required:
-      - test_result
-      - test_execution
-      - artefact
-      - artefact_build
-      title: TestResultResponseWithContext
-      description: Test result response with artefact and test execution context
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
+    ArtefactBuildMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse
+    IssueStatus:
+      type: string
+      enum:
+      - unknown
+      - open
+      - closed
+      title: IssueStatus
+    ArtefactStatus:
+      type: string
+      enum:
+      - APPROVED
+      - MARKED_AS_FAILED
+      - UNDECIDED
+      title: ArtefactStatus
+    TestResultSearchResponseWithContext:
+      properties:
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        test_results:
+          items:
+            $ref: '#/components/schemas/TestResultResponseWithContext'
+          type: array
+          title: Test Results
+      type: object
+      required:
+      - count
+      - limit
+      - offset
+      - test_results
+      title: TestResultSearchResponseWithContext
+      description: Response model for test results search endpoint with full context
     HTTPValidationError:
       properties:
         detail:
@@ -875,68 +914,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    IssueSource:
-      type: string
-      enum:
-      - jira
-      - github
-      - launchpad
-      title: IssueSource
-    PreviousTestResult:
+    ValidationError:
       properties:
-        status:
-          $ref: '#/components/schemas/TestResultStatus'
-        version:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Version
-        artefact_id:
-          type: integer
-          title: Artefact Id
-        test_execution_id:
-          type: integer
-          title: Test Execution Id
-        test_result_id:
-          type: integer
-          title: Test Result Id
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - status
-      - version
-      - artefact_id
-      - test_execution_id
-      - test_result_id
-      title: PreviousTestResult
-    TestResultStatus:
-      type: string
-      enum:
-      - PASSED
-      - FAILED
-      - SKIPPED
-      title: TestResultStatus
-    ReviewerResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
-        name:
-          type: string
-          title: Name
-      type: object
-      required:
-      - id
-      - email
-      - launchpad_email
-      - name
-      title: ReviewerResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError

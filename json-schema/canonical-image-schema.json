@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-image-schema.json",
+  "title": "Image",
+  "description": "Image represents an image available in AMS",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-images-api-openapi.yml#/components/schemas/Image",
+  "type": "object",
+  "properties": {
+    "architecture": {
+      "description": "CPU architecture supported by the image",
+      "type": "string"
+    },
+    "default": {
+      "description": "Flag to show whether the image is used by default if no image name is provided",
+      "type": "boolean"
+    },
+    "id": {
+      "description": "ID of the image",
+      "type": "string"
+    },
+    "immutable": {
+      "description": "Flag to show whether the image can be edited by an AMS instance or not",
+      "type": "boolean"
+    },
+    "name": {
+      "description": "Name of the image",
+      "type": "string"
+    },
+    "status": {
+      "description": "Current status of the image",
+      "type": "string",
+      "enum": [
+        "error",
+        "created",
+        "active",
+        "initializing",
+        "unknown"
+      ]
+    },
+    "status_code": {
+      "$ref": "#/$defs/ImageStatus"
+    },
+    "type": {
+      "$ref": "#/$defs/ImageType"
+    },
+    "used_by": {
+      "description": "List of application ids using the image as a base",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "versions": {
+      "description": "List of versions for the image",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ImageVersion"
+      }
+    }
+  },
+  "$defs": {
+    "ImageStatus": {
+      "description": "ImageStatus represents the status of an image",
+      "type": "integer",
+      "format": "int64"
+    },
+    "ImageType": {
+      "description": "ImageType specifies the type of an image",
+      "type": "string"
+    },
+    "ImageVersion": {
+      "description": "ImageVersion describes a single version of an image",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "description": "Creation UTC timestamp of the image",
+          "type": "integer",
+          "format": "int64"
+        },
+        "fingerprint": {
+          "description": "Fingerprint of the image version",
+          "type": "string"
+        },
+        "remote_id": {
+          "description": "Version of the image in the remote server",
+          "type": "string"
+        },
+        "size": {
+          "description": "Size (in bytes) of the image version",
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "description": "Current status of the image",
+          "type": "string",
+          "enum": [
+            "error",
+            "created",
+            "active",
+            "initializing",
+            "unknown"
+          ]
+        },
+        "status_code": {
+          "$ref": "#/$defs/ImageStatus"
+        },
+        "version": {
+          "description": "Version for the image",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

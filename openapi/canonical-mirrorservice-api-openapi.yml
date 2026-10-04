@@ -277,32 +277,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    SyncMirrorRequest:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: "The resource name of the mirror to sync.\n Format: \"mirrors/{mirror}\""
-        keyrings:
-          type: array
-          items:
-            type: string
-          description: Optional keyring files to use for validation.
-        ignoreChecksums:
-          type: boolean
-          description: Ignore checksum mismatches.
-        ignoreSignatures:
-          type: boolean
-          description: Ignore signature verification failures.
-        forceUpdate:
-          type: boolean
-          description: Force a full update.
-        skipExistingPackages:
-          type: boolean
-          description: Skip downloading packages that already exist.
-      description: The request message for syncing a mirror.
     Operation:
       type: object
       properties:
@@ -325,26 +299,6 @@ components:
           - $ref: '#/components/schemas/GoogleProtobufAny'
           description: "The normal, successful response of the operation.  If the original\n method returns no data on success, such as `Delete`, the response is\n `google.protobuf.Empty`.  If the original method is standard\n `Get`/`Create`/`Update`, the response should be the resource.  For other\n methods, the response should have the type `XxxResponse`, where `Xxx`\n is the original method name.  For example, if the original method name\n is `TakeSnapshot()`, the inferred response type is\n `TakeSnapshotResponse`."
       description: "This resource represents a long-running operation that is the result of a\n network API call."
-    GoogleProtobufAny:
-      type: object
-      properties:
-        '@type':
-          type: string
-          description: The type of the serialized message.
-      additionalProperties: true
-      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-    ListMirrorPackagesResponse:
-      type: object
-      properties:
-        mirrorPackages:
-          type: array
-          items:
-            type: string
-          description: "The list of package strings.\n Example: [\"snap-http_1.4.0_source\", ...]"
-        nextPageToken:
-          type: string
-          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
-      description: The response message for listing packages in a mirror.
     Mirror:
       required:
       - displayName
@@ -432,20 +386,6 @@ components:
           description: The type of upstream repository being mirrored.
           format: enum
       description: A repository mirror configuration and status.
-    BatchGetMirrorsResponse:
-      type: object
-      properties:
-        mirrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Mirror'
-          description: Mirrors requested.
-        unreachable:
-          type: array
-          items:
-            type: string
-          description: "Unreachable mirrors. Populated when the request opts into\n `return_partial_success` and reading across collections."
-      description: The response message for retrieving a batch of mirrors.
     GpgKey:
       required:
       - armor
@@ -464,6 +404,58 @@ components:
           type: string
           description: The fingerprint of the key.
       description: A GPG key resource.
+    SyncMirrorRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: "The resource name of the mirror to sync.\n Format: \"mirrors/{mirror}\""
+        keyrings:
+          type: array
+          items:
+            type: string
+          description: Optional keyring files to use for validation.
+        ignoreChecksums:
+          type: boolean
+          description: Ignore checksum mismatches.
+        ignoreSignatures:
+          type: boolean
+          description: Ignore signature verification failures.
+        forceUpdate:
+          type: boolean
+          description: Force a full update.
+        skipExistingPackages:
+          type: boolean
+          description: Skip downloading packages that already exist.
+      description: The request message for syncing a mirror.
+    BatchGetMirrorsRequest:
+      required:
+      - names
+      type: object
+      properties:
+        names:
+          type: array
+          items:
+            type: string
+          description: "The names of the mirrors to retrieve.\n A maximum of 100 mirrors can be retrieved in a batch.\n Format: mirrors/{mirror}"
+        returnPartialSuccess:
+          type: boolean
+          description: "Setting this field to `true` will opt the request into returning the\n mirrors that are reachable, and into including the names of those that\n were unreachable in the [BatchGetMirrorsResponse.unreachable] field."
+      description: The request message for retrieving a batch of mirrors.
+    ListMirrorPackagesResponse:
+      type: object
+      properties:
+        mirrorPackages:
+          type: array
+          items:
+            type: string
+          description: "The list of package strings.\n Example: [\"snap-http_1.4.0_source\", ...]"
+        nextPageToken:
+          type: string
+          description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+      description: The response message for listing packages in a mirror.
     Status:
       type: object
       properties:
@@ -480,6 +472,28 @@ components:
             $ref: '#/components/schemas/GoogleProtobufAny'
           description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
       description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+    BatchGetMirrorsResponse:
+      type: object
+      properties:
+        mirrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mirror'
+          description: Mirrors requested.
+        unreachable:
+          type: array
+          items:
+            type: string
+          description: "Unreachable mirrors. Populated when the request opts into\n `return_partial_success` and reading across collections."
+      description: The response message for retrieving a batch of mirrors.
+    GoogleProtobufAny:
+      type: object
+      properties:
+        '@type':
+          type: string
+          description: The type of the serialized message.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
     ListMirrorsResponse:
       type: object
       properties:
@@ -492,17 +506,3 @@ components:
           type: string
           description: "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
       description: The response message for listing mirrors.
-    BatchGetMirrorsRequest:
-      required:
-      - names
-      type: object
-      properties:
-        names:
-          type: array
-          items:
-            type: string
-          description: "The names of the mirrors to retrieve.\n A maximum of 100 mirrors can be retrieved in a batch.\n Format: mirrors/{mirror}"
-        returnPartialSuccess:
-          type: boolean
-          description: "Setting this field to `true` will opt the request into returning the\n mirrors that are reachable, and into including the names of those that\n were unreachable in the [BatchGetMirrorsResponse.unreachable] field."
-      description: The request message for retrieving a batch of mirrors.

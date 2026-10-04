@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-level-schema.json",
+  "title": "Level",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-microceph-api-openapi.yml#/components/schemas/Level",
+  "type": "string",
+  "oneOf": [
+    {
+      "title": "PANIC",
+      "const": 0
+    },
+    {
+      "title": "FATAL",
+      "const": 1
+    },
+    {
+      "title": "ERROR",
+      "const": 2
+    },
+    {
+      "title": "WARNING",
+      "const": 3
+    },
+    {
+      "title": "INFO",
+      "const": 4
+    },
+    {
+      "title": "DEBUG",
+      "const": 5
+    },
+    {
+      "title": "TRACE",
+      "const": 6
+    }
+  ]
+}

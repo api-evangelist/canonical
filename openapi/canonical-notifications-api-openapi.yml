@@ -259,15 +259,6 @@ paths:
       - change_notification
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     NotificationsResponse:
       properties:
         notifications:
@@ -325,6 +316,21 @@ components:
       - created_at
       - dismissed_at
       title: NotificationResponse
+    NotificationType:
+      type: string
+      enum:
+      - USER_ASSIGNED_ARTEFACT_REVIEW
+      - USER_ASSIGNED_ENVIRONMENT_REVIEW
+      title: NotificationType
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -351,9 +357,3 @@ components:
       - msg
       - type
       title: ValidationError
-    NotificationType:
-      type: string
-      enum:
-      - USER_ASSIGNED_ARTEFACT_REVIEW
-      - USER_ASSIGNED_ENVIRONMENT_REVIEW
-      title: NotificationType

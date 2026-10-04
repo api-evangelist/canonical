@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-image-export-post-schema.json",
+  "title": "ImageExportPost",
+  "description": "ImageExportPost represents the fields required to export a LXD image",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-images-api-openapi.yml#/components/schemas/ImageExportPost",
+  "properties": {
+    "aliases": {
+      "description": "List of aliases to set on the image",
+      "items": {
+        "$ref": "#/$defs/ImageAlias"
+      },
+      "type": "array",
+      "x-go-name": "Aliases"
+    },
+    "certificate": {
+      "description": "Remote server certificate",
+      "type": "string",
+      "x-go-name": "Certificate"
+    },
+    "profiles": {
+      "description": "List of profiles to use\n\nAPI extension: image_copy_profile",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Profiles"
+    },
+    "project": {
+      "description": "Project name\n\nAPI extension: image_target_project",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "secret": {
+      "description": "Image receive secret",
+      "type": "string",
+      "x-go-name": "Secret"
+    },
+    "target": {
+      "description": "Target server URL",
+      "type": "string",
+      "x-go-name": "Target"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "ImageAlias": {
+      "description": "ImageAlias represents an alias from the alias list of a LXD image",
+      "properties": {
+        "description": {
+          "description": "Description of the alias",
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "name": {
+          "description": "Name of the alias",
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

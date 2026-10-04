@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-operation-schema.json",
+  "title": "Operation",
+  "description": "This resource represents a long-running operation that is the result of a\n network API call.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-localservice-api-openapi.yml#/components/schemas/Operation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The server-assigned name, which is only unique within the same service that\n originally returns it. If you use the default HTTP mapping, the\n `name` should be a resource name ending with `operations/{unique_id}`."
+    },
+    "metadata": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GoogleProtobufAny"
+        }
+      ],
+      "description": "Service-specific metadata associated with the operation.  It typically\n contains progress information and common metadata such as create time.\n Some services might not provide such metadata.  Any method that returns a\n long-running operation should document the metadata type, if any."
+    },
+    "done": {
+      "type": "boolean",
+      "description": "If the value is `false`, it means the operation is still in progress.\n If `true`, the operation is completed, and either `error` or `response` is\n available."
+    },
+    "error": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/Status"
+        }
+      ],
+      "description": "The error result of the operation in case of failure or cancellation."
+    },
+    "response": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/GoogleProtobufAny"
+        }
+      ],
+      "description": "The normal, successful response of the operation.  If the original\n method returns no data on success, such as `Delete`, the response is\n `google.protobuf.Empty`.  If the original method is standard\n `Get`/`Create`/`Update`, the response should be the resource.  For other\n methods, the response should have the type `XxxResponse`, where `Xxx`\n is the original method name.  For example, if the original method name\n is `TakeSnapshot()`, the inferred response type is\n `TakeSnapshotResponse`."
+    }
+  },
+  "$defs": {
+    "GoogleProtobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "The type of the serialized message."
+        }
+      },
+      "additionalProperties": true,
+      "description": "Contains an arbitrary serialized message along with a @type that describes the type of the serialized message."
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string",
+          "description": "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client."
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GoogleProtobufAny"
+          },
+          "description": "A list of messages that carry the error details.  There is a common set of message types for APIs to use."
+        }
+      },
+      "description": "The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors)."
+    }
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-instance-schema.json",
+  "title": "Instance",
+  "description": "Instance represents a single instance",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-instances-api-openapi.yml#/components/schemas/Instance",
+  "type": "object",
+  "properties": {
+    "address": {
+      "description": "Address is the IP address of the instance",
+      "type": "string"
+    },
+    "app_id": {
+      "description": "AppID is the ID of the application the instance is created from. Empty if the\ninstance has not been created from an application.",
+      "type": "string"
+    },
+    "app_name": {
+      "description": "AppName is the name of the application the instance is created from. Empty if the\ninstance has not been created from an application.",
+      "type": "string"
+    },
+    "app_version": {
+      "description": "AppVersion is the version of the application the instance is created from. Empty if the\ninstance has not been created from an application.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "architecture": {
+      "description": "Architecture describes the CPU archtitecture the instance is using",
+      "type": "string"
+    },
+    "base": {
+      "description": "If this is a base instance or not",
+      "type": "boolean"
+    },
+    "config": {
+      "description": "Config summarizes the configuration the instance uses",
+      "type": "object",
+      "properties": {
+        "boot_activity": {
+          "description": "BootActivity specifies the Android activity which is started by default",
+          "type": "string"
+        },
+        "boot_package": {
+          "description": "BootPackage specifies the Android application package name which is started by default",
+          "type": "string"
+        },
+        "devmode": {
+          "description": "DevMode specifies if development mode has been turned on for the instance",
+          "type": "boolean"
+        },
+        "disable_watchdog": {
+          "description": "DisableWatchdog defines whether the watchdog is disabled",
+          "type": "boolean"
+        },
+        "display": {
+          "type": "object",
+          "properties": {
+            "density": {
+              "description": "Density is the piel density of the virtual display",
+              "type": "integer",
+              "format": "int64"
+            },
+            "fps": {
+              "description": "FPS is the frame rate of the virtual display",
+              "type": "integer",
+              "format": "int64"
+            },
+            "height": {
+              "description": "Height is the height of the virtual display",
+              "type": "integer",
+              "format": "int64"
+            },
+            "width": {
+              "description": "Width is the width of the virtual display",
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        },
+        "enable_streaming": {
+          "description": "EnableStreaming specifies if streaming should be enabled for the instance or not",
+          "type": "boolean"
+        },
+        "metrics_server": {
+          "description": "MetricsServer specifies a metrics server the instance will use",
+          "type": "string"
+        },
+        "platform": {
+          "description": "Platform specifies the Anbox platform the instance is running with",
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "description": "CreatedAt specifies the time at which the instance was created",
+      "type": "integer",
+      "format": "int64"
+    },
+    "error_message": {
+      "description": "ErrorMessage provides an error message when the instance status is set to error.",
+      "type": "string"
+    },
+    "id": {
+      "description": "ID of the instance",
+      "type": "string"
+    },
+    "image_id": {
+      "description": "ImageID is the ID of the image the instance is created from. Empty if the\ninstance has not been created from an image.",
+      "type": "string"
+    },
+    "image_version": {
+      "description": "ImageVersion is the version of the image the instance is created from. Empty if the\ninstance has not been created from an image.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "name": {
+      "description": "Name of the instance. Typically in the format \"ams-<ID>\".",
+      "type": "string"
+    },
+    "node": {
+      "description": "Node the instance is running on",
+      "type": "string"
+    },
+    "public_address": {
+      "description": "PublicAddress is the external IP address the instance is accessible on (in most\ncases the IP of the node it is running on)",
+      "type": "string"
+    },
+    "resources": {
+      "$ref": "#/$defs/InstanceResources"
+    },
+    "services": {
+      "description": "Services the instance exposes",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InstanceService"
+      }
+    },
+    "status": {
+      "description": "Status of the instance",
+      "type": "string"
+    },
+    "status_code": {
+      "$ref": "#/$defs/InstanceStatus"
+    },
+    "status_message": {
+      "description": "StatusMessage describes the current status of the instance",
+      "type": "string"
+    },
+    "stored_logs": {
+      "description": "StoredLogs lists log files AMS stores for the instance.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "description": "Tags specifies the tags the instance has assigned",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "type": {
+      "$ref": "#/$defs/InstanceType"
+    }
+  },
+  "$defs": {
+    "InstanceResources": {
+      "description": "InstanceResources represents resources assigned to an instance",
+      "type": "object",
+      "properties": {
+        "cpus": {
+          "description": "CPUs cores assigned to the instance",
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk-size": {
+          "description": "DiskSize specifies the amount of storage assigned to the instance in bytes",
+          "type": "integer",
+          "format": "int64"
+        },
+        "gpu-slots": {
+          "description": "GPUSlots specifies the number of GPU slots the instance got allocated",
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory": {
+          "description": "Memory assigned to the instance in bytes",
+          "type": "integer",
+          "format": "int64"
+        },
+        "vpu-slots": {
+          "description": "VPUSlots specifies the number of VPU slots the instance",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "InstanceService": {
+      "description": "While NetworkServiceSpec defines what the user requests, InstanceService is what is actually\nopened on the instance.",
+      "type": "object",
+      "title": "InstanceService describes a single service the instance exposes to the outside world.",
+      "properties": {
+        "expose": {
+          "description": "Expose defines wether the service is exposed on the public endpoint of the node\nor if it is only available on the private endpoint. To expose the service set to\ntrue and to false otherwise.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name gives the instance a hint what the exposed port is being used for. This\nallows further tweaks inside the instance to expose the service correctly.",
+          "type": "string"
+        },
+        "node_port": {
+          "description": "NodePort is the port used on the LXD node to map to the service port\nIf left empty the node port is automatically selected.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "node_port_end": {
+          "description": "NodePortEnd, if specified, denotes the end of the port range on the node starting\nat NodePort",
+          "type": "integer",
+          "format": "int64"
+        },
+        "port": {
+          "description": "Port is the port the instance provides a service on",
+          "type": "integer",
+          "format": "int64"
+        },
+        "port_end": {
+          "description": "PortEnd, if specified, denotes the end of the port range starting at Port",
+          "type": "integer",
+          "format": "int64"
+        },
+        "protocols": {
+          "description": "List of network protocols (tcp, udp) the port should be exposed for",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NetworkProtocol"
+          }
+        }
+      }
+    },
+    "InstanceStatus": {
+      "description": "InstanceStatus represents the status a instance can be in",
+      "type": "integer",
+      "format": "int64"
+    },
+    "InstanceType": {
+      "description": "InstanceType describes the type of an instance (container, vm)",
+      "type": "string"
+    },
+    "NetworkProtocol": {
+      "description": "NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use",
+      "type": "string"
+    }
+  }
+}

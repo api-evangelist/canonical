@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-issues-get-response-schema.json",
+  "title": "IssuesGetResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-issues-api-openapi.yml#/components/schemas/IssuesGetResponse",
+  "properties": {
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/MinimalIssueResponse"
+      },
+      "type": "array",
+      "title": "Issues"
+    },
+    "count": {
+      "type": "integer",
+      "title": "Count"
+    },
+    "limit": {
+      "type": "integer",
+      "title": "Limit"
+    },
+    "offset": {
+      "type": "integer",
+      "title": "Offset"
+    }
+  },
+  "type": "object",
+  "required": [
+    "issues",
+    "count",
+    "limit",
+    "offset"
+  ],
+  "$defs": {
+    "IssueSource": {
+      "type": "string",
+      "enum": [
+        "jira",
+        "github",
+        "launchpad"
+      ],
+      "title": "IssueSource"
+    },
+    "IssueStatus": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "open",
+        "closed"
+      ],
+      "title": "IssueStatus"
+    },
+    "MinimalIssueResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "source": {
+          "$ref": "#/$defs/IssueSource"
+        },
+        "project": {
+          "type": "string",
+          "title": "Project"
+        },
+        "key": {
+          "type": "string",
+          "title": "Key"
+        },
+        "title": {
+          "type": "string",
+          "title": "Title"
+        },
+        "status": {
+          "$ref": "#/$defs/IssueStatus"
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2083,
+          "minLength": 1,
+          "format": "uri",
+          "title": "Url"
+        },
+        "labels": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Labels"
+        },
+        "test_executions_count": {
+          "type": "integer",
+          "title": "Test Executions Count",
+          "default": 0
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "project",
+        "key",
+        "title",
+        "status",
+        "url"
+      ],
+      "title": "MinimalIssueResponse"
+    }
+  }
+}

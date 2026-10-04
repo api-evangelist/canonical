@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-post-exec-request-schema.json",
+  "title": "PostExecRequest",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-exec-api-openapi.yml#/components/schemas/PostExecRequest",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The command to execute (including arguments)."
+    },
+    "service-context": {
+      "type": "string",
+      "description": "The service context to use for execution."
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Environment variables to set for the command."
+    },
+    "working-dir": {
+      "type": "string",
+      "description": "The working directory for the command."
+    },
+    "timeout": {
+      "type": "string",
+      "description": "The timeout for the command execution (e.g., \"60s\", \"1m\")."
+    },
+    "user-id": {
+      "type": "integer",
+      "description": "The user ID to run the command as."
+    },
+    "user": {
+      "type": "string",
+      "description": "The username to run the command as."
+    },
+    "group-id": {
+      "type": "integer",
+      "description": "The group ID to run the command as."
+    },
+    "group": {
+      "type": "string",
+      "description": "The group name to run the command as."
+    },
+    "terminal": {
+      "type": "boolean",
+      "description": "Whether to allocate a pseudo-terminal."
+    },
+    "interactive": {
+      "type": "boolean",
+      "description": "Whether the command is interactive."
+    },
+    "split-stderr": {
+      "type": "boolean",
+      "description": "Whether to split stderr from stdout."
+    },
+    "width": {
+      "type": "integer",
+      "description": "The width of the terminal (if applicable)."
+    },
+    "height": {
+      "type": "integer",
+      "description": "The height of the terminal (if applicable)."
+    }
+  },
+  "required": [
+    "command"
+  ]
+}

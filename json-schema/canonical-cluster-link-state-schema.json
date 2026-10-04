@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-cluster-link-state-schema.json",
+  "title": "ClusterLinkState represents the state of a linked cluster.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-cluster-links-api-openapi.yml#/components/schemas/ClusterLinkState",
+  "properties": {
+    "cluster_link_members": {
+      "description": "ClusterLinkMembers represents the state of cluster members on a linked cluster.",
+      "items": {
+        "$ref": "#/$defs/ClusterLinkMemberState"
+      },
+      "type": "array",
+      "x-go-name": "ClusterLinkMembersState"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "ClusterLinkMemberState": {
+      "properties": {
+        "address": {
+          "description": "Address at which the cluster member can be reached.",
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "server_name": {
+          "description": "Name of the cluster member.",
+          "type": "string",
+          "x-go-name": "ServerName"
+        },
+        "status": {
+          "description": "Cluster member's status.",
+          "type": "string",
+          "x-go-name": "Status"
+        }
+      },
+      "title": "ClusterLinkMemberState represents the state of a cluster member on a linked cluster.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

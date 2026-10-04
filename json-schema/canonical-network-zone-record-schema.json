@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-zone-record-schema.json",
+  "title": "NetworkZoneRecord represents a network zone (DNS) record.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-zones-api-openapi.yml#/components/schemas/NetworkZoneRecord",
+  "properties": {
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Advanced configuration for the record",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the record",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "entries": {
+      "description": "Entries in the record",
+      "items": {
+        "$ref": "#/$defs/NetworkZoneRecordEntry"
+      },
+      "type": "array",
+      "x-go-name": "Entries"
+    },
+    "name": {
+      "description": "The name of the record",
+      "type": "string",
+      "x-go-name": "Name"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "NetworkZoneRecordEntry": {
+      "description": "NetworkZoneRecordEntry represents the fields in a record entry",
+      "properties": {
+        "ttl": {
+          "description": "TTL for the entry",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "TTL"
+        },
+        "type": {
+          "description": "Type of DNS entry",
+          "type": "string",
+          "x-go-name": "Type"
+        },
+        "value": {
+          "description": "Value for the record",
+          "type": "string",
+          "x-go-name": "Value"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

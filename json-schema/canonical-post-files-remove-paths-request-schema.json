@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-post-files-remove-paths-request-schema.json",
+  "title": "PostFilesRemovePathsRequest",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-files-api-openapi.yml#/components/schemas/PostFilesRemovePathsRequest",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "remove"
+      ]
+    },
+    "paths": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/removePathsItem"
+      }
+    }
+  },
+  "required": [
+    "action",
+    "paths"
+  ],
+  "$defs": {
+    "removePathsItem": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The path to the file or directory to remove."
+        },
+        "recursive": {
+          "type": "boolean",
+          "description": "Whether to remove recursively (for directories)."
+        }
+      },
+      "required": [
+        "path"
+      ]
+    }
+  }
+}

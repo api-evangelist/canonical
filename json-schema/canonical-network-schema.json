@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-schema.json",
+  "title": "Network",
+  "description": "Network represents a LXD network",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-networks-api-openapi.yml#/components/schemas/Network",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Network configuration map (refer to doc/networks.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the profile\n\nAPI extension: entity_description",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "locations": {
+      "description": "Cluster members on which the network has been defined\n\nAPI extension: clustering",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true,
+      "type": "array",
+      "x-go-name": "Locations"
+    },
+    "managed": {
+      "description": "Whether this is a LXD managed network\n\nAPI extension: network",
+      "readOnly": true,
+      "type": "boolean",
+      "x-go-name": "Managed"
+    },
+    "name": {
+      "description": "The network name",
+      "readOnly": true,
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "project": {
+      "description": "Project name\n\nAPI extension: networks_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "status": {
+      "description": "The state of the network (for managed network in clusters)\n\nAPI extension: clustering",
+      "readOnly": true,
+      "type": "string",
+      "x-go-name": "Status"
+    },
+    "type": {
+      "description": "The network type",
+      "readOnly": true,
+      "type": "string",
+      "x-go-name": "Type"
+    },
+    "used_by": {
+      "description": "List of URLs of objects using this profile",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true,
+      "type": "array",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

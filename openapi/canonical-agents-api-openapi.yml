@@ -280,6 +280,30 @@ components:
       type: object
       properties: {}
       additionalProperties: true
+    AgentIn:
+      type: object
+      properties:
+        identifier:
+          type: string
+        job_id:
+          type: string
+        location:
+          type: string
+        log:
+          type: array
+          items:
+            type: string
+        provision_type:
+          type: string
+        queues:
+          type: array
+          items:
+            type: string
+        state:
+          type: string
+        comment:
+          type: string
+      additionalProperties: false
     AgentJob:
       type: object
       properties:
@@ -309,10 +333,13 @@ components:
       required:
       - job_id
       additionalProperties: false
-    QueuesIn:
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
       type: object
-      properties: {}
-      additionalProperties: true
     ProvisionLogsIn:
       type: object
       properties:
@@ -326,6 +353,25 @@ components:
       - exit_code
       - job_id
       additionalProperties: false
+    QueuesIn:
+      type: object
+      properties: {}
+      additionalProperties: true
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object
     AgentOut:
       type: object
       properties:
@@ -357,49 +403,3 @@ components:
       required:
       - name
       additionalProperties: false
-    HTTPError:
-      properties:
-        detail:
-          type: object
-        message:
-          type: string
-      type: object
-    AgentIn:
-      type: object
-      properties:
-        identifier:
-          type: string
-        job_id:
-          type: string
-        location:
-          type: string
-        log:
-          type: array
-          items:
-            type: string
-        provision_type:
-          type: string
-        queues:
-          type: array
-          items:
-            type: string
-        state:
-          type: string
-        comment:
-          type: string
-      additionalProperties: false
-    ValidationError:
-      properties:
-        detail:
-          type: object
-          properties:
-            <location>:
-              type: object
-              properties:
-                <field_name>:
-                  type: array
-                  items:
-                    type: string
-        message:
-          type: string
-      type: object

@@ -217,6 +217,69 @@ paths:
       tags:
       - cluster groups
 components:
+  schemas:
+    ClusterGroupPost:
+      properties:
+        name:
+          description: The new name of the cluster group
+          example: group1
+          type: string
+          x-go-name: Name
+      title: ClusterGroupPost represents the fields required to rename a cluster group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterGroup:
+      properties:
+        description:
+          description: The description of the cluster group
+          example: amd64 servers
+          type: string
+          x-go-name: Description
+        members:
+          description: List of members in this group
+          example:
+          - node1
+          - node3
+          items:
+            type: string
+          type: array
+          x-go-name: Members
+        name:
+          description: The new name of the cluster group
+          example: group1
+          type: string
+          x-go-name: Name
+        used_by:
+          description: 'UsedBy is a list or LXD entity URLs that reference the cluster group.
+
+
+            API extension: clustering_groups_used_by'
+          items:
+            type: string
+          type: array
+          x-go-name: UsedBy
+      title: ClusterGroup represents a cluster group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterGroupPut:
+      properties:
+        description:
+          description: The description of the cluster group
+          example: amd64 servers
+          type: string
+          x-go-name: Description
+        members:
+          description: List of members in this group
+          example:
+          - node1
+          - node3
+          items:
+            type: string
+          type: array
+          x-go-name: Members
+      title: ClusterGroupPut represents the modifiable fields of a cluster group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
   responses:
     BadRequest:
       description: Bad Request
@@ -235,6 +298,26 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
                 type: string
                 x-go-name: Type
             type: object
@@ -298,86 +381,3 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-  schemas:
-    ClusterGroupPut:
-      properties:
-        description:
-          description: The description of the cluster group
-          example: amd64 servers
-          type: string
-          x-go-name: Description
-        members:
-          description: List of members in this group
-          example:
-          - node1
-          - node3
-          items:
-            type: string
-          type: array
-          x-go-name: Members
-      title: ClusterGroupPut represents the modifiable fields of a cluster group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterGroupPost:
-      properties:
-        name:
-          description: The new name of the cluster group
-          example: group1
-          type: string
-          x-go-name: Name
-      title: ClusterGroupPost represents the fields required to rename a cluster group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterGroup:
-      properties:
-        description:
-          description: The description of the cluster group
-          example: amd64 servers
-          type: string
-          x-go-name: Description
-        members:
-          description: List of members in this group
-          example:
-          - node1
-          - node3
-          items:
-            type: string
-          type: array
-          x-go-name: Members
-        name:
-          description: The new name of the cluster group
-          example: group1
-          type: string
-          x-go-name: Name
-        used_by:
-          description: 'UsedBy is a list or LXD entity URLs that reference the cluster group.
-
-
-            API extension: clustering_groups_used_by'
-          items:
-            type: string
-          type: array
-          x-go-name: UsedBy
-      title: ClusterGroup represents a cluster group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api

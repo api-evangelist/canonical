@@ -12,6 +12,7 @@ description: >-
   Canonical API changelog. The most useful one for an API consumer is the LXD api-extensions list,
   which is genuinely an API change log: every entry is a named, appended capability that a client can
   test for at runtime on GET /1.0.
+entries: []
 scheme:
   style: per-product release notes plus, for LXD, a runtime capability list
   dated: partial

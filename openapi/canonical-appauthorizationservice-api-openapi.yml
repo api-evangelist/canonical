@@ -269,27 +269,6 @@ paths:
       - AppAuthorizationService
 components:
   schemas:
-    authorizationRemoveAllowedAppFromGroupResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    apiauthorizationGroup:
-      properties:
-        group_id:
-          type: string
-      type: object
-    authorizationRemoveAllowedAppsFromGroupResp:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
     authorizationGetAllowedGroupsForAppResp:
       properties:
         data:
@@ -310,11 +289,6 @@ components:
           format: int32
           type: integer
       type: object
-    authorizationApp:
-      properties:
-        client_id:
-          type: string
-      type: object
     authorizationRemoveAllowedGroupsForAppResp:
       properties:
         message:
@@ -322,6 +296,11 @@ components:
         status:
           format: int32
           type: integer
+      type: object
+    authorizationApp:
+      properties:
+        client_id:
+          type: string
       type: object
     authorizationGetAllowedAppsInGroupResp:
       properties:
@@ -335,7 +314,28 @@ components:
           format: int32
           type: integer
       type: object
+    apiauthorizationGroup:
+      properties:
+        group_id:
+          type: string
+      type: object
     authorizationAddAllowedAppToGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationRemoveAllowedAppsFromGroupResp:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    authorizationRemoveAllowedAppFromGroupResp:
       properties:
         message:
           type: string

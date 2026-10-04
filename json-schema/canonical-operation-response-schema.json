@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-operation-response-schema.json",
+  "title": "OperationResponse",
+  "description": "Operation",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-applications-api-openapi.yml#/components/schemas/OperationResponse",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/Operation"
+    },
+    "operation": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "status_code": {
+      "type": "integer",
+      "format": "int64"
+    },
+    "type": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "Operation": {
+      "description": "Operation represents a background operation",
+      "type": "object",
+      "properties": {
+        "class": {
+          "description": "Class of the operation",
+          "type": "string",
+          "enum": [
+            "task",
+            "websocket",
+            "token"
+          ]
+        },
+        "created_at": {
+          "description": "When the operation was created",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "Human readable description of the operation",
+          "type": "string"
+        },
+        "err": {
+          "description": "The error string if the operation failed",
+          "type": "string"
+        },
+        "id": {
+          "description": "UUID of the operation",
+          "type": "string"
+        },
+        "may_cancel": {
+          "description": "Whether this operation can be canceled (DELETE over REST)",
+          "type": "boolean"
+        },
+        "metadata": {
+          "description": "Metadata related to the operation and affected resources",
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "resources": {
+          "description": "Dictionnary of resource types (containers, snapshots, images)\nand affected resources",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "server_address": {
+          "description": "The address of the server where the operation ran",
+          "type": "string",
+          "format": "ipv4"
+        },
+        "status": {
+          "description": "String version of the operation status",
+          "type": "string"
+        },
+        "status_code": {
+          "$ref": "#/$defs/StatusCode"
+        },
+        "updated_at": {
+          "description": "When the operation was updated",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "StatusCode": {
+      "description": "StatusCode represents a valid REST operation",
+      "type": "integer",
+      "format": "int64"
+    }
+  }
+}

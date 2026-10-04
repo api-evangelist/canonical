@@ -2,7 +2,7 @@ overlay: 1.0.0
 info:
   title: API Evangelist enrichment overlay — Anbox Cloud AMS API
   version: 1.0.0
-extends: ../openapi/canonical-anbox-cloud-ams-api-openapi.json
+extends: ../openapi/_original/canonical-anbox-cloud-ams-api-openapi.json
 x-generated: '2026-09-05'
 x-method: generated
 x-source: openapi/canonical-anbox-cloud-ams-api-openapi.json

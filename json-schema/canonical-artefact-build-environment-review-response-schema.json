@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-artefact-build-environment-review-response-schema.json",
+  "title": "ArtefactBuildEnvironmentReviewResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-artefacts-api-openapi.yml#/components/schemas/ArtefactBuildEnvironmentReviewResponse",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "review_decision": {
+      "items": {
+        "$ref": "#/$defs/ArtefactBuildEnvironmentReviewDecision"
+      },
+      "type": "array",
+      "title": "Review Decision"
+    },
+    "review_comment": {
+      "type": "string",
+      "title": "Review Comment"
+    },
+    "environment": {
+      "$ref": "#/$defs/EnvironmentResponse"
+    },
+    "artefact_build": {
+      "$ref": "#/$defs/ArtefactBuildMinimalResponse"
+    },
+    "reviewers": {
+      "items": {
+        "$ref": "#/$defs/ReviewerResponse"
+      },
+      "type": "array",
+      "title": "Reviewers",
+      "default": []
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "review_decision",
+    "review_comment",
+    "environment",
+    "artefact_build"
+  ],
+  "$defs": {
+    "ArtefactBuildEnvironmentReviewDecision": {
+      "type": "string",
+      "enum": [
+        "REJECTED",
+        "APPROVED_INCONSISTENT_TEST",
+        "APPROVED_UNSTABLE_PHYSICAL_INFRA",
+        "APPROVED_CUSTOMER_PREREQUISITE_FAIL",
+        "APPROVED_FAULTY_HARDWARE",
+        "APPROVED_ALL_TESTS_PASS"
+      ],
+      "title": "ArtefactBuildEnvironmentReviewDecision"
+    },
+    "ArtefactBuildMinimalResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "architecture": {
+          "type": "string",
+          "title": "Architecture"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Revision"
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "architecture",
+        "revision"
+      ],
+      "title": "ArtefactBuildMinimalResponse"
+    },
+    "EnvironmentResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "architecture": {
+          "type": "string",
+          "title": "Architecture"
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "architecture"
+      ],
+      "title": "EnvironmentResponse"
+    },
+    "ReviewerResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "launchpad_handle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Launchpad Handle"
+        },
+        "email": {
+          "type": "string",
+          "title": "Email"
+        },
+        "launchpad_email": {
+          "type": "string",
+          "title": "Launchpad Email",
+          "deprecated": true
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "email",
+        "launchpad_email",
+        "name"
+      ],
+      "title": "ReviewerResponse"
+    }
+  }
+}

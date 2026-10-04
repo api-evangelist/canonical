@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-notification-response-schema.json",
+  "title": "NotificationResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-notifications-api-openapi.yml#/components/schemas/NotificationResponse",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "user_id": {
+      "type": "integer",
+      "title": "User Id"
+    },
+    "notification_type": {
+      "$ref": "#/$defs/NotificationType"
+    },
+    "target_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Target Url"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+    },
+    "dismissed_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Dismissed At"
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "user_id",
+    "notification_type",
+    "target_url",
+    "created_at",
+    "dismissed_at"
+  ],
+  "$defs": {
+    "NotificationType": {
+      "type": "string",
+      "enum": [
+        "USER_ASSIGNED_ARTEFACT_REVIEW",
+        "USER_ASSIGNED_ENVIRONMENT_REVIEW"
+      ],
+      "title": "NotificationType"
+    }
+  }
+}

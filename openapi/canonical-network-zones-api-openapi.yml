@@ -533,139 +533,7 @@ paths:
       tags:
       - network-zones
 components:
-  responses:
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not found
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Operation:
-      description: Operation
-      content:
-        application/json:
-          schema:
-            properties:
-              metadata:
-                $ref: '#/components/schemas/Operation'
-              operation:
-                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-                type: string
-                x-go-name: Operation
-              status:
-                example: Operation created
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 100
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: async
-                type: string
-                x-go-name: Type
-            type: object
   schemas:
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
       properties:
@@ -773,27 +641,33 @@ components:
           x-go-name: UpdatedAt
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkZonesPost:
-      description: NetworkZonesPost represents the fields of a new LXD network zone
+    NetworkZoneRecord:
       properties:
         config:
           additionalProperties:
             type: string
-          description: Zone configuration map (refer to doc/network-zones.md)
+          description: Advanced configuration for the record
           example:
             user.mykey: foo
           type: object
           x-go-name: Config
         description:
-          description: Description of the network zone
-          example: Internal domain
+          description: Description of the record
+          example: SPF record
           type: string
           x-go-name: Description
+        entries:
+          description: Entries in the record
+          items:
+            $ref: '#/components/schemas/NetworkZoneRecordEntry'
+          type: array
+          x-go-name: Entries
         name:
-          description: The name of the zone (DNS domain name)
-          example: example.net
+          description: The name of the record
+          example: '@'
           type: string
           x-go-name: Name
+      title: NetworkZoneRecord represents a network zone (DNS) record.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     NetworkZone:
@@ -846,27 +720,6 @@ components:
       title: NetworkZone represents a network zone (DNS).
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    OperationRequestor:
-      description: 'API extension: operation_requestor.'
-      properties:
-        address:
-          description: Address is the origin address of the request.
-          example: 10.0.2.15
-          type: string
-          x-go-name: Address
-        protocol:
-          description: Protocol represents the method used to authenticate the requestor.
-          example: oidc
-          type: string
-          x-go-name: Protocol
-        username:
-          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
-          example: jane.doe@example.com
-          type: string
-          x-go-name: Username
-      title: OperationRequestor represents the initial requestor of an operation
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     NetworkZoneRecordsPost:
       description: NetworkZoneRecordsPost represents the fields of a new LXD network zone record
       properties:
@@ -896,8 +749,29 @@ components:
           x-go-name: Name
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkZonePut:
-      description: NetworkZonePut represents the modifiable fields of a LXD network zone
+    NetworkZoneRecordEntry:
+      description: NetworkZoneRecordEntry represents the fields in a record entry
+      properties:
+        ttl:
+          description: TTL for the entry
+          example: 3600
+          format: uint64
+          type: integer
+          x-go-name: TTL
+        type:
+          description: Type of DNS entry
+          example: TXT
+          type: string
+          x-go-name: Type
+        value:
+          description: Value for the record
+          example: v=spf1 mx ~all
+          type: string
+          x-go-name: Value
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    NetworkZonesPost:
+      description: NetworkZonesPost represents the fields of a new LXD network zone
       properties:
         config:
           additionalProperties:
@@ -912,6 +786,11 @@ components:
           example: Internal domain
           type: string
           x-go-name: Description
+        name:
+          description: The name of the zone (DNS domain name)
+          example: example.net
+          type: string
+          x-go-name: Name
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     NetworkZoneRecordPut:
@@ -938,53 +817,174 @@ components:
           x-go-name: Entries
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkZoneRecordEntry:
-      description: NetworkZoneRecordEntry represents the fields in a record entry
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
       properties:
-        ttl:
-          description: TTL for the entry
-          example: 3600
-          format: uint64
-          type: integer
-          x-go-name: TTL
-        type:
-          description: Type of DNS entry
-          example: TXT
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
           type: string
-          x-go-name: Type
-        value:
-          description: Value for the record
-          example: v=spf1 mx ~all
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
           type: string
-          x-go-name: Value
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    NetworkZoneRecord:
+    NetworkZonePut:
+      description: NetworkZonePut represents the modifiable fields of a LXD network zone
       properties:
         config:
           additionalProperties:
             type: string
-          description: Advanced configuration for the record
+          description: Zone configuration map (refer to doc/network-zones.md)
           example:
             user.mykey: foo
           type: object
           x-go-name: Config
         description:
-          description: Description of the record
-          example: SPF record
+          description: Description of the network zone
+          example: Internal domain
           type: string
           x-go-name: Description
-        entries:
-          description: Entries in the record
-          items:
-            $ref: '#/components/schemas/NetworkZoneRecordEntry'
-          type: array
-          x-go-name: Entries
-        name:
-          description: The name of the record
-          example: '@'
-          type: string
-          x-go-name: Name
-      title: NetworkZoneRecord represents a network zone (DNS) record.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

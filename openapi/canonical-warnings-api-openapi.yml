@@ -218,6 +218,26 @@ components:
                 type: string
                 x-go-name: Type
             type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
     Forbidden:
       description: Forbidden
       content:
@@ -278,27 +298,17 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
   schemas:
+    WarningPut:
+      properties:
+        status:
+          description: Status of the warning (new, acknowledged, or resolved)
+          example: new
+          type: string
+          x-go-name: Status
+      title: WarningPut represents the modifiable fields of a warning.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     Warning:
       properties:
         count:
@@ -360,15 +370,5 @@ components:
           type: string
           x-go-name: UUID
       title: Warning represents a warning entry.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    WarningPut:
-      properties:
-        status:
-          description: Status of the warning (new, acknowledged, or resolved)
-          example: new
-          type: string
-          x-go-name: Status
-      title: WarningPut represents the modifiable fields of a warning.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api

@@ -211,15 +211,17 @@ paths:
       - view_test
 components:
   schemas:
-    HTTPValidationError:
+    TestCasesResponse:
       properties:
-        detail:
+        test_cases:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/TestCaseInfo'
           type: array
-          title: Detail
+          title: Test Cases
       type: object
-      title: HTTPValidationError
+      required:
+      - test_cases
+      title: TestCasesResponse
     TestReportedIssueRequest:
       properties:
         template_id:
@@ -282,6 +284,15 @@ components:
       - created_at
       - updated_at
       title: TestReportedIssueResponse
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
     TestCaseInfo:
       properties:
         test_case:
@@ -297,26 +308,15 @@ components:
       - test_case
       - template_id
       title: TestCaseInfo
-    TestCasesResponse:
+    HTTPValidationError:
       properties:
-        test_cases:
+        detail:
           items:
-            $ref: '#/components/schemas/TestCaseInfo'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Test Cases
+          title: Detail
       type: object
-      required:
-      - test_cases
-      title: TestCasesResponse
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

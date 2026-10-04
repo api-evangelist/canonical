@@ -376,49 +376,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Attachment:
-      type: object
-      properties:
-        agent:
-          type: string
-        device:
-          type: string
-      required:
-      - agent
-      additionalProperties: false
-    ActionIn:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - cancel
-      required:
-      - action
-      additionalProperties: false
-    JobSearchResponse:
-      type: object
-      properties:
-        jobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Job'
-      required:
-      - jobs
-      additionalProperties: false
-    JobEvent:
-      type: object
-      properties:
-        event_name:
-          type: string
-        timestamp:
-          type: string
-        detail:
-          type: string
-      required:
-      - event_name
-      - timestamp
-      additionalProperties: false
     TestData:
       type: object
       properties:
@@ -438,6 +395,10 @@ components:
             type: string
             pattern: ^[a-zA-Z0-9_/-]+$
       additionalProperties: false
+    ProvisionData:
+      type: object
+      properties: {}
+      additionalProperties: false
     JobId:
       type: object
       properties:
@@ -446,41 +407,25 @@ components:
       required:
       - job_id
       additionalProperties: false
-    ValidationError:
+    Attachment:
+      type: object
       properties:
-        detail:
-          type: object
-          properties:
-            <location>:
-              type: object
-              properties:
-                <field_name>:
-                  type: array
-                  items:
-                    type: string
-        message:
+        agent:
           type: string
-      type: object
-    ProvisionData:
-      type: object
-      properties: {}
+        device:
+          type: string
+      required:
+      - agent
       additionalProperties: false
-    StatusUpdate:
+    JobSearchResponse:
       type: object
       properties:
-        agent_id:
-          type: string
-        job_queue:
-          type: string
-        job_status_webhook:
-          type: string
-          format: url
-        events:
+        jobs:
           type: array
           items:
-            $ref: '#/components/schemas/JobEvent'
+            $ref: '#/components/schemas/Job'
       required:
-      - job_status_webhook
+      - jobs
       additionalProperties: false
     ReserveData:
       type: object
@@ -491,6 +436,19 @@ components:
             type: string
             pattern: ^(lp|gh):(\S+)$
         timeout: {}
+      additionalProperties: false
+    JobEvent:
+      type: object
+      properties:
+        event_name:
+          type: string
+        timestamp:
+          type: string
+        detail:
+          type: string
+      required:
+      - event_name
+      - timestamp
       additionalProperties: false
     Job:
       type: object
@@ -543,13 +501,6 @@ components:
       required:
       - job_queue
       additionalProperties: false
-    HTTPError:
-      properties:
-        detail:
-          type: object
-        message:
-          type: string
-      type: object
     JobOut:
       type: object
       properties:
@@ -606,3 +557,52 @@ components:
       required:
       - job_queue
       additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
+    ActionIn:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - cancel
+      required:
+      - action
+      additionalProperties: false
+    StatusUpdate:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        job_queue:
+          type: string
+        job_status_webhook:
+          type: string
+          format: url
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobEvent'
+      required:
+      - job_status_webhook
+      additionalProperties: false
+    ValidationError:
+      properties:
+        detail:
+          type: object
+          properties:
+            <location>:
+              type: object
+              properties:
+                <field_name>:
+                  type: array
+                  items:
+                    type: string
+        message:
+          type: string
+      type: object

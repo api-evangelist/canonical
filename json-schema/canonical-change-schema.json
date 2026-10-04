@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-change-schema.json",
+  "title": "Change",
+  "description": "Represents the state and progress of a background operation.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-authenticationrequired-api-openapi.yml#/components/schemas/Change",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "A unique ID for this change."
+    },
+    "kind": {
+      "type": "string",
+      "description": "A code describing what type of change this is."
+    },
+    "summary": {
+      "type": "string",
+      "description": "Human-readable description of the change."
+    },
+    "status": {
+      "type": "string",
+      "description": "Summary status of the current combined task statuses.",
+      "enum": [
+        "Abort",
+        "Do",
+        "Doing",
+        "Done",
+        "Error",
+        "Hold",
+        "Undo",
+        "Undoing",
+        "Wait"
+      ]
+    },
+    "tasks": {
+      "type": "array",
+      "description": "An array of objects describing tasks in this change.",
+      "items": {
+        "$ref": "#/$defs/Task"
+      }
+    },
+    "ready": {
+      "type": "boolean",
+      "description": "True if this change has completed."
+    },
+    "spawn-time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The time this change started."
+    },
+    "ready-time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The time this change completed (omitted if not completed)."
+    },
+    "err": {
+      "type": "string",
+      "description": "A human-readable error description if the transaction fails."
+    },
+    "data": {
+      "type": "object",
+      "description": "Result of the change, structure depends on the 'kind'.",
+      "additionalProperties": true
+    },
+    "log": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "A log of events that occurred during the change."
+    }
+  },
+  "$defs": {
+    "Progress": {
+      "type": "object",
+      "description": "Represents the progress of a task.",
+      "properties": {
+        "done": {
+          "type": "integer",
+          "description": "The number of units completed."
+        },
+        "label": {
+          "type": "string",
+          "description": "A descriptive label for the progress bar."
+        },
+        "total": {
+          "type": "integer",
+          "description": "The total number of units for the task."
+        }
+      }
+    },
+    "Task": {
+      "type": "object",
+      "description": "Represents a single task within a larger change.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique ID for this task."
+        },
+        "kind": {
+          "type": "string",
+          "description": "A code describing what type of task this is.",
+          "enum": [
+            "check-rerefresh",
+            "cleanup",
+            "clear-snap",
+            "copy-snap-data",
+            "discard-snap",
+            "download-snap",
+            "mount-snap",
+            "prerequisites",
+            "remove-aliases",
+            "run-hook",
+            "setup-profiles",
+            "start-snap-services",
+            "stop-snap-services",
+            "unlink-current-snap",
+            "validate-snap"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "description": "A human-readable description of the task."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the task. The usual state\nprocedure is Do, Doing, Done.",
+          "enum": [
+            "Abort",
+            "Default",
+            "Do",
+            "Doing",
+            "Done",
+            "Error",
+            "Hold",
+            "Undo",
+            "Undoing",
+            "Undone",
+            "Wait"
+          ]
+        },
+        "progress": {
+          "$ref": "#/$defs/Progress"
+        },
+        "spawn-time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time this task was started."
+        },
+        "ready-time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time this task was completed."
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "affected-snaps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true,
+          "description": "Additional data related to the task, structure depends on the 'kind'."
+        },
+        "log": {
+          "type": "array",
+          "description": "A log of events that occurred during the task.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

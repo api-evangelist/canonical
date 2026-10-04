@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-node-patch-schema.json",
+  "title": "NodePatch",
+  "description": "NodePatch describes a request to update an existing node",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-nodes-api-openapi.yml#/components/schemas/NodePatch",
+  "type": "object",
+  "properties": {
+    "cpu_allocation_rate": {
+      "description": "Update the CPU allocation rate for the node",
+      "type": "number",
+      "format": "float"
+    },
+    "cpus": {
+      "description": "Update the number of CPUs for the node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "gpu_encoder_slots": {
+      "description": "Update the number of GPU encoder slots to configure on the node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "gpu_slots": {
+      "description": "Update the number of GPU slots to configure on the node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "gpus": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NodeGPUPatch"
+      }
+    },
+    "memory": {
+      "description": "Update the memory (in GB) for the node",
+      "type": "string"
+    },
+    "memory_allocation_rate": {
+      "description": "Update the memory allocation rate for the node",
+      "type": "number",
+      "format": "float"
+    },
+    "public_address": {
+      "description": "Update the public IP Address of the node",
+      "type": "string",
+      "format": "ipv4"
+    },
+    "subnet": {
+      "description": "Update the subnet info of the node if the subnet of a node is changed",
+      "type": "string",
+      "format": "ipv4"
+    },
+    "tags": {
+      "description": "Update the tags of the node",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unscheduable": {
+      "description": "DEPRECATED Flag in favour of `unschedulable` flag",
+      "type": "boolean"
+    },
+    "unschedulable": {
+      "description": "Flag used to remove the node from scheduler and not schedule containers on it",
+      "type": "boolean"
+    }
+  },
+  "$defs": {
+    "NodeGPUPatch": {
+      "description": "NodeGPUPatch allows changing configuration for individual GPUs",
+      "type": "object",
+      "properties": {
+        "encoder_slots": {
+          "description": "Update the number of GPU encoder slots",
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "description": "ID of the GPU configured on the node",
+          "type": "integer",
+          "format": "uint64"
+        },
+        "slots": {
+          "description": "Update the number of the GPU slots available on the Node",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

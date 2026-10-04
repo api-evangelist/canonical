@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-artefact-response-schema.json",
+  "title": "ArtefactResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-artefacts-api-openapi.yml#/components/schemas/ArtefactResponse",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "version": {
+      "type": "string",
+      "title": "Version"
+    },
+    "track": {
+      "type": "string",
+      "title": "Track"
+    },
+    "store": {
+      "type": "string",
+      "title": "Store"
+    },
+    "branch": {
+      "type": "string",
+      "title": "Branch"
+    },
+    "series": {
+      "type": "string",
+      "title": "Series"
+    },
+    "repo": {
+      "type": "string",
+      "title": "Repo"
+    },
+    "source": {
+      "type": "string",
+      "title": "Source"
+    },
+    "os": {
+      "type": "string",
+      "title": "Os"
+    },
+    "release": {
+      "type": "string",
+      "title": "Release"
+    },
+    "owner": {
+      "type": "string",
+      "title": "Owner"
+    },
+    "sha256": {
+      "type": "string",
+      "title": "Sha256"
+    },
+    "image_url": {
+      "type": "string",
+      "title": "Image Url"
+    },
+    "stage": {
+      "type": "string",
+      "title": "Stage"
+    },
+    "family": {
+      "type": "string",
+      "title": "Family"
+    },
+    "status": {
+      "$ref": "#/$defs/ArtefactStatus"
+    },
+    "comment": {
+      "type": "string",
+      "title": "Comment"
+    },
+    "attributes": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Attributes"
+    },
+    "archived": {
+      "type": "boolean",
+      "title": "Archived"
+    },
+    "reviewers": {
+      "items": {
+        "$ref": "#/$defs/ReviewerResponse"
+      },
+      "type": "array",
+      "title": "Reviewers"
+    },
+    "due_date": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Due Date"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+    },
+    "bug_link": {
+      "type": "string",
+      "title": "Bug Link"
+    },
+    "jira_issue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Jira Issue"
+    },
+    "all_environment_reviews_count": {
+      "type": "integer",
+      "title": "All Environment Reviews Count"
+    },
+    "completed_environment_reviews_count": {
+      "type": "integer",
+      "title": "Completed Environment Reviews Count"
+    },
+    "assignee": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReviewerResponse"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Backward-compatible assignee field. Populated from the first entry in reviewers when present.",
+      "readOnly": true
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "version",
+    "track",
+    "store",
+    "branch",
+    "series",
+    "repo",
+    "source",
+    "os",
+    "release",
+    "owner",
+    "sha256",
+    "image_url",
+    "stage",
+    "family",
+    "status",
+    "comment",
+    "attributes",
+    "archived",
+    "reviewers",
+    "due_date",
+    "created_at",
+    "bug_link",
+    "jira_issue",
+    "all_environment_reviews_count",
+    "completed_environment_reviews_count",
+    "assignee"
+  ],
+  "$defs": {
+    "ArtefactStatus": {
+      "type": "string",
+      "enum": [
+        "APPROVED",
+        "MARKED_AS_FAILED",
+        "UNDECIDED"
+      ],
+      "title": "ArtefactStatus"
+    },
+    "ReviewerResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "launchpad_handle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Launchpad Handle"
+        },
+        "email": {
+          "type": "string",
+          "title": "Email"
+        },
+        "launchpad_email": {
+          "type": "string",
+          "title": "Launchpad Email",
+          "deprecated": true
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "email",
+        "launchpad_email",
+        "name"
+      ],
+      "title": "ReviewerResponse"
+    }
+  }
+}

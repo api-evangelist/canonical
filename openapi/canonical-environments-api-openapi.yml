@@ -199,39 +199,40 @@ paths:
       - view_test
 components:
   schemas:
-    HTTPValidationError:
+    EnvironmentReportedIssueRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    EnvironmentsResponse:
-      properties:
-        environments:
-          items:
-            type: string
-          type: array
-          title: Environments
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
+        environment_name:
+          type: string
+          title: Environment Name
+        description:
+          type: string
+          title: Description
+        url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Url
+        is_confirmed:
+          type: boolean
+          title: Is Confirmed
       type: object
       required:
-      - environments
-      - count
-      - limit
-      - offset
-      title: EnvironmentsResponse
-      description: Response model for environments endpoint
+      - environment_name
+      - description
+      - is_confirmed
+      title: EnvironmentReportedIssueRequest
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
     EnvironmentReportedIssueResponse:
       properties:
         id:
@@ -272,40 +273,39 @@ components:
       - created_at
       - updated_at
       title: EnvironmentReportedIssueResponse
-    EnvironmentReportedIssueRequest:
+    EnvironmentsResponse:
       properties:
-        environment_name:
-          type: string
-          title: Environment Name
-        description:
-          type: string
-          title: Description
-        url:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Url
-        is_confirmed:
-          type: boolean
-          title: Is Confirmed
+        environments:
+          items:
+            type: string
+          type: array
+          title: Environments
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
       type: object
       required:
-      - environment_name
-      - description
-      - is_confirmed
-      title: EnvironmentReportedIssueRequest
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
+      - environments
+      - count
+      - limit
+      - offset
+      title: EnvironmentsResponse
+      description: Response model for environments endpoint
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-auth-group-schema.json",
+  "title": "AuthGroup is the type for a LXD group.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-auth-groups-api-openapi.yml#/components/schemas/AuthGroup",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "description": {
+      "description": "Description is a short description of the group.",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "identities": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "description": "Identities is a map of authentication method to slice of identity identifiers.",
+      "type": "object",
+      "x-go-name": "Identities"
+    },
+    "identity_provider_groups": {
+      "description": "IdentityProviderGroups are a list of groups from the IdP whose mapping\nincludes this group.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "IdentityProviderGroups"
+    },
+    "name": {
+      "description": "Name is the name of the group.",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "permissions": {
+      "description": "Permissions are a list of permissions.",
+      "items": {
+        "$ref": "#/$defs/Permission"
+      },
+      "type": "array",
+      "x-go-name": "Permissions"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "Permission": {
+      "properties": {
+        "entitlement": {
+          "description": "Entitlement is the entitlement define for the entity type.",
+          "type": "string",
+          "x-go-name": "Entitlement"
+        },
+        "entity_type": {
+          "description": "EntityType is the string representation of the entity type.",
+          "type": "string",
+          "x-go-name": "EntityType"
+        },
+        "url": {
+          "description": "EntityReference is the URL of the entity that the permission applies to.",
+          "type": "string",
+          "x-go-name": "EntityReference"
+        }
+      },
+      "title": "Permission represents a permission that may be granted to a group.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

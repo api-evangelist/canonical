@@ -262,205 +262,89 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    BadRequest:
-      description: 'Bad Request. The request could not be processed due to a client-side error.
-
-        This can be due to malformed syntax or providing an entity that does not exist.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 400
-              status:
-                type: string
-                enum:
-                - Bad Request
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/ConfdbError'
-                - $ref: '#/components/schemas/MalformedRequestError'
-                - $ref: '#/components/schemas/NoSSHKeysError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
-    Conflict:
-      description: Conflict. The request conflicts with the current state of the server.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                description: The HTTP status code.
-                enum:
-                - 409
-              status:
-                type: string
-                description: The textual representation of the status code.
-                enum:
-                - Conflict
-              type:
-                type: string
-                description: The type of response.
-                enum:
-                - error
-              result:
-                $ref: '#/components/schemas/ConflictError'
-    AccessDenied:
-      description: "Access Denied. The daemon/store cannot or will not process the request because \nthe user does not have the correct authorization from the system."
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                description: The HTTP status code.
-                enum:
-                - 401
-              status:
-                type: string
-                description: The textual representation of the status code.
-                enum:
-                - Unauthorized
-              type:
-                type: string
-                description: The type of response.
-                enum:
-                - error
-              result:
-                type: object
-                properties:
-                  kind:
-                    type: string
-                    description: A machine-readable string identifying the error type.
-                    enum:
-                    - login-required
-                  message:
-                    type: string
-                    description: A human-readable error message.
-                    enum:
-                    - access denied
-    InternalError:
-      description: An internal error occurred on the server. This is a generic response for server-side issues.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 500
-              status:
-                type: string
-                enum:
-                - Internal Server Error
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                $ref: '#/components/schemas/InternalServerError'
-    NotFound:
-      description: 'Not Found. The requested resource could not be found.
-
-        Can refer to either a local or remote resource'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 404
-              status:
-                type: string
-                enum:
-                - Not Found
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/NoModelAssertionError'
-                - $ref: '#/components/schemas/NoSerialAssertionError'
-                - $ref: '#/components/schemas/NotFoundError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
-    Accepted:
-      description: The asynchronous request was accepted and is being processed.
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The response for an accepted asynchronous operation.
-            properties:
-              type:
-                type: string
-                enum:
-                - async
-              status-code:
-                type: integer
-                enum:
-                - 202
-              status:
-                type: string
-                enum:
-                - Accepted
-              change:
-                type: string
-                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
-                example: '61'
-              result:
-                type:
-                - object
-                - 'null'
-                description: For an accepted async operation, this is always null as the result is not yet available.
-                example: null
   schemas:
-    ConflictError:
+    InternalServerError:
       type: object
       properties:
         message:
           type: string
-          description: A human-readable error message explaining the conflict.
-          example: snap 'alias-snap' has 'manip' change in progress
+          description: A human-readable error message.
+          enum:
+          - internal server error
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
         kind:
           type: string
-          description: A machine-readable string identifying the error type.
+          description: machine-readable definition of the error.
           enum:
-          - snap-change-conflict
-        value:
-          type: object
-          description: Additional structured data about the conflict.
-          properties:
-            change-kind:
-              type: string
-              description: The kind of change that is in progress.
-              enum:
-              - manip
-            snap-name:
-              type: string
-              description: The name of the snap that has a conflicting change.
-              example: alias-snap
-    NotFoundError:
-      type: object
-      properties:
+          - assertion-not-found
         message:
           type: string
-          example: no snapshot set with the given ID
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    AppActionStart:
+      type: object
+      description: Starts one or more services.
+      allOf:
+      - $ref: '#/components/schemas/AppActionBase'
+      - type: object
+        required:
+        - action
+        properties:
+          action:
+            type: string
+            enum:
+            - start
+          enable:
+            type: boolean
+            description: Arranges to have the service start at system boot.
+            default: false
+      example:
+        action: start
+        names:
+        - lxd
+        enable: true
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
     Activator:
       type: object
       description: 'Details about a single service activator. Note that uppercase field names
@@ -490,150 +374,31 @@ components:
           - dbus
           - socket
           - timer
-    UserNotFoundError:
+    ConflictError:
       type: object
       properties:
         message:
           type: string
-          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
-    AppActionBase:
-      type: object
-      required:
-      - action
-      - names
-      properties:
-        action:
-          type: string
-          description: The action to perform.
-        names:
-          type: array
-          description: A list of names of snaps (e.g. "lxd") or specific apps (e.g. "lxd.daemon") to operate on.
-          items:
-            type: string
-            example: multipass
-        scope:
-          type: array
-          items:
-            type: string
-        users:
-          type: object
-          properties:
-            names:
-              type: array
-              items:
-                type: string
-            selector:
-              type: string
-              description: Internally converted to an integer by the servers marshalling/unmarshalling process
-              enum:
-              - userX
-              - self
-              - all
-    SnapNotInstalledError:
-      type: object
-      description: The snap does not exist on the system.
-      properties:
+          description: A human-readable error message explaining the conflict.
+          example: snap 'alias-snap' has 'manip' change in progress
         kind:
           type: string
-          description: machine-readable definition of the error.
+          description: A machine-readable string identifying the error type.
           enum:
-          - snap-not-found
-          - snap-not-installed
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: no state entry for key
+          - snap-change-conflict
         value:
-          type: string
-          description: Value passed that triggered the error.
-          example: firefox
-    ConfdbError:
-      type: object
-      description: An error occured while interacting with confdb.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - option-not-available
-          - option-not-found
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
-    AppActionRestart:
-      type: object
-      description: Restarts one or more services.
-      allOf:
-      - $ref: '#/components/schemas/AppActionBase'
-      - type: object
-        required:
-        - action
-        properties:
-          action:
-            type: string
-            enum:
-            - restart
-          reload:
-            type: boolean
-            description: Tries to reload the service if it supports it; otherwise, it performs a full restart.
-            default: false
-      example:
-        action: restart
-        names:
-        - lxd
-        reload: true
-    AppActionStop:
-      type: object
-      description: Stops one or more services.
-      allOf:
-      - $ref: '#/components/schemas/AppActionBase'
-      - type: object
-        required:
-        - action
-        properties:
-          action:
-            type: string
-            enum:
-            - stop
-          disable:
-            type: boolean
-            description: Arranges to no longer start the service at system boot.
-            default: false
-      example:
-        action: stop
-        names:
-        - lxd
-        disable: true
-    AppActionStart:
-      type: object
-      description: Starts one or more services.
-      allOf:
-      - $ref: '#/components/schemas/AppActionBase'
-      - type: object
-        required:
-        - action
-        properties:
-          action:
-            type: string
-            enum:
-            - start
-          enable:
-            type: boolean
-            description: Arranges to have the service start at system boot.
-            default: false
-      example:
-        action: start
-        names:
-        - lxd
-        enable: true
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
+          type: object
+          description: Additional structured data about the conflict.
+          properties:
+            change-kind:
+              type: string
+              description: The kind of change that is in progress.
+              enum:
+              - manip
+            snap-name:
+              type: string
+              description: The name of the snap that has a conflicting change.
+              example: alias-snap
     MalformedRequestError:
       type: object
       properties:
@@ -686,33 +451,101 @@ components:
           type: socket
           active: true
           enabled: true
-    InternalServerError:
+    AppActionRestart:
+      type: object
+      description: Restarts one or more services.
+      allOf:
+      - $ref: '#/components/schemas/AppActionBase'
+      - type: object
+        required:
+        - action
+        properties:
+          action:
+            type: string
+            enum:
+            - restart
+          reload:
+            type: boolean
+            description: Tries to reload the service if it supports it; otherwise, it performs a full restart.
+            default: false
+      example:
+        action: restart
+        names:
+        - lxd
+        reload: true
+    AppActionBase:
+      type: object
+      required:
+      - action
+      - names
+      properties:
+        action:
+          type: string
+          description: The action to perform.
+        names:
+          type: array
+          description: A list of names of snaps (e.g. "lxd") or specific apps (e.g. "lxd.daemon") to operate on.
+          items:
+            type: string
+            example: multipass
+        scope:
+          type: array
+          items:
+            type: string
+        users:
+          type: object
+          properties:
+            names:
+              type: array
+              items:
+                type: string
+            selector:
+              type: string
+              description: Internally converted to an integer by the servers marshalling/unmarshalling process
+              enum:
+              - userX
+              - self
+              - all
+    UserNotFoundError:
       type: object
       properties:
         message:
           type: string
-          description: A human-readable error message.
-          enum:
-          - internal server error
-    NoModelAssertionError:
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    AppActionStop:
       type: object
-      description: The model assertion has not been created yet.
+      description: Stops one or more services.
+      allOf:
+      - $ref: '#/components/schemas/AppActionBase'
+      - type: object
+        required:
+        - action
+        properties:
+          action:
+            type: string
+            enum:
+            - stop
+          disable:
+            type: boolean
+            description: Arranges to no longer start the service at system boot.
+            default: false
+      example:
+        action: stop
+        names:
+        - lxd
+        disable: true
+    NoSSHKeysError:
+      type: object
       properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - assertion-not-found
         message:
           type: string
-          description: Human-readable string describing the error.
-          enum:
-          - no model assertion yet
-        value:
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    NotFoundError:
+      type: object
+      properties:
+        message:
           type: string
-          description: Value passed that triggered the error.
-          enum:
-          - model
+          example: no snapshot set with the given ID
     NoSerialAssertionError:
       type: object
       description: The serial assertion has not been created yet.
@@ -732,6 +565,173 @@ components:
           description: Value passed that triggered the error.
           enum:
           - serial
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    Accepted:
+      description: The asynchronous request was accepted and is being processed.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response for an accepted asynchronous operation.
+            properties:
+              type:
+                type: string
+                enum:
+                - async
+              status-code:
+                type: integer
+                enum:
+                - 202
+              status:
+                type: string
+                enum:
+                - Accepted
+              change:
+                type: string
+                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
+                example: '61'
+              result:
+                type:
+                - object
+                - 'null'
+                description: For an accepted async operation, this is always null as the result is not yet available.
+                example: null
+    Conflict:
+      description: Conflict. The request conflicts with the current state of the server.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                description: The HTTP status code.
+                enum:
+                - 409
+              status:
+                type: string
+                description: The textual representation of the status code.
+                enum:
+                - Conflict
+              type:
+                type: string
+                description: The type of response.
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/ConflictError'
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    AccessDenied:
+      description: "Access Denied. The daemon/store cannot or will not process the request because \nthe user does not have the correct authorization from the system."
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                description: The HTTP status code.
+                enum:
+                - 401
+              status:
+                type: string
+                description: The textual representation of the status code.
+                enum:
+                - Unauthorized
+              type:
+                type: string
+                description: The type of response.
+                enum:
+                - error
+              result:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    description: A machine-readable string identifying the error type.
+                    enum:
+                    - login-required
+                  message:
+                    type: string
+                    description: A human-readable error message.
+                    enum:
+                    - access denied
   securitySchemes:
     PeerAuth:
       type: apiKey

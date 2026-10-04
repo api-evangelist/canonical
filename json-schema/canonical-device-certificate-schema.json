@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-device-certificate-schema.json",
+  "title": "DeviceCertificate",
+  "description": "Device Certificate Serializer class.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-devices-api-openapi.yml#/components/schemas/DeviceCertificate",
+  "type": "object",
+  "properties": {
+    "csr": {
+      "type": "string",
+      "title": "Device Certificate Signing Request"
+    },
+    "certificate": {
+      "type": "string",
+      "title": "Signed Device Certificate"
+    },
+    "ca": {
+      "type": "string",
+      "title": "Device Certificate Authority"
+    },
+    "chain": {
+      "type": "string",
+      "title": "Device Certificate Chain"
+    },
+    "status": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/StatusEnum"
+        },
+        {
+          "$ref": "#/$defs/BlankEnum"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "readOnly": true,
+      "title": "Device Certificate request created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "readOnly": true,
+      "title": "Device Certificate last updated"
+    }
+  },
+  "required": [
+    "created_at",
+    "csr",
+    "updated_at"
+  ],
+  "$defs": {
+    "BlankEnum": {
+      "enum": [
+        ""
+      ]
+    },
+    "StatusEnum": {
+      "enum": [
+        "pending",
+        "signed",
+        "denied"
+      ],
+      "type": "string",
+      "description": "* `pending` - Pending\n* `signed` - Signed\n* `denied` - Denied"
+    }
+  }
+}

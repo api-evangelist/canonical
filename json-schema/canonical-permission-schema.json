@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-permission-schema.json",
+  "title": "Permission represents a permission that may be granted to a group.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-permissions-api-openapi.yml#/components/schemas/Permission",
+  "properties": {
+    "entitlement": {
+      "description": "Entitlement is the entitlement define for the entity type.",
+      "type": "string",
+      "x-go-name": "Entitlement"
+    },
+    "entity_type": {
+      "description": "EntityType is the string representation of the entity type.",
+      "type": "string",
+      "x-go-name": "EntityType"
+    },
+    "url": {
+      "description": "EntityReference is the URL of the entity that the permission applies to.",
+      "type": "string",
+      "x-go-name": "EntityReference"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

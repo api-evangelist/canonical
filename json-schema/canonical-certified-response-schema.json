@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-certified-response-schema.json",
+  "title": "CertifiedResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-certification-api-openapi.yml#/components/schemas/CertifiedResponse",
+  "properties": {
+    "status": {
+      "type": "string",
+      "const": "Certified",
+      "title": "Status",
+      "default": "Certified"
+    },
+    "certified_url": {
+      "type": "string",
+      "title": "Certified URL"
+    },
+    "architecture": {
+      "type": "string",
+      "title": "Architecture"
+    },
+    "bios": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BiosValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "board": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BoardValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "chassis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ChassisValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "available_releases": {
+      "items": {
+        "$ref": "#/$defs/OSValidator"
+      },
+      "type": "array",
+      "title": "Available Releases"
+    }
+  },
+  "type": "object",
+  "required": [
+    "certified_url",
+    "architecture",
+    "bios",
+    "board",
+    "available_releases"
+  ],
+  "$defs": {
+    "BiosValidator": {
+      "properties": {
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Revision"
+        },
+        "firmware_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Firmware Revision"
+        },
+        "release_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Release Date"
+        }
+      },
+      "type": "object",
+      "required": [
+        "vendor",
+        "version",
+        "revision",
+        "firmware_revision",
+        "release_date"
+      ],
+      "title": "BiosValidator"
+    },
+    "BoardValidator": {
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "product_name": {
+          "type": "string",
+          "title": "Product Name"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "manufacturer",
+        "product_name",
+        "version"
+      ],
+      "title": "BoardValidator"
+    },
+    "ChassisValidator": {
+      "properties": {
+        "chassis_type": {
+          "type": "string",
+          "title": "Chassis Type"
+        },
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "sku": {
+          "type": "string",
+          "title": "Sku"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "chassis_type",
+        "manufacturer",
+        "sku",
+        "version"
+      ],
+      "title": "ChassisValidator"
+    },
+    "KernelPackageValidator": {
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Signature"
+        },
+        "loaded_modules": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Loaded Modules",
+          "default": []
+        }
+      },
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "signature"
+      ],
+      "title": "KernelPackageValidator"
+    },
+    "OSValidator": {
+      "properties": {
+        "distributor": {
+          "type": "string",
+          "title": "Distributor"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "codename": {
+          "type": "string",
+          "title": "Codename"
+        },
+        "kernel": {
+          "$ref": "#/$defs/KernelPackageValidator"
+        }
+      },
+      "type": "object",
+      "required": [
+        "distributor",
+        "version",
+        "codename",
+        "kernel"
+      ],
+      "title": "OSValidator"
+    }
+  }
+}

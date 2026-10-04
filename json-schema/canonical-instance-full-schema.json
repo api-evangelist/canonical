@@ -1,0 +1,535 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-instance-full-schema.json",
+  "title": "InstanceFull is a combination of Instance, InstanceBackup, InstanceState and InstanceSnapshot.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-instances-api-openapi.yml#/components/schemas/InstanceFull",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "architecture": {
+      "description": "Architecture name",
+      "type": "string",
+      "x-go-name": "Architecture"
+    },
+    "backups": {
+      "description": "List of backups.",
+      "items": {
+        "$ref": "#/$defs/InstanceBackup"
+      },
+      "type": "array",
+      "x-go-name": "Backups"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Instance configuration (see doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "created_at": {
+      "description": "Instance creation timestamp",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "CreatedAt"
+    },
+    "description": {
+      "description": "Instance description",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Instance devices (see doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Devices"
+    },
+    "ephemeral": {
+      "description": "Whether the instance is ephemeral (deleted on shutdown)",
+      "type": "boolean",
+      "x-go-name": "Ephemeral"
+    },
+    "expanded_config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Expanded configuration (all profiles and local config merged)",
+      "type": "object",
+      "x-go-name": "ExpandedConfig"
+    },
+    "expanded_devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Expanded devices (all profiles and local devices merged)",
+      "type": "object",
+      "x-go-name": "ExpandedDevices"
+    },
+    "last_used_at": {
+      "description": "Last start timestamp",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "LastUsedAt"
+    },
+    "location": {
+      "description": "What cluster member this instance is located on",
+      "type": "string",
+      "x-go-name": "Location"
+    },
+    "name": {
+      "description": "Instance name",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "profiles": {
+      "description": "List of profiles applied to the instance",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Profiles"
+    },
+    "project": {
+      "description": "Instance project name\n\nAPI extension: instance_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "snapshots": {
+      "description": "List of snapshots.",
+      "items": {
+        "$ref": "#/$defs/InstanceSnapshot"
+      },
+      "type": "array",
+      "x-go-name": "Snapshots"
+    },
+    "state": {
+      "$ref": "#/$defs/InstanceState"
+    },
+    "stateful": {
+      "description": "Whether the instance currently has saved state on disk",
+      "type": "boolean",
+      "x-go-name": "Stateful"
+    },
+    "status": {
+      "description": "Instance status (see instance_state)",
+      "type": "string",
+      "x-go-name": "Status"
+    },
+    "status_code": {
+      "$ref": "#/$defs/StatusCode_2"
+    },
+    "type": {
+      "description": "The type of instance (container or virtual-machine)",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "InstanceBackup": {
+      "properties": {
+        "container_only": {
+          "description": "Whether to ignore snapshots (deprecated, use instance_only)\n\nDeprecated: Use InstanceOnly.",
+          "type": "boolean",
+          "x-deprecated": true,
+          "x-go-name": "ContainerOnly"
+        },
+        "created_at": {
+          "description": "When the backup was created",
+          "format": "date-time",
+          "type": "string",
+          "x-go-name": "CreatedAt"
+        },
+        "expires_at": {
+          "description": "When the backup expires (gets auto-deleted)",
+          "format": "date-time",
+          "type": "string",
+          "x-go-name": "ExpiresAt"
+        },
+        "instance_only": {
+          "description": "Whether to ignore snapshots",
+          "type": "boolean",
+          "x-go-name": "InstanceOnly"
+        },
+        "name": {
+          "description": "Backup name",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "optimized_storage": {
+          "description": "Whether to use a pool-optimized binary format (instead of plain tarball)",
+          "type": "boolean",
+          "x-go-name": "OptimizedStorage"
+        }
+      },
+      "title": "InstanceBackup represents a LXD instance backup.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceSnapshot": {
+      "properties": {
+        "architecture": {
+          "description": "Architecture name",
+          "type": "string",
+          "x-go-name": "Architecture"
+        },
+        "config": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Instance configuration (see doc/instances.md)",
+          "type": "object",
+          "x-go-name": "Config"
+        },
+        "created_at": {
+          "description": "Instance creation timestamp",
+          "format": "date-time",
+          "type": "string",
+          "x-go-name": "CreatedAt"
+        },
+        "devices": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "description": "Instance devices (see doc/instances.md)",
+          "type": "object",
+          "x-go-name": "Devices"
+        },
+        "ephemeral": {
+          "description": "Whether the instance is ephemeral (deleted on shutdown)",
+          "type": "boolean",
+          "x-go-name": "Ephemeral"
+        },
+        "expanded_config": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Expanded configuration (all profiles and local config merged)",
+          "type": "object",
+          "x-go-name": "ExpandedConfig"
+        },
+        "expanded_devices": {
+          "additionalProperties": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "description": "Expanded devices (all profiles and local devices merged)",
+          "type": "object",
+          "x-go-name": "ExpandedDevices"
+        },
+        "expires_at": {
+          "description": "When the snapshot expires (gets auto-deleted)",
+          "format": "date-time",
+          "type": "string",
+          "x-go-name": "ExpiresAt"
+        },
+        "last_used_at": {
+          "description": "Last start timestamp",
+          "format": "date-time",
+          "type": "string",
+          "x-go-name": "LastUsedAt"
+        },
+        "name": {
+          "description": "Snapshot name",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "profiles": {
+          "description": "List of profiles applied to the instance",
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-go-name": "Profiles"
+        },
+        "size": {
+          "description": "Size of the snapshot in bytes\n\nAPI extension: snapshot_disk_usage",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Size"
+        },
+        "stateful": {
+          "description": "Whether the instance currently has saved state on disk",
+          "type": "boolean",
+          "x-go-name": "Stateful"
+        }
+      },
+      "title": "InstanceSnapshot represents a LXD instance snapshot.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceState": {
+      "properties": {
+        "cpu": {
+          "$ref": "#/$defs/InstanceStateCPU"
+        },
+        "disk": {
+          "additionalProperties": {
+            "$ref": "#/$defs/InstanceStateDisk"
+          },
+          "description": "Disk usage key/value pairs",
+          "type": "object",
+          "x-go-name": "Disk"
+        },
+        "memory": {
+          "$ref": "#/$defs/InstanceStateMemory"
+        },
+        "network": {
+          "additionalProperties": {
+            "$ref": "#/$defs/InstanceStateNetwork"
+          },
+          "description": "Network usage key/value pairs",
+          "type": "object",
+          "x-go-name": "Network"
+        },
+        "pid": {
+          "description": "PID of the runtime",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Pid"
+        },
+        "processes": {
+          "description": "Number of processes in the instance",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Processes"
+        },
+        "status": {
+          "description": "Current status (Running, Stopped, Frozen or Error)",
+          "type": "string",
+          "x-go-name": "Status"
+        },
+        "status_code": {
+          "$ref": "#/$defs/StatusCode_2"
+        }
+      },
+      "title": "InstanceState represents a LXD instance's state.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceStateCPU": {
+      "properties": {
+        "usage": {
+          "description": "CPU usage in nanoseconds",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Usage"
+        }
+      },
+      "title": "InstanceStateCPU represents the cpu information section of a LXD instance's state.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceStateDisk": {
+      "properties": {
+        "total": {
+          "description": "Total size in bytes. Uses 0 to convey that the instance has access to the entire pool's storage.\n\nAPI extension: instances_state_total",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Total"
+        },
+        "usage": {
+          "description": "Disk usage in bytes. Uses 0 to indicate that the storage driver for the pool does not support retrieving disk usage.",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Usage"
+        }
+      },
+      "title": "InstanceStateDisk represents the disk information section of a LXD instance's state.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceStateMemory": {
+      "properties": {
+        "swap_usage": {
+          "description": "SWAP usage in bytes",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "SwapUsage"
+        },
+        "swap_usage_peak": {
+          "description": "Peak SWAP usage in bytes",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "SwapUsagePeak"
+        },
+        "total": {
+          "description": "Total memory size in bytes\n\nAPI extension: instances_state_total",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Total"
+        },
+        "usage": {
+          "description": "Memory usage in bytes",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Usage"
+        },
+        "usage_peak": {
+          "description": "Peak memory usage in bytes",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "UsagePeak"
+        }
+      },
+      "title": "InstanceStateMemory represents the memory information section of a LXD instance's state.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceStateNetwork": {
+      "properties": {
+        "addresses": {
+          "description": "List of IP addresses",
+          "items": {
+            "$ref": "#/$defs/InstanceStateNetworkAddress"
+          },
+          "type": "array",
+          "x-go-name": "Addresses"
+        },
+        "counters": {
+          "$ref": "#/$defs/InstanceStateNetworkCounters"
+        },
+        "host_name": {
+          "description": "Name of the interface on the host",
+          "type": "string",
+          "x-go-name": "HostName"
+        },
+        "hwaddr": {
+          "description": "MAC address",
+          "type": "string",
+          "x-go-name": "Hwaddr"
+        },
+        "mtu": {
+          "description": "MTU (maximum transmit unit) for the interface",
+          "format": "int64",
+          "type": "integer",
+          "x-go-name": "Mtu"
+        },
+        "state": {
+          "description": "Administrative state of the interface (up/down)",
+          "type": "string",
+          "x-go-name": "State"
+        },
+        "type": {
+          "description": "Type of interface (broadcast, loopback, point-to-point, ...)",
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "title": "InstanceStateNetwork represents the network information section of a LXD instance's state.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceStateNetworkAddress": {
+      "description": "InstanceStateNetworkAddress represents a network address as part of the network section of a LXD\ninstance's state.",
+      "properties": {
+        "address": {
+          "description": "IP address",
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "family": {
+          "description": "Network family (inet or inet6)",
+          "type": "string",
+          "x-go-name": "Family"
+        },
+        "netmask": {
+          "description": "Network mask",
+          "type": "string",
+          "x-go-name": "Netmask"
+        },
+        "scope": {
+          "description": "Address scope (local, link or global)",
+          "type": "string",
+          "x-go-name": "Scope"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "InstanceStateNetworkCounters": {
+      "description": "InstanceStateNetworkCounters represents packet counters as part of the network section of a LXD\ninstance's state.",
+      "properties": {
+        "bytes_received": {
+          "description": "Number of bytes received",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "BytesReceived"
+        },
+        "bytes_sent": {
+          "description": "Number of bytes sent",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "BytesSent"
+        },
+        "errors_received": {
+          "description": "Number of errors received",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "ErrorsReceived"
+        },
+        "errors_sent": {
+          "description": "Number of errors sent",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "ErrorsSent"
+        },
+        "packets_dropped_inbound": {
+          "description": "Number of inbound packets dropped",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "PacketsDroppedInbound"
+        },
+        "packets_dropped_outbound": {
+          "description": "Number of outbound packets dropped",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "PacketsDroppedOutbound"
+        },
+        "packets_received": {
+          "description": "Number of packets received",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "PacketsReceived"
+        },
+        "packets_sent": {
+          "description": "Number of packets sent",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "PacketsSent"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "StatusCode_2": {
+      "format": "int64",
+      "title": "StatusCode represents a valid LXD operation and container status.",
+      "type": "integer",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

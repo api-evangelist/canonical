@@ -81,6 +81,42 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    AgentJob:
+      type: object
+      properties:
+        job_id:
+          type: string
+        submitted_by:
+          type:
+          - string
+          - 'null'
+          default: null
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        job_queue:
+          type: string
+        job_state:
+          type: string
+        job_priority:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+      - job_id
+      additionalProperties: false
+    HTTPError:
+      properties:
+        detail:
+          type: object
+        message:
+          type: string
+      type: object
     AgentOut:
       type: object
       properties:
@@ -111,40 +147,4 @@ components:
           - $ref: '#/components/schemas/AgentJob'
       required:
       - name
-      additionalProperties: false
-    HTTPError:
-      properties:
-        detail:
-          type: object
-        message:
-          type: string
-      type: object
-    AgentJob:
-      type: object
-      properties:
-        job_id:
-          type: string
-        submitted_by:
-          type:
-          - string
-          - 'null'
-          default: null
-        created_at:
-          type: string
-          format: date-time
-        started_at:
-          type: string
-          format: date-time
-        job_queue:
-          type: string
-        job_state:
-          type: string
-        job_priority:
-          type: integer
-        tags:
-          type: array
-          items:
-            type: string
-      required:
-      - job_id
       additionalProperties: false

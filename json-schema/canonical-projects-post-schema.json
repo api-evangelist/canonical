@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-projects-post-schema.json",
+  "title": "ProjectsPost",
+  "description": "ProjectsPost represents the fields of a new LXD project",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-projects-api-openapi.yml#/components/schemas/ProjectsPost",
+  "properties": {
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Project configuration map (refer to doc/projects.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the project",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "name": {
+      "description": "The name of the new project",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "network": {
+      "description": "Add a network device connected to the specified network to the default profile",
+      "type": "string",
+      "x-go-name": "Network"
+    },
+    "storage": {
+      "description": "Add a root disk device using the specified storage pool to the default profile",
+      "type": "string",
+      "x-go-name": "StoragePool"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

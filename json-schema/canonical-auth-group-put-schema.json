@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-auth-group-put-schema.json",
+  "title": "AuthGroupPut contains the editable fields of a group.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-auth-groups-api-openapi.yml#/components/schemas/AuthGroupPut",
+  "properties": {
+    "description": {
+      "description": "Description is a short description of the group.",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "permissions": {
+      "description": "Permissions are a list of permissions.",
+      "items": {
+        "$ref": "#/$defs/Permission"
+      },
+      "type": "array",
+      "x-go-name": "Permissions"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "Permission": {
+      "properties": {
+        "entitlement": {
+          "description": "Entitlement is the entitlement define for the entity type.",
+          "type": "string",
+          "x-go-name": "Entitlement"
+        },
+        "entity_type": {
+          "description": "EntityType is the string representation of the entity type.",
+          "type": "string",
+          "x-go-name": "EntityType"
+        },
+        "url": {
+          "description": "EntityReference is the URL of the entity that the permission applies to.",
+          "type": "string",
+          "x-go-name": "EntityReference"
+        }
+      },
+      "title": "Permission represents a permission that may be granted to a group.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

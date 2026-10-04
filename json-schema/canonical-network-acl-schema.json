@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-acl-schema.json",
+  "title": "NetworkACL used for displaying an ACL.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-acls-api-openapi.yml#/components/schemas/NetworkACL",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "ACL configuration map (refer to doc/network-acls.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the ACL",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "egress": {
+      "description": "List of egress rules (order independent)",
+      "items": {
+        "$ref": "#/$defs/NetworkACLRule"
+      },
+      "type": "array",
+      "x-go-name": "Egress"
+    },
+    "ingress": {
+      "description": "List of ingress rules (order independent)",
+      "items": {
+        "$ref": "#/$defs/NetworkACLRule"
+      },
+      "type": "array",
+      "x-go-name": "Ingress"
+    },
+    "name": {
+      "description": "The new name for the ACL",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "project": {
+      "description": "Project name\n\nAPI extension: network_acls_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "used_by": {
+      "description": "List of URLs of objects using this profile",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true,
+      "type": "array",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "NetworkACLRule": {
+      "description": "Refer to doc/network-acls.md for details.",
+      "properties": {
+        "action": {
+          "description": "Action to perform on rule match",
+          "type": "string",
+          "x-go-name": "Action"
+        },
+        "description": {
+          "description": "Description of the rule",
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "destination": {
+          "description": "Destination address",
+          "type": "string",
+          "x-go-name": "Destination"
+        },
+        "destination_port": {
+          "description": "Destination port",
+          "type": "string",
+          "x-go-name": "DestinationPort"
+        },
+        "icmp_code": {
+          "description": "ICMP message code (for ICMP protocol)",
+          "type": "string",
+          "x-go-name": "ICMPCode"
+        },
+        "icmp_type": {
+          "description": "Type of ICMP message (for ICMP protocol)",
+          "type": "string",
+          "x-go-name": "ICMPType"
+        },
+        "protocol": {
+          "description": "Protocol",
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "source": {
+          "description": "Source address",
+          "type": "string",
+          "x-go-name": "Source"
+        },
+        "source_port": {
+          "description": "Source port",
+          "type": "string",
+          "x-go-name": "SourcePort"
+        },
+        "state": {
+          "description": "State of the rule",
+          "type": "string",
+          "x-go-name": "State"
+        }
+      },
+      "title": "NetworkACLRule represents a single rule in an ACL ruleset.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

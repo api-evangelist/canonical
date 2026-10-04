@@ -147,15 +147,6 @@ components:
                 items:
                   type: string
                 description: List of checks that were changed.
-    GetChecksResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/checkInfo'
     checkInfo:
       type: object
       properties:
@@ -190,20 +181,6 @@ components:
         prev-change-id:
           type: string
           description: ID of the previous change associated with the check.
-    RefreshCheckResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: object
-            properties:
-              info:
-                $ref: '#/components/schemas/checkInfo'
-                type: object
-              error:
-                type: string
-                description: The error message if the check failed; empty string on success.
     BaseResponse:
       type: object
       properties:
@@ -221,3 +198,26 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
+    RefreshCheckResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              info:
+                $ref: '#/components/schemas/checkInfo'
+                type: object
+              error:
+                type: string
+                description: The error message if the check failed; empty string on success.
+    GetChecksResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/checkInfo'

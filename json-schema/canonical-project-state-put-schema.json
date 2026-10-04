@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-project-state-put-schema.json",
+  "title": "ProjectStatePut",
+  "description": "ProjectStatePut represents the fields for updating project replica state",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-projects-api-openapi.yml#/components/schemas/ProjectStatePut",
+  "properties": {
+    "replica_mode": {
+      "description": "Replica mode to set: \"leader\", \"standby\", or \"\" to clear the replica mode",
+      "type": "string",
+      "x-go-name": "ReplicaMode"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

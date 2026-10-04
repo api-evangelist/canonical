@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-issue-attachment-request-schema.json",
+  "title": "IssueAttachmentRequest",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-issues-api-openapi.yml#/components/schemas/IssueAttachmentRequest",
+  "properties": {
+    "test_results": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Test Results"
+    },
+    "test_results_filters": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TestResultSearchFilters"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "attachment_rule": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Attachment Rule"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "ExecutionMetadata": {
+      "additionalProperties": {
+        "items": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 1,
+          "description": "Execution Metadata Value"
+        },
+        "type": "array"
+      },
+      "propertyNames": {
+        "maxLength": 200,
+        "minLength": 1,
+        "description": "Execution Metadata Category"
+      },
+      "type": "object",
+      "title": "Execution Metadata",
+      "description": "A mapping of string categories to lists of string values."
+    },
+    "FamilyName": {
+      "type": "string",
+      "enum": [
+        "snap",
+        "deb",
+        "charm",
+        "image",
+        "solution"
+      ],
+      "title": "FamilyName"
+    },
+    "TestExecutionStatus": {
+      "type": "string",
+      "enum": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "PASSED",
+        "FAILED",
+        "NOT_TESTED",
+        "ENDED_PREMATURELY"
+      ],
+      "title": "TestExecutionStatus"
+    },
+    "TestResultSearchFilters": {
+      "properties": {
+        "families": {
+          "items": {
+            "$ref": "#/$defs/FamilyName"
+          },
+          "type": "array",
+          "title": "Families"
+        },
+        "artefacts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Artefacts"
+        },
+        "artefact_versions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Artefact Versions"
+        },
+        "artefact_stages": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Artefact Stages"
+        },
+        "artefact_tracks": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Artefact Tracks"
+        },
+        "artefact_is_archived": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Artefact Is Archived"
+        },
+        "environments": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Environments"
+        },
+        "test_cases": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Test Cases"
+        },
+        "template_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Template Ids"
+        },
+        "test_plans": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Test Plans"
+        },
+        "execution_metadata": {
+          "$ref": "#/$defs/ExecutionMetadata"
+        },
+        "issues": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "any",
+                "none"
+              ]
+            }
+          ],
+          "title": "Issues"
+        },
+        "test_result_statuses": {
+          "items": {
+            "$ref": "#/$defs/TestResultStatus"
+          },
+          "type": "array",
+          "title": "Test Result Statuses"
+        },
+        "test_execution_statuses": {
+          "items": {
+            "$ref": "#/$defs/TestExecutionStatus"
+          },
+          "type": "array",
+          "title": "Test Execution Statuses"
+        },
+        "reviewer_ids": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "any",
+                "none"
+              ]
+            }
+          ],
+          "title": "Reviewer Ids"
+        },
+        "assignee_ids": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "any",
+                "none"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Assignee Ids",
+          "deprecated": true
+        },
+        "rerun_is_requested": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rerun Is Requested"
+        },
+        "execution_is_latest": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Execution Is Latest"
+        },
+        "from_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "From Date"
+        },
+        "until_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Until Date"
+        },
+        "offset": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Offset"
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Limit"
+        }
+      },
+      "type": "object",
+      "title": "TestResultSearchFilters"
+    },
+    "TestResultStatus": {
+      "type": "string",
+      "enum": [
+        "PASSED",
+        "FAILED",
+        "SKIPPED"
+      ],
+      "title": "TestResultStatus"
+    }
+  }
+}

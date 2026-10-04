@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-project-schema.json",
+  "title": "Project",
+  "description": "Project represents a LXD project",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-projects-api-openapi.yml#/components/schemas/Project",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Project configuration map (refer to doc/projects.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the project",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "name": {
+      "description": "The project name",
+      "readOnly": true,
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "replica_mode": {
+      "description": "Replica mode for the project (leader, standby, or empty)\nThis field is updated via PUT /1.0/projects/<name>/state\n\nAPI extension: project_replica_mode",
+      "readOnly": true,
+      "type": "string",
+      "x-go-name": "ReplicaMode"
+    },
+    "used_by": {
+      "description": "List of URLs of objects using this project",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true,
+      "type": "array",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

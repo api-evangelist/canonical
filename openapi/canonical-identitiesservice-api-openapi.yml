@@ -240,7 +240,44 @@ components:
           format: int32
           type: integer
       type: object
-    identitiesUpdateIdentityResp:
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    identitiesRecoveryIdentityAddress:
+      properties:
+        additional_properties:
+          additionalProperties: {}
+          type: object
+        created_at:
+          format: date-time
+          type: string
+        id:
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        value:
+          type: string
+        via:
+          type: string
+      type: object
+    identitiesNullableString:
+      properties:
+        isSet:
+          type: boolean
+        value:
+          type: string
+      type: object
+    identitiesCreateIdentityResp:
       properties:
         data:
           items:
@@ -254,22 +291,51 @@ components:
           format: int32
           type: integer
       type: object
-    identitiesUpdateIdentityBody:
+    identitiesIdentityCredentials:
       properties:
         additional_properties:
+          additionalProperties: {}
           type: object
-        credentials:
+        config:
+          additionalProperties: {}
           type: object
-        metadata_admin:
-          type: object
-        metadata_public:
-          type: object
-        schema_id:
+        created_at:
+          format: date-time
           type: string
-        state:
+        identifiers:
+          items:
+            type: string
+          type: array
+        type:
           type: string
-        traits:
-          type: object
+        updated_at:
+          format: date-time
+          type: string
+        version:
+          format: int64
+          type: string
+      type: object
+    identitiesListIdentitiesResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/identitiesIdentity'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    typesErrorResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
       type: object
     identitiesGetIdentityResp:
       properties:
@@ -284,76 +350,6 @@ components:
         status:
           format: int32
           type: integer
-      type: object
-    typesPagination:
-      properties:
-        next:
-          type: string
-        pageToken:
-          type: string
-        prev:
-          type: string
-        size:
-          format: int32
-          type: integer
-      type: object
-    identitiesNullableString:
-      properties:
-        isSet:
-          type: boolean
-        value:
-          type: string
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    identitiesIdentity:
-      properties:
-        additional_properties:
-          additionalProperties: {}
-          type: object
-        created_at:
-          format: date-time
-          type: string
-        credentials:
-          additionalProperties:
-            $ref: '#/components/schemas/identitiesIdentityCredentials'
-          type: object
-        id:
-          type: string
-        metadata_admin:
-          type: object
-        metadata_public:
-          type: object
-        organization_id:
-          $ref: '#/components/schemas/identitiesNullableString'
-        recovery_addresses:
-          items:
-            $ref: '#/components/schemas/identitiesRecoveryIdentityAddress'
-          type: array
-        schema_id:
-          type: string
-        schema_url:
-          type: string
-        state:
-          type: string
-        state_changed_at:
-          format: date-time
-          type: string
-        traits:
-          type: object
-        updated_at:
-          format: date-time
-          type: string
-        verifiable_addresses:
-          items:
-            $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
-          type: array
       type: object
     identitiesVerifiableIdentityAddress:
       properties:
@@ -405,31 +401,24 @@ components:
             $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
           type: array
       type: object
-    identitiesIdentityCredentials:
+    identitiesUpdateIdentityBody:
       properties:
         additional_properties:
-          additionalProperties: {}
           type: object
-        config:
-          additionalProperties: {}
+        credentials:
           type: object
-        created_at:
-          format: date-time
+        metadata_admin:
+          type: object
+        metadata_public:
+          type: object
+        schema_id:
           type: string
-        identifiers:
-          items:
-            type: string
-          type: array
-        type:
+        state:
           type: string
-        updated_at:
-          format: date-time
-          type: string
-        version:
-          format: int64
-          type: string
+        traits:
+          type: object
       type: object
-    identitiesCreateIdentityResp:
+    identitiesUpdateIdentityResp:
       properties:
         data:
           items:
@@ -443,21 +432,7 @@ components:
           format: int32
           type: integer
       type: object
-    identitiesListIdentitiesResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/identitiesIdentity'
-          type: array
-        message:
-          type: string
-        meta:
-          $ref: '#/components/schemas/typesPagination'
-        status:
-          format: int32
-          type: integer
-      type: object
-    identitiesRecoveryIdentityAddress:
+    identitiesIdentity:
       properties:
         additional_properties:
           additionalProperties: {}
@@ -465,15 +440,40 @@ components:
         created_at:
           format: date-time
           type: string
+        credentials:
+          additionalProperties:
+            $ref: '#/components/schemas/identitiesIdentityCredentials'
+          type: object
         id:
           type: string
+        metadata_admin:
+          type: object
+        metadata_public:
+          type: object
+        organization_id:
+          $ref: '#/components/schemas/identitiesNullableString'
+        recovery_addresses:
+          items:
+            $ref: '#/components/schemas/identitiesRecoveryIdentityAddress'
+          type: array
+        schema_id:
+          type: string
+        schema_url:
+          type: string
+        state:
+          type: string
+        state_changed_at:
+          format: date-time
+          type: string
+        traits:
+          type: object
         updated_at:
           format: date-time
           type: string
-        value:
-          type: string
-        via:
-          type: string
+        verifiable_addresses:
+          items:
+            $ref: '#/components/schemas/identitiesVerifiableIdentityAddress'
+          type: array
       type: object
   securitySchemes:
     OAuth2:

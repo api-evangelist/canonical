@@ -323,6 +323,30 @@ components:
         id:
           type: string
       type: object
+    typesPagination:
+      properties:
+        next:
+          type: string
+        pageToken:
+          type: string
+        prev:
+          type: string
+        size:
+          format: int32
+          type: integer
+      type: object
+    schemasUpdateSchemaResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apischemasSchema'
+          type: array
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
     apischemasSchema:
       properties:
         additional_properties:
@@ -340,17 +364,29 @@ components:
           format: int32
           type: integer
       type: object
-    schemasGetDefaultSchemaResp:
+    schemasRemoveSchemaResp:
       properties:
-        data:
-          $ref: '#/components/schemas/schemasDefaultSchema'
         message:
           type: string
         status:
           format: int32
           type: integer
       type: object
-    schemasUpdateSchemaResp:
+    schemasListSchemasResp:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/apischemasSchema'
+          type: array
+        message:
+          type: string
+        meta:
+          $ref: '#/components/schemas/typesPagination'
+        status:
+          format: int32
+          type: integer
+      type: object
+    schemasCreateSchemaResp:
       properties:
         data:
           items:
@@ -374,33 +410,7 @@ components:
           format: int32
           type: integer
       type: object
-    schemasCreateSchemaResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/apischemasSchema'
-          type: array
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    schemasListSchemasResp:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/apischemasSchema'
-          type: array
-        message:
-          type: string
-        meta:
-          $ref: '#/components/schemas/typesPagination'
-        status:
-          format: int32
-          type: integer
-      type: object
-    schemasUpdateDefaultSchemaResp:
+    schemasGetDefaultSchemaResp:
       properties:
         data:
           $ref: '#/components/schemas/schemasDefaultSchema'
@@ -410,20 +420,10 @@ components:
           format: int32
           type: integer
       type: object
-    typesPagination:
+    schemasUpdateDefaultSchemaResp:
       properties:
-        next:
-          type: string
-        pageToken:
-          type: string
-        prev:
-          type: string
-        size:
-          format: int32
-          type: integer
-      type: object
-    schemasRemoveSchemaResp:
-      properties:
+        data:
+          $ref: '#/components/schemas/schemasDefaultSchema'
         message:
           type: string
         status:

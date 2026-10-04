@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-prompting-rule-action-remove-schema.json",
+  "title": "PromptingRuleActionRemove",
+  "description": "The schema the API uses for the 'remove' action of /v2/interfaces/rules.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-experimental-api-openapi.yml#/components/schemas/PromptingRuleActionRemove",
+  "type": "object",
+  "required": [
+    "action",
+    "selector"
+  ],
+  "properties": {
+    "action": {
+      "type": "string",
+      "description": "The action to perform on the rules endpoint.",
+      "enum": [
+        "remove"
+      ]
+    },
+    "selector": {
+      "type": "object",
+      "description": "Used to select rules for removal.",
+      "properties": {
+        "snap": {
+          "type": "string",
+          "description": "The snap for which to remove rules."
+        },
+        "interface": {
+          "type": "string",
+          "description": "The interface for which to remove rules."
+        }
+      }
+    }
+  }
+}

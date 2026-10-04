@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identity-schema.json",
+  "title": "Identity is the type for an authenticated party that can make requests to the HTTPS API.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identities-api-openapi.yml#/components/schemas/Identity",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "authentication_method": {
+      "description": "AuthenticationMethod is the authentication method that the identity\nauthenticates to LXD with.",
+      "type": "string",
+      "x-go-name": "AuthenticationMethod"
+    },
+    "expires_at": {
+      "description": "ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the\nexpiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.\nIt is unset for identities whose credential has no expiry, that have no credential yet (pending identities),\nor whose token has been revoked.\n\nAPI extension: access_management_expiry.",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "ExpiresAt"
+    },
+    "groups": {
+      "description": "Groups is the list of groups for which the identity is a member.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "id": {
+      "description": "Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).",
+      "type": "string",
+      "x-go-name": "Identifier"
+    },
+    "name": {
+      "description": "Name is the Name claim of the identity if authenticated via OIDC, or the name\nof the certificate if authenticated with TLS.",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "tls_certificate": {
+      "description": "TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.\n\nAPI extension: access_management_tls.",
+      "type": "string",
+      "x-go-name": "TLSCertificate"
+    },
+    "type": {
+      "description": "Type is the type of identity.",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

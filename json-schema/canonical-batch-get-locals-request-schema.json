@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-batch-get-locals-request-schema.json",
+  "title": "BatchGetLocalsRequest",
+  "description": "The request message for retrieving a batch of local repositories.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-localservice-api-openapi.yml#/components/schemas/BatchGetLocalsRequest",
+  "required": [
+    "names"
+  ],
+  "type": "object",
+  "properties": {
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The names of the local repositories to retrieve.\n A maximum of 100 local repositories can be retrieved in a batch.\n Format: locals/{local}"
+    },
+    "returnPartialSuccess": {
+      "type": "boolean",
+      "description": "Setting this field to `true` will opt the request into returning the\n locals that are reachable, and into including the names of those that\n were unreachable in the [BatchGetLocalsResponse.unreachable] field."
+    }
+  }
+}

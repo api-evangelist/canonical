@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-certificates-post-2-schema.json",
+  "title": "CertificatesPost_2",
+  "description": "CertificatesPost represents the fields of a new LXD certificate",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-certificates-api-openapi.yml#/components/schemas/CertificatesPost_2",
+  "properties": {
+    "certificate": {
+      "description": "The certificate itself, as base64 encoded X509 PEM certificate\n\nAPI extension: certificate_self_renewal",
+      "type": "string",
+      "x-go-name": "Certificate"
+    },
+    "name": {
+      "description": "Name associated with the certificate",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "password": {
+      "description": "Server trust password (used to add an untrusted client, deprecated, use trust_token)\n\nDeprecated: Use TrustToken.",
+      "type": "string",
+      "x-deprecated": true,
+      "x-go-name": "Password"
+    },
+    "projects": {
+      "description": "List of allowed projects (applies when restricted)\n\nAPI extension: certificate_project",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Projects"
+    },
+    "restricted": {
+      "description": "Whether to limit the certificate to listed projects\n\nAPI extension: certificate_project",
+      "type": "boolean",
+      "x-go-name": "Restricted"
+    },
+    "token": {
+      "description": "Whether to create a certificate add token\n\nAPI extension: certificate_token",
+      "type": "boolean",
+      "x-go-name": "Token"
+    },
+    "trust_token": {
+      "description": "Trust token (used to add an untrusted client)\n\nAPI extension: explicit_trust_token",
+      "type": "string",
+      "x-go-name": "TrustToken"
+    },
+    "type": {
+      "description": "Usage type for the certificate",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

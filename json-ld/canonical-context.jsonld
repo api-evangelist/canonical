@@ -1,0 +1,1039 @@
+{
+  "@context": {
+    "@vocab": "https://canonical.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "canonical": "https://canonical.com/schema#",
+    "Operation": "canonical:Operation",
+    "class": {
+      "@id": "canonical:class",
+      "@type": "xsd:string"
+    },
+    "created_at": {
+      "@id": "canonical:created_at",
+      "@type": "xsd:dateTime"
+    },
+    "description": {
+      "@id": "canonical:description",
+      "@type": "xsd:string"
+    },
+    "err": {
+      "@id": "canonical:err",
+      "@type": "xsd:string"
+    },
+    "id": {
+      "@id": "canonical:id",
+      "@type": "xsd:string"
+    },
+    "may_cancel": {
+      "@id": "canonical:may_cancel",
+      "@type": "xsd:boolean"
+    },
+    "metadata": {
+      "@id": "canonical:metadata"
+    },
+    "resources": {
+      "@id": "canonical:resources"
+    },
+    "server_address": {
+      "@id": "canonical:server_address",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "canonical:status",
+      "@type": "xsd:string"
+    },
+    "status_code": {
+      "@id": "canonical:status_code",
+      "@type": "@id"
+    },
+    "updated_at": {
+      "@id": "canonical:updated_at",
+      "@type": "xsd:dateTime"
+    },
+    "NoMetaSyncResponse": "canonical:NoMetaSyncResponse",
+    "error_code": {
+      "@id": "canonical:error_code",
+      "@type": "xsd:integer"
+    },
+    "type": {
+      "@id": "canonical:type",
+      "@type": "xsd:string"
+    },
+    "Addon": "canonical:Addon",
+    "name": {
+      "@id": "canonical:name",
+      "@type": "xsd:string"
+    },
+    "used_by": {
+      "@id": "canonical:used_by",
+      "@container": "@list"
+    },
+    "versions": {
+      "@id": "canonical:versions",
+      "@container": "@list"
+    },
+    "OperationResponse": "canonical:OperationResponse",
+    "operation": {
+      "@id": "canonical:operation",
+      "@type": "xsd:string"
+    },
+    "AddonVersion": "canonical:AddonVersion",
+    "fingerprint": {
+      "@id": "canonical:fingerprint",
+      "@type": "xsd:string"
+    },
+    "size": {
+      "@id": "canonical:size",
+      "@type": "xsd:integer"
+    },
+    "version": {
+      "@id": "canonical:version",
+      "@type": "xsd:integer"
+    },
+    "AgentJob": "canonical:AgentJob",
+    "job_id": {
+      "@id": "canonical:job_id",
+      "@type": "xsd:string"
+    },
+    "submitted_by": {
+      "@id": "canonical:submitted_by",
+      "@type": "xsd:string"
+    },
+    "started_at": {
+      "@id": "canonical:started_at",
+      "@type": "xsd:dateTime"
+    },
+    "job_queue": {
+      "@id": "canonical:job_queue",
+      "@type": "xsd:string"
+    },
+    "job_state": {
+      "@id": "canonical:job_state",
+      "@type": "xsd:string"
+    },
+    "job_priority": {
+      "@id": "canonical:job_priority",
+      "@type": "xsd:integer"
+    },
+    "tags": {
+      "@id": "canonical:tags",
+      "@container": "@list"
+    },
+    "ProvisionLogsIn": "canonical:ProvisionLogsIn",
+    "exit_code": {
+      "@id": "canonical:exit_code",
+      "@type": "xsd:integer"
+    },
+    "detail": {
+      "@id": "canonical:detail",
+      "@type": "xsd:string"
+    },
+    "AgentOut": "canonical:AgentOut",
+    "state": {
+      "@id": "canonical:state",
+      "@type": "xsd:string"
+    },
+    "queues": {
+      "@id": "canonical:queues",
+      "@container": "@list"
+    },
+    "location": {
+      "@id": "canonical:location",
+      "@type": "xsd:string"
+    },
+    "provision_type": {
+      "@id": "canonical:provision_type",
+      "@type": "xsd:string"
+    },
+    "comment": {
+      "@id": "canonical:comment",
+      "@type": "xsd:string"
+    },
+    "restricted_to": {
+      "@id": "canonical:restricted_to"
+    },
+    "job": {
+      "@id": "canonical:job"
+    },
+    "HTTPError": "canonical:HTTPError",
+    "message": {
+      "@id": "canonical:message",
+      "@type": "xsd:string"
+    },
+    "AgentIn": "canonical:AgentIn",
+    "identifier": {
+      "@id": "canonical:identifier",
+      "@type": "xsd:string"
+    },
+    "log": {
+      "@id": "canonical:log",
+      "@container": "@list"
+    },
+    "ValidationError": "canonical:ValidationError",
+    "authorizationRemoveAllowedAppFromGroupResp": "canonical:authorizationRemoveAllowedAppFromGroupResp",
+    "apiauthorizationGroup": "canonical:apiauthorizationGroup",
+    "group_id": {
+      "@id": "canonical:group_id",
+      "@type": "xsd:string"
+    },
+    "authorizationRemoveAllowedAppsFromGroupResp": "canonical:authorizationRemoveAllowedAppsFromGroupResp",
+    "authorizationGetAllowedGroupsForAppResp": "canonical:authorizationGetAllowedGroupsForAppResp",
+    "data": {
+      "@id": "canonical:data",
+      "@container": "@list"
+    },
+    "typesErrorResponse": "canonical:typesErrorResponse",
+    "authorizationApp": "canonical:authorizationApp",
+    "client_id": {
+      "@id": "canonical:client_id",
+      "@type": "xsd:string"
+    },
+    "authorizationRemoveAllowedGroupsForAppResp": "canonical:authorizationRemoveAllowedGroupsForAppResp",
+    "authorizationGetAllowedAppsInGroupResp": "canonical:authorizationGetAllowedAppsInGroupResp",
+    "authorizationAddAllowedAppToGroupResp": "canonical:authorizationAddAllowedAppToGroupResp",
+    "api_gateway.ResponseStatus": "canonical:api_gateway.ResponseStatus",
+    "api_gateway.Application": "canonical:api_gateway.Application",
+    "api_gateway.ResponseType": "canonical:api_gateway.ResponseType",
+    "api.ApplicationsGetResponse": "canonical:api.ApplicationsGetResponse",
+    "error": {
+      "@id": "canonical:error",
+      "@type": "xsd:string"
+    },
+    "NetworkServiceSpec": "canonical:NetworkServiceSpec",
+    "expose": {
+      "@id": "canonical:expose",
+      "@type": "xsd:boolean"
+    },
+    "port": {
+      "@id": "canonical:port",
+      "@type": "xsd:integer"
+    },
+    "port_end": {
+      "@id": "canonical:port_end",
+      "@type": "xsd:integer"
+    },
+    "protocols": {
+      "@id": "canonical:protocols",
+      "@container": "@list"
+    },
+    "ApplicationAddon": "canonical:ApplicationAddon",
+    "ApplicationBootstrap": "canonical:ApplicationBootstrap",
+    "keep": {
+      "@id": "canonical:keep",
+      "@container": "@list"
+    },
+    "ApplicationVersionPatch": "canonical:ApplicationVersionPatch",
+    "published": {
+      "@id": "canonical:published",
+      "@type": "xsd:boolean"
+    },
+    "ApplicationResourcesPost": "canonical:ApplicationResourcesPost",
+    "cpus": {
+      "@id": "canonical:cpus",
+      "@type": "xsd:integer"
+    },
+    "disk-size": {
+      "@id": "canonical:disk-size",
+      "@type": "xsd:string"
+    },
+    "gpu-slots": {
+      "@id": "canonical:gpu-slots",
+      "@type": "xsd:integer"
+    },
+    "memory": {
+      "@id": "canonical:memory",
+      "@type": "xsd:string"
+    },
+    "vpu-slots": {
+      "@id": "canonical:vpu-slots",
+      "@type": "xsd:integer"
+    },
+    "ApplicationHooks": "canonical:ApplicationHooks",
+    "timeout": {
+      "@id": "canonical:timeout",
+      "@type": "xsd:string"
+    },
+    "ApplicationsDelete": "canonical:ApplicationsDelete",
+    "force": {
+      "@id": "canonical:force",
+      "@type": "xsd:boolean"
+    },
+    "ids": {
+      "@id": "canonical:ids",
+      "@container": "@list"
+    },
+    "ApplicationPatch": "canonical:ApplicationPatch",
+    "addons": {
+      "@id": "canonical:addons",
+      "@container": "@list"
+    },
+    "boot_activity": {
+      "@id": "canonical:boot_activity",
+      "@type": "xsd:string"
+    },
+    "bootstrap": {
+      "@id": "canonical:bootstrap",
+      "@type": "@id"
+    },
+    "features": {
+      "@id": "canonical:features",
+      "@container": "@list"
+    },
+    "hooks": {
+      "@id": "canonical:hooks",
+      "@type": "@id"
+    },
+    "image": {
+      "@id": "canonical:image",
+      "@type": "xsd:string"
+    },
+    "inhibit_auto_updates": {
+      "@id": "canonical:inhibit_auto_updates",
+      "@type": "xsd:boolean"
+    },
+    "instance-type": {
+      "@id": "canonical:instance-type",
+      "@type": "xsd:string"
+    },
+    "manifest_version": {
+      "@id": "canonical:manifest_version",
+      "@type": "xsd:string"
+    },
+    "node_selector": {
+      "@id": "canonical:node_selector",
+      "@container": "@list"
+    },
+    "required_permissions": {
+      "@id": "canonical:required_permissions",
+      "@container": "@list"
+    },
+    "services": {
+      "@id": "canonical:services",
+      "@container": "@list"
+    },
+    "video_encoder": {
+      "@id": "canonical:video_encoder",
+      "@type": "@id"
+    },
+    "watchdog": {
+      "@id": "canonical:watchdog",
+      "@type": "@id"
+    },
+    "ApplicationVersionDelete": "canonical:ApplicationVersionDelete",
+    "Application": "canonical:Application",
+    "abi": {
+      "@id": "canonical:abi",
+      "@type": "xsd:string"
+    },
+    "boot_package": {
+      "@id": "canonical:boot_package",
+      "@type": "xsd:string"
+    },
+    "immutable": {
+      "@id": "canonical:immutable",
+      "@type": "xsd:boolean"
+    },
+    "instance_type": {
+      "@id": "canonical:instance_type",
+      "@type": "xsd:string"
+    },
+    "parent_image_id": {
+      "@id": "canonical:parent_image_id",
+      "@type": "xsd:string"
+    },
+    "vm": {
+      "@id": "canonical:vm",
+      "@type": "xsd:boolean"
+    },
+    "ApplicationVersion": "canonical:ApplicationVersion",
+    "error_message": {
+      "@id": "canonical:error_message",
+      "@type": "xsd:string"
+    },
+    "extra_data": {
+      "@id": "canonical:extra_data"
+    },
+    "number": {
+      "@id": "canonical:number",
+      "@type": "xsd:integer"
+    },
+    "parent_image_version": {
+      "@id": "canonical:parent_image_version",
+      "@type": "xsd:integer"
+    },
+    "ApplicationWatchdog": "canonical:ApplicationWatchdog",
+    "allowed-packages": {
+      "@id": "canonical:allowed-packages",
+      "@container": "@list"
+    },
+    "disabled": {
+      "@id": "canonical:disabled",
+      "@type": "xsd:boolean"
+    },
+    "ApplicationResources": "canonical:ApplicationResources",
+    "ApplicationExtraData": "canonical:ApplicationExtraData",
+    "owner": {
+      "@id": "canonical:owner",
+      "@type": "xsd:string"
+    },
+    "permissions": {
+      "@id": "canonical:permissions",
+      "@type": "xsd:string"
+    },
+    "target": {
+      "@id": "canonical:target",
+      "@type": "xsd:string"
+    },
+    "PatchedFoxgloveDashboard": "canonical:PatchedFoxgloveDashboard",
+    "uid": {
+      "@id": "canonical:uid",
+      "@type": "xsd:string"
+    },
+    "dashboard": {
+      "@id": "canonical:dashboard"
+    },
+    "PatchedLokiAlertRuleFile": "canonical:PatchedLokiAlertRuleFile",
+    "rules": {
+      "@id": "canonical:rules",
+      "@type": "xsd:string"
+    },
+    "template": {
+      "@id": "canonical:template",
+      "@type": "xsd:boolean"
+    },
+    "PrometheusAlertRuleFile": "canonical:PrometheusAlertRuleFile",
+    "FoxgloveDashboard": "canonical:FoxgloveDashboard",
+    "PatchedGrafanaDashboard": "canonical:PatchedGrafanaDashboard",
+    "GrafanaDashboard": "canonical:GrafanaDashboard",
+    "LokiAlertRuleFile": "canonical:LokiAlertRuleFile",
+    "PatchedPrometheusAlertRuleFile": "canonical:PatchedPrometheusAlertRuleFile",
+    "Permission": "canonical:Permission",
+    "HTTPValidationError": "canonical:HTTPValidationError",
+    "ApplicationPatch_2": "canonical:ApplicationPatch_2",
+    "ApplicationResponse": "canonical:ApplicationResponse",
+    "api_key": {
+      "@id": "canonical:api_key",
+      "@type": "xsd:string"
+    },
+    "ApplicationPost": "canonical:ApplicationPost",
+    "ConflictError": "canonical:ConflictError",
+    "kind": {
+      "@id": "canonical:kind",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "canonical:value"
+    },
+    "NotFoundError": "canonical:NotFoundError",
+    "Activator": "canonical:Activator",
+    "active": {
+      "@id": "canonical:active",
+      "@type": "xsd:boolean"
+    },
+    "enabled": {
+      "@id": "canonical:enabled",
+      "@type": "xsd:boolean"
+    },
+    "UserNotFoundError": "canonical:UserNotFoundError",
+    "AppActionBase": "canonical:AppActionBase",
+    "action": {
+      "@id": "canonical:action",
+      "@type": "xsd:string"
+    },
+    "names": {
+      "@id": "canonical:names",
+      "@container": "@list"
+    },
+    "scope": {
+      "@id": "canonical:scope",
+      "@container": "@list"
+    },
+    "users": {
+      "@id": "canonical:users"
+    },
+    "SnapNotInstalledError": "canonical:SnapNotInstalledError",
+    "ConfdbError": "canonical:ConfdbError",
+    "NoSSHKeysError": "canonical:NoSSHKeysError",
+    "MalformedRequestError": "canonical:MalformedRequestError",
+    "App": "canonical:App",
+    "snap": {
+      "@id": "canonical:snap",
+      "@type": "xsd:string"
+    },
+    "desktop-file": {
+      "@id": "canonical:desktop-file",
+      "@type": "xsd:string"
+    },
+    "daemon": {
+      "@id": "canonical:daemon",
+      "@type": "xsd:string"
+    },
+    "common-id": {
+      "@id": "canonical:common-id",
+      "@type": "xsd:string"
+    },
+    "activators": {
+      "@id": "canonical:activators",
+      "@container": "@list"
+    },
+    "InternalServerError": "canonical:InternalServerError",
+    "NoModelAssertionError": "canonical:NoModelAssertionError",
+    "NoSerialAssertionError": "canonical:NoSerialAssertionError",
+    "TestExecutionRelevantLinkResponse": "canonical:TestExecutionRelevantLinkResponse",
+    "label": {
+      "@id": "canonical:label",
+      "@type": "xsd:string"
+    },
+    "url": {
+      "@id": "canonical:url",
+      "@type": "@id"
+    },
+    "ArtefactBuildResponse": "canonical:ArtefactBuildResponse",
+    "architecture": {
+      "@id": "canonical:architecture",
+      "@type": "xsd:string"
+    },
+    "revision": {
+      "@id": "canonical:revision"
+    },
+    "test_executions": {
+      "@id": "canonical:test_executions",
+      "@container": "@list"
+    },
+    "TestExecutionStatus": "canonical:TestExecutionStatus",
+    "TestExecutionResponse": "canonical:TestExecutionResponse",
+    "ci_link": {
+      "@id": "canonical:ci_link"
+    },
+    "c3_link": {
+      "@id": "canonical:c3_link"
+    },
+    "relevant_links": {
+      "@id": "canonical:relevant_links",
+      "@container": "@list"
+    },
+    "environment": {
+      "@id": "canonical:environment",
+      "@type": "@id"
+    },
+    "test_plan": {
+      "@id": "canonical:test_plan",
+      "@type": "xsd:string"
+    },
+    "execution_metadata": {
+      "@id": "canonical:execution_metadata",
+      "@type": "@id"
+    },
+    "is_triaged": {
+      "@id": "canonical:is_triaged",
+      "@type": "xsd:boolean"
+    },
+    "is_rerun_requested": {
+      "@id": "canonical:is_rerun_requested",
+      "@type": "xsd:boolean"
+    },
+    "rerun_priority": {
+      "@id": "canonical:rerun_priority"
+    },
+    "EnvironmentResponse": "canonical:EnvironmentResponse",
+    "ArtefactMatchingRuleResponse": "canonical:ArtefactMatchingRuleResponse",
+    "family": {
+      "@id": "canonical:family",
+      "@type": "@id"
+    },
+    "stage": {
+      "@id": "canonical:stage"
+    },
+    "track": {
+      "@id": "canonical:track"
+    },
+    "branch": {
+      "@id": "canonical:branch"
+    },
+    "store": {
+      "@id": "canonical:store"
+    },
+    "series": {
+      "@id": "canonical:series"
+    },
+    "os": {
+      "@id": "canonical:os"
+    },
+    "release": {
+      "@id": "canonical:release"
+    },
+    "teams": {
+      "@id": "canonical:teams",
+      "@container": "@list"
+    },
+    "grant_permissions": {
+      "@id": "canonical:grant_permissions",
+      "@container": "@list"
+    },
+    "FamilyName": "canonical:FamilyName",
+    "ArtefactMatchingRuleRequest": "canonical:ArtefactMatchingRuleRequest",
+    "team_ids": {
+      "@id": "canonical:team_ids",
+      "@container": "@list"
+    },
+    "TeamMinimal": "canonical:TeamMinimal",
+    "ArtefactMatchingRulePatch": "canonical:ArtefactMatchingRulePatch",
+    "ArtefactBuildMinimalResponse": "canonical:ArtefactBuildMinimalResponse",
+    "ArtefactBuildEnvironmentReviewDecision": "canonical:ArtefactBuildEnvironmentReviewDecision",
+    "ArtefactSearchResponse": "canonical:ArtefactSearchResponse",
+    "artefacts": {
+      "@id": "canonical:artefacts",
+      "@container": "@list"
+    },
+    "count": {
+      "@id": "canonical:count",
+      "@type": "xsd:integer"
+    },
+    "limit": {
+      "@id": "canonical:limit",
+      "@type": "xsd:integer"
+    },
+    "offset": {
+      "@id": "canonical:offset",
+      "@type": "xsd:integer"
+    },
+    "ArtefactStatus": "canonical:ArtefactStatus",
+    "ArtefactHistoryResponse": "canonical:ArtefactHistoryResponse",
+    "items": {
+      "@id": "canonical:items",
+      "@container": "@list"
+    },
+    "ArtefactHistoryItemResponse": "canonical:ArtefactHistoryItemResponse",
+    "artefact_id": {
+      "@id": "canonical:artefact_id",
+      "@type": "xsd:integer"
+    },
+    "ArtefactResponse": "canonical:ArtefactResponse",
+    "repo": {
+      "@id": "canonical:repo",
+      "@type": "xsd:string"
+    },
+    "source": {
+      "@id": "canonical:source",
+      "@type": "xsd:string"
+    },
+    "sha256": {
+      "@id": "canonical:sha256",
+      "@type": "xsd:string"
+    },
+    "image_url": {
+      "@id": "canonical:image_url",
+      "@type": "xsd:string"
+    },
+    "attributes": {
+      "@id": "canonical:attributes"
+    },
+    "archived": {
+      "@id": "canonical:archived",
+      "@type": "xsd:boolean"
+    },
+    "reviewers": {
+      "@id": "canonical:reviewers",
+      "@container": "@list"
+    },
+    "due_date": {
+      "@id": "canonical:due_date"
+    },
+    "bug_link": {
+      "@id": "canonical:bug_link",
+      "@type": "xsd:string"
+    },
+    "jira_issue": {
+      "@id": "canonical:jira_issue"
+    },
+    "all_environment_reviews_count": {
+      "@id": "canonical:all_environment_reviews_count",
+      "@type": "xsd:integer"
+    },
+    "completed_environment_reviews_count": {
+      "@id": "canonical:completed_environment_reviews_count",
+      "@type": "xsd:integer"
+    },
+    "assignee": {
+      "@id": "canonical:assignee"
+    },
+    "ArtefactVersionResponse": "canonical:ArtefactVersionResponse",
+    "ArtefactBuildEnvironmentReviewResponse": "canonical:ArtefactBuildEnvironmentReviewResponse",
+    "review_decision": {
+      "@id": "canonical:review_decision",
+      "@container": "@list"
+    },
+    "review_comment": {
+      "@id": "canonical:review_comment",
+      "@type": "xsd:string"
+    },
+    "artefact_build": {
+      "@id": "canonical:artefact_build",
+      "@type": "@id"
+    },
+    "ArtefactPatch": "canonical:ArtefactPatch",
+    "assignee_id": {
+      "@id": "canonical:assignee_id"
+    },
+    "assignee_email": {
+      "@id": "canonical:assignee_email"
+    },
+    "reviewer_ids": {
+      "@id": "canonical:reviewer_ids"
+    },
+    "reviewer_emails": {
+      "@id": "canonical:reviewer_emails"
+    },
+    "StageName": "canonical:StageName",
+    "EnvironmentReviewPatch": "canonical:EnvironmentReviewPatch",
+    "ReviewerResponse": "canonical:ReviewerResponse",
+    "launchpad_handle": {
+      "@id": "canonical:launchpad_handle"
+    },
+    "email": {
+      "@id": "canonical:email",
+      "@type": "xsd:string"
+    },
+    "launchpad_email": {
+      "@id": "canonical:launchpad_email",
+      "@type": "xsd:string"
+    },
+    "AssertionResult": "canonical:AssertionResult",
+    "result": {
+      "@id": "canonical:result",
+      "@container": "@list"
+    },
+    "status-code": {
+      "@id": "canonical:status-code",
+      "@type": "xsd:integer"
+    },
+    "QuotaGroup": "canonical:QuotaGroup",
+    "group-name": {
+      "@id": "canonical:group-name",
+      "@type": "xsd:string"
+    },
+    "subgroups": {
+      "@id": "canonical:subgroups",
+      "@container": "@list"
+    },
+    "parent": {
+      "@id": "canonical:parent",
+      "@type": "xsd:string"
+    },
+    "snaps": {
+      "@id": "canonical:snaps",
+      "@container": "@list"
+    },
+    "constraints": {
+      "@id": "canonical:constraints"
+    },
+    "current": {
+      "@id": "canonical:current"
+    },
+    "PlugRef": "canonical:PlugRef",
+    "plug": {
+      "@id": "canonical:plug",
+      "@type": "xsd:string"
+    },
+    "Slot": "canonical:Slot",
+    "slot": {
+      "@id": "canonical:slot",
+      "@type": "xsd:string"
+    },
+    "interface": {
+      "@id": "canonical:interface",
+      "@type": "xsd:string"
+    },
+    "attrs": {
+      "@id": "canonical:attrs"
+    },
+    "apps": {
+      "@id": "canonical:apps",
+      "@container": "@list"
+    },
+    "connections": {
+      "@id": "canonical:connections",
+      "@container": "@list"
+    },
+    "SlotRef": "canonical:SlotRef",
+    "Plug": "canonical:Plug",
+    "AuthGroupPost": "canonical:AuthGroupPost",
+    "AuthGroupsPost": "canonical:AuthGroupsPost",
+    "AuthGroup": "canonical:AuthGroup",
+    "access_entitlements": {
+      "@id": "canonical:access_entitlements",
+      "@container": "@list"
+    },
+    "identities": {
+      "@id": "canonical:identities"
+    },
+    "identity_provider_groups": {
+      "@id": "canonical:identity_provider_groups",
+      "@container": "@list"
+    },
+    "AuthGroupPut": "canonical:AuthGroupPut",
+    "authenticationMeResp": "canonical:authenticationMeResp",
+    "nonce": {
+      "@id": "canonical:nonce",
+      "@type": "xsd:string"
+    },
+    "sid": {
+      "@id": "canonical:sid",
+      "@type": "xsd:string"
+    },
+    "sub": {
+      "@id": "canonical:sub",
+      "@type": "xsd:string"
+    },
+    "SystemActionReboot": "canonical:SystemActionReboot",
+    "mode": {
+      "@id": "canonical:mode",
+      "@type": "xsd:string"
+    },
+    "SystemActionCheckPassphrase": "canonical:SystemActionCheckPassphrase",
+    "passphrase": {
+      "@id": "canonical:passphrase",
+      "@type": "xsd:string"
+    },
+    "Links": "canonical:Links",
+    "contact": {
+      "@id": "canonical:contact",
+      "@container": "@list"
+    },
+    "website": {
+      "@id": "canonical:website",
+      "@container": "@list"
+    },
+    "StoreCategory": "canonical:StoreCategory",
+    "featured": {
+      "@id": "canonical:featured",
+      "@type": "xsd:boolean"
+    },
+    "Media": "canonical:Media",
+    "height": {
+      "@id": "canonical:height",
+      "@type": "xsd:integer"
+    },
+    "width": {
+      "@id": "canonical:width",
+      "@type": "xsd:integer"
+    },
+    "SystemActionDo": "canonical:SystemActionDo",
+    "title": {
+      "@id": "canonical:title",
+      "@type": "xsd:string"
+    },
+    "ValidationSet": "canonical:ValidationSet",
+    "account-id": {
+      "@id": "canonical:account-id",
+      "@type": "xsd:string"
+    },
+    "pinned-at": {
+      "@id": "canonical:pinned-at",
+      "@type": "xsd:integer"
+    },
+    "sequence": {
+      "@id": "canonical:sequence",
+      "@type": "xsd:integer"
+    },
+    "valid": {
+      "@id": "canonical:valid",
+      "@type": "xsd:boolean"
+    },
+    "Change": "canonical:Change",
+    "summary": {
+      "@id": "canonical:summary",
+      "@type": "xsd:string"
+    },
+    "tasks": {
+      "@id": "canonical:tasks",
+      "@container": "@list"
+    },
+    "ready": {
+      "@id": "canonical:ready",
+      "@type": "xsd:boolean"
+    },
+    "spawn-time": {
+      "@id": "canonical:spawn-time",
+      "@type": "xsd:dateTime"
+    },
+    "ready-time": {
+      "@id": "canonical:ready-time",
+      "@type": "xsd:dateTime"
+    },
+    "Log": "canonical:Log",
+    "timestamp": {
+      "@id": "canonical:timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "pid": {
+      "@id": "canonical:pid",
+      "@type": "xsd:string"
+    },
+    "Task": "canonical:Task",
+    "progress": {
+      "@id": "canonical:progress",
+      "@type": "@id"
+    },
+    "Progress": "canonical:Progress",
+    "done": {
+      "@id": "canonical:done",
+      "@type": "xsd:integer"
+    },
+    "total": {
+      "@id": "canonical:total",
+      "@type": "xsd:integer"
+    },
+    "SystemDetails": "canonical:SystemDetails",
+    "brand": {
+      "@id": "canonical:brand"
+    },
+    "model": {
+      "@id": "canonical:model"
+    },
+    "actions": {
+      "@id": "canonical:actions",
+      "@container": "@list"
+    },
+    "available-optional": {
+      "@id": "canonical:available-optional"
+    },
+    "volumes": {
+      "@id": "canonical:volumes",
+      "@container": "@list"
+    },
+    "storage-encryption": {
+      "@id": "canonical:storage-encryption"
+    },
+    "SystemActionCheckPin": "canonical:SystemActionCheckPin",
+    "pin": {
+      "@id": "canonical:pin",
+      "@type": "xsd:string"
+    },
+    "Publisher": "canonical:Publisher",
+    "display-name": {
+      "@id": "canonical:display-name",
+      "@type": "xsd:string"
+    },
+    "username": {
+      "@id": "canonical:username",
+      "@type": "xsd:string"
+    },
+    "validation": {
+      "@id": "canonical:validation",
+      "@type": "xsd:string"
+    },
+    "SystemActionFixEncryptionSupport": "canonical:SystemActionFixEncryptionSupport",
+    "fix-action": {
+      "@id": "canonical:fix-action",
+      "@type": "xsd:string"
+    },
+    "args": {
+      "@id": "canonical:args"
+    },
+    "Snap": "canonical:Snap",
+    "base": {
+      "@id": "canonical:base",
+      "@type": "xsd:string"
+    },
+    "channel": {
+      "@id": "canonical:channel",
+      "@type": "xsd:string"
+    },
+    "common-ids": {
+      "@id": "canonical:common-ids",
+      "@container": "@list"
+    },
+    "confinement": {
+      "@id": "canonical:confinement",
+      "@type": "xsd:string"
+    },
+    "developer": {
+      "@id": "canonical:developer",
+      "@type": "xsd:string"
+    },
+    "devmode": {
+      "@id": "canonical:devmode",
+      "@type": "xsd:boolean"
+    },
+    "download-size": {
+      "@id": "canonical:download-size",
+      "@type": "xsd:integer"
+    },
+    "icon": {
+      "@id": "canonical:icon",
+      "@type": "@id"
+    },
+    "license": {
+      "@id": "canonical:license",
+      "@type": "xsd:string"
+    },
+    "private": {
+      "@id": "canonical:private",
+      "@type": "xsd:boolean"
+    },
+    "store-url": {
+      "@id": "canonical:store-url",
+      "@type": "@id"
+    },
+    "categories": {
+      "@id": "canonical:categories",
+      "@container": "@list"
+    },
+    "links": {
+      "@id": "canonical:links",
+      "@type": "@id"
+    },
+    "media": {
+      "@id": "canonical:media",
+      "@container": "@list"
+    },
+    "publisher": {
+      "@id": "canonical:publisher",
+      "@type": "@id"
+    },
+    "SystemActionCreate": "canonical:SystemActionCreate",
+    "validation-sets": {
+      "@id": "canonical:validation-sets",
+      "@container": "@list"
+    },
+    "test-system": {
+      "@id": "canonical:test-system",
+      "@type": "xsd:boolean"
+    },
+    "mark-default": {
+      "@id": "canonical:mark-default",
+      "@type": "xsd:boolean"
+    },
+    "offline": {
+      "@id": "canonical:offline",
+      "@type": "xsd:boolean"
+    },
+    "SystemActionInstall": "canonical:SystemActionInstall",
+    "step": {
+      "@id": "canonical:step",
+      "@type": "xsd:string"
+    },
+    "SystemActionRemove": "canonical:SystemActionRemove",
+    "apiauthz_groupsRemoveGroupResp": "canonical:apiauthz_groupsRemoveGroupResp",
+    "apiauthz_groupsListGroupsResp": "canonical:apiauthz_groupsListGroupsResp",
+    "meta": {
+      "@id": "canonical:meta",
+      "@type": "@id"
+    },
+    "authz_groupsRemoveUserFromGroupResp": "canonical:authz_groupsRemoveUserFromGroupResp"
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Canonical API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Canonical's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-04) from openapi/canonical-add-ons-api-openapi.yml, openapi/canonical-agents-api-openapi.yml, openapi/canonical-appauthorizationservice-api-openapi.yml.",
+  "dcterms:created": "2026-10-04",
+  "dcterms:source": [
+    "openapi/canonical-add-ons-api-openapi.yml",
+    "openapi/canonical-agents-api-openapi.yml",
+    "openapi/canonical-appauthorizationservice-api-openapi.yml",
+    "openapi/canonical-application-api-openapi.yml",
+    "openapi/canonical-applications-api-openapi.yml"
+  ]
+}

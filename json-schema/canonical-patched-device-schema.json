@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-patched-device-schema.json",
+  "title": "PatchedDevice",
+  "description": "Device Serializer class.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-devices-api-openapi.yml#/components/schemas/PatchedDevice",
+  "type": "object",
+  "properties": {
+    "uid": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "creation_date": {
+      "type": "string",
+      "format": "date-time",
+      "readOnly": true
+    },
+    "address": {
+      "type": "string",
+      "title": "Device IP"
+    },
+    "public_ssh_key": {
+      "type": "string",
+      "title": "Device public SSH key"
+    },
+    "grafana_dashboards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "foxglove_dashboards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prometheus_alert_rule_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "loki_alert_rule_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "certificate": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/DeviceCertificate"
+        }
+      ],
+      "readOnly": true
+    }
+  },
+  "$defs": {
+    "BlankEnum": {
+      "enum": [
+        ""
+      ]
+    },
+    "DeviceCertificate": {
+      "type": "object",
+      "description": "Device Certificate Serializer class.",
+      "properties": {
+        "csr": {
+          "type": "string",
+          "title": "Device Certificate Signing Request"
+        },
+        "certificate": {
+          "type": "string",
+          "title": "Signed Device Certificate"
+        },
+        "ca": {
+          "type": "string",
+          "title": "Device Certificate Authority"
+        },
+        "chain": {
+          "type": "string",
+          "title": "Device Certificate Chain"
+        },
+        "status": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/StatusEnum"
+            },
+            {
+              "$ref": "#/$defs/BlankEnum"
+            }
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true,
+          "title": "Device Certificate request created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true,
+          "title": "Device Certificate last updated"
+        }
+      },
+      "required": [
+        "created_at",
+        "csr",
+        "updated_at"
+      ]
+    },
+    "StatusEnum": {
+      "enum": [
+        "pending",
+        "signed",
+        "denied"
+      ],
+      "type": "string",
+      "description": "* `pending` - Pending\n* `signed` - Signed\n* `denied` - Denied"
+    }
+  }
+}

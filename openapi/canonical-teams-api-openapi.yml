@@ -221,41 +221,27 @@ components:
       - change_notification
       - view_sentry_debug
       title: Permission
-    UserMinimalResponse:
+    TeamCreate:
       properties:
-        id:
-          type: integer
-          title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
         name:
           type: string
           title: Name
-        is_admin:
-          type: boolean
-          title: Is Admin
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+          default: []
+        artefact_matching_rules:
+          items:
+            $ref: '#/components/schemas/ArtefactMatchingRuleBase'
+          type: array
+          title: Artefact Matching Rules
+          default: []
       type: object
       required:
-      - id
-      - email
       - name
-      - is_admin
-      title: UserMinimalResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      title: TeamCreate
     FamilyName:
       type: string
       enum:
@@ -283,6 +269,37 @@ components:
           title: Artefact Matching Rules
       type: object
       title: TeamPatch
+    TeamResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        permissions:
+          items:
+            $ref: '#/components/schemas/Permission'
+          type: array
+          title: Permissions
+        members:
+          items:
+            $ref: '#/components/schemas/UserMinimalResponse'
+          type: array
+          title: Members
+        artefact_matching_rules:
+          items:
+            $ref: '#/components/schemas/ArtefactMatchingRuleInResponse'
+          type: array
+          title: Artefact Matching Rules
+      type: object
+      required:
+      - id
+      - name
+      - permissions
+      - members
+      - artefact_matching_rules
+      title: TeamResponse
     ArtefactMatchingRuleInResponse:
       properties:
         id:
@@ -356,6 +373,41 @@ components:
       - grant_permissions
       title: ArtefactMatchingRuleInResponse
       description: Artefact matching rule fields when included in responses (no relationships)
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ArtefactMatchingRuleBase:
       properties:
         name:
@@ -406,81 +458,29 @@ components:
       - family
       title: ArtefactMatchingRuleBase
       description: Base model for artefact matching rule with common fields
-    TeamCreate:
-      properties:
-        name:
-          type: string
-          title: Name
-        permissions:
-          items:
-            $ref: '#/components/schemas/Permission'
-          type: array
-          title: Permissions
-          default: []
-        artefact_matching_rules:
-          items:
-            $ref: '#/components/schemas/ArtefactMatchingRuleBase'
-          type: array
-          title: Artefact Matching Rules
-          default: []
-      type: object
-      required:
-      - name
-      title: TeamCreate
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TeamResponse:
+    UserMinimalResponse:
       properties:
         id:
           type: integer
           title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
         name:
           type: string
           title: Name
-        permissions:
-          items:
-            $ref: '#/components/schemas/Permission'
-          type: array
-          title: Permissions
-        members:
-          items:
-            $ref: '#/components/schemas/UserMinimalResponse'
-          type: array
-          title: Members
-        artefact_matching_rules:
-          items:
-            $ref: '#/components/schemas/ArtefactMatchingRuleInResponse'
-          type: array
-          title: Artefact Matching Rules
+        is_admin:
+          type: boolean
+          title: Is Admin
       type: object
       required:
       - id
+      - email
       - name
-      - permissions
-      - members
-      - artefact_matching_rules
-      title: TeamResponse
+      - is_admin
+      title: UserMinimalResponse

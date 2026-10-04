@@ -1,0 +1,580 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-related-certified-system-exists-response-schema.json",
+  "title": "RelatedCertifiedSystemExistsResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-certification-api-openapi.yml#/components/schemas/RelatedCertifiedSystemExistsResponse",
+  "properties": {
+    "status": {
+      "type": "string",
+      "const": "Related Certified System Exists",
+      "title": "Status",
+      "default": "Related Certified System Exists"
+    },
+    "certified_url": {
+      "type": "string",
+      "title": "Certified URL"
+    },
+    "architecture": {
+      "type": "string",
+      "title": "Architecture"
+    },
+    "board": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BoardValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "bios": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BiosValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "chassis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ChassisValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "gpu": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/GPUValidator"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Gpu"
+    },
+    "audio": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/AudioValidator"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Audio"
+    },
+    "video": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/VideoCaptureValidator"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Video"
+    },
+    "network": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/NetworkAdapterValidator"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Network"
+    },
+    "wireless": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/WirelessAdapterValidator"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Wireless"
+    },
+    "pci_peripherals": {
+      "items": {
+        "$ref": "#/$defs/PCIPeripheralValidator"
+      },
+      "type": "array",
+      "title": "Pci Peripherals",
+      "default": []
+    },
+    "usb_peripherals": {
+      "items": {
+        "$ref": "#/$defs/USBPeripheralValidator"
+      },
+      "type": "array",
+      "title": "Usb Peripherals",
+      "default": []
+    },
+    "available_releases": {
+      "items": {
+        "$ref": "#/$defs/OSValidator"
+      },
+      "type": "array",
+      "title": "Available Releases"
+    }
+  },
+  "type": "object",
+  "required": [
+    "certified_url",
+    "architecture",
+    "board",
+    "bios",
+    "available_releases"
+  ],
+  "$defs": {
+    "AudioValidator": {
+      "properties": {
+        "model": {
+          "type": "string",
+          "title": "Model"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "identifier": {
+          "type": "string",
+          "title": "Identifier"
+        }
+      },
+      "type": "object",
+      "required": [
+        "model",
+        "vendor",
+        "identifier"
+      ],
+      "title": "AudioValidator",
+      "description": "Validator model for audio devices"
+    },
+    "BiosValidator": {
+      "properties": {
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Revision"
+        },
+        "firmware_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Firmware Revision"
+        },
+        "release_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Release Date"
+        }
+      },
+      "type": "object",
+      "required": [
+        "vendor",
+        "version",
+        "revision",
+        "firmware_revision",
+        "release_date"
+      ],
+      "title": "BiosValidator"
+    },
+    "BoardValidator": {
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "product_name": {
+          "type": "string",
+          "title": "Product Name"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "manufacturer",
+        "product_name",
+        "version"
+      ],
+      "title": "BoardValidator"
+    },
+    "ChassisValidator": {
+      "properties": {
+        "chassis_type": {
+          "type": "string",
+          "title": "Chassis Type"
+        },
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "sku": {
+          "type": "string",
+          "title": "Sku"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "chassis_type",
+        "manufacturer",
+        "sku",
+        "version"
+      ],
+      "title": "ChassisValidator"
+    },
+    "DeviceStatus": {
+      "type": "string",
+      "enum": [
+        "known-working",
+        "known-breaking",
+        "unknown"
+      ],
+      "title": "DeviceStatus"
+    },
+    "GPUValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "codename": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Codename"
+        },
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "identifier": {
+          "type": "string",
+          "title": "Identifier"
+        }
+      },
+      "type": "object",
+      "required": [
+        "manufacturer",
+        "version",
+        "identifier"
+      ],
+      "title": "GPUValidator"
+    },
+    "KernelPackageValidator": {
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Signature"
+        },
+        "loaded_modules": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Loaded Modules",
+          "default": []
+        }
+      },
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "signature"
+      ],
+      "title": "KernelPackageValidator"
+    },
+    "NetworkAdapterValidator": {
+      "properties": {
+        "bus": {
+          "type": "string",
+          "title": "Bus"
+        },
+        "identifier": {
+          "type": "string",
+          "title": "Identifier"
+        },
+        "model": {
+          "type": "string",
+          "title": "Model"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "capacity": {
+          "type": "integer",
+          "title": "Capacity"
+        }
+      },
+      "type": "object",
+      "required": [
+        "bus",
+        "identifier",
+        "model",
+        "vendor",
+        "capacity"
+      ],
+      "title": "NetworkAdapterValidator",
+      "description": "Validator for ethernet network adapters"
+    },
+    "OSValidator": {
+      "properties": {
+        "distributor": {
+          "type": "string",
+          "title": "Distributor"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "codename": {
+          "type": "string",
+          "title": "Codename"
+        },
+        "kernel": {
+          "$ref": "#/$defs/KernelPackageValidator"
+        }
+      },
+      "type": "object",
+      "required": [
+        "distributor",
+        "version",
+        "codename",
+        "kernel"
+      ],
+      "title": "OSValidator"
+    },
+    "PCIPeripheralValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pci_id": {
+          "type": "string",
+          "title": "Pci Id"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        }
+      },
+      "type": "object",
+      "required": [
+        "pci_id",
+        "name",
+        "vendor"
+      ],
+      "title": "PCIPeripheralValidator"
+    },
+    "USBPeripheralValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "usb_id": {
+          "type": "string",
+          "title": "Usb Id"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        }
+      },
+      "type": "object",
+      "required": [
+        "usb_id",
+        "name",
+        "vendor"
+      ],
+      "title": "USBPeripheralValidator"
+    },
+    "VideoCaptureValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model": {
+          "type": "string",
+          "title": "Model"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "identifier": {
+          "type": "string",
+          "title": "Identifier"
+        }
+      },
+      "type": "object",
+      "required": [
+        "model",
+        "vendor",
+        "identifier"
+      ],
+      "title": "VideoCaptureValidator",
+      "description": "Validator model for video capture devices"
+    },
+    "WirelessAdapterValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model": {
+          "type": "string",
+          "title": "Model"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "identifier": {
+          "type": "string",
+          "title": "Identifier"
+        }
+      },
+      "type": "object",
+      "required": [
+        "model",
+        "vendor",
+        "identifier"
+      ],
+      "title": "WirelessAdapterValidator",
+      "description": "Validator model for wireless network adapters"
+    }
+  }
+}

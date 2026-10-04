@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-forward-put-schema.json",
+  "title": "NetworkForwardPut",
+  "description": "NetworkForwardPut represents the modifiable fields of a LXD network address forward",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-forwards-api-openapi.yml#/components/schemas/NetworkForwardPut",
+  "properties": {
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Forward configuration map (refer to doc/network-forwards.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the forward listen IP",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "ports": {
+      "description": "Port forwards (optional)",
+      "items": {
+        "$ref": "#/$defs/NetworkForwardPort"
+      },
+      "type": "array",
+      "x-go-name": "Ports"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "NetworkForwardPort": {
+      "description": "NetworkForwardPort represents a port specification in a network address forward",
+      "properties": {
+        "description": {
+          "description": "Description of the forward port",
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "listen_port": {
+          "description": "ListenPort(s) to forward (comma delimited ranges)",
+          "type": "string",
+          "x-go-name": "ListenPort"
+        },
+        "protocol": {
+          "description": "Protocol for port forward (either tcp or udp)",
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "target_address": {
+          "description": "TargetAddress to forward ListenPorts to",
+          "type": "string",
+          "x-go-name": "TargetAddress"
+        },
+        "target_port": {
+          "description": "TargetPort(s) to forward ListenPorts to (allows for many-to-one)",
+          "type": "string",
+          "x-go-name": "TargetPort"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

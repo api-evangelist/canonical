@@ -2,52 +2,19 @@ openapi: 3.2.0
 info:
   title: Canonical Assertions API
   version: '1.0'
-  description: 'Operations tagged Assertions across 2 of this provider''s published API definitions: canonical-openapi.yml, canonical-snapd-rest-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Assertions across 2 of this provider''s published API definitions: canonical-snapd-rest-api-openapi.yml, canonical-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
-- url: https://api.snapcraft.io
 - url: unix:///run/snapd.socket
   description: 'Local snapd socket access. Unless otherwise specified, routes appear on
 
     this socket.'
 - url: unix:///run/snapd-snap.socket
   description: Snapd socket access for snaps
+- url: https://api.snapcraft.io
 tags:
 - name: Assertions
+  description: List and add assertion types.
 paths:
-  /v2/assertions/{type}/{primaryKey}:
-    parameters:
-    - in: path
-      name: type
-      required: true
-      schema:
-        type: string
-        enum:
-        - snap-declaration
-        - snap-revision
-        - account
-        - account-key
-        - validation-set
-    - in: path
-      name: primaryKey
-      required: true
-      schema:
-        type: string
-    get:
-      summary: Fetch an assertion
-      description: Retrieve a signed assertion document by type and primary key.
-      responses:
-        '200':
-          description: Signed assertion document (application/x.ubuntu.assertion).
-          content:
-            application/x.ubuntu.assertion:
-              schema:
-                type: string
-      tags:
-      - Assertions
-      operationId: getV2AssertionsByTypeByPrimaryKey
-      x-operation-id-source: derived
-    servers:
-    - url: https://api.snapcraft.io
   /v2/assertions:
     get:
       tags:
@@ -543,146 +510,48 @@ paths:
         this socket.'
     - url: unix:///run/snapd-snap.socket
       description: Snapd socket access for snaps
+  /v2/assertions/{type}/{primaryKey}:
+    parameters:
+    - in: path
+      name: type
+      required: true
+      schema:
+        type: string
+        enum:
+        - snap-declaration
+        - snap-revision
+        - account
+        - account-key
+        - validation-set
+    - in: path
+      name: primaryKey
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Fetch an assertion
+      description: Retrieve a signed assertion document by type and primary key.
+      responses:
+        '200':
+          description: Signed assertion document (application/x.ubuntu.assertion).
+          content:
+            application/x.ubuntu.assertion:
+              schema:
+                type: string
+      tags:
+      - Assertions
+      operationId: getV2AssertionsByTypeByPrimaryKey
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.snapcraft.io
 components:
-  responses:
-    BadRequest:
-      description: 'Bad Request. The request could not be processed due to a client-side error.
-
-        This can be due to malformed syntax or providing an entity that does not exist.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 400
-              status:
-                type: string
-                enum:
-                - Bad Request
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/ConfdbError'
-                - $ref: '#/components/schemas/MalformedRequestError'
-                - $ref: '#/components/schemas/NoSSHKeysError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
-    NotFound:
-      description: 'Not Found. The requested resource could not be found.
-
-        Can refer to either a local or remote resource'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 404
-              status:
-                type: string
-                enum:
-                - Not Found
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/NoModelAssertionError'
-                - $ref: '#/components/schemas/NoSerialAssertionError'
-                - $ref: '#/components/schemas/NotFoundError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
-    Accepted:
-      description: The asynchronous request was accepted and is being processed.
-      content:
-        application/json:
-          schema:
-            type: object
-            description: The response for an accepted asynchronous operation.
-            properties:
-              type:
-                type: string
-                enum:
-                - async
-              status-code:
-                type: integer
-                enum:
-                - 202
-              status:
-                type: string
-                enum:
-                - Accepted
-              change:
-                type: string
-                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
-                example: '61'
-              result:
-                type:
-                - object
-                - 'null'
-                description: For an accepted async operation, this is always null as the result is not yet available.
-                example: null
-    InternalError:
-      description: An internal error occurred on the server. This is a generic response for server-side issues.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 500
-              status:
-                type: string
-                enum:
-                - Internal Server Error
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                $ref: '#/components/schemas/InternalServerError'
   schemas:
-    SnapNotInstalledError:
-      type: object
-      description: The snap does not exist on the system.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - snap-not-found
-          - snap-not-installed
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: no state entry for key
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          example: firefox
-    MalformedRequestError:
+    UserNotFoundError:
       type: object
       properties:
         message:
           type: string
-          example: cannot decode request body into an alias action
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
     InternalServerError:
       type: object
       properties:
@@ -710,37 +579,6 @@ components:
           description: Value passed that triggered the error.
           enum:
           - model
-    NotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: no snapshot set with the given ID
-    NoSerialAssertionError:
-      type: object
-      description: The serial assertion has not been created yet.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          enum:
-          - no serial assertion yet
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          enum:
-          - serial
-    UserNotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
     ConfdbError:
       type: object
       description: An error occured while interacting with confdb.
@@ -802,6 +640,169 @@ components:
         status: OK
         status-code: 200
         type: sync
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
+    NoSerialAssertionError:
+      type: object
+      description: The serial assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no serial assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - serial
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
+
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    Accepted:
+      description: The asynchronous request was accepted and is being processed.
+      content:
+        application/json:
+          schema:
+            type: object
+            description: The response for an accepted asynchronous operation.
+            properties:
+              type:
+                type: string
+                enum:
+                - async
+              status-code:
+                type: integer
+                enum:
+                - 202
+              status:
+                type: string
+                enum:
+                - Accepted
+              change:
+                type: string
+                description: The ID of the background change that was initiated. This is a string because JSON only uses floats.
+                example: '61'
+              result:
+                type:
+                - object
+                - 'null'
+                description: For an accepted async operation, this is always null as the result is not yet available.
+                example: null
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
   securitySchemes:
     PeerAuth:
       type: apiKey
@@ -828,5 +829,5 @@ externalDocs:
   url: https://snapcraft.io/docs
   description: Snap and Snapcraft documentation
 x-refined-from:
-- canonical-openapi.yml
 - canonical-snapd-rest-api-openapi.yml
+- canonical-openapi.yml

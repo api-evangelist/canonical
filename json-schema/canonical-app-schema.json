@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-app-schema.json",
+  "title": "App",
+  "description": "Represents a single application provided by a snap.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-apps-api-openapi.yml#/components/schemas/App",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "snap": {
+      "type": "string",
+      "description": "The snap providing the app."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the app."
+    },
+    "desktop-file": {
+      "type": "string",
+      "description": "The desktop file for the app."
+    },
+    "daemon": {
+      "type": "string",
+      "description": "The daemon type, if the app is a service.",
+      "enum": [
+        "forking",
+        "notify",
+        "oneshot",
+        "simple"
+      ]
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "True if the app is an enabled service."
+    },
+    "active": {
+      "type": "boolean",
+      "description": "True if the app is an active service."
+    },
+    "common-id": {
+      "type": "string",
+      "description": "Common ID associated with this app."
+    },
+    "activators": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Activator"
+      }
+    }
+  },
+  "$defs": {
+    "Activator": {
+      "type": "object",
+      "description": "Details about a single service activator. Note that uppercase field names\nexist to maintain backward compatibility with the non-conformant previous\nimplementation, and are thus not documented here.",
+      "required": [
+        "name",
+        "type",
+        "active",
+        "enabled"
+      ],
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "description": "Whether the activator is active or not."
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the activator is enabled or not."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the activator."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the activator.",
+          "enum": [
+            "dbus",
+            "socket",
+            "timer"
+          ]
+        }
+      }
+    }
+  }
+}

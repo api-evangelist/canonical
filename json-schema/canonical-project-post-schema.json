@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-project-post-schema.json",
+  "title": "ProjectPost",
+  "description": "ProjectPost represents the fields required to rename a LXD project",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-projects-api-openapi.yml#/components/schemas/ProjectPost",
+  "properties": {
+    "name": {
+      "description": "The new name for the project",
+      "type": "string",
+      "x-go-name": "Name"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

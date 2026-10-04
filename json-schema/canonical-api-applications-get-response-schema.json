@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-api-applications-get-response-schema.json",
+  "title": "api.ApplicationsGetResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-application-api-openapi.yml#/components/schemas/api.ApplicationsGetResponse",
+  "type": "object",
+  "properties": {
+    "error": {
+      "description": "Error is an optional error message",
+      "type": "string"
+    },
+    "metadata": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/api_gateway.Application"
+      }
+    },
+    "status": {
+      "description": "Status of the response",
+      "enum": [
+        "success",
+        "failed",
+        "unknown"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/api_gateway.ResponseStatus"
+        }
+      ]
+    },
+    "status_code": {
+      "description": "StatusCode is the HTTP code of the response",
+      "type": "integer"
+    },
+    "type": {
+      "description": "Type of the operation",
+      "enum": [
+        "sync",
+        "async",
+        "error"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/$defs/api_gateway.ResponseType"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "api_gateway.Application": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "api_gateway.ResponseStatus": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failed",
+        "unknown"
+      ],
+      "x-enum-varnames": [
+        "ResponseStatusSuccess",
+        "ResponseStatusFailed",
+        "ResponseStatusUnknown"
+      ]
+    },
+    "api_gateway.ResponseType": {
+      "type": "string",
+      "enum": [
+        "sync",
+        "async",
+        "error"
+      ],
+      "x-enum-varnames": [
+        "ResponseTypeSync",
+        "ResponseTypeAsync",
+        "ResponseTypeError"
+      ]
+    }
+  }
+}

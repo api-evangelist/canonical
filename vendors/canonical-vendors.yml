@@ -1,0 +1,59 @@
+generated: '2026-10-04'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: cloudflare
+  name: Cloudflare
+  area: cdn
+  host: documentation.ubuntu.com
+  evidence: header:cf-ray
+  signal: header
+  confidence: high
+  kin_score:
+  - https_enforced
+  - hsts
+- vendor: readthedocs
+  name: Read the Docs
+  area: documentation
+  host: documentation.ubuntu.com
+  evidence: cname:readthedocs.com
+  signal: docs-platform
+  confidence: high
+  kin_score: []
+reliance:
+  areas_vendor_served:
+  - cdn
+  - documentation
+  vendor_count: 2
+  areas_observed: 12
+  share_of_observable_areas: 0.167
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: readthedocs'
+- canonical.com (Website)
+- documentation.ubuntu.com (Documentation)
+- status.canonical.com (StatusPage)
+- ubuntu.com (SignUp)
+- login.ubuntu.com (Login)
+- ubuntu.com (Support)
+- documentation.ubuntu.com (APIReference)
+- ubuntu.com (GettingStarted)
+- api.snapcraft.io (baseURL)
+- api.charmhub.io (baseURL)
+- <maas-host> (baseURL)
+- api.launchpad.net (baseURL)

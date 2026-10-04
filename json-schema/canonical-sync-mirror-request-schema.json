@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-sync-mirror-request-schema.json",
+  "title": "SyncMirrorRequest",
+  "description": "The request message for syncing a mirror.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-mirrorservice-api-openapi.yml#/components/schemas/SyncMirrorRequest",
+  "required": [
+    "name"
+  ],
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The resource name of the mirror to sync.\n Format: \"mirrors/{mirror}\""
+    },
+    "keyrings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional keyring files to use for validation."
+    },
+    "ignoreChecksums": {
+      "type": "boolean",
+      "description": "Ignore checksum mismatches."
+    },
+    "ignoreSignatures": {
+      "type": "boolean",
+      "description": "Ignore signature verification failures."
+    },
+    "forceUpdate": {
+      "type": "boolean",
+      "description": "Force a full update."
+    },
+    "skipExistingPackages": {
+      "type": "boolean",
+      "description": "Skip downloading packages that already exist."
+    }
+  }
+}

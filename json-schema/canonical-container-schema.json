@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-container-schema.json",
+  "title": "Container",
+  "description": "Container represents a single container",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-containers-api-openapi.yml#/components/schemas/Container",
+  "type": "object",
+  "properties": {
+    "address": {
+      "description": "Address is the IP address of the container",
+      "type": "string"
+    },
+    "app_id": {
+      "description": "AppID is the ID of the application the container is created from. Empty if the\ncontainer has not been created from an application.",
+      "type": "string"
+    },
+    "app_name": {
+      "description": "AppName is the name of the application the container is created from. Empty if the\ncontainer has not been created from an application.",
+      "type": "string"
+    },
+    "app_version": {
+      "description": "AppVersion is the version of the application the container is created from. Empty if the\ncontainer has not been created from an application.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "architecture": {
+      "description": "Architecture describes the CPU archtitecture the container is using",
+      "type": "string"
+    },
+    "config": {
+      "description": "Config summarizes the configuration the container uses",
+      "type": "object",
+      "properties": {
+        "boot_activity": {
+          "description": "BootActivity specifies the Android activity which is started by default",
+          "type": "string"
+        },
+        "boot_package": {
+          "description": "BootPackage specifies the Android application package name which is started by default",
+          "type": "string"
+        },
+        "devmode": {
+          "description": "DevMode specifies if development mode has been turned on for the container",
+          "type": "boolean"
+        },
+        "disable_watchdog": {
+          "description": "DisableWatchdog defines whether the watchdog is disabled",
+          "type": "boolean"
+        },
+        "metrics_server": {
+          "description": "MetricsServer specifies a metrics server the container will use",
+          "type": "string"
+        },
+        "platform": {
+          "description": "Platform specifies the Anbox platform the container is running with",
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "description": "CreatedAt specifies the time at which the container was created",
+      "type": "integer",
+      "format": "int64"
+    },
+    "error_message": {
+      "description": "ErrorMessage provides an error message when the container status is set to error.",
+      "type": "string"
+    },
+    "id": {
+      "description": "ID of the container",
+      "type": "string"
+    },
+    "image_id": {
+      "description": "ImageID is the ID of the image the container is created from. Empty if the\ncontainer has not been created from an image.",
+      "type": "string"
+    },
+    "image_version": {
+      "description": "ImageVersion is the version of the image the container is created from. Empty if the\ncontainer has not been created from an image.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "name": {
+      "description": "Name of the container. Typically in the format \"ams-<ID>\".",
+      "type": "string"
+    },
+    "node": {
+      "description": "Node the container is running on",
+      "type": "string"
+    },
+    "public_address": {
+      "description": "PublicAddress is the external IP address the container is accessible on (in most\ncases the IP of the node it is running on)",
+      "type": "string"
+    },
+    "resources": {
+      "description": "Resources specifies the resources allocated for the container",
+      "type": "object",
+      "properties": {
+        "cpus": {
+          "description": "CPUs cores assigned to the container",
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk-size": {
+          "description": "DiskSize specifies the amount of storage assigned to the container",
+          "type": "string"
+        },
+        "gpu-slots": {
+          "description": "GPUSlots specifies the number of GPU slots the container got allocated",
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory": {
+          "description": "Memory assigned to the container",
+          "type": "string"
+        },
+        "vpu-slots": {
+          "description": "VPUSlots specifies the number of VPU slots the container",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "services": {
+      "description": "Services the container exposes",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ContainerService"
+      }
+    },
+    "status": {
+      "description": "Status of the container",
+      "type": "string"
+    },
+    "status_code": {
+      "$ref": "#/$defs/ContainerStatus"
+    },
+    "stored_logs": {
+      "description": "StoredLogs lists log files AMS stores for the container.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "description": "Tags specifies the tags the container has assigned",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "type": {
+      "$ref": "#/$defs/ContainerType"
+    }
+  },
+  "$defs": {
+    "ContainerService": {
+      "description": "While NetworkServiceSpec defines what the user requests, ContainerService is what is actually\nopened on the container.",
+      "type": "object",
+      "title": "ContainerService describes a single service the container exposes to the outside world.",
+      "properties": {
+        "expose": {
+          "description": "Expose defines wether the service is exposed on the public endpoint of the node\nor if it is only available on the private endpoint. To expose the service set to\ntrue and to false otherwise.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name gives the container a hint what the exposed port is being used for. This\nallows further tweaks inside the container to expose the service correctly.",
+          "type": "string"
+        },
+        "node_port": {
+          "description": "NodePort is the port used on the LXD node to map to the service port\nIf left empty the node port is automatically selected.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "node_port_end": {
+          "description": "NodePortEnd, if specified, denotes the end of the port range on the node starting\nat NodePort",
+          "type": "integer",
+          "format": "int64"
+        },
+        "port": {
+          "description": "Port is the port the container provides a service on",
+          "type": "integer",
+          "format": "int64"
+        },
+        "port_end": {
+          "description": "PortEnd, if specified, denotes the end of the port range starting at Port",
+          "type": "integer",
+          "format": "int64"
+        },
+        "protocols": {
+          "description": "List of network protocols (tcp, udp) the port should be exposed for",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NetworkProtocol"
+          }
+        }
+      }
+    },
+    "ContainerStatus": {
+      "description": "ContainerStatus represents the status a container can be in",
+      "type": "integer",
+      "format": "int64"
+    },
+    "ContainerType": {
+      "description": "Possible values are: regular, base, unknown",
+      "type": "string",
+      "title": "ContainerType describes the type of a container."
+    },
+    "NetworkProtocol": {
+      "description": "NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use",
+      "type": "string"
+    }
+  }
+}

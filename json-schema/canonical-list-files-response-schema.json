@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-list-files-response-schema.json",
+  "title": "ListFilesResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-files-api-openapi.yml#/components/schemas/ListFilesResponse",
+  "allOf": [
+    {
+      "$ref": "#/$defs/BaseResponse"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FileInfo"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "BaseResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Response type, \"sync\"."
+        },
+        "status-code": {
+          "type": "integer",
+          "description": "HTTP response status code."
+        },
+        "status": {
+          "type": "string",
+          "description": "The description of the HTTP status code.\n\nSee the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).\n"
+        }
+      }
+    },
+    "FileInfo": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Full path to the file or directory."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the file or directory."
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of file entry (e.g., \"file\", \"directory\", \"symlink\").",
+          "enum": [
+            "device",
+            "directory",
+            "file",
+            "named-pipe",
+            "socket",
+            "symlink",
+            "unknown"
+          ]
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Size of the file in bytes (only for regular files)."
+        },
+        "permissions": {
+          "type": "string",
+          "description": "File permissions in octal format (for example, \"644\")."
+        },
+        "last-modified": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modified [time](#time) in RFC3339 format."
+        },
+        "user-id": {
+          "type": "integer",
+          "description": "User ID of the owner."
+        },
+        "user": {
+          "type": "string",
+          "description": "Username of the owner."
+        },
+        "group-id": {
+          "type": "integer",
+          "description": "Group ID of the owner."
+        },
+        "group": {
+          "type": "string",
+          "description": "Group name of the owner."
+        }
+      },
+      "required": [
+        "path",
+        "name",
+        "type",
+        "permissions",
+        "last-modified"
+      ]
+    }
+  }
+}

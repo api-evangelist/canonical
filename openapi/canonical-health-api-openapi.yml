@@ -130,6 +130,18 @@ paths:
       - Health
 components:
   schemas:
+    GetHealthOKResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            properties:
+              healthy:
+                type: boolean
+                description: True if the check is healthy, false otherwise.
+                const: true
     BaseResponse:
       type: object
       properties:
@@ -159,18 +171,6 @@ components:
                 type: boolean
                 description: True if the check is healthy, false otherwise.
                 const: false
-    GetHealthOKResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: object
-            properties:
-              healthy:
-                type: boolean
-                description: True if the check is healthy, false otherwise.
-                const: true
 x-refined-from:
 - canonical-cos-registration-server-api-openapi.yml
 - canonical-pebble-api-openapi.yml

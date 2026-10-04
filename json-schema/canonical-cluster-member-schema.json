@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-cluster-member-schema.json",
+  "title": "ClusterMember represents the a LXD node in the cluster.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-cluster-api-openapi.yml#/components/schemas/ClusterMember",
+  "properties": {
+    "architecture": {
+      "description": "The primary architecture of the cluster member\n\nAPI extension: clustering_architecture",
+      "type": "string",
+      "x-go-name": "Architecture"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Additional configuration information\n\nAPI extension: clustering_config",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "database": {
+      "description": "Whether the cluster member is a database server (database-leader, database-voter, or database-standby)",
+      "type": "boolean",
+      "x-go-name": "Database"
+    },
+    "description": {
+      "description": "Cluster member description\n\nAPI extension: clustering_description",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "failure_domain": {
+      "description": "Name of the failure domain for this cluster member\n\nAPI extension: clustering_failure_domains",
+      "type": "string",
+      "x-go-name": "FailureDomain"
+    },
+    "groups": {
+      "description": "List of cluster groups this member belongs to\n\nAPI extension: clustering_groups",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "message": {
+      "description": "Additional status information",
+      "type": "string",
+      "x-go-name": "Message"
+    },
+    "roles": {
+      "description": "List of roles held by this cluster member\n\nAPI extension: clustering_roles",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Roles"
+    },
+    "server_name": {
+      "description": "Name of the cluster member",
+      "type": "string",
+      "x-go-name": "ServerName"
+    },
+    "status": {
+      "description": "Current status",
+      "type": "string",
+      "x-go-name": "Status"
+    },
+    "url": {
+      "description": "URL at which the cluster member can be reached",
+      "type": "string",
+      "x-go-name": "URL"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

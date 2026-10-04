@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-artefact-build-response-schema.json",
+  "title": "ArtefactBuildResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-artefact-builds-api-openapi.yml#/components/schemas/ArtefactBuildResponse",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "architecture": {
+      "type": "string",
+      "title": "Architecture"
+    },
+    "revision": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Revision"
+    },
+    "test_executions": {
+      "items": {
+        "$ref": "#/$defs/TestExecutionResponse"
+      },
+      "type": "array",
+      "title": "Test Executions"
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "architecture",
+    "revision",
+    "test_executions"
+  ],
+  "$defs": {
+    "EnvironmentResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "architecture": {
+          "type": "string",
+          "title": "Architecture"
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "architecture"
+      ],
+      "title": "EnvironmentResponse"
+    },
+    "ExecutionMetadata": {
+      "additionalProperties": {
+        "items": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 1,
+          "description": "Execution Metadata Value"
+        },
+        "type": "array"
+      },
+      "propertyNames": {
+        "maxLength": 200,
+        "minLength": 1,
+        "description": "Execution Metadata Category"
+      },
+      "type": "object",
+      "title": "Execution Metadata",
+      "description": "A mapping of string categories to lists of string values."
+    },
+    "TestExecutionRelevantLinkResponse": {
+      "properties": {
+        "label": {
+          "type": "string",
+          "title": "Label"
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2083,
+          "minLength": 1,
+          "format": "uri",
+          "title": "Url"
+        },
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        }
+      },
+      "type": "object",
+      "required": [
+        "label",
+        "url",
+        "id"
+      ],
+      "title": "TestExecutionRelevantLinkResponse"
+    },
+    "TestExecutionResponse": {
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "Id"
+        },
+        "ci_link": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ci Link"
+        },
+        "c3_link": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "C3 Link"
+        },
+        "relevant_links": {
+          "items": {
+            "$ref": "#/$defs/TestExecutionRelevantLinkResponse"
+          },
+          "type": "array",
+          "title": "Relevant Links"
+        },
+        "environment": {
+          "$ref": "#/$defs/EnvironmentResponse"
+        },
+        "status": {
+          "$ref": "#/$defs/TestExecutionStatus"
+        },
+        "test_plan": {
+          "type": "string",
+          "title": "Test Plan"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "Created At"
+        },
+        "execution_metadata": {
+          "$ref": "#/$defs/ExecutionMetadata"
+        },
+        "is_triaged": {
+          "type": "boolean",
+          "title": "Is Triaged"
+        },
+        "is_rerun_requested": {
+          "type": "boolean",
+          "title": "Is Rerun Requested",
+          "readOnly": true
+        },
+        "rerun_priority": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rerun Priority",
+          "readOnly": true
+        }
+      },
+      "type": "object",
+      "required": [
+        "id",
+        "ci_link",
+        "c3_link",
+        "environment",
+        "status",
+        "test_plan",
+        "created_at",
+        "execution_metadata",
+        "is_triaged",
+        "is_rerun_requested",
+        "rerun_priority"
+      ],
+      "title": "TestExecutionResponse"
+    },
+    "TestExecutionStatus": {
+      "type": "string",
+      "enum": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "PASSED",
+        "FAILED",
+        "NOT_TESTED",
+        "ENDED_PREMATURELY"
+      ],
+      "title": "TestExecutionStatus"
+    }
+  }
+}

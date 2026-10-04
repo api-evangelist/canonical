@@ -37,16 +37,6 @@ paths:
                 $ref: '#/components/schemas/api.RegionsGetResponse'
 components:
   schemas:
-    api_gateway.ResponseStatus:
-      type: string
-      enum:
-      - success
-      - failed
-      - unknown
-      x-enum-varnames:
-      - ResponseStatusSuccess
-      - ResponseStatusFailed
-      - ResponseStatusUnknown
     api.Region:
       type: object
       properties:
@@ -94,3 +84,13 @@ components:
       - ResponseTypeSync
       - ResponseTypeAsync
       - ResponseTypeError
+    api_gateway.ResponseStatus:
+      type: string
+      enum:
+      - success
+      - failed
+      - unknown
+      x-enum-varnames:
+      - ResponseStatusSuccess
+      - ResponseStatusFailed
+      - ResponseStatusUnknown

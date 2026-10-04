@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-import-local-packages-request-schema.json",
+  "title": "ImportLocalPackagesRequest",
+  "description": "The request message for importing packages into a local repository.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-localservice-api-openapi.yml#/components/schemas/ImportLocalPackagesRequest",
+  "required": [
+    "name",
+    "url"
+  ],
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The resource name of the local repository to import packages into.\n Format: \"locals/{local}\""
+    },
+    "url": {
+      "type": "string",
+      "description": "The URL of the package list or index to import from."
+    },
+    "validateOnly": {
+      "type": "boolean",
+      "description": "If set to true, the request is validated without actually performing the import.\n The set of packages that would be imported is returned as the result of the task.\n See: https://google.aip.dev/163"
+    }
+  }
+}

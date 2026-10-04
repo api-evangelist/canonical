@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-snap-schema.json",
+  "title": "Snap",
+  "description": "Detailed information about a single snap.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-authenticationrequired-api-openapi.yml#/components/schemas/Snap",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique identifier for the snap."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the snap."
+    },
+    "base": {
+      "type": "string",
+      "description": "The base snap this snap is built on."
+    },
+    "channel": {
+      "type": "string",
+      "description": "The default channel for this snap."
+    },
+    "common-ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confinement": {
+      "type": "string",
+      "enum": [
+        "classic",
+        "devmode",
+        "strict"
+      ]
+    },
+    "contact": {
+      "type": "string",
+      "description": "The primary contact URL or email for the developer."
+    },
+    "description": {
+      "type": "string",
+      "description": "A detailed description of the snap."
+    },
+    "developer": {
+      "type": "string",
+      "description": "The username of the snap developer."
+    },
+    "devmode": {
+      "type": "boolean",
+      "description": "If set to true, the snap needs to be installed with devmode confinement\nand doesn't, yet, work with strict confinement due to sandbox limitations\nor developer unfamiliarity."
+    },
+    "download-size": {
+      "type": "integer",
+      "format": "int64",
+      "description": "The size of the snap package in bytes."
+    },
+    "icon": {
+      "type": "string",
+      "format": "uri",
+      "description": "A URL to the snap's icon image."
+    },
+    "license": {
+      "type": "string"
+    },
+    "private": {
+      "type": "boolean",
+      "description": "Whether the snap is private."
+    },
+    "revision": {
+      "type": "string",
+      "description": "The latest revision number of the snap in this channel."
+    },
+    "status": {
+      "type": "string"
+    },
+    "store-url": {
+      "type": "string",
+      "format": "uri",
+      "description": "The URL to the snap's page in the Snap Store."
+    },
+    "summary": {
+      "type": "string",
+      "description": "A short, one-line summary of the snap."
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "description": "The type of the snap. 'os' is deprecated, and is left for compatibility\nwith the 'core' and 'ubuntu-core' snaps.",
+      "enum": [
+        "app",
+        "kernel",
+        "os",
+        "gadget",
+        "base"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "description": "The version string of the latest revision."
+    },
+    "website": {
+      "type": "string",
+      "format": "uri",
+      "description": "The official website for the snap or application."
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/StoreCategory"
+      }
+    },
+    "links": {
+      "$ref": "#/$defs/Links"
+    },
+    "media": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Media"
+      }
+    },
+    "publisher": {
+      "$ref": "#/$defs/Publisher"
+    }
+  },
+  "$defs": {
+    "Links": {
+      "type": "object",
+      "description": "A collection of relevant links for the snap.",
+      "properties": {
+        "contact": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "website": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "additionalProperties": {
+        "type": "array",
+        "description": "Allows for other link collections like 'issues', 'docs', etc.",
+        "items": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "Media": {
+      "type": "object",
+      "description": "A media asset for the snap, such as an icon or screenshot.",
+      "properties": {
+        "height": {
+          "type": "integer",
+          "description": "The height of the asset in pixels."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "icon",
+            "screenshot"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL of the asset."
+        },
+        "width": {
+          "type": "integer",
+          "description": "The width of the asset in pixels."
+        }
+      }
+    },
+    "Publisher": {
+      "type": "object",
+      "description": "Information about the publisher of the snap.",
+      "properties": {
+        "display-name": {
+          "type": "string",
+          "description": "The user name associated with the account."
+        },
+        "id": {
+          "type": "string",
+          "description": "The developer ID associated with the account."
+        },
+        "username": {
+          "type": "string"
+        },
+        "validation": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "starred",
+            "unproven"
+          ]
+        }
+      }
+    },
+    "StoreCategory": {
+      "type": "object",
+      "description": "A store category associated with the snap.",
+      "properties": {
+        "featured": {
+          "type": "boolean",
+          "description": "Indicates if the snap is featured in this category."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the category."
+        }
+      }
+    }
+  }
+}

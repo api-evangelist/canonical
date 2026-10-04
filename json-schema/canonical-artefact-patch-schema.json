@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-artefact-patch-schema.json",
+  "title": "ArtefactPatch",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-artefacts-api-openapi.yml#/components/schemas/ArtefactPatch",
+  "properties": {
+    "status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtefactStatus"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "archived": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Archived"
+    },
+    "stage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StageName"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "comment": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Comment"
+    },
+    "jira_issue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Jira Issue"
+    },
+    "attributes": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Attributes"
+    },
+    "assignee_id": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Assignee Id",
+      "description": "Legacy field. Mapped to reviewer_ids as a single-element list when reviewer_ids/reviewer_emails are not provided.",
+      "deprecated": true
+    },
+    "assignee_email": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Assignee Email",
+      "description": "Legacy field. Mapped to reviewer_emails as a single-element list when reviewer_ids/reviewer_emails are not provided.",
+      "deprecated": true
+    },
+    "reviewer_ids": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reviewer Ids",
+      "description": "Reviewer user IDs. Preferred over legacy assignee_id/assignee_email for setting assignees."
+    },
+    "reviewer_emails": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reviewer Emails",
+      "description": "Reviewer emails. Preferred over legacy assignee_id/assignee_email for setting assignees."
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "ArtefactStatus": {
+      "type": "string",
+      "enum": [
+        "APPROVED",
+        "MARKED_AS_FAILED",
+        "UNDECIDED"
+      ],
+      "title": "ArtefactStatus"
+    },
+    "StageName": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "updates",
+        "edge",
+        "beta",
+        "candidate",
+        "stable",
+        "pending",
+        "current"
+      ],
+      "title": "StageName"
+    }
+  }
+}

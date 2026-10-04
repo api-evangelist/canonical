@@ -848,441 +848,6 @@ paths:
       - change_test
 components:
   schemas:
-    ArtefactBuildMinimalResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
-    StartImageTestExecutionRequest:
-      properties:
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
-        version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Version
-          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
-        arch:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Arch
-          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
-        environment:
-          type: string
-          title: Environment
-          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
-        ci_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Ci Link
-          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
-        test_plan:
-          type: string
-          maxLength: 200
-          title: Test Plan
-          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
-        initial_status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
-          default: IN_PROGRESS
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
-          type: array
-          title: Relevant Links
-          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
-        needs_assignment:
-          type: boolean
-          title: Needs Assignment
-          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
-          default: false
-        family:
-          type: string
-          const: image
-          title: Family
-          default: image
-        execution_stage:
-          anyOf:
-          - $ref: '#/components/schemas/ImageStage'
-          - type: 'null'
-          description: 'Promotion stage of the image being tested. Options: ''pending'' (awaiting approval), ''current'' (approved and published). Use ''pending'' for images undergoing testing before promotion.'
-        os:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Os
-          description: 'Operating system of the image. Examples: ''ubuntu'', ''ubuntu-core'', ''ubuntu-server'''
-        release:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Release
-          description: 'OS release codename or version. Examples: ''focal'', ''jammy'', ''noble'', ''20.04'', ''22.04'', ''24.04'''
-        sha256:
-          type: string
-          title: Sha256
-          description: SHA256 checksum hash uniquely identifying this image build. Used to verify image integrity and uniqueness.
-        owner:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Owner
-          description: 'Team or organization responsible for the image. Examples: ''canonical'', ''ubuntu-images'', team names'
-        image_url:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Image Url
-          description: Direct URL where the image file can be downloaded or accessed. Should be a valid HTTP/HTTPS URL.
-      type: object
-      required:
-      - environment
-      - test_plan
-      - sha256
-      title: StartImageTestExecutionRequest
-    TestExecutionRelevantLinkCreate:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-      type: object
-      required:
-      - label
-      - url
-      title: TestExecutionRelevantLinkCreate
-    ImageStage:
-      type: string
-      enum:
-      - pending
-      - current
-      title: ImageStage
-    C3TestResultStatus:
-      type: string
-      enum:
-      - pass
-      - fail
-      - skip
-      title: C3TestResultStatus
-    TestExecutionResponseWithContext:
-      properties:
-        id:
-          type: integer
-          title: Id
-        ci_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ci Link
-        c3_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C3 Link
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
-          type: array
-          title: Relevant Links
-        environment:
-          $ref: '#/components/schemas/EnvironmentResponse'
-        status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-        test_plan:
-          type: string
-          title: Test Plan
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-        is_triaged:
-          type: boolean
-          title: Is Triaged
-        artefact:
-          $ref: '#/components/schemas/ArtefactResponse'
-        artefact_build:
-          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
-        test_results:
-          items:
-            $ref: '#/components/schemas/TestResultResponse'
-          type: array
-          title: Test Results
-        is_rerun_requested:
-          type: boolean
-          title: Is Rerun Requested
-          readOnly: true
-        rerun_priority:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Rerun Priority
-          readOnly: true
-      type: object
-      required:
-      - id
-      - ci_link
-      - c3_link
-      - environment
-      - status
-      - test_plan
-      - created_at
-      - execution_metadata
-      - is_triaged
-      - artefact
-      - artefact_build
-      - is_rerun_requested
-      - rerun_priority
-      title: TestExecutionResponseWithContext
-    SnapStage:
-      type: string
-      enum:
-      - edge
-      - beta
-      - candidate
-      - stable
-      title: SnapStage
-    ArtefactStatus:
-      type: string
-      enum:
-      - APPROVED
-      - MARKED_AS_FAILED
-      - UNDECIDED
-      title: ArtefactStatus
-    DeleteReruns:
-      properties:
-        test_execution_ids:
-          items:
-            type: integer
-          type: array
-          uniqueItems: true
-          title: Test Execution Ids
-        test_results_filters:
-          anyOf:
-          - $ref: '#/components/schemas/TestResultSearchFilters'
-          - type: 'null'
-        test_executions_filters:
-          anyOf:
-          - $ref: '#/components/schemas/TestExecutionRerunFilters'
-          - type: 'null'
-      type: object
-      title: DeleteReruns
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
-    TestResultResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        category:
-          type: string
-          title: Category
-        template_id:
-          type: string
-          title: Template Id
-        status:
-          $ref: '#/components/schemas/TestResultStatus'
-        comment:
-          type: string
-          title: Comment
-        io_log:
-          type: string
-          title: Io Log
-        previous_results:
-          items:
-            $ref: '#/components/schemas/PreviousTestResult'
-          type: array
-          title: Previous Results
-          description: The last 10 test results matched with the current test execution. The items are sorted in descending order, the first test result is the most recent, while the last one is the oldest one.
-          default: []
-        issues:
-          items:
-            $ref: '#/components/schemas/MinimalIssueTestResultAttachmentResponse'
-          type: array
-          title: Issues
-      type: object
-      required:
-      - id
-      - name
-      - created_at
-      - category
-      - template_id
-      - status
-      - comment
-      - io_log
-      - issues
-      title: TestResultResponse
-    StartSnapTestExecutionRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
-        version:
-          type: string
-          title: Version
-          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
-        arch:
-          type: string
-          title: Arch
-          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
-        environment:
-          type: string
-          title: Environment
-          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
-        ci_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Ci Link
-          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
-        test_plan:
-          type: string
-          maxLength: 200
-          title: Test Plan
-          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
-        initial_status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
-          default: IN_PROGRESS
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
-          type: array
-          title: Relevant Links
-          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
-        needs_assignment:
-          type: boolean
-          title: Needs Assignment
-          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
-          default: false
-        family:
-          type: string
-          const: snap
-          title: Family
-        revision:
-          type: integer
-          title: Revision
-          description: Snap package revision number from the store. Each architecture build has its own revision number. Find this in the snap store or via 'snap info <snap-name>' command.
-        track:
-          type: string
-          title: Track
-          description: 'Snap release track being tested. Tracks represent different major versions or streams of development. Common values: ''latest'' (default), version numbers like ''22'', ''1.0'', or custom tracks like ''experimental''. Use ''latest'' if unsure.'
-        store:
-          type: string
-          title: Store
-          description: Snap store where the snap is published. Typically 'ubuntu' for public Ubuntu Store snaps, or a brand store ID for enterprise stores. Use 'ubuntu' for standard snaps.
-        branch:
-          type: string
-          maxLength: 200
-          title: Branch
-          description: Optional snap branch name within the track/risk level. Branches are temporary testing channels. Usually empty string (default) unless testing a specific branch.
-          default: ''
-        execution_stage:
-          $ref: '#/components/schemas/SnapStage'
-          description: 'Distribution channel/risk level of the snap being tested. Options: ''edge'' (cutting-edge, frequent updates), ''beta'' (pre-release testing), ''candidate'' (release candidate), ''stable'' (production ready). Choose based on where the snap currently resides in the release pipeline.'
-      type: object
-      required:
-      - name
-      - version
-      - arch
-      - environment
-      - test_plan
-      - family
-      - revision
-      - track
-      - store
-      - execution_stage
-      title: StartSnapTestExecutionRequest
-    MinimalIssueTestResultAttachmentResponse:
-      properties:
-        issue:
-          $ref: '#/components/schemas/MinimalIssueResponse'
-        attachment_rule:
-          anyOf:
-          - $ref: '#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse'
-          - type: 'null'
-      type: object
-      required:
-      - issue
-      - attachment_rule
-      title: MinimalIssueTestResultAttachmentResponse
-    TestEventResponse:
-      properties:
-        event_name:
-          type: string
-          title: Event Name
-        timestamp:
-          type: string
-          format: date-time
-          title: Timestamp
-        detail:
-          type: string
-          title: Detail
-      type: object
-      required:
-      - event_name
-      - timestamp
-      - detail
-      title: TestEventResponse
     ArtefactResponse:
       properties:
         id:
@@ -1411,64 +976,361 @@ components:
       - completed_environment_reviews_count
       - assignee
       title: ArtefactResponse
-    RerunDetailsResponse:
+    StartImageTestExecutionRequest:
       properties:
-        priority_summaries:
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
+        version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Version
+          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
+        arch:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Arch
+          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
+        environment:
+          type: string
+          title: Environment
+          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
+        ci_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Ci Link
+          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
+        test_plan:
+          type: string
+          maxLength: 200
+          title: Test Plan
+          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
+        initial_status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
+          default: IN_PROGRESS
+        relevant_links:
           items:
-            $ref: '#/components/schemas/RerunPrioritySummary'
+            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
           type: array
-          title: Priority Summaries
-        selected_priority:
+          title: Relevant Links
+          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
+        needs_assignment:
+          type: boolean
+          title: Needs Assignment
+          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
+          default: false
+        family:
+          type: string
+          const: image
+          title: Family
+          default: image
+        execution_stage:
+          anyOf:
+          - $ref: '#/components/schemas/ImageStage'
+          - type: 'null'
+          description: 'Promotion stage of the image being tested. Options: ''pending'' (awaiting approval), ''current'' (approved and published). Use ''pending'' for images undergoing testing before promotion.'
+        os:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Os
+          description: 'Operating system of the image. Examples: ''ubuntu'', ''ubuntu-core'', ''ubuntu-server'''
+        release:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Release
+          description: 'OS release codename or version. Examples: ''focal'', ''jammy'', ''noble'', ''20.04'', ''22.04'', ''24.04'''
+        sha256:
+          type: string
+          title: Sha256
+          description: SHA256 checksum hash uniquely identifying this image build. Used to verify image integrity and uniqueness.
+        owner:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner
+          description: 'Team or organization responsible for the image. Examples: ''canonical'', ''ubuntu-images'', team names'
+        image_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Image Url
+          description: Direct URL where the image file can be downloaded or accessed. Should be a valid HTTP/HTTPS URL.
+      type: object
+      required:
+      - environment
+      - test_plan
+      - sha256
+      title: StartImageTestExecutionRequest
+    PendingRerun:
+      properties:
+        test_execution_id:
+          type: integer
+          title: Test Execution Id
+        ci_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ci Link
+        family:
+          $ref: '#/components/schemas/FamilyName'
+        test_execution:
+          $ref: '#/components/schemas/TestExecutionResponse'
+        artefact:
+          $ref: '#/components/schemas/ArtefactResponse'
+        artefact_build:
+          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+        priority:
+          type: integer
+          title: Priority
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - test_execution_id
+      - ci_link
+      - family
+      - test_execution
+      - artefact
+      - artefact_build
+      - priority
+      - created_at
+      title: PendingRerun
+    TestExecutionResponseWithContext:
+      properties:
+        id:
+          type: integer
+          title: Id
+        ci_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ci Link
+        c3_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C3 Link
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
+          type: array
+          title: Relevant Links
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+        test_plan:
+          type: string
+          title: Test Plan
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+        is_triaged:
+          type: boolean
+          title: Is Triaged
+        artefact:
+          $ref: '#/components/schemas/ArtefactResponse'
+        artefact_build:
+          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
+        test_results:
+          items:
+            $ref: '#/components/schemas/TestResultResponse'
+          type: array
+          title: Test Results
+        is_rerun_requested:
+          type: boolean
+          title: Is Rerun Requested
+          readOnly: true
+        rerun_priority:
           anyOf:
           - type: integer
           - type: 'null'
-          title: Selected Priority
+          title: Rerun Priority
+          readOnly: true
+      type: object
+      required:
+      - id
+      - ci_link
+      - c3_link
+      - environment
+      - status
+      - test_plan
+      - created_at
+      - execution_metadata
+      - is_triaged
+      - artefact
+      - artefact_build
+      - is_rerun_requested
+      - rerun_priority
+      title: TestExecutionResponseWithContext
+    RerunRequest:
+      properties:
+        test_execution_ids:
+          items:
+            type: integer
+          type: array
+          uniqueItems: true
+          title: Test Execution Ids
+        test_results_filters:
+          anyOf:
+          - $ref: '#/components/schemas/TestResultSearchFilters'
+          - type: 'null'
+        test_executions_filters:
+          anyOf:
+          - $ref: '#/components/schemas/TestExecutionRerunFilters'
+          - type: 'null'
+        priority:
+          anyOf:
+          - type: integer
+            maximum: 1000000
+            minimum: -1000000
+          - type: 'null'
+          title: Priority
+      type: object
+      title: RerunRequest
+    C3TestResultStatus:
+      type: string
+      enum:
+      - pass
+      - fail
+      - skip
+      title: C3TestResultStatus
+    MinimalIssueTestResultAttachmentResponse:
+      properties:
+        issue:
+          $ref: '#/components/schemas/MinimalIssueResponse'
+        attachment_rule:
+          anyOf:
+          - $ref: '#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse'
+          - type: 'null'
+      type: object
+      required:
+      - issue
+      - attachment_rule
+      title: MinimalIssueTestResultAttachmentResponse
+    ReviewerResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
+    StatusUpdateRequest:
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/TestEventResponse'
+          type: array
+          title: Events
+      type: object
+      required:
+      - events
+      title: StatusUpdateRequest
+    TestExecutionsPatchRequest:
+      properties:
+        c3_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: C3 Link
+        ci_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Ci Link
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/TestExecutionStatus'
+          - type: string
+            const: COMPLETED
+          - type: 'null'
+          title: Status
+        execution_metadata:
+          anyOf:
+          - $ref: '#/components/schemas/ExecutionMetadata'
+          - type: 'null'
+      type: object
+      title: TestExecutionsPatchRequest
+    ExecutionMetadata:
+      additionalProperties:
+        items:
+          type: string
+          maxLength: 200
+          minLength: 1
+          description: Execution Metadata Value
+        type: array
+      propertyNames:
+        maxLength: 200
+        minLength: 1
+        description: Execution Metadata Category
+      type: object
+      title: Execution Metadata
+      description: A mapping of string categories to lists of string values.
+      examples:
+      - charm:
+        - postgresql-k8s
+        - mysql-k8s
+        charm:postgresql-k8s:revision:
+        - '495'
+    RerunPrioritySummary:
+      properties:
+        priority:
+          type: integer
+          title: Priority
         count:
           type: integer
           title: Count
-        selected_count:
-          type: integer
-          title: Selected Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        reruns:
-          items:
-            $ref: '#/components/schemas/RerunDetail'
-          type: array
-          title: Reruns
       type: object
       required:
-      - priority_summaries
-      - selected_priority
+      - priority
       - count
-      - selected_count
-      - limit
-      - offset
-      - reruns
-      title: RerunDetailsResponse
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
+      title: RerunPrioritySummary
     MinimalIssueResponse:
       properties:
         id:
@@ -1514,108 +1376,7 @@ components:
       - status
       - url
       title: MinimalIssueResponse
-    TestExecutionSearchResponse:
-      properties:
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-        test_executions:
-          items:
-            $ref: '#/components/schemas/TestExecutionResponseWithContext'
-          type: array
-          title: Test Executions
-      type: object
-      required:
-      - count
-      - limit
-      - offset
-      - test_executions
-      title: TestExecutionSearchResponse
-    ExecutionMetadata:
-      additionalProperties:
-        items:
-          type: string
-          maxLength: 200
-          minLength: 1
-          description: Execution Metadata Value
-        type: array
-      propertyNames:
-        maxLength: 200
-        minLength: 1
-        description: Execution Metadata Category
-      type: object
-      title: Execution Metadata
-      description: A mapping of string categories to lists of string values.
-      examples:
-      - charm:
-        - postgresql-k8s
-        - mysql-k8s
-        charm:postgresql-k8s:revision:
-        - '495'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TestExecutionsPatchRequest:
-      properties:
-        c3_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: C3 Link
-        ci_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Ci Link
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/TestExecutionStatus'
-          - type: string
-            const: COMPLETED
-          - type: 'null'
-          title: Status
-        execution_metadata:
-          anyOf:
-          - $ref: '#/components/schemas/ExecutionMetadata'
-          - type: 'null'
-      type: object
-      title: TestExecutionsPatchRequest
-    RerunRequest:
+    DeleteReruns:
       properties:
         test_execution_ids:
           items:
@@ -1631,184 +1392,8 @@ components:
           anyOf:
           - $ref: '#/components/schemas/TestExecutionRerunFilters'
           - type: 'null'
-        priority:
-          anyOf:
-          - type: integer
-            maximum: 1000000
-            minimum: -1000000
-          - type: 'null'
-          title: Priority
       type: object
-      title: RerunRequest
-    DebStage:
-      type: string
-      enum:
-      - proposed
-      - updates
-      title: DebStage
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
-          type: integer
-          title: Id
-      type: object
-      required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse
-    PendingRerun:
-      properties:
-        test_execution_id:
-          type: integer
-          title: Test Execution Id
-        ci_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ci Link
-        family:
-          $ref: '#/components/schemas/FamilyName'
-        test_execution:
-          $ref: '#/components/schemas/TestExecutionResponse'
-        artefact:
-          $ref: '#/components/schemas/ArtefactResponse'
-        artefact_build:
-          $ref: '#/components/schemas/ArtefactBuildMinimalResponse'
-        priority:
-          type: integer
-          title: Priority
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-      type: object
-      required:
-      - test_execution_id
-      - ci_link
-      - family
-      - test_execution
-      - artefact
-      - artefact_build
-      - priority
-      - created_at
-      title: PendingRerun
-    EndTestExecutionRequest:
-      properties:
-        ci_link:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Ci Link
-        c3_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: C3 Link
-        checkbox_version:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Checkbox Version
-        test_results:
-          items:
-            $ref: '#/components/schemas/C3TestResult'
-          type: array
-          title: Test Results
-      type: object
-      required:
-      - ci_link
-      - test_results
-      title: EndTestExecutionRequest
-    MinimalIssueTestResultAttachmentRuleResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        enabled:
-          type: boolean
-          title: Enabled
-        families:
-          items:
-            $ref: '#/components/schemas/FamilyName'
-          type: array
-          title: Families
-        artefacts:
-          items:
-            type: string
-          type: array
-          title: Artefacts
-        artefact_versions:
-          items:
-            type: string
-          type: array
-          title: Artefact Versions
-        artefact_stages:
-          items:
-            type: string
-          type: array
-          title: Artefact Stages
-        artefact_tracks:
-          items:
-            type: string
-          type: array
-          title: Artefact Tracks
-        environment_names:
-          items:
-            type: string
-          type: array
-          title: Environment Names
-        test_plans:
-          items:
-            type: string
-          type: array
-          title: Test Plans
-        test_case_names:
-          items:
-            type: string
-          type: array
-          title: Test Case Names
-        template_ids:
-          items:
-            type: string
-          type: array
-          title: Template Ids
-        test_result_statuses:
-          items:
-            $ref: '#/components/schemas/TestResultStatus'
-          type: array
-          title: Test Result Statuses
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-      type: object
-      required:
-      - id
-      - enabled
-      - families
-      - artefacts
-      - artefact_versions
-      - artefact_stages
-      - artefact_tracks
-      - environment_names
-      - test_plans
-      - test_case_names
-      - template_ids
-      - test_result_statuses
-      - execution_metadata
-      title: MinimalIssueTestResultAttachmentRuleResponse
+      title: DeleteReruns
     TestExecutionRerunFilters:
       properties:
         families:
@@ -1910,171 +1495,193 @@ components:
         Excludes pagination (limit/offset) and search-only fields (event_names)
 
         that have no meaning in the rerun context.'
-    SolutionStage:
-      type: string
-      enum:
-      - edge
-      - beta
-      - candidate
-      - stable
-      title: SolutionStage
-    IssueStatus:
-      type: string
-      enum:
-      - unknown
-      - open
-      - closed
-      title: IssueStatus
-    TestExecutionResponse:
+    MinimalIssueTestResultAttachmentRuleResponse:
       properties:
         id:
           type: integer
           title: Id
-        ci_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ci Link
-        c3_link:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C3 Link
-        relevant_links:
+        enabled:
+          type: boolean
+          title: Enabled
+        families:
           items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
+            $ref: '#/components/schemas/FamilyName'
           type: array
-          title: Relevant Links
-        environment:
-          $ref: '#/components/schemas/EnvironmentResponse'
-        status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-        test_plan:
+          title: Families
+        artefacts:
+          items:
+            type: string
+          type: array
+          title: Artefacts
+        artefact_versions:
+          items:
+            type: string
+          type: array
+          title: Artefact Versions
+        artefact_stages:
+          items:
+            type: string
+          type: array
+          title: Artefact Stages
+        artefact_tracks:
+          items:
+            type: string
+          type: array
+          title: Artefact Tracks
+        environment_names:
+          items:
+            type: string
+          type: array
+          title: Environment Names
+        test_plans:
+          items:
+            type: string
+          type: array
+          title: Test Plans
+        test_case_names:
+          items:
+            type: string
+          type: array
+          title: Test Case Names
+        template_ids:
+          items:
+            type: string
+          type: array
+          title: Template Ids
+        test_result_statuses:
+          items:
+            $ref: '#/components/schemas/TestResultStatus'
+          type: array
+          title: Test Result Statuses
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+      type: object
+      required:
+      - id
+      - enabled
+      - families
+      - artefacts
+      - artefact_versions
+      - artefact_stages
+      - artefact_tracks
+      - environment_names
+      - test_plans
+      - test_case_names
+      - template_ids
+      - test_result_statuses
+      - execution_metadata
+      title: MinimalIssueTestResultAttachmentRuleResponse
+    TestResultResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
           type: string
-          title: Test Plan
+          title: Name
         created_at:
           type: string
           format: date-time
           title: Created At
-        execution_metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
-        is_triaged:
-          type: boolean
-          title: Is Triaged
-        is_rerun_requested:
-          type: boolean
-          title: Is Rerun Requested
-          readOnly: true
-        rerun_priority:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Rerun Priority
-          readOnly: true
+        category:
+          type: string
+          title: Category
+        template_id:
+          type: string
+          title: Template Id
+        status:
+          $ref: '#/components/schemas/TestResultStatus'
+        comment:
+          type: string
+          title: Comment
+        io_log:
+          type: string
+          title: Io Log
+        previous_results:
+          items:
+            $ref: '#/components/schemas/PreviousTestResult'
+          type: array
+          title: Previous Results
+          description: The last 10 test results matched with the current test execution. The items are sorted in descending order, the first test result is the most recent, while the last one is the oldest one.
+          default: []
+        issues:
+          items:
+            $ref: '#/components/schemas/MinimalIssueTestResultAttachmentResponse'
+          type: array
+          title: Issues
       type: object
       required:
       - id
-      - ci_link
-      - c3_link
-      - environment
-      - status
-      - test_plan
+      - name
       - created_at
-      - execution_metadata
-      - is_triaged
-      - is_rerun_requested
-      - rerun_priority
-      title: TestExecutionResponse
-    StartCharmTestExecutionRequest:
+      - category
+      - template_id
+      - status
+      - comment
+      - io_log
+      - issues
+      title: TestResultResponse
+    PreviousTestResult:
       properties:
-        name:
-          type: string
-          title: Name
-          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
+        status:
+          $ref: '#/components/schemas/TestResultStatus'
         version:
           type: string
           title: Version
-          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
-        arch:
-          type: string
-          title: Arch
-          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
-        environment:
-          type: string
-          title: Environment
-          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
-        ci_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Ci Link
-          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
-        test_plan:
-          type: string
-          maxLength: 200
-          title: Test Plan
-          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
-        initial_status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
-          default: IN_PROGRESS
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
-          type: array
-          title: Relevant Links
-          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
-        needs_assignment:
-          type: boolean
-          title: Needs Assignment
-          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
-          default: false
-        family:
-          type: string
-          const: charm
-          title: Family
-        revision:
+        artefact_id:
           type: integer
-          title: Revision
-          description: Charm revision number from Charmhub. Each architecture build has its own revision. Find this via 'charm info <charm-name>' or in Charmhub.
-        track:
-          type: string
-          title: Track
-          description: 'Charm release track being tested. Tracks represent different major versions or development streams. Common values: ''latest'' (default), version-based tracks like ''1.0'', ''22''. Use ''latest'' if unsure.'
-        branch:
-          type: string
-          title: Branch
-          description: Optional charm branch name within the track/risk level. Branches are temporary testing channels. Usually empty string (default) unless testing a specific branch.
-          default: ''
-        execution_stage:
-          $ref: '#/components/schemas/CharmStage'
-          description: 'Distribution channel/risk level of the charm being tested. Options: ''edge'' (cutting-edge updates), ''beta'' (pre-release), ''candidate'' (release candidate), ''stable'' (production). Choose based on where the charm currently resides in the release pipeline.'
+          title: Artefact Id
+        test_execution_id:
+          type: integer
+          title: Test Execution Id
+        test_result_id:
+          type: integer
+          title: Test Result Id
       type: object
       required:
-      - name
+      - status
       - version
-      - arch
-      - environment
-      - test_plan
-      - family
-      - revision
-      - track
-      - execution_stage
-      title: StartCharmTestExecutionRequest
-    StatusUpdateRequest:
+      - artefact_id
+      - test_execution_id
+      - test_result_id
+      title: PreviousTestResult
+    IssueSource:
+      type: string
+      enum:
+      - jira
+      - github
+      - launchpad
+      title: IssueSource
+    TestResultStatus:
+      type: string
+      enum:
+      - PASSED
+      - FAILED
+      - SKIPPED
+      title: TestResultStatus
+    TestExecutionSearchResponse:
       properties:
-        events:
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        test_executions:
           items:
-            $ref: '#/components/schemas/TestEventResponse'
+            $ref: '#/components/schemas/TestExecutionResponseWithContext'
           type: array
-          title: Events
+          title: Test Executions
       type: object
       required:
-      - events
-      title: StatusUpdateRequest
+      - count
+      - limit
+      - offset
+      - test_executions
+      title: TestExecutionSearchResponse
     TestResultRequest:
       properties:
         name:
@@ -2103,282 +1710,6 @@ components:
       - name
       - status
       title: TestResultRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CharmStage:
-      type: string
-      enum:
-      - edge
-      - beta
-      - candidate
-      - stable
-      title: CharmStage
-    IssueSource:
-      type: string
-      enum:
-      - jira
-      - github
-      - launchpad
-      title: IssueSource
-    PreviousTestResult:
-      properties:
-        status:
-          $ref: '#/components/schemas/TestResultStatus'
-        version:
-          type: string
-          title: Version
-        artefact_id:
-          type: integer
-          title: Artefact Id
-        test_execution_id:
-          type: integer
-          title: Test Execution Id
-        test_result_id:
-          type: integer
-          title: Test Result Id
-      type: object
-      required:
-      - status
-      - version
-      - artefact_id
-      - test_execution_id
-      - test_result_id
-      title: PreviousTestResult
-    RerunDetail:
-      properties:
-        test_plan_name:
-          type: string
-          title: Test Plan Name
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
-        priority:
-          type: integer
-          title: Priority
-        architecture:
-          type: string
-          title: Architecture
-        environment_name:
-          type: string
-          title: Environment Name
-      type: object
-      required:
-      - test_plan_name
-      - created_at
-      - priority
-      - architecture
-      - environment_name
-      title: RerunDetail
-    RerunPrioritySummary:
-      properties:
-        priority:
-          type: integer
-          title: Priority
-        count:
-          type: integer
-          title: Count
-      type: object
-      required:
-      - priority
-      - count
-      title: RerunPrioritySummary
-    StartSolutionTestExecutionRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
-        version:
-          type: string
-          title: Version
-          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
-        arch:
-          type: string
-          title: Arch
-          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
-        environment:
-          type: string
-          title: Environment
-          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
-        ci_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Ci Link
-          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
-        test_plan:
-          type: string
-          maxLength: 200
-          title: Test Plan
-          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
-        initial_status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
-          default: IN_PROGRESS
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
-          type: array
-          title: Relevant Links
-          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
-        needs_assignment:
-          type: boolean
-          title: Needs Assignment
-          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
-          default: false
-        family:
-          type: string
-          const: solution
-          title: Family
-        attributes:
-          additionalProperties: true
-          type: object
-          title: Attributes
-        execution_stage:
-          $ref: '#/components/schemas/SolutionStage'
-          description: Promotion stage of the solution being tested.
-      type: object
-      required:
-      - name
-      - version
-      - arch
-      - environment
-      - test_plan
-      - family
-      - execution_stage
-      title: StartSolutionTestExecutionRequest
-    TestResultStatus:
-      type: string
-      enum:
-      - PASSED
-      - FAILED
-      - SKIPPED
-      title: TestResultStatus
-    StartDebTestExecutionRequest:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
-        version:
-          type: string
-          title: Version
-          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
-        arch:
-          type: string
-          title: Arch
-          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
-        environment:
-          type: string
-          title: Environment
-          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
-        ci_link:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Ci Link
-          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
-        test_plan:
-          type: string
-          maxLength: 200
-          title: Test Plan
-          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
-        initial_status:
-          $ref: '#/components/schemas/TestExecutionStatus'
-          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
-          default: IN_PROGRESS
-        relevant_links:
-          items:
-            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
-          type: array
-          title: Relevant Links
-          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
-        needs_assignment:
-          type: boolean
-          title: Needs Assignment
-          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
-          default: false
-        family:
-          type: string
-          const: deb
-          title: Family
-        series:
-          type: string
-          title: Series
-          description: 'Ubuntu release series being tested. Examples: ''focal'' (20.04), ''jammy'' (22.04), ''noble'' (24.04), ''oracular'' (24.10)'
-        repo:
-          type: string
-          title: Repo
-          description: 'Repository containing the deb package. Examples: ''main'', ''universe'', ''restricted'', ''multiverse'' for archive repositories, or custom PPA names like ''ppa:team/ppa-name'''
-        source:
-          type: string
-          maxLength: 200
-          title: Source
-          description: Source package name for PPA builds, or empty string for archive pockets. Provide this OR execution_stage, not both. Use source when testing from a PPA, use execution_stage when testing from official archive pockets.
-          default: ''
-        execution_stage:
-          anyOf:
-          - $ref: '#/components/schemas/DebStage'
-          - type: string
-            const: ''
-          maxLength: 100
-          title: Execution Stage
-          description: 'Archive pocket where the deb resides, or empty string for PPAs. Options: ''proposed'' (pre-release testing area), ''updates'' (stable updates). Provide this OR source, not both. Use execution_stage for official archive testing, leave empty if testing from a PPA (and provide source instead).'
-          default: ''
-      type: object
-      required:
-      - name
-      - version
-      - arch
-      - environment
-      - test_plan
-      - family
-      - series
-      - repo
-      title: StartDebTestExecutionRequest
-    C3TestResult:
-      properties:
-        name:
-          type: string
-          title: Name
-        template_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Template Id
-        status:
-          $ref: '#/components/schemas/C3TestResultStatus'
-        category:
-          type: string
-          title: Category
-        comment:
-          type: string
-          title: Comment
-        io_log:
-          type: string
-          title: Io Log
-      type: object
-      required:
-      - name
-      - status
-      - category
-      - comment
-      - io_log
-      title: C3TestResult
     TestResultSearchFilters:
       properties:
         families:
@@ -2509,30 +1840,699 @@ components:
           title: Limit
       type: object
       title: TestResultSearchFilters
-    ReviewerResponse:
+    RerunDetail:
+      properties:
+        test_plan_name:
+          type: string
+          title: Test Plan Name
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        priority:
+          type: integer
+          title: Priority
+        architecture:
+          type: string
+          title: Architecture
+        environment_name:
+          type: string
+          title: Environment Name
+      type: object
+      required:
+      - test_plan_name
+      - created_at
+      - priority
+      - architecture
+      - environment_name
+      title: RerunDetail
+    StartSnapTestExecutionRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
+        version:
+          type: string
+          title: Version
+          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
+        arch:
+          type: string
+          title: Arch
+          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
+        environment:
+          type: string
+          title: Environment
+          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
+        ci_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Ci Link
+          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
+        test_plan:
+          type: string
+          maxLength: 200
+          title: Test Plan
+          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
+        initial_status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
+          default: IN_PROGRESS
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
+          type: array
+          title: Relevant Links
+          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
+        needs_assignment:
+          type: boolean
+          title: Needs Assignment
+          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
+          default: false
+        family:
+          type: string
+          const: snap
+          title: Family
+        revision:
+          type: integer
+          title: Revision
+          description: Snap package revision number from the store. Each architecture build has its own revision number. Find this in the snap store or via 'snap info <snap-name>' command.
+        track:
+          type: string
+          title: Track
+          description: 'Snap release track being tested. Tracks represent different major versions or streams of development. Common values: ''latest'' (default), version numbers like ''22'', ''1.0'', or custom tracks like ''experimental''. Use ''latest'' if unsure.'
+        store:
+          type: string
+          title: Store
+          description: Snap store where the snap is published. Typically 'ubuntu' for public Ubuntu Store snaps, or a brand store ID for enterprise stores. Use 'ubuntu' for standard snaps.
+        branch:
+          type: string
+          maxLength: 200
+          title: Branch
+          description: Optional snap branch name within the track/risk level. Branches are temporary testing channels. Usually empty string (default) unless testing a specific branch.
+          default: ''
+        execution_stage:
+          $ref: '#/components/schemas/SnapStage'
+          description: 'Distribution channel/risk level of the snap being tested. Options: ''edge'' (cutting-edge, frequent updates), ''beta'' (pre-release testing), ''candidate'' (release candidate), ''stable'' (production ready). Choose based on where the snap currently resides in the release pipeline.'
+      type: object
+      required:
+      - name
+      - version
+      - arch
+      - environment
+      - test_plan
+      - family
+      - revision
+      - track
+      - store
+      - execution_stage
+      title: StartSnapTestExecutionRequest
+    CharmStage:
+      type: string
+      enum:
+      - edge
+      - beta
+      - candidate
+      - stable
+      title: CharmStage
+    ImageStage:
+      type: string
+      enum:
+      - pending
+      - current
+      title: ImageStage
+    C3TestResult:
+      properties:
+        name:
+          type: string
+          title: Name
+        template_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Template Id
+        status:
+          $ref: '#/components/schemas/C3TestResultStatus'
+        category:
+          type: string
+          title: Category
+        comment:
+          type: string
+          title: Comment
+        io_log:
+          type: string
+          title: Io Log
+      type: object
+      required:
+      - name
+      - status
+      - category
+      - comment
+      - io_log
+      title: C3TestResult
+    SolutionStage:
+      type: string
+      enum:
+      - edge
+      - beta
+      - candidate
+      - stable
+      title: SolutionStage
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    EnvironmentResponse:
       properties:
         id:
           type: integer
           title: Id
-        launchpad_handle:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
         name:
           type: string
           title: Name
+        architecture:
+          type: string
+          title: Architecture
       type: object
       required:
       - id
-      - email
-      - launchpad_email
       - name
-      title: ReviewerResponse
+      - architecture
+      title: EnvironmentResponse
+    TestEventResponse:
+      properties:
+        event_name:
+          type: string
+          title: Event Name
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+        detail:
+          type: string
+          title: Detail
+      type: object
+      required:
+      - event_name
+      - timestamp
+      - detail
+      title: TestEventResponse
+    TestExecutionResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        ci_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ci Link
+        c3_link:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C3 Link
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkResponse'
+          type: array
+          title: Relevant Links
+        environment:
+          $ref: '#/components/schemas/EnvironmentResponse'
+        status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+        test_plan:
+          type: string
+          title: Test Plan
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        execution_metadata:
+          $ref: '#/components/schemas/ExecutionMetadata'
+        is_triaged:
+          type: boolean
+          title: Is Triaged
+        is_rerun_requested:
+          type: boolean
+          title: Is Rerun Requested
+          readOnly: true
+        rerun_priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Rerun Priority
+          readOnly: true
+      type: object
+      required:
+      - id
+      - ci_link
+      - c3_link
+      - environment
+      - status
+      - test_plan
+      - created_at
+      - execution_metadata
+      - is_triaged
+      - is_rerun_requested
+      - rerun_priority
+      title: TestExecutionResponse
+    RerunDetailsResponse:
+      properties:
+        priority_summaries:
+          items:
+            $ref: '#/components/schemas/RerunPrioritySummary'
+          type: array
+          title: Priority Summaries
+        selected_priority:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Selected Priority
+        count:
+          type: integer
+          title: Count
+        selected_count:
+          type: integer
+          title: Selected Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+        reruns:
+          items:
+            $ref: '#/components/schemas/RerunDetail'
+          type: array
+          title: Reruns
+      type: object
+      required:
+      - priority_summaries
+      - selected_priority
+      - count
+      - selected_count
+      - limit
+      - offset
+      - reruns
+      title: RerunDetailsResponse
+    TestExecutionRelevantLinkResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
+    StartSolutionTestExecutionRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
+        version:
+          type: string
+          title: Version
+          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
+        arch:
+          type: string
+          title: Arch
+          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
+        environment:
+          type: string
+          title: Environment
+          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
+        ci_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Ci Link
+          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
+        test_plan:
+          type: string
+          maxLength: 200
+          title: Test Plan
+          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
+        initial_status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
+          default: IN_PROGRESS
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
+          type: array
+          title: Relevant Links
+          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
+        needs_assignment:
+          type: boolean
+          title: Needs Assignment
+          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
+          default: false
+        family:
+          type: string
+          const: solution
+          title: Family
+        attributes:
+          additionalProperties: true
+          type: object
+          title: Attributes
+        execution_stage:
+          $ref: '#/components/schemas/SolutionStage'
+          description: Promotion stage of the solution being tested.
+      type: object
+      required:
+      - name
+      - version
+      - arch
+      - environment
+      - test_plan
+      - family
+      - execution_stage
+      title: StartSolutionTestExecutionRequest
+    SnapStage:
+      type: string
+      enum:
+      - edge
+      - beta
+      - candidate
+      - stable
+      title: SnapStage
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
+    DebStage:
+      type: string
+      enum:
+      - proposed
+      - updates
+      title: DebStage
+    StartDebTestExecutionRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
+        version:
+          type: string
+          title: Version
+          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
+        arch:
+          type: string
+          title: Arch
+          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
+        environment:
+          type: string
+          title: Environment
+          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
+        ci_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Ci Link
+          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
+        test_plan:
+          type: string
+          maxLength: 200
+          title: Test Plan
+          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
+        initial_status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
+          default: IN_PROGRESS
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
+          type: array
+          title: Relevant Links
+          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
+        needs_assignment:
+          type: boolean
+          title: Needs Assignment
+          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
+          default: false
+        family:
+          type: string
+          const: deb
+          title: Family
+        series:
+          type: string
+          title: Series
+          description: 'Ubuntu release series being tested. Examples: ''focal'' (20.04), ''jammy'' (22.04), ''noble'' (24.04), ''oracular'' (24.10)'
+        repo:
+          type: string
+          title: Repo
+          description: 'Repository containing the deb package. Examples: ''main'', ''universe'', ''restricted'', ''multiverse'' for archive repositories, or custom PPA names like ''ppa:team/ppa-name'''
+        source:
+          type: string
+          maxLength: 200
+          title: Source
+          description: Source package name for PPA builds, or empty string for archive pockets. Provide this OR execution_stage, not both. Use source when testing from a PPA, use execution_stage when testing from official archive pockets.
+          default: ''
+        execution_stage:
+          anyOf:
+          - $ref: '#/components/schemas/DebStage'
+          - type: string
+            const: ''
+          maxLength: 100
+          title: Execution Stage
+          description: 'Archive pocket where the deb resides, or empty string for PPAs. Options: ''proposed'' (pre-release testing area), ''updates'' (stable updates). Provide this OR source, not both. Use execution_stage for official archive testing, leave empty if testing from a PPA (and provide source instead).'
+          default: ''
+      type: object
+      required:
+      - name
+      - version
+      - arch
+      - environment
+      - test_plan
+      - family
+      - series
+      - repo
+      title: StartDebTestExecutionRequest
+    ArtefactBuildMinimalResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse
+    EndTestExecutionRequest:
+      properties:
+        ci_link:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Ci Link
+        c3_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: C3 Link
+        checkbox_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checkbox Version
+        test_results:
+          items:
+            $ref: '#/components/schemas/C3TestResult'
+          type: array
+          title: Test Results
+      type: object
+      required:
+      - ci_link
+      - test_results
+      title: EndTestExecutionRequest
+    IssueStatus:
+      type: string
+      enum:
+      - unknown
+      - open
+      - closed
+      title: IssueStatus
+    ArtefactStatus:
+      type: string
+      enum:
+      - APPROVED
+      - MARKED_AS_FAILED
+      - UNDECIDED
+      title: ArtefactStatus
+    TestExecutionRelevantLinkCreate:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+      type: object
+      required:
+      - label
+      - url
+      title: TestExecutionRelevantLinkCreate
+    StartCharmTestExecutionRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: 'User-defined name identifying the artefact under test. Not unique - multiple versions/stages of the same artefact share this name. Examples: ''core22'', ''ubuntu-desktop'', ''snapd'''
+        version:
+          type: string
+          title: Version
+          description: Version identifier of the artefact being tested. Format depends on artefact family - e.g., revisions for charms/snaps, version numbers for debs.
+        arch:
+          type: string
+          title: Arch
+          description: 'CPU architecture where tests will execute. Common values: ''amd64'', ''arm64'', ''armhf'', ''s390x'', ''ppc64el'''
+        environment:
+          type: string
+          title: Environment
+          description: 'Name of the test execution environment. This can identify the specific physical device, VM, or container where tests run or logical environment like a test lab or cloud region. Examples: ''cm3'', ''rpi4'', ''lxd-vm'', ''aws-ec2''. The environment will be auto-created if it doesn''t exist.'
+        ci_link:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Ci Link
+          description: Optional URL linking to the CI job executing these tests. Useful for tracking test runs back to their automation source. Can be omitted.
+        test_plan:
+          type: string
+          maxLength: 200
+          title: Test Plan
+          description: Identifier for the test suite or plan executed. Groups related test results together - e.g., 'certification-24.04', 'smoke-tests', 'full-regression'. The test plan will be auto-created if it doesn't exist.
+        initial_status:
+          $ref: '#/components/schemas/TestExecutionStatus'
+          description: Initial status of the test execution. Default 'IN_PROGRESS' is appropriate for ongoing tests. Use 'COMPLETED' if test results will be uploaded separately.
+          default: IN_PROGRESS
+        relevant_links:
+          items:
+            $ref: '#/components/schemas/TestExecutionRelevantLinkCreate'
+          type: array
+          title: Relevant Links
+          description: Optional list of additional URLs related to this test execution (e.g., bug reports, documentation, related PRs). Can be omitted or left empty.
+        needs_assignment:
+          type: boolean
+          title: Needs Assignment
+          description: Whether the artefact created from this test execution requires assignment of a reviewer. Set to true if test results need human review before the artefact can be promoted. Default false means no review assignment needed.
+          default: false
+        family:
+          type: string
+          const: charm
+          title: Family
+        revision:
+          type: integer
+          title: Revision
+          description: Charm revision number from Charmhub. Each architecture build has its own revision. Find this via 'charm info <charm-name>' or in Charmhub.
+        track:
+          type: string
+          title: Track
+          description: 'Charm release track being tested. Tracks represent different major versions or development streams. Common values: ''latest'' (default), version-based tracks like ''1.0'', ''22''. Use ''latest'' if unsure.'
+        branch:
+          type: string
+          title: Branch
+          description: Optional charm branch name within the track/risk level. Branches are temporary testing channels. Usually empty string (default) unless testing a specific branch.
+          default: ''
+        execution_stage:
+          $ref: '#/components/schemas/CharmStage'
+          description: 'Distribution channel/risk level of the charm being tested. Options: ''edge'' (cutting-edge updates), ''beta'' (pre-release), ''candidate'' (release candidate), ''stable'' (production). Choose based on where the charm currently resides in the release pipeline.'
+      type: object
+      required:
+      - name
+      - version
+      - arch
+      - environment
+      - test_plan
+      - family
+      - revision
+      - track
+      - execution_stage
+      title: StartCharmTestExecutionRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-cluster-links-post-schema.json",
+  "title": "ClusterLinksPost represents the fields available for a new cluster link.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-cluster-links-api-openapi.yml#/components/schemas/ClusterLinksPost",
+  "properties": {
+    "auth_groups": {
+      "description": "List of auth groups this cluster link belongs to.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AuthGroups"
+    },
+    "cluster_certificate": {
+      "description": "The certificate (X509 PEM encoded) for the linked cluster. This is included in server-side POST requests to activate the pending cluster link on the linked cluster that generated the trust token.",
+      "type": "string",
+      "x-go-name": "ClusterCertificate"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Cluster link configuration map (refer to doc/clustering.md).",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the cluster link.",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "fingerprint": {
+      "description": "Fingerprint of the remote cluster's certificate, echoed back to confirm a pending public\ncluster link. It must match the fingerprint returned when the pending link was created; the\ncertificate itself is not resubmitted, as the server pins the copy it already holds.\nAPI extension: cluster_links_public.",
+      "type": "string",
+      "x-go-name": "Fingerprint"
+    },
+    "name": {
+      "description": "Name of the cluster.",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "remote_address": {
+      "description": "RemoteAddress is the address of the remote cluster, used for public links. It is the address\ncontacted when creating a pending public cluster link, and is required for that request only.\nConfirming the link pins the address recorded when the pending link was created, so the link\nalways points at the address that was verified; setting this field on a confirm request is\nrejected.",
+      "type": "string",
+      "x-go-name": "RemoteAddress"
+    },
+    "trust_token": {
+      "description": "TrustToken for creating a cluster link. This is included in requests to create an active cluster link on the local cluster and activate a pending cluster link on the linked cluster.\nAPI extension: explicit_trust_token",
+      "type": "string",
+      "x-go-name": "TrustToken"
+    },
+    "type": {
+      "description": "Type of the cluster link.\nCurrently only \"bidirectional\" is supported.",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

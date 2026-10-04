@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identity-info-schema.json",
+  "title": "IdentityInfo expands an Identity to include effective group membership and effective permissions.",
+  "description": "These fields can only be evaluated for the currently authenticated identity.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identities-api-openapi.yml#/components/schemas/IdentityInfo",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "authentication_method": {
+      "description": "AuthenticationMethod is the authentication method that the identity\nauthenticates to LXD with.",
+      "type": "string",
+      "x-go-name": "AuthenticationMethod"
+    },
+    "effective_groups": {
+      "description": "Effective groups is the combined and deduplicated list of LXD groups that the identity is a direct member of, and\nthe LXD groups that the identity is an effective member of via identity provider group mappings.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "EffectiveGroups"
+    },
+    "effective_permissions": {
+      "description": "Effective permissions is the combined and deduplicated list of permissions that the identity has by virtue of\ndirect membership to a LXD group, or effective membership of a LXD group via identity provider group mappings.",
+      "items": {
+        "$ref": "#/$defs/Permission"
+      },
+      "type": "array",
+      "x-go-name": "EffectivePermissions"
+    },
+    "expires_at": {
+      "description": "ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the\nexpiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.\nIt is unset for identities whose credential has no expiry, that have no credential yet (pending identities),\nor whose token has been revoked.\n\nAPI extension: access_management_expiry.",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "ExpiresAt"
+    },
+    "fine_grained": {
+      "description": "FineGrained is a boolean indicating whether the identity is fine-grained,\nmeaning that permissions are managed via group membership.",
+      "type": "boolean",
+      "x-go-name": "FineGrained"
+    },
+    "groups": {
+      "description": "Groups is the list of groups for which the identity is a member.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "id": {
+      "description": "Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).",
+      "type": "string",
+      "x-go-name": "Identifier"
+    },
+    "name": {
+      "description": "Name is the Name claim of the identity if authenticated via OIDC, or the name\nof the certificate if authenticated with TLS.",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "tls_certificate": {
+      "description": "TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.\n\nAPI extension: access_management_tls.",
+      "type": "string",
+      "x-go-name": "TLSCertificate"
+    },
+    "type": {
+      "description": "Type is the type of identity.",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "Permission": {
+      "properties": {
+        "entitlement": {
+          "description": "Entitlement is the entitlement define for the entity type.",
+          "type": "string",
+          "x-go-name": "Entitlement"
+        },
+        "entity_type": {
+          "description": "EntityType is the string representation of the entity type.",
+          "type": "string",
+          "x-go-name": "EntityType"
+        },
+        "url": {
+          "description": "EntityReference is the URL of the entity that the permission applies to.",
+          "type": "string",
+          "x-go-name": "EntityReference"
+        }
+      },
+      "title": "Permission represents a permission that may be granted to a group.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

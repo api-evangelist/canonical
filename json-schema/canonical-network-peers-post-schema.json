@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-peers-post-schema.json",
+  "title": "NetworkPeersPost",
+  "description": "NetworkPeersPost represents the fields of a new LXD network peering",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-peers-api-openapi.yml#/components/schemas/NetworkPeersPost",
+  "properties": {
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Peer configuration map (refer to doc/network-peers.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the peer",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "name": {
+      "description": "Name of the peer",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "target_network": {
+      "description": "Name of the target network",
+      "type": "string",
+      "x-go-name": "TargetNetwork"
+    },
+    "target_project": {
+      "description": "Name of the target project",
+      "type": "string",
+      "x-go-name": "TargetProject"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

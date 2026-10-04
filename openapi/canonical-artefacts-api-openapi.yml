@@ -431,82 +431,6 @@ paths:
       - view_artefact
 components:
   schemas:
-    ArtefactBuildMinimalResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        architecture:
-          type: string
-          title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-      type: object
-      required:
-      - id
-      - architecture
-      - revision
-      title: ArtefactBuildMinimalResponse
-    ArtefactBuildEnvironmentReviewDecision:
-      type: string
-      enum:
-      - REJECTED
-      - APPROVED_INCONSISTENT_TEST
-      - APPROVED_UNSTABLE_PHYSICAL_INFRA
-      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
-      - APPROVED_FAULTY_HARDWARE
-      - APPROVED_ALL_TESTS_PASS
-      title: ArtefactBuildEnvironmentReviewDecision
-    ArtefactSearchResponse:
-      properties:
-        artefacts:
-          items:
-            type: string
-          type: array
-          title: Artefacts
-        count:
-          type: integer
-          title: Count
-        limit:
-          type: integer
-          title: Limit
-        offset:
-          type: integer
-          title: Offset
-      type: object
-      required:
-      - artefacts
-      - count
-      - limit
-      - offset
-      title: ArtefactSearchResponse
-    ArtefactStatus:
-      type: string
-      enum:
-      - APPROVED
-      - MARKED_AS_FAILED
-      - UNDECIDED
-      title: ArtefactStatus
-    EnvironmentResponse:
-      properties:
-        id:
-          type: integer
-          title: Id
-        name:
-          type: string
-          title: Name
-        architecture:
-          type: string
-          title: Architecture
-      type: object
-      required:
-      - id
-      - name
-      - architecture
-      title: EnvironmentResponse
     ArtefactHistoryResponse:
       properties:
         count:
@@ -522,32 +446,69 @@ components:
       - count
       - items
       title: ArtefactHistoryResponse
-    ArtefactHistoryItemResponse:
+    ArtefactPatch:
       properties:
-        artefact_id:
-          type: integer
-          title: Artefact Id
-        name:
-          type: string
-          title: Name
-        version:
-          type: string
-          title: Version
+        status:
+          anyOf:
+          - $ref: '#/components/schemas/ArtefactStatus'
+          - type: 'null'
+        archived:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Archived
         stage:
-          type: string
-          title: Stage
-        created_at:
-          type: string
-          format: date-time
-          title: Created At
+          anyOf:
+          - $ref: '#/components/schemas/StageName'
+          - type: 'null'
+        comment:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Comment
+        jira_issue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Jira Issue
+        attributes:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Attributes
+        assignee_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Assignee Id
+          description: Legacy field. Mapped to reviewer_ids as a single-element list when reviewer_ids/reviewer_emails are not provided.
+          deprecated: true
+        assignee_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assignee Email
+          description: Legacy field. Mapped to reviewer_emails as a single-element list when reviewer_ids/reviewer_emails are not provided.
+          deprecated: true
+        reviewer_ids:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Reviewer Ids
+          description: Reviewer user IDs. Preferred over legacy assignee_id/assignee_email for setting assignees.
+        reviewer_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Reviewer Emails
+          description: Reviewer emails. Preferred over legacy assignee_id/assignee_email for setting assignees.
       type: object
-      required:
-      - artefact_id
-      - name
-      - version
-      - stage
-      - created_at
-      title: ArtefactHistoryItemResponse
+      title: ArtefactPatch
     ArtefactResponse:
       properties:
         id:
@@ -676,38 +637,33 @@ components:
       - completed_environment_reviews_count
       - assignee
       title: ArtefactResponse
-    ArtefactVersionResponse:
+    ReviewerResponse:
       properties:
-        version:
-          type: string
-          title: Version
-        artefact_id:
+        id:
           type: integer
-          title: Artefact Id
+          title: Id
+        launchpad_handle:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Launchpad Handle
+        email:
+          type: string
+          title: Email
+        launchpad_email:
+          type: string
+          title: Launchpad Email
+          deprecated: true
+        name:
+          type: string
+          title: Name
       type: object
       required:
-      - version
-      - artefact_id
-      title: ArtefactVersionResponse
-    FamilyName:
-      type: string
-      enum:
-      - snap
-      - deb
-      - charm
-      - image
-      - solution
-      title: FamilyName
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
+      - id
+      - email
+      - launchpad_email
+      - name
+      title: ReviewerResponse
     ExecutionMetadata:
       additionalProperties:
         items:
@@ -729,52 +685,31 @@ components:
         - mysql-k8s
         charm:postgresql-k8s:revision:
         - '495'
-    ValidationError:
+    ArtefactVersionResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        version:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
+          title: Version
+        artefact_id:
           type: integer
-          title: Id
+          title: Artefact Id
       type: object
       required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse
+      - version
+      - artefact_id
+      title: ArtefactVersionResponse
+    StageName:
+      type: string
+      enum:
+      - proposed
+      - updates
+      - edge
+      - beta
+      - candidate
+      - stable
+      - pending
+      - current
+      title: StageName
     ArtefactBuildEnvironmentReviewResponse:
       properties:
         id:
@@ -806,31 +741,32 @@ components:
       - environment
       - artefact_build
       title: ArtefactBuildEnvironmentReviewResponse
-    ArtefactBuildResponse:
+    FamilyName:
+      type: string
+      enum:
+      - snap
+      - deb
+      - charm
+      - image
+      - solution
+      title: FamilyName
+    EnvironmentResponse:
       properties:
         id:
           type: integer
           title: Id
+        name:
+          type: string
+          title: Name
         architecture:
           type: string
           title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-        test_executions:
-          items:
-            $ref: '#/components/schemas/TestExecutionResponse'
-          type: array
-          title: Test Executions
       type: object
       required:
       - id
+      - name
       - architecture
-      - revision
-      - test_executions
-      title: ArtefactBuildResponse
+      title: EnvironmentResponse
     TestExecutionResponse:
       properties:
         id:
@@ -891,90 +827,26 @@ components:
       - is_rerun_requested
       - rerun_priority
       title: TestExecutionResponse
-    HTTPValidationError:
+    TestExecutionRelevantLinkResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
       type: object
-      title: HTTPValidationError
-    ArtefactPatch:
-      properties:
-        status:
-          anyOf:
-          - $ref: '#/components/schemas/ArtefactStatus'
-          - type: 'null'
-        archived:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Archived
-        stage:
-          anyOf:
-          - $ref: '#/components/schemas/StageName'
-          - type: 'null'
-        comment:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Comment
-        jira_issue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Jira Issue
-        attributes:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Attributes
-        assignee_id:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Assignee Id
-          description: Legacy field. Mapped to reviewer_ids as a single-element list when reviewer_ids/reviewer_emails are not provided.
-          deprecated: true
-        assignee_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Assignee Email
-          description: Legacy field. Mapped to reviewer_emails as a single-element list when reviewer_ids/reviewer_emails are not provided.
-          deprecated: true
-        reviewer_ids:
-          anyOf:
-          - items:
-              type: integer
-            type: array
-          - type: 'null'
-          title: Reviewer Ids
-          description: Reviewer user IDs. Preferred over legacy assignee_id/assignee_email for setting assignees.
-        reviewer_emails:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Reviewer Emails
-          description: Reviewer emails. Preferred over legacy assignee_id/assignee_email for setting assignees.
-      type: object
-      title: ArtefactPatch
-    StageName:
-      type: string
-      enum:
-      - proposed
-      - updates
-      - edge
-      - beta
-      - candidate
-      - stable
-      - pending
-      - current
-      title: StageName
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
     EnvironmentReviewPatch:
       properties:
         id:
@@ -996,30 +868,158 @@ components:
           title: Review Comment
       type: object
       title: EnvironmentReviewPatch
-    ReviewerResponse:
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
+    ArtefactBuildMinimalResponse:
       properties:
         id:
           type: integer
           title: Id
-        launchpad_handle:
+        architecture:
+          type: string
+          title: Architecture
+        revision:
           anyOf:
-          - type: string
+          - type: integer
           - type: 'null'
-          title: Launchpad Handle
-        email:
-          type: string
-          title: Email
-        launchpad_email:
-          type: string
-          title: Launchpad Email
-          deprecated: true
-        name:
-          type: string
-          title: Name
+          title: Revision
       type: object
       required:
       - id
-      - email
-      - launchpad_email
+      - architecture
+      - revision
+      title: ArtefactBuildMinimalResponse
+    ArtefactHistoryItemResponse:
+      properties:
+        artefact_id:
+          type: integer
+          title: Artefact Id
+        name:
+          type: string
+          title: Name
+        version:
+          type: string
+          title: Version
+        stage:
+          type: string
+          title: Stage
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+      - artefact_id
       - name
-      title: ReviewerResponse
+      - version
+      - stage
+      - created_at
+      title: ArtefactHistoryItemResponse
+    ArtefactStatus:
+      type: string
+      enum:
+      - APPROVED
+      - MARKED_AS_FAILED
+      - UNDECIDED
+      title: ArtefactStatus
+    ArtefactBuildEnvironmentReviewDecision:
+      type: string
+      enum:
+      - REJECTED
+      - APPROVED_INCONSISTENT_TEST
+      - APPROVED_UNSTABLE_PHYSICAL_INFRA
+      - APPROVED_CUSTOMER_PREREQUISITE_FAIL
+      - APPROVED_FAULTY_HARDWARE
+      - APPROVED_ALL_TESTS_PASS
+      title: ArtefactBuildEnvironmentReviewDecision
+    ArtefactSearchResponse:
+      properties:
+        artefacts:
+          items:
+            type: string
+          type: array
+          title: Artefacts
+        count:
+          type: integer
+          title: Count
+        limit:
+          type: integer
+          title: Limit
+        offset:
+          type: integer
+          title: Offset
+      type: object
+      required:
+      - artefacts
+      - count
+      - limit
+      - offset
+      title: ArtefactSearchResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ArtefactBuildResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        architecture:
+          type: string
+          title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+        test_executions:
+          items:
+            $ref: '#/components/schemas/TestExecutionResponse'
+          type: array
+          title: Test Executions
+      type: object
+      required:
+      - id
+      - architecture
+      - revision
+      - test_executions
+      title: ArtefactBuildResponse

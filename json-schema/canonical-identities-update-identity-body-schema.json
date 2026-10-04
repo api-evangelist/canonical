@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identities-update-identity-body-schema.json",
+  "title": "identitiesUpdateIdentityBody",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identitiesservice-api-openapi.yml#/components/schemas/identitiesUpdateIdentityBody",
+  "properties": {
+    "additional_properties": {
+      "type": "object"
+    },
+    "credentials": {
+      "type": "object"
+    },
+    "metadata_admin": {
+      "type": "object"
+    },
+    "metadata_public": {
+      "type": "object"
+    },
+    "schema_id": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "traits": {
+      "type": "object"
+    }
+  },
+  "type": "object"
+}

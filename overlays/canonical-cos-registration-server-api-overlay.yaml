@@ -2,7 +2,7 @@ overlay: 1.0.0
 info:
   title: API Evangelist enrichment overlay — COS Registration Server API
   version: 1.0.0
-extends: ../openapi/canonical-cos-registration-server-api-openapi.yml
+extends: ../openapi/_original/canonical-cos-registration-server-api-openapi.yml
 x-generated: '2026-09-05'
 x-method: generated
 x-source: openapi/canonical-cos-registration-server-api-openapi.yml

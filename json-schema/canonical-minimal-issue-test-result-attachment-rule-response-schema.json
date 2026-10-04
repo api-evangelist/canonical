@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-minimal-issue-test-result-attachment-rule-response-schema.json",
+  "title": "MinimalIssueTestResultAttachmentRuleResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-issues-api-openapi.yml#/components/schemas/MinimalIssueTestResultAttachmentRuleResponse",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "title": "Id"
+    },
+    "enabled": {
+      "type": "boolean",
+      "title": "Enabled"
+    },
+    "families": {
+      "items": {
+        "$ref": "#/$defs/FamilyName"
+      },
+      "type": "array",
+      "title": "Families"
+    },
+    "artefacts": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Artefacts"
+    },
+    "artefact_versions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Artefact Versions"
+    },
+    "artefact_stages": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Artefact Stages"
+    },
+    "artefact_tracks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Artefact Tracks"
+    },
+    "environment_names": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Environment Names"
+    },
+    "test_plans": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Test Plans"
+    },
+    "test_case_names": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Test Case Names"
+    },
+    "template_ids": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Template Ids"
+    },
+    "test_result_statuses": {
+      "items": {
+        "$ref": "#/$defs/TestResultStatus"
+      },
+      "type": "array",
+      "title": "Test Result Statuses"
+    },
+    "execution_metadata": {
+      "$ref": "#/$defs/ExecutionMetadata"
+    }
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "enabled",
+    "families",
+    "artefacts",
+    "artefact_versions",
+    "artefact_stages",
+    "artefact_tracks",
+    "environment_names",
+    "test_plans",
+    "test_case_names",
+    "template_ids",
+    "test_result_statuses",
+    "execution_metadata"
+  ],
+  "$defs": {
+    "ExecutionMetadata": {
+      "additionalProperties": {
+        "items": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 1,
+          "description": "Execution Metadata Value"
+        },
+        "type": "array"
+      },
+      "propertyNames": {
+        "maxLength": 200,
+        "minLength": 1,
+        "description": "Execution Metadata Category"
+      },
+      "type": "object",
+      "title": "Execution Metadata",
+      "description": "A mapping of string categories to lists of string values."
+    },
+    "FamilyName": {
+      "type": "string",
+      "enum": [
+        "snap",
+        "deb",
+        "charm",
+        "image",
+        "solution"
+      ],
+      "title": "FamilyName"
+    },
+    "TestResultStatus": {
+      "type": "string",
+      "enum": [
+        "PASSED",
+        "FAILED",
+        "SKIPPED"
+      ],
+      "title": "TestResultStatus"
+    }
+  }
+}

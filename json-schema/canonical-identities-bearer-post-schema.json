@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identities-bearer-post-schema.json",
+  "title": "IdentitiesBearerPost contains required information for the creation of a token identity.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identities-api-openapi.yml#/components/schemas/IdentitiesBearerPost",
+  "properties": {
+    "groups": {
+      "description": "Groups is the list of groups for which the identity is a member.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "name": {
+      "description": "Name associated with the identity",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "type": {
+      "description": "Type of identity",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

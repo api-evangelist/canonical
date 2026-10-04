@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-container-exec-post-schema.json",
+  "title": "ContainerExecPost",
+  "description": "ContainerExecPost represents an container execution request",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-containers-api-openapi.yml#/components/schemas/ContainerExecPost",
+  "type": "object",
+  "properties": {
+    "command": {
+      "description": "Command inside the container to execute",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environment": {
+      "description": "Environment to setup when the command is executed.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "height": {
+      "description": "Height of the terminal. Only required when `interactive` is set to `true`.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "interactive": {
+      "description": "Whether the command is executed interactively or not",
+      "type": "boolean"
+    },
+    "width": {
+      "description": "Width of the terminal. Only required when `interactive` is set to `true`.",
+      "type": "integer",
+      "format": "int64"
+    }
+  }
+}

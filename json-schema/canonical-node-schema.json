@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-node-schema.json",
+  "title": "Node",
+  "description": "Node describes a single node of the underlying LXD cluster AMS manages",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-nodes-api-openapi.yml#/components/schemas/Node",
+  "type": "object",
+  "properties": {
+    "address": {
+      "description": "Internal IP address of the node",
+      "type": "string",
+      "format": "ipv4"
+    },
+    "architecture": {
+      "description": "CPU architecture of the node",
+      "type": "string"
+    },
+    "cpu_allocation_rate": {
+      "description": "CPU allocation rate for the node",
+      "type": "number",
+      "format": "float"
+    },
+    "cpus": {
+      "description": "Number of CPUs on the node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "disk_size": {
+      "description": "Disk size for the node",
+      "type": "string"
+    },
+    "gpu_encoder_slots": {
+      "description": "Number of GPU encoder slots present on the node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "gpu_slots": {
+      "description": "Number of GPU slots present on the node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "gpus": {
+      "description": "GPU information for the node",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NodeGPU"
+      }
+    },
+    "is_master": {
+      "description": "Flag to represent the master node for the AMS cluster",
+      "type": "boolean"
+    },
+    "managed": {
+      "description": "Flag used to control if AMS can manage the LXD node",
+      "type": "boolean"
+    },
+    "memory": {
+      "description": "Memory (in GB) of the LXD node",
+      "type": "string"
+    },
+    "memory_allocation_rate": {
+      "description": "Memory allocation rate for the node",
+      "type": "number",
+      "format": "float"
+    },
+    "name": {
+      "description": "Name of the node",
+      "type": "string"
+    },
+    "network_bridge_mtu": {
+      "description": "MTU for the configured network bridge on LXD",
+      "type": "integer",
+      "format": "int64"
+    },
+    "public_address": {
+      "description": "Public IP address of the node",
+      "type": "string",
+      "format": "ipv4"
+    },
+    "status": {
+      "description": "Current status of the node",
+      "type": "string"
+    },
+    "status_code": {
+      "$ref": "#/$defs/NodeStatus"
+    },
+    "storage_pool": {
+      "description": "Name of the storage pool configured for the node",
+      "type": "string"
+    },
+    "tags": {
+      "description": "Tags attached to the node",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unscheduable": {
+      "description": "DEPRECATED Flag in favour of `unschedulable` flag",
+      "type": "boolean"
+    },
+    "unschedulable": {
+      "description": "Flag used to see if the node is available to schedule containers",
+      "type": "boolean"
+    },
+    "vpus": {
+      "description": "VPU information for the node",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NodeVPU"
+      }
+    }
+  },
+  "$defs": {
+    "NodeGPU": {
+      "description": "NodeGPU describes a single GPU available on a node",
+      "type": "object",
+      "properties": {
+        "allocations": {
+          "description": "Map of current allocations and containers on the GPU",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/NodeGPUAllocation"
+          }
+        },
+        "encoder_slots": {
+          "description": "Number of the encoder slots available on the GPU",
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "description": "ID of the GPU configured on the node",
+          "type": "integer",
+          "format": "uint64"
+        },
+        "numa_node": {
+          "description": "NUMA Node number for the GPU",
+          "type": "integer",
+          "format": "uint64"
+        },
+        "pci_address": {
+          "description": "PCI Bus Address used by the GPU",
+          "type": "string"
+        },
+        "render_name": {
+          "description": "PCI Bus Address used by the GPU",
+          "type": "string"
+        },
+        "slots": {
+          "description": "Number of the GPU slots available",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "NodeGPUAllocation": {
+      "description": "NodeGPUAllocation describes a single allocation on a GPU",
+      "type": "object",
+      "properties": {
+        "encoder_slots": {
+          "description": "Number of Encoder Slots allocated to the container",
+          "type": "integer",
+          "format": "int64"
+        },
+        "gpus": {
+          "description": "List of GPU IDs allocated to the container",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "slots": {
+          "description": "Number of GPU Slots allocated to the container",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "NodeStatus": {
+      "description": "NodeStatus describes the current status of a node",
+      "type": "integer",
+      "format": "int64"
+    },
+    "NodeVPU": {
+      "description": "NodeVPU describes a single independent VPU available on a node",
+      "type": "object",
+      "properties": {
+        "allocations": {
+          "description": "Map of current allocations on the VPU",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/NodeVPUAllocation"
+          }
+        },
+        "id": {
+          "description": "ID of the VPU",
+          "type": "integer",
+          "format": "uint64"
+        },
+        "model": {
+          "description": "Model name of the VPU",
+          "type": "string"
+        },
+        "numa_node": {
+          "description": "NUMA node the card sits on",
+          "type": "integer",
+          "format": "uint64"
+        },
+        "slots": {
+          "description": "Number of slots available on the VPU",
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "description": "Type of the VPU. Valid values are: unknown, netint",
+          "type": "string"
+        }
+      }
+    },
+    "NodeVPUAllocation": {
+      "description": "NodeVPUAllocation describes a single allocation for a VPU",
+      "type": "object",
+      "properties": {
+        "ids": {
+          "description": "VPU IDs the allocation is for",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "slots": {
+          "description": "Number of slots used by this allocation",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identity-provider-groups-post-schema.json",
+  "title": "IdentityProviderGroupsPost is used for creating an IdentityProviderGroup.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identity-provider-groups-api-openapi.yml#/components/schemas/IdentityProviderGroupsPost",
+  "properties": {
+    "groups": {
+      "description": "Groups are the groups the IdP group resolves to.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "name": {
+      "description": "Name is the name of the IdP group.",
+      "type": "string",
+      "x-go-name": "Name"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

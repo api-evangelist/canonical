@@ -432,10 +432,6 @@ paths:
       - Operations
 components:
   schemas:
-    StatusCode:
-      description: StatusCode represents a valid REST operation
-      type: integer
-      format: int64
     Operation:
       description: Operation represents a background operation
       type: object
@@ -498,6 +494,21 @@ components:
           description: When the operation was updated
           type: string
           format: date-time
+    CollectionResponse:
+      description: Collection Response
+      allOf:
+      - $ref: '#/components/schemas/NoMetaSyncResponse'
+      - type: object
+        properties:
+          total_size:
+            description: Total Count of the collection
+            type: integer
+            format: int64
+            example: 99
+    StatusCode:
+      description: StatusCode represents a valid REST operation
+      type: integer
+      format: int64
     NoMetaSyncResponse:
       description: Swagger Synchronous response without metadata field
       type: object
@@ -520,22 +531,6 @@ components:
           description: Type of operation response
           type: string
           example: sync
-    CollectionResponse:
-      description: Collection Response
-      allOf:
-      - $ref: '#/components/schemas/NoMetaSyncResponse'
-      - type: object
-        properties:
-          total_size:
-            description: Total Count of the collection
-            type: integer
-            format: int64
-            example: 99
-    StatusCode_2:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
     Operation_2:
       description: Operation represents a LXD background operation
       properties:
@@ -643,6 +638,11 @@ components:
           x-go-name: UpdatedAt
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode_2:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
     OperationRequestor:
       description: 'API extension: operation_requestor.'
       properties:
@@ -682,6 +682,59 @@ components:
               type:
                 type: string
                 example: error
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metadata:
+                example: '{}'
+              status:
+                type: string
+                example: Success
+              status_code:
+                type: integer
+                format: int64
+                example: 200
+              type:
+                type: string
+                example: sync
+    ErrorUnauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: missing secret
+              error_code:
+                type: integer
+                format: int64
+                example: 401
+              type:
+                type: string
+                example: error
+    ErrorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Not Authorized
+              error_code:
+                type: integer
+                format: int64
+                example: 403
+              type:
+                type: string
+                example: error
     InternalServerError:
       description: Internal Server Error
       content:
@@ -698,23 +751,6 @@ components:
                 example: 500
               metadata:
                 example: '{}'
-              type:
-                type: string
-                example: error
-    ErrorUnauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: missing secret
-              error_code:
-                type: integer
-                format: int64
-                example: 401
               type:
                 type: string
                 example: error
@@ -737,42 +773,6 @@ components:
               type:
                 type: string
                 example: error
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              metadata:
-                example: '{}'
-              status:
-                type: string
-                example: Success
-              status_code:
-                type: integer
-                format: int64
-                example: 200
-              type:
-                type: string
-                example: sync
-    ErrorForbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: Not Authorized
-              error_code:
-                type: integer
-                format: int64
-                example: 403
-              type:
-                type: string
-                example: error
     BadRequest:
       description: Bad Request
       content:
@@ -790,6 +790,26 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse_2:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
                 type: string
                 x-go-name: Type
             type: object
@@ -830,26 +850,6 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse_2:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
                 type: string
                 x-go-name: Type
             type: object

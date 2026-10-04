@@ -127,13 +127,18 @@ components:
         message:
           type: string
       type: object
-    RestrictedQueueIn:
+    RestrictedQueueOut:
       type: object
       properties:
-        client_id:
+        queue:
           type: string
+        owners:
+          type: array
+          items:
+            type: string
       required:
-      - client_id
+      - owners
+      - queue
       additionalProperties: false
     ValidationError:
       properties:
@@ -150,16 +155,11 @@ components:
         message:
           type: string
       type: object
-    RestrictedQueueOut:
+    RestrictedQueueIn:
       type: object
       properties:
-        queue:
+        client_id:
           type: string
-        owners:
-          type: array
-          items:
-            type: string
       required:
-      - owners
-      - queue
+      - client_id
       additionalProperties: false

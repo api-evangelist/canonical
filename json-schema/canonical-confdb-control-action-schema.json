@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-confdb-control-action-schema.json",
+  "title": "ConfdbControlAction",
+  "description": "Request to delegate or withdraw an operator's remote access to confdb views.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-experimental-api-openapi.yml#/components/schemas/ConfdbControlAction",
+  "type": "object",
+  "required": [
+    "action",
+    "operator-id"
+  ],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "delegate",
+        "undelegate"
+      ],
+      "description": "The action to perform.\n\nUse `delegate` to grant access, or `undelegate` to withdraw it."
+    },
+    "operator-id": {
+      "type": "string",
+      "description": "The account ID of the operator."
+    },
+    "authentications": {
+      "type": "array",
+      "description": "Determines how request messages are signed. With `operator-key`, the\noperator signs messages directly. With `store`, the Store signs on their\nbehalf.\n\nRequired for `delegate`. For `undelegate`, omit to withdraw all\nauthentication methods.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "operator-key",
+          "store"
+        ]
+      }
+    },
+    "views": {
+      "type": "array",
+      "description": "The confdb views, specified in the format `<account-id>/<schema>/<view-name>`.\n\nRequired for `delegate`. For `undelegate`, omit to withdraw access from\nall views.",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-application-patch-schema.json",
+  "title": "ApplicationPatch",
+  "description": "ApplicationPatch represents the fields a user can modify",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationPatch",
+  "type": "object",
+  "properties": {
+    "addons": {
+      "description": "List of addons enabled for the application",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "boot_activity": {
+      "description": "Name of the boot package for the version",
+      "type": "string"
+    },
+    "bootstrap": {
+      "$ref": "#/$defs/ApplicationBootstrap"
+    },
+    "features": {
+      "description": "List of features supported by the application",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hooks": {
+      "$ref": "#/$defs/ApplicationHooks"
+    },
+    "image": {
+      "description": "Base image id or name to use for the applicaiton",
+      "type": "string"
+    },
+    "inhibit_auto_updates": {
+      "description": "Whether or not to auto update the application's base image",
+      "type": "boolean"
+    },
+    "instance-type": {
+      "description": "Instance type to use for the application",
+      "type": "string"
+    },
+    "manifest_version": {
+      "description": "Version of the manifest used to create the application",
+      "type": "string"
+    },
+    "node_selector": {
+      "description": "List of tags for filtering the nodes to run the application on",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_permissions": {
+      "description": "Required android application permissions",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resources": {
+      "$ref": "#/$defs/ApplicationResourcesPost"
+    },
+    "services": {
+      "description": "List of services exposed by the application that should be expose on the instance\nFor application version update, changing those values would trigger a new application version creation",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NetworkServiceSpec"
+      }
+    },
+    "tags": {
+      "description": "Tags to attach to the application",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "video_encoder": {
+      "$ref": "#/$defs/VideoEncoderType"
+    },
+    "watchdog": {
+      "$ref": "#/$defs/ApplicationWatchdog"
+    }
+  },
+  "$defs": {
+    "ApplicationBootstrap": {
+      "description": "ApplicationBootstrap describes the fields used to configure the application bootstrap",
+      "type": "object",
+      "properties": {
+        "keep": {
+          "description": "List of files to keep after the bootstrap",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ApplicationHooks": {
+      "description": "ApplicationHooks describes the fields used to configure the hooks of an application",
+      "type": "object",
+      "properties": {
+        "timeout": {
+          "description": "Time limit to wait for the hook to complete before timing out",
+          "type": "string"
+        }
+      }
+    },
+    "ApplicationResourcesPost": {
+      "description": "ApplicationResourcesPost represents the fields used to update an application resource",
+      "type": "object",
+      "properties": {
+        "cpus": {
+          "description": "Number of CPUs required by the application",
+          "type": "integer",
+          "format": "int64"
+        },
+        "disk-size": {
+          "description": "Storage size required by the application",
+          "type": "string"
+        },
+        "gpu-slots": {
+          "description": "Number of GPU slots required by the application",
+          "type": "integer",
+          "format": "int64"
+        },
+        "memory": {
+          "description": "Memory to be assigned to the application",
+          "type": "string"
+        },
+        "vpu-slots": {
+          "description": "Number of VPU slots required by the application",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ApplicationWatchdog": {
+      "description": "ApplicationWatchdog describes the fields used to update an application watchdog",
+      "type": "object",
+      "properties": {
+        "allowed-packages": {
+          "description": "List of android packages to enable the watchdog for",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "disabled": {
+          "description": "Whether or not to enable the watchdog for the application",
+          "type": "boolean"
+        }
+      }
+    },
+    "NetworkProtocol": {
+      "description": "NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use",
+      "type": "string"
+    },
+    "NetworkServiceSpec": {
+      "description": "NetworkServiceSpec is used to define the user defined network services that should be opened on a container",
+      "type": "object",
+      "properties": {
+        "expose": {
+          "description": "Expose defines wether the service is exposed on the public endpoint of the node\nor if it is only available on the private endpoint. To expose the service set to\ntrue and to false otherwise.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name gives the container a hint what the exposed port is being used for. This\nallows further tweaks inside the container to expose the service correctly.\nExampe: ssh",
+          "type": "string"
+        },
+        "port": {
+          "description": "Port is the port the container provides a service on",
+          "type": "integer",
+          "format": "int64"
+        },
+        "port_end": {
+          "description": "PortEnd is the end of the port range set for a service. If empty, only a\nsingle port is opened",
+          "type": "integer",
+          "format": "int64"
+        },
+        "protocols": {
+          "description": "List of network protocols (tcp, udp) the port should be exposed for",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NetworkProtocol"
+          }
+        }
+      }
+    },
+    "VideoEncoderType": {
+      "description": "VideoEncoderType describes the type of a video encoder is used by an application",
+      "type": "string"
+    }
+  }
+}

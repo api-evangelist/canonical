@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-get-change-by-idresponse-schema.json",
+  "title": "GetChangeByIDResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-changes-and-tasks-api-openapi.yml#/components/schemas/GetChangeByIDResponse",
+  "allOf": [
+    {
+      "$ref": "#/$defs/BaseResponse"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/$defs/changeInfo"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "BaseResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Response type, \"sync\"."
+        },
+        "status-code": {
+          "type": "integer",
+          "description": "HTTP response status code."
+        },
+        "status": {
+          "type": "string",
+          "description": "The description of the HTTP status code.\n\nSee the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).\n"
+        }
+      }
+    },
+    "changeInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/taskInfo"
+          }
+        },
+        "ready": {
+          "type": "boolean"
+        },
+        "err": {
+          "type": "string"
+        },
+        "spawn-time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "spawn-time is a [time](#time)."
+        },
+        "ready-time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ready-time is a [time](#time)."
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "json-string"
+          }
+        }
+      }
+    },
+    "taskInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "log": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "progress": {
+          "$ref": "#/$defs/taskInfoProgress"
+        },
+        "spawn-time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "spawn-time is a [time](#time)."
+        },
+        "ready-time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ready-time is a [time](#time)."
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "json-string"
+          }
+        }
+      }
+    },
+    "taskInfoProgress": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "done": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

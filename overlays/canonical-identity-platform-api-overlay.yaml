@@ -2,7 +2,7 @@ overlay: 1.0.0
 info:
   title: API Evangelist enrichment overlay — Identity Platform API
   version: 1.0.0
-extends: ../openapi/canonical-identity-platform-api-openapi.yml
+extends: ../openapi/_original/canonical-identity-platform-api-openapi.yml
 x-generated: '2026-09-05'
 x-method: generated
 x-source: openapi/canonical-identity-platform-api-openapi.yml

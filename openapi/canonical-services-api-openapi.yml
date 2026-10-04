@@ -91,21 +91,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PostServicesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseAsyncResponse'
-      - type: object
-        properties:
-          result:
-            type: 'null'
-    BaseAsyncResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          change:
-            type: string
-            description: The Change ID of the asynchronous change.
     serviceInfo:
       type: object
       properties:
@@ -130,15 +115,6 @@ components:
           type: string
           format: date-time
           description: '[Time](#time) the service transitioned to the current status.'
-    GetServicesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/serviceInfo'
     BaseResponse:
       type: object
       properties:
@@ -156,3 +132,27 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
+    BaseAsyncResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          change:
+            type: string
+            description: The Change ID of the asynchronous change.
+    GetServicesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/serviceInfo'
+    PostServicesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseAsyncResponse'
+      - type: object
+        properties:
+          result:
+            type: 'null'

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-instance-2-schema.json",
+  "title": "Instance represents a LXD instance.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-instances-api-openapi.yml#/components/schemas/Instance_2",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "architecture": {
+      "description": "Architecture name",
+      "type": "string",
+      "x-go-name": "Architecture"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Instance configuration (see doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "created_at": {
+      "description": "Instance creation timestamp",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "CreatedAt"
+    },
+    "description": {
+      "description": "Instance description",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Instance devices (see doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Devices"
+    },
+    "ephemeral": {
+      "description": "Whether the instance is ephemeral (deleted on shutdown)",
+      "type": "boolean",
+      "x-go-name": "Ephemeral"
+    },
+    "expanded_config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Expanded configuration (all profiles and local config merged)",
+      "type": "object",
+      "x-go-name": "ExpandedConfig"
+    },
+    "expanded_devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Expanded devices (all profiles and local devices merged)",
+      "type": "object",
+      "x-go-name": "ExpandedDevices"
+    },
+    "last_used_at": {
+      "description": "Last start timestamp",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "LastUsedAt"
+    },
+    "location": {
+      "description": "What cluster member this instance is located on",
+      "type": "string",
+      "x-go-name": "Location"
+    },
+    "name": {
+      "description": "Instance name",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "profiles": {
+      "description": "List of profiles applied to the instance",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Profiles"
+    },
+    "project": {
+      "description": "Instance project name\n\nAPI extension: instance_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "stateful": {
+      "description": "Whether the instance currently has saved state on disk",
+      "type": "boolean",
+      "x-go-name": "Stateful"
+    },
+    "status": {
+      "description": "Instance status (see instance_state)",
+      "type": "string",
+      "x-go-name": "Status"
+    },
+    "status_code": {
+      "$ref": "#/$defs/StatusCode_2"
+    },
+    "type": {
+      "description": "The type of instance (container or virtual-machine)",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "StatusCode_2": {
+      "format": "int64",
+      "title": "StatusCode represents a valid LXD operation and container status.",
+      "type": "integer",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

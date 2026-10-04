@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-operation-2-schema.json",
+  "title": "Operation_2",
+  "description": "Operation represents a LXD background operation",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-operations-api-openapi.yml#/components/schemas/Operation_2",
+  "properties": {
+    "child_count": {
+      "description": "Number of child operations.\n\nAPI extension: operation_child_count",
+      "format": "int64",
+      "type": "integer",
+      "x-go-name": "ChildCount"
+    },
+    "class": {
+      "description": "Type of operation (task, token or websocket)",
+      "type": "string",
+      "x-go-name": "Class"
+    },
+    "created_at": {
+      "description": "Operation creation time",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "CreatedAt"
+    },
+    "description": {
+      "description": "Description of the operation",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "err": {
+      "description": "Operation error message",
+      "type": "string",
+      "x-go-name": "Err"
+    },
+    "err_code": {
+      "description": "Operation error code\n\nAPI extension: bulk_operations",
+      "format": "int64",
+      "type": "integer",
+      "x-go-name": "ErrCode"
+    },
+    "id": {
+      "description": "UUID of the operation",
+      "type": "string",
+      "x-go-name": "ID"
+    },
+    "location": {
+      "description": "Which cluster member this record was found on\n\nAPI extension: operation_location",
+      "type": "string",
+      "x-go-name": "Location"
+    },
+    "may_cancel": {
+      "description": "Whether the operation can be canceled",
+      "type": "boolean",
+      "x-go-name": "MayCancel"
+    },
+    "metadata": {
+      "additionalProperties": {},
+      "description": "Operation specific metadata",
+      "type": "object",
+      "x-go-name": "Metadata"
+    },
+    "requestor": {
+      "$ref": "#/$defs/OperationRequestor"
+    },
+    "resources": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "description": "Affected resources",
+      "type": "object",
+      "x-go-name": "Resources"
+    },
+    "status": {
+      "description": "Status name",
+      "type": "string",
+      "x-go-name": "Status"
+    },
+    "status_code": {
+      "$ref": "#/$defs/StatusCode_2"
+    },
+    "updated_at": {
+      "description": "Operation last change",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "UpdatedAt"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "OperationRequestor": {
+      "description": "API extension: operation_requestor.",
+      "properties": {
+        "address": {
+          "description": "Address is the origin address of the request.",
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "protocol": {
+          "description": "Protocol represents the method used to authenticate the requestor.",
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "username": {
+          "description": "Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.",
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "title": "OperationRequestor represents the initial requestor of an operation",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "StatusCode_2": {
+      "format": "int64",
+      "title": "StatusCode represents a valid LXD operation and container status.",
+      "type": "integer",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

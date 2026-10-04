@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-plug-schema.json",
+  "title": "Plug",
+  "description": "Detailed information about a plug.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-asynchronous-api-openapi.yml#/components/schemas/Plug",
+  "type": "object",
+  "properties": {
+    "snap": {
+      "type": "string",
+      "description": "The name of the snap providing the plug."
+    },
+    "plug": {
+      "type": "string",
+      "description": "The name of the plug itself."
+    },
+    "interface": {
+      "type": "string",
+      "description": "The interface name for the plug."
+    },
+    "attrs": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "A static map of the plug's attributes.\nThese are attributes that belong to the plug"
+    },
+    "apps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "A list of apps associated with this plug."
+    },
+    "label": {
+      "type": "string",
+      "description": "The display label for the plug."
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SlotRef"
+      },
+      "description": "A list of slots this plug is connected to."
+    }
+  },
+  "$defs": {
+    "SlotRef": {
+      "type": "object",
+      "description": "A reference to a specific slot.",
+      "properties": {
+        "snap": {
+          "type": "string",
+          "description": "The name of the snap providing the slot."
+        },
+        "slot": {
+          "type": "string",
+          "description": "The name of the slot."
+        }
+      }
+    }
+  }
+}

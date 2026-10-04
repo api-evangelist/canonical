@@ -362,126 +362,88 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 components:
-  responses:
-    BadRequest:
-      description: 'Bad Request. The request could not be processed due to a client-side error.
-
-        This can be due to malformed syntax or providing an entity that does not exist.'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 400
-              status:
-                type: string
-                enum:
-                - Bad Request
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/ConfdbError'
-                - $ref: '#/components/schemas/MalformedRequestError'
-                - $ref: '#/components/schemas/NoSSHKeysError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
-    InternalError:
-      description: An internal error occurred on the server. This is a generic response for server-side issues.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 500
-              status:
-                type: string
-                enum:
-                - Internal Server Error
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                $ref: '#/components/schemas/InternalServerError'
-    NotFound:
-      description: 'Not Found. The requested resource could not be found.
-
-        Can refer to either a local or remote resource'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              status-code:
-                type: integer
-                enum:
-                - 404
-              status:
-                type: string
-                enum:
-                - Not Found
-              type:
-                type: string
-                enum:
-                - error
-              result:
-                oneOf:
-                - $ref: '#/components/schemas/NoModelAssertionError'
-                - $ref: '#/components/schemas/NoSerialAssertionError'
-                - $ref: '#/components/schemas/NotFoundError'
-                - $ref: '#/components/schemas/UserNotFoundError'
-                - $ref: '#/components/schemas/SnapNotInstalledError'
   schemas:
-    Links:
-      type: object
-      description: A collection of relevant links for the snap.
-      properties:
-        contact:
-          type: array
-          items:
-            type: string
-            format: uri
-          example:
-          - mailto:user@canonical.com
-          - https://discourse.example.com/c/support
-        website:
-          type: array
-          items:
-            type: string
-            format: uri
-            example: https://canonical.com
-      additionalProperties:
-        type: array
-        description: Allows for other link collections like 'issues', 'docs', etc.
-        items:
-          type: string
-          format: uri
-          example: https://github.com/user/repo/issues
-    StoreCategory:
-      type: object
-      description: A store category associated with the snap.
-      properties:
-        featured:
-          type: boolean
-          description: Indicates if the snap is featured in this category.
-        name:
-          type: string
-          description: The name of the category.
-    NotFoundError:
+    TimerString:
+      type: string
+      description: 'A custom schedule format for defining recurring events, combining weekdays, times, spans, and frequencies.
+
+
+        **Syntax Summary:**
+
+        - A timer string is composed of one or more event sets, separated by '',,''.
+
+        - Each event set can define weekdays (''mon'', ''tue'', ''wed2'', ''fri5'') and time windows (''10:00'', ''09:00-11:00'').
+
+        - Weekday spans (''mon-fri'') define an event for each day in the span.
+
+        - Time spans (''14:00-16:00'') define a single event within the span, which can be divided using a count (''/2'').
+
+        '
+      externalDocs:
+        description: For the complete specification, see the timer string documentation.
+        url: https://snapcraft.io/docs/timer-string-format
+      pattern: ^[a-zA-Z0-9,:~\/-]+$
+      example: mon-wed,fri,9:00-11:00/2
+    InternalServerError:
       type: object
       properties:
         message:
           type: string
-          example: no snapshot set with the given ID
+          description: A human-readable error message.
+          enum:
+          - internal server error
+    NoModelAssertionError:
+      type: object
+      description: The model assertion has not been created yet.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          enum:
+          - no model assertion yet
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          enum:
+          - model
+    ConfdbError:
+      type: object
+      description: An error occured while interacting with confdb.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - option-not-available
+          - option-not-found
+          - assertion-not-found
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
+    SnapNotInstalledError:
+      type: object
+      description: The snap does not exist on the system.
+      properties:
+        kind:
+          type: string
+          description: machine-readable definition of the error.
+          enum:
+          - snap-not-found
+          - snap-not-installed
+        message:
+          type: string
+          description: Human-readable string describing the error.
+          example: no state entry for key
+        value:
+          type: string
+          description: Value passed that triggered the error.
+          example: firefox
     Activator:
       type: object
       description: 'Details about a single service activator. Note that uppercase field names
@@ -511,12 +473,350 @@ components:
           - dbus
           - socket
           - timer
-    UserNotFoundError:
+    InstalledSnap:
+      type: object
+      description: Represents a snap package that is installed on the system.
+      allOf:
+      - $ref: '#/components/schemas/Snap'
+      - type: object
+        properties:
+          apps:
+            type: array
+            description: A list of applications provided by the snap.
+            items:
+              $ref: '#/components/schemas/App'
+          status:
+            type: string
+            description: The current status of the snap revision.
+            enum:
+            - active
+            - installed
+          install-date:
+            type: string
+            format: RFC3339
+            description: The date and time when this snap revision was installed.
+          installed-size:
+            type: integer
+            format: int64
+            description: The disk space used by the snap in bytes.
+          devmode:
+            type: boolean
+            description: True if the snap is currently installed in development mode.
+          trymode:
+            type: boolean
+            description: True if the snap was installed in try mode.
+          jailmode:
+            type: boolean
+            description: True if the snap is currently installed in jail mode.
+          tracking-channel:
+            type: string
+            description: The channel that updates will be installed from.
+            example: stable
+          refresh-inhibit:
+            type: object
+            description: Indicates that the snap refresh is currently inhibited.
+            properties:
+              proceed-time:
+                type: string
+                format: RFC3339
+                description: The time after which a refresh will be forced.
+          refresh-failures:
+            type: object
+            description: Information about failed auto-refresh attempts.
+            properties:
+              revision:
+                type: integer
+              failure-count:
+                type: integer
+              last-failure-time:
+                type: string
+                format: RFC3339
+              last-failure-severity:
+                type: string
+                enum:
+                - after-reboot
+          components:
+            type: array
+            description: A list of installed and available components for this snap.
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                type:
+                  type: string
+                version:
+                  type: string
+                summary:
+                  type: string
+                description:
+                  type: string
+                revision:
+                  type: string
+                install-date:
+                  type: string
+                  format: RFC3339
+                installed-size:
+                  type: integer
+                  format: int64
+    Snap:
+      type: object
+      description: Detailed information about a single snap.
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the snap.
+        name:
+          type: string
+          description: The name of the snap.
+        base:
+          type: string
+          description: The base snap this snap is built on.
+          example: core20
+        channel:
+          type: string
+          description: The default channel for this snap.
+        common-ids:
+          type: array
+          items:
+            type: string
+            example: code.desktop
+        confinement:
+          type: string
+          enum:
+          - classic
+          - devmode
+          - strict
+        contact:
+          type: string
+          description: The primary contact URL or email for the developer.
+        description:
+          type: string
+          description: A detailed description of the snap.
+        developer:
+          type: string
+          description: The username of the snap developer.
+        devmode:
+          type: boolean
+          description: 'If set to true, the snap needs to be installed with devmode confinement
+
+            and doesn''t, yet, work with strict confinement due to sandbox limitations
+
+            or developer unfamiliarity.'
+        download-size:
+          type: integer
+          format: int64
+          description: The size of the snap package in bytes.
+        icon:
+          type: string
+          format: uri
+          description: A URL to the snap's icon image.
+        license:
+          type: string
+        private:
+          type: boolean
+          description: Whether the snap is private.
+        revision:
+          type: string
+          description: The latest revision number of the snap in this channel.
+        status:
+          type: string
+          example: available
+        store-url:
+          type: string
+          format: uri
+          description: The URL to the snap's page in the Snap Store.
+        summary:
+          type: string
+          description: A short, one-line summary of the snap.
+        title:
+          type: string
+        type:
+          type: string
+          description: 'The type of the snap. ''os'' is deprecated, and is left for compatibility
+
+            with the ''core'' and ''ubuntu-core'' snaps.'
+          enum:
+          - app
+          - kernel
+          - os
+          - gadget
+          - base
+        version:
+          type: string
+          description: The version string of the latest revision.
+        website:
+          type: string
+          format: uri
+          description: The official website for the snap or application.
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreCategory'
+        links:
+          $ref: '#/components/schemas/Links'
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/Media'
+        publisher:
+          $ref: '#/components/schemas/Publisher'
+    Warning:
       type: object
       properties:
         message:
           type: string
-          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+          description: The warnings message content.
+        first-added:
+          type: string
+          format: date-time
+          description: The first time a warning with this message was created (RFC3339 UTC format).
+          example: '2025-09-08T17:29:40.829324752Z'
+        last-added:
+          type: string
+          format: date-time
+          description: The last time a warning with this message was created (RFC3339 UTC format).
+          example: '2025-09-08T17:34:40.829324752Z'
+        last-shown:
+          type: string
+          format: date-time
+          description: The last time this warning was displayed to the user (RFC3339 UTC format).
+          example: '2025-09-08T17:34:40.829324752Z'
+        delete-after:
+          type: string
+          description: A duration string indicating how much time since this warning was last added that it should be deleted.
+          example: 1h30m
+        repeat-after:
+          type: string
+          description: Duration string indicating how much time since this warning was last shown that it should be shown again.
+          example: 30m
+    Snapshot:
+      type: object
+      description: Metadata for a single snap's snapshot.
+      properties:
+        id:
+          type: integer
+          description: The ID of the snapshot.
+          example: 2
+        set:
+          type: integer
+          description: The ID of the set this snapshot belongs to.
+          example: 1
+        time:
+          type: string
+          format: date-time
+          description: The creation timestamp of the snapshot (RFC3339 UTC format).
+          example: '2025-08-18T14:30:38.226662804-02:30'
+        snap:
+          type: string
+          description: The name of the snap that was snapshotted.
+          example: libreoffice
+        snap-id:
+          type: string
+          description: The unique store ID of the snap.
+          example: CpUkI0qPIIBVRsjy49adNq4D6Ra72y4v
+        revision:
+          type: string
+          description: The revision of the snap at the time of the snapshot.
+          example: '355'
+        version:
+          type: string
+          description: The version of the snap at the time of the a snapshot.
+          example: 25.2.5.2
+        size:
+          type: integer
+          format: int64
+          description: The size of the snapshot data in bytes.
+          example: 1286593
+        auto:
+          type: boolean
+          description: True if the snapshot was created automatically.
+        epoch:
+          type: object
+          externalDocs:
+            description: To learn more about snap epochs, consult the Snapcraft documentation
+            url: https://documentation.ubuntu.com/snapcraft/stable/how-to/crafting/manage-data-compatibility/
+          properties:
+            read:
+              type: array
+              items:
+                type: integer
+            write:
+              type: array
+              items:
+                type: integer
+        sha3-384:
+          type: object
+          description: 'A map of archive components to their SHA3-384 checksums. There is a top level archive for system wide data,
+
+            and a per-user archive as well.'
+          additionalProperties:
+            type: string
+          example:
+            archive.tgz: fb8e887e47b1e8763d82ee5ddc8da8ad4601824d3154381a5d3b5bbe4125ded31fcc7b701a8318fbe3ea21213f333c8b
+            user/$USER.tgz: 00cd2cf11d3c5731129dd11f8f82b0f13e807f6d839fd79afe052e301e43ee32ecdd217059cae0c400ff9c49e6dbaff6
+        summary:
+          type: string
+          description: A user-provided summary or description of the snapshot (often empty).
+    System:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              mode:
+                type: string
+                enum:
+                - install
+                - recover
+                - factory-reset
+                - run
+              title:
+                type: string
+                enum:
+                - Reinstall
+                - Recover
+                - Factory Reset
+                - Run normally
+        brand:
+          type: object
+          properties:
+            display-name:
+              type: string
+              example: Canonical
+            id:
+              type: string
+              example: canonical
+            username:
+              type: string
+              example: canonical
+            validation:
+              type: string
+              enum:
+              - starred
+              - unproven
+              - verified
+        current:
+          type: boolean
+        default-recovery-system:
+          type: boolean
+        label:
+          type: string
+          example: '20240603'
+        model:
+          type: object
+          properties:
+            brand-id:
+              type: string
+              example: canonical
+            display-name:
+              type: string
+              example: ubuntu-core-24-amd64
+            model:
+              type: string
+              example: ubuntu-core-24-amd64
     Media:
       type: object
       description: A media asset for the snap, such as an icon or screenshot.
@@ -536,6 +836,177 @@ components:
         width:
           type: integer
           description: The width of the asset in pixels.
+    MalformedRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: cannot decode request body into an alias action
+    App:
+      type: object
+      description: Represents a single application provided by a snap.
+      required:
+      - name
+      properties:
+        snap:
+          type: string
+          description: The snap providing the app.
+        name:
+          type: string
+          description: The name of the app.
+        desktop-file:
+          type: string
+          description: The desktop file for the app.
+        daemon:
+          type: string
+          description: The daemon type, if the app is a service.
+          enum:
+          - forking
+          - notify
+          - oneshot
+          - simple
+        enabled:
+          type: boolean
+          description: True if the app is an enabled service.
+        active:
+          type: boolean
+          description: True if the app is an active service.
+        common-id:
+          type: string
+          description: Common ID associated with this app.
+        activators:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activator'
+      example:
+        snap: lxd
+        name: daemon
+        daemon: simple
+        enabled: true
+        activators:
+        - name: unix
+          type: socket
+          active: true
+          enabled: true
+    StoreCategory:
+      type: object
+      description: A store category associated with the snap.
+      properties:
+        featured:
+          type: boolean
+          description: Indicates if the snap is featured in this category.
+        name:
+          type: string
+          description: The name of the category.
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: cannot find user user@canonical.com'
+    Publisher:
+      type: object
+      description: Information about the publisher of the snap.
+      properties:
+        display-name:
+          type: string
+          description: The user name associated with the account.
+        id:
+          type: string
+          description: The developer ID associated with the account.
+        username:
+          type: string
+        validation:
+          type: string
+          enum:
+          - verified
+          - starred
+          - unproven
+    QuotaGroup:
+      type: object
+      description: Defines a quota group for one or more snaps.
+      required:
+      - group-name
+      properties:
+        group-name:
+          type: string
+          description: The name of the quota group.
+          example: logmem
+        subgroups:
+          type: array
+          items:
+            type: string
+          description: lists any subgroups this quota group contains.
+        parent:
+          type: string
+          description: Contains the parent quota group name, if this group is a subgroup.
+        snaps:
+          type: array
+          items:
+            type: string
+          description: Lists any snaps that belong to this quota group.
+        services:
+          type: string
+          description: Only for a subgroup, lists specific services belonging to a snap in the parent group.
+        constraints:
+          type: object
+          description: The types and values of limits defined for this quota group.
+          properties:
+            memory:
+              type: integer
+              format: int64
+              description: Memory usage limit in bytes.
+              example: 32768
+            cpu:
+              type: string
+              description: Includes percentage as a limit.
+            cpu-set:
+              type: string
+              description: Per-cpu limits, with cpus listing included cores.
+            threads:
+              type: integer
+              description: Maximum number of threads for this quota group.
+              example: 2
+            journal:
+              type: object
+              description: Number of messages logged per time period.
+              properties:
+                size:
+                  type: integer
+                  format: int64
+                rate-count:
+                  type: integer
+                rate-period:
+                  type: integer
+        current:
+          type: object
+          description: Contains the current usage of memory and task quotas
+          additionalProperties: true
+    SnapshotSet:
+      type: object
+      description: Represents a set of snapshots, typically created at the same time.
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for this snapshot set.
+          example: 1
+        snapshots:
+          type: array
+          description: A list of individual snapshots included in this set.
+          items:
+            $ref: '#/components/schemas/Snapshot'
+    NoSSHKeysError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'cannot create user user@canonical.com: no ssh keys found'
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: no snapshot set with the given ID
     SystemInfo:
       type: object
       description: Detailed information about the snapd server's configuration and environment.
@@ -650,512 +1121,31 @@ components:
           type: string
           description: The detailed version of snapd.
           example: '2.72'
-    SnapNotInstalledError:
+    Links:
       type: object
-      description: The snap does not exist on the system.
+      description: A collection of relevant links for the snap.
       properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - snap-not-found
-          - snap-not-installed
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: no state entry for key
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          example: firefox
-    SnapshotSet:
-      type: object
-      description: Represents a set of snapshots, typically created at the same time.
-      properties:
-        id:
-          type: integer
-          description: The unique identifier for this snapshot set.
-          example: 1
-        snapshots:
-          type: array
-          description: A list of individual snapshots included in this set.
-          items:
-            $ref: '#/components/schemas/Snapshot'
-    ConfdbError:
-      type: object
-      description: An error occured while interacting with confdb.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - option-not-available
-          - option-not-found
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          example: 'cannot get ''ssid'' through canonical/network/wifi-setup: no data'
-    QuotaGroup:
-      type: object
-      description: Defines a quota group for one or more snaps.
-      required:
-      - group-name
-      properties:
-        group-name:
-          type: string
-          description: The name of the quota group.
-          example: logmem
-        subgroups:
-          type: array
-          items:
-            type: string
-          description: lists any subgroups this quota group contains.
-        parent:
-          type: string
-          description: Contains the parent quota group name, if this group is a subgroup.
-        snaps:
-          type: array
-          items:
-            type: string
-          description: Lists any snaps that belong to this quota group.
-        services:
-          type: string
-          description: Only for a subgroup, lists specific services belonging to a snap in the parent group.
-        constraints:
-          type: object
-          description: The types and values of limits defined for this quota group.
-          properties:
-            memory:
-              type: integer
-              format: int64
-              description: Memory usage limit in bytes.
-              example: 32768
-            cpu:
-              type: string
-              description: Includes percentage as a limit.
-            cpu-set:
-              type: string
-              description: Per-cpu limits, with cpus listing included cores.
-            threads:
-              type: integer
-              description: Maximum number of threads for this quota group.
-              example: 2
-            journal:
-              type: object
-              description: Number of messages logged per time period.
-              properties:
-                size:
-                  type: integer
-                  format: int64
-                rate-count:
-                  type: integer
-                rate-period:
-                  type: integer
-        current:
-          type: object
-          description: Contains the current usage of memory and task quotas
-          additionalProperties: true
-    Warning:
-      type: object
-      properties:
-        message:
-          type: string
-          description: The warnings message content.
-        first-added:
-          type: string
-          format: date-time
-          description: The first time a warning with this message was created (RFC3339 UTC format).
-          example: '2025-09-08T17:29:40.829324752Z'
-        last-added:
-          type: string
-          format: date-time
-          description: The last time a warning with this message was created (RFC3339 UTC format).
-          example: '2025-09-08T17:34:40.829324752Z'
-        last-shown:
-          type: string
-          format: date-time
-          description: The last time this warning was displayed to the user (RFC3339 UTC format).
-          example: '2025-09-08T17:34:40.829324752Z'
-        delete-after:
-          type: string
-          description: A duration string indicating how much time since this warning was last added that it should be deleted.
-          example: 1h30m
-        repeat-after:
-          type: string
-          description: Duration string indicating how much time since this warning was last shown that it should be shown again.
-          example: 30m
-    System:
-      type: object
-      properties:
-        actions:
-          type: array
-          items:
-            type: object
-            properties:
-              mode:
-                type: string
-                enum:
-                - install
-                - recover
-                - factory-reset
-                - run
-              title:
-                type: string
-                enum:
-                - Reinstall
-                - Recover
-                - Factory Reset
-                - Run normally
-        brand:
-          type: object
-          properties:
-            display-name:
-              type: string
-              example: Canonical
-            id:
-              type: string
-              example: canonical
-            username:
-              type: string
-              example: canonical
-            validation:
-              type: string
-              enum:
-              - starred
-              - unproven
-              - verified
-        current:
-          type: boolean
-        default-recovery-system:
-          type: boolean
-        label:
-          type: string
-          example: '20240603'
-        model:
-          type: object
-          properties:
-            brand-id:
-              type: string
-              example: canonical
-            display-name:
-              type: string
-              example: ubuntu-core-24-amd64
-            model:
-              type: string
-              example: ubuntu-core-24-amd64
-    Publisher:
-      type: object
-      description: Information about the publisher of the snap.
-      properties:
-        display-name:
-          type: string
-          description: The user name associated with the account.
-        id:
-          type: string
-          description: The developer ID associated with the account.
-        username:
-          type: string
-        validation:
-          type: string
-          enum:
-          - verified
-          - starred
-          - unproven
-    NoSSHKeysError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'cannot create user user@canonical.com: no ssh keys found'
-    Snap:
-      type: object
-      description: Detailed information about a single snap.
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the snap.
-        name:
-          type: string
-          description: The name of the snap.
-        base:
-          type: string
-          description: The base snap this snap is built on.
-          example: core20
-        channel:
-          type: string
-          description: The default channel for this snap.
-        common-ids:
-          type: array
-          items:
-            type: string
-            example: code.desktop
-        confinement:
-          type: string
-          enum:
-          - classic
-          - devmode
-          - strict
         contact:
-          type: string
-          description: The primary contact URL or email for the developer.
-        description:
-          type: string
-          description: A detailed description of the snap.
-        developer:
-          type: string
-          description: The username of the snap developer.
-        devmode:
-          type: boolean
-          description: 'If set to true, the snap needs to be installed with devmode confinement
-
-            and doesn''t, yet, work with strict confinement due to sandbox limitations
-
-            or developer unfamiliarity.'
-        download-size:
-          type: integer
-          format: int64
-          description: The size of the snap package in bytes.
-        icon:
-          type: string
-          format: uri
-          description: A URL to the snap's icon image.
-        license:
-          type: string
-        private:
-          type: boolean
-          description: Whether the snap is private.
-        revision:
-          type: string
-          description: The latest revision number of the snap in this channel.
-        status:
-          type: string
-          example: available
-        store-url:
-          type: string
-          format: uri
-          description: The URL to the snap's page in the Snap Store.
-        summary:
-          type: string
-          description: A short, one-line summary of the snap.
-        title:
-          type: string
-        type:
-          type: string
-          description: 'The type of the snap. ''os'' is deprecated, and is left for compatibility
-
-            with the ''core'' and ''ubuntu-core'' snaps.'
-          enum:
-          - app
-          - kernel
-          - os
-          - gadget
-          - base
-        version:
-          type: string
-          description: The version string of the latest revision.
+          type: array
+          items:
+            type: string
+            format: uri
+          example:
+          - mailto:user@canonical.com
+          - https://discourse.example.com/c/support
         website:
+          type: array
+          items:
+            type: string
+            format: uri
+            example: https://canonical.com
+      additionalProperties:
+        type: array
+        description: Allows for other link collections like 'issues', 'docs', etc.
+        items:
           type: string
           format: uri
-          description: The official website for the snap or application.
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/StoreCategory'
-        links:
-          $ref: '#/components/schemas/Links'
-        media:
-          type: array
-          items:
-            $ref: '#/components/schemas/Media'
-        publisher:
-          $ref: '#/components/schemas/Publisher'
-    TimerString:
-      type: string
-      description: 'A custom schedule format for defining recurring events, combining weekdays, times, spans, and frequencies.
-
-
-        **Syntax Summary:**
-
-        - A timer string is composed of one or more event sets, separated by '',,''.
-
-        - Each event set can define weekdays (''mon'', ''tue'', ''wed2'', ''fri5'') and time windows (''10:00'', ''09:00-11:00'').
-
-        - Weekday spans (''mon-fri'') define an event for each day in the span.
-
-        - Time spans (''14:00-16:00'') define a single event within the span, which can be divided using a count (''/2'').
-
-        '
-      externalDocs:
-        description: For the complete specification, see the timer string documentation.
-        url: https://snapcraft.io/docs/timer-string-format
-      pattern: ^[a-zA-Z0-9,:~\/-]+$
-      example: mon-wed,fri,9:00-11:00/2
-    InstalledSnap:
-      type: object
-      description: Represents a snap package that is installed on the system.
-      allOf:
-      - $ref: '#/components/schemas/Snap'
-      - type: object
-        properties:
-          apps:
-            type: array
-            description: A list of applications provided by the snap.
-            items:
-              $ref: '#/components/schemas/App'
-          status:
-            type: string
-            description: The current status of the snap revision.
-            enum:
-            - active
-            - installed
-          install-date:
-            type: string
-            format: RFC3339
-            description: The date and time when this snap revision was installed.
-          installed-size:
-            type: integer
-            format: int64
-            description: The disk space used by the snap in bytes.
-          devmode:
-            type: boolean
-            description: True if the snap is currently installed in development mode.
-          trymode:
-            type: boolean
-            description: True if the snap was installed in try mode.
-          jailmode:
-            type: boolean
-            description: True if the snap is currently installed in jail mode.
-          tracking-channel:
-            type: string
-            description: The channel that updates will be installed from.
-            example: stable
-          refresh-inhibit:
-            type: object
-            description: Indicates that the snap refresh is currently inhibited.
-            properties:
-              proceed-time:
-                type: string
-                format: RFC3339
-                description: The time after which a refresh will be forced.
-          refresh-failures:
-            type: object
-            description: Information about failed auto-refresh attempts.
-            properties:
-              revision:
-                type: integer
-              failure-count:
-                type: integer
-              last-failure-time:
-                type: string
-                format: RFC3339
-              last-failure-severity:
-                type: string
-                enum:
-                - after-reboot
-          components:
-            type: array
-            description: A list of installed and available components for this snap.
-            items:
-              type: object
-              properties:
-                name:
-                  type: string
-                type:
-                  type: string
-                version:
-                  type: string
-                summary:
-                  type: string
-                description:
-                  type: string
-                revision:
-                  type: string
-                install-date:
-                  type: string
-                  format: RFC3339
-                installed-size:
-                  type: integer
-                  format: int64
-    MalformedRequestError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: cannot decode request body into an alias action
-    App:
-      type: object
-      description: Represents a single application provided by a snap.
-      required:
-      - name
-      properties:
-        snap:
-          type: string
-          description: The snap providing the app.
-        name:
-          type: string
-          description: The name of the app.
-        desktop-file:
-          type: string
-          description: The desktop file for the app.
-        daemon:
-          type: string
-          description: The daemon type, if the app is a service.
-          enum:
-          - forking
-          - notify
-          - oneshot
-          - simple
-        enabled:
-          type: boolean
-          description: True if the app is an enabled service.
-        active:
-          type: boolean
-          description: True if the app is an active service.
-        common-id:
-          type: string
-          description: Common ID associated with this app.
-        activators:
-          type: array
-          items:
-            $ref: '#/components/schemas/Activator'
-      example:
-        snap: lxd
-        name: daemon
-        daemon: simple
-        enabled: true
-        activators:
-        - name: unix
-          type: socket
-          active: true
-          enabled: true
-    InternalServerError:
-      type: object
-      properties:
-        message:
-          type: string
-          description: A human-readable error message.
-          enum:
-          - internal server error
-    NoModelAssertionError:
-      type: object
-      description: The model assertion has not been created yet.
-      properties:
-        kind:
-          type: string
-          description: machine-readable definition of the error.
-          enum:
-          - assertion-not-found
-        message:
-          type: string
-          description: Human-readable string describing the error.
-          enum:
-          - no model assertion yet
-        value:
-          type: string
-          description: Value passed that triggered the error.
-          enum:
-          - model
+          example: https://github.com/user/repo/issues
     NoSerialAssertionError:
       type: object
       description: The serial assertion has not been created yet.
@@ -1175,74 +1165,84 @@ components:
           description: Value passed that triggered the error.
           enum:
           - serial
-    Snapshot:
-      type: object
-      description: Metadata for a single snap's snapshot.
-      properties:
-        id:
-          type: integer
-          description: The ID of the snapshot.
-          example: 2
-        set:
-          type: integer
-          description: The ID of the set this snapshot belongs to.
-          example: 1
-        time:
-          type: string
-          format: date-time
-          description: The creation timestamp of the snapshot (RFC3339 UTC format).
-          example: '2025-08-18T14:30:38.226662804-02:30'
-        snap:
-          type: string
-          description: The name of the snap that was snapshotted.
-          example: libreoffice
-        snap-id:
-          type: string
-          description: The unique store ID of the snap.
-          example: CpUkI0qPIIBVRsjy49adNq4D6Ra72y4v
-        revision:
-          type: string
-          description: The revision of the snap at the time of the snapshot.
-          example: '355'
-        version:
-          type: string
-          description: The version of the snap at the time of the a snapshot.
-          example: 25.2.5.2
-        size:
-          type: integer
-          format: int64
-          description: The size of the snapshot data in bytes.
-          example: 1286593
-        auto:
-          type: boolean
-          description: True if the snapshot was created automatically.
-        epoch:
-          type: object
-          externalDocs:
-            description: To learn more about snap epochs, consult the Snapcraft documentation
-            url: https://documentation.ubuntu.com/snapcraft/stable/how-to/crafting/manage-data-compatibility/
-          properties:
-            read:
-              type: array
-              items:
-                type: integer
-            write:
-              type: array
-              items:
-                type: integer
-        sha3-384:
-          type: object
-          description: 'A map of archive components to their SHA3-384 checksums. There is a top level archive for system wide data,
+  responses:
+    BadRequest:
+      description: 'Bad Request. The request could not be processed due to a client-side error.
 
-            and a per-user archive as well.'
-          additionalProperties:
-            type: string
-          example:
-            archive.tgz: fb8e887e47b1e8763d82ee5ddc8da8ad4601824d3154381a5d3b5bbe4125ded31fcc7b701a8318fbe3ea21213f333c8b
-            user/$USER.tgz: 00cd2cf11d3c5731129dd11f8f82b0f13e807f6d839fd79afe052e301e43ee32ecdd217059cae0c400ff9c49e6dbaff6
-        summary:
-          type: string
-          description: A user-provided summary or description of the snapshot (often empty).
+        This can be due to malformed syntax or providing an entity that does not exist.'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 400
+              status:
+                type: string
+                enum:
+                - Bad Request
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/ConfdbError'
+                - $ref: '#/components/schemas/MalformedRequestError'
+                - $ref: '#/components/schemas/NoSSHKeysError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
+    InternalError:
+      description: An internal error occurred on the server. This is a generic response for server-side issues.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 500
+              status:
+                type: string
+                enum:
+                - Internal Server Error
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                $ref: '#/components/schemas/InternalServerError'
+    NotFound:
+      description: 'Not Found. The requested resource could not be found.
+
+        Can refer to either a local or remote resource'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status-code:
+                type: integer
+                enum:
+                - 404
+              status:
+                type: string
+                enum:
+                - Not Found
+              type:
+                type: string
+                enum:
+                - error
+              result:
+                oneOf:
+                - $ref: '#/components/schemas/NoModelAssertionError'
+                - $ref: '#/components/schemas/NoSerialAssertionError'
+                - $ref: '#/components/schemas/NotFoundError'
+                - $ref: '#/components/schemas/UserNotFoundError'
+                - $ref: '#/components/schemas/SnapNotInstalledError'
   securitySchemes:
     PeerAuth:
       type: apiKey

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-list-local-packages-response-schema.json",
+  "title": "ListLocalPackagesResponse",
+  "description": "The response message for listing local repository packages.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-localservice-api-openapi.yml#/components/schemas/ListLocalPackagesResponse",
+  "type": "object",
+  "properties": {
+    "localPackages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The list of package name strings.\n Example: [\"snap-http_1.4.0_source\", ...]"
+    },
+    "nextPageToken": {
+      "type": "string",
+      "description": "A token, which can be sent as `page_token` to retrieve the next page.\n If this field is omitted, there are no subsequent pages."
+    }
+  }
+}

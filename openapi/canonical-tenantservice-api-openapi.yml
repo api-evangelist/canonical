@@ -586,25 +586,36 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    tenantListTenantsResponse:
+      properties:
+        next_page_token:
+          type: string
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
+      type: object
+    tenantCreateTenantResponse:
+      properties:
+        tenant:
+          $ref: '#/components/schemas/tenantTenant'
+      type: object
+    tenantCreateTenantRequest:
+      properties:
+        name:
+          type: string
+      type: object
+    tenantUpdateTenantUserResponse:
+      properties:
+        user:
+          $ref: '#/components/schemas/tenantTenantUser'
+      type: object
     tenantListUserTenantsResponse:
       properties:
         tenants:
           items:
             $ref: '#/components/schemas/tenantTenant'
           type: array
-      type: object
-    typesErrorResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
-    tenantProvisionUserResponse:
-      properties:
-        status:
-          type: string
       type: object
     tenantTenantUser:
       properties:
@@ -615,12 +626,51 @@ components:
         user_id:
           type: string
       type: object
-    TenantServiceInviteMemberBody:
+    tenantTenantInput:
       properties:
-        email:
+        enabled:
+          type: boolean
+        name:
           type: string
+      type: object
+    tenantDeleteTenantResponse:
+      properties:
+        message:
+          type: string
+        status:
+          format: int32
+          type: integer
+      type: object
+    TenantServiceUpdateTenantUserBody:
+      properties:
         role:
           type: string
+      type: object
+    tenantProvisionUserResponse:
+      properties:
+        status:
+          type: string
+      type: object
+    tenantListTenantUsersResponse:
+      properties:
+        next_page_token:
+          type: string
+        users:
+          items:
+            $ref: '#/components/schemas/tenantTenantUser'
+          type: array
+      type: object
+    tenantLookupTenantsResponse:
+      properties:
+        tenants:
+          items:
+            $ref: '#/components/schemas/tenantTenant'
+          type: array
+      type: object
+    tenantUpdateTenantResponse:
+      properties:
+        tenant:
+          $ref: '#/components/schemas/tenantTenant'
       type: object
     tenantListMyTenantsResponse:
       properties:
@@ -628,6 +678,15 @@ components:
           items:
             $ref: '#/components/schemas/tenantTenant'
           type: array
+      type: object
+    tenantInviteMemberResponse:
+      properties:
+        code:
+          type: string
+        link:
+          type: string
+        status:
+          type: string
       type: object
     tenantTenant:
       properties:
@@ -640,40 +699,6 @@ components:
         name:
           type: string
       type: object
-    tenantUpdateTenantUserResponse:
-      properties:
-        user:
-          $ref: '#/components/schemas/tenantTenantUser'
-      type: object
-    tenantCreateTenantResponse:
-      properties:
-        tenant:
-          $ref: '#/components/schemas/tenantTenant'
-      type: object
-    tenantListTenantsResponse:
-      properties:
-        next_page_token:
-          type: string
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
-      type: object
-    TenantServiceUpdateTenantBody:
-      properties:
-        tenant:
-          $ref: '#/components/schemas/tenantTenantInput'
-        update_mask:
-          type: string
-      type: object
-    tenantDeleteTenantResponse:
-      properties:
-        message:
-          type: string
-        status:
-          format: int32
-          type: integer
-      type: object
     TenantServiceProvisionUserBody:
       properties:
         email:
@@ -681,52 +706,27 @@ components:
         role:
           type: string
       type: object
-    tenantListTenantUsersResponse:
+    TenantServiceInviteMemberBody:
       properties:
-        next_page_token:
+        email:
           type: string
-        users:
-          items:
-            $ref: '#/components/schemas/tenantTenantUser'
-          type: array
-      type: object
-    tenantTenantInput:
-      properties:
-        enabled:
-          type: boolean
-        name:
-          type: string
-      type: object
-    TenantServiceUpdateTenantUserBody:
-      properties:
         role:
           type: string
       type: object
-    tenantUpdateTenantResponse:
+    typesErrorResponse:
       properties:
-        tenant:
-          $ref: '#/components/schemas/tenantTenant'
-      type: object
-    tenantInviteMemberResponse:
-      properties:
-        code:
-          type: string
-        link:
+        message:
           type: string
         status:
-          type: string
+          format: int32
+          type: integer
       type: object
-    tenantCreateTenantRequest:
+    TenantServiceUpdateTenantBody:
       properties:
-        name:
+        tenant:
+          $ref: '#/components/schemas/tenantTenantInput'
+        update_mask:
           type: string
-      type: object
-    tenantLookupTenantsResponse:
-      properties:
-        tenants:
-          items:
-            $ref: '#/components/schemas/tenantTenant'
-          type: array
       type: object
   securitySchemes:
     OAuth2:

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-certificates-post-schema.json",
+  "title": "CertificatesPost",
+  "description": "CertificatesPost represents the fields of a new auth provided certificate",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-certificates-api-openapi.yml#/components/schemas/CertificatesPost",
+  "type": "object",
+  "properties": {
+    "certificate": {
+      "description": "Base64 encoded certificate content without the header or the footer",
+      "type": "string"
+    },
+    "trust-password": {
+      "description": "TrustPassword is used to register a new client with the service",
+      "type": "string"
+    }
+  }
+}

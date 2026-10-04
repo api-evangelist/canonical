@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-idps-list-idps-resp-schema.json",
+  "title": "idpsListIdpsResp",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-idpsservice-api-openapi.yml#/components/schemas/idpsListIdpsResp",
+  "properties": {
+    "data": {
+      "items": {
+        "$ref": "#/$defs/idpsIdp"
+      },
+      "type": "array"
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "idpsIdp": {
+      "properties": {
+        "apple_private_key": {
+          "type": "string"
+        },
+        "apple_private_key_id": {
+          "type": "string"
+        },
+        "apple_team_id": {
+          "type": "string"
+        },
+        "auth_url": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "issuer_url": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "mapper_url": {
+          "type": "string"
+        },
+        "microsoft_tenant": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "requested_claims": {
+          "type": "string"
+        },
+        "scope": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "subject_source": {
+          "type": "string"
+        },
+        "token_url": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

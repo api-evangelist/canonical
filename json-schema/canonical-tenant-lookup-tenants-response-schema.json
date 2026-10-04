@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-tenant-lookup-tenants-response-schema.json",
+  "title": "tenantLookupTenantsResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-internal-api-openapi.yml#/components/schemas/tenantLookupTenantsResponse",
+  "properties": {
+    "tenants": {
+      "items": {
+        "$ref": "#/$defs/tenantTenant"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "tenantTenant": {
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

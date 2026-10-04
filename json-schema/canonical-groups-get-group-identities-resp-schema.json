@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-groups-get-group-identities-resp-schema.json",
+  "title": "groupsGetGroupIdentitiesResp",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-groupsservice-api-openapi.yml#/components/schemas/groupsGetGroupIdentitiesResp",
+  "properties": {
+    "data": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "message": {
+      "type": "string"
+    },
+    "meta": {
+      "$ref": "#/$defs/typesPagination"
+    },
+    "status": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "typesPagination": {
+      "properties": {
+        "next": {
+          "type": "string"
+        },
+        "pageToken": {
+          "type": "string"
+        },
+        "prev": {
+          "type": "string"
+        },
+        "size": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

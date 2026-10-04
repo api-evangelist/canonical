@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-networks-post-schema.json",
+  "title": "NetworksPost",
+  "description": "NetworksPost represents the fields of a new LXD network",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-networks-api-openapi.yml#/components/schemas/NetworksPost",
+  "properties": {
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Network configuration map (refer to doc/networks.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the profile\n\nAPI extension: entity_description",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "name": {
+      "description": "The name of the new network",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "type": {
+      "description": "The network type (refer to doc/networks.md)",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-state-schema.json",
+  "title": "NetworkState",
+  "description": "NetworkState represents the network state",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-networks-api-openapi.yml#/components/schemas/NetworkState",
+  "properties": {
+    "addresses": {
+      "description": "List of addresses",
+      "items": {
+        "$ref": "#/$defs/NetworkStateAddress"
+      },
+      "type": "array",
+      "x-go-name": "Addresses"
+    },
+    "bond": {
+      "$ref": "#/$defs/NetworkStateBond"
+    },
+    "bridge": {
+      "$ref": "#/$defs/NetworkStateBridge"
+    },
+    "counters": {
+      "$ref": "#/$defs/NetworkStateCounters"
+    },
+    "hwaddr": {
+      "description": "MAC address",
+      "type": "string",
+      "x-go-name": "Hwaddr"
+    },
+    "mtu": {
+      "description": "MTU",
+      "format": "int64",
+      "type": "integer",
+      "x-go-name": "Mtu"
+    },
+    "ovn": {
+      "$ref": "#/$defs/NetworkStateOVN"
+    },
+    "state": {
+      "description": "Link state",
+      "type": "string",
+      "x-go-name": "State"
+    },
+    "type": {
+      "description": "Interface type",
+      "type": "string",
+      "x-go-name": "Type"
+    },
+    "vlan": {
+      "$ref": "#/$defs/NetworkStateVLAN"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "NetworkStateAddress": {
+      "description": "NetworkStateAddress represents a network address",
+      "properties": {
+        "address": {
+          "description": "IP address",
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "family": {
+          "description": "Address family",
+          "type": "string",
+          "x-go-name": "Family"
+        },
+        "netmask": {
+          "description": "IP netmask (CIDR)",
+          "type": "string",
+          "x-go-name": "Netmask"
+        },
+        "scope": {
+          "description": "Address scope",
+          "type": "string",
+          "x-go-name": "Scope"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "NetworkStateBond": {
+      "description": "NetworkStateBond represents bond specific state",
+      "properties": {
+        "down_delay": {
+          "description": "Delay on link down (ms)",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "DownDelay"
+        },
+        "lower_devices": {
+          "description": "List of devices that are part of the bond",
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-go-name": "LowerDevices"
+        },
+        "mii_frequency": {
+          "description": "How often to check for link state (ms)",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "MIIFrequency"
+        },
+        "mii_state": {
+          "description": "Bond link state",
+          "type": "string",
+          "x-go-name": "MIIState"
+        },
+        "mode": {
+          "description": "Bonding mode",
+          "type": "string",
+          "x-go-name": "Mode"
+        },
+        "transmit_policy": {
+          "description": "Transmit balancing policy",
+          "type": "string",
+          "x-go-name": "TransmitPolicy"
+        },
+        "up_delay": {
+          "description": "Delay on link up (ms)",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "UpDelay"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "NetworkStateBridge": {
+      "description": "NetworkStateBridge represents bridge specific state",
+      "properties": {
+        "forward_delay": {
+          "description": "Delay on port join (ms)",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "ForwardDelay"
+        },
+        "id": {
+          "description": "Bridge ID",
+          "type": "string",
+          "x-go-name": "ID"
+        },
+        "stp": {
+          "description": "Whether STP is enabled",
+          "type": "boolean",
+          "x-go-name": "STP"
+        },
+        "upper_devices": {
+          "description": "List of devices that are in the bridge",
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-go-name": "UpperDevices"
+        },
+        "vlan_default": {
+          "description": "Default VLAN ID",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "VLANDefault"
+        },
+        "vlan_filtering": {
+          "description": "Whether VLAN filtering is enabled",
+          "type": "boolean",
+          "x-go-name": "VLANFiltering"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "NetworkStateCounters": {
+      "description": "NetworkStateCounters represents packet counters",
+      "properties": {
+        "bytes_received": {
+          "description": "Number of bytes received",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "BytesReceived"
+        },
+        "bytes_sent": {
+          "description": "Number of bytes sent",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "BytesSent"
+        },
+        "packets_received": {
+          "description": "Number of packets received",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "PacketsReceived"
+        },
+        "packets_sent": {
+          "description": "Number of packets sent",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "PacketsSent"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "NetworkStateOVN": {
+      "description": "NetworkStateOVN represents OVN specific state",
+      "properties": {
+        "chassis": {
+          "description": "OVN network chassis name",
+          "type": "string",
+          "x-go-name": "Chassis"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "NetworkStateVLAN": {
+      "description": "NetworkStateVLAN represents VLAN specific state",
+      "properties": {
+        "lower_device": {
+          "description": "Parent device",
+          "type": "string",
+          "x-go-name": "LowerDevice"
+        },
+        "vid": {
+          "description": "VLAN ID",
+          "format": "uint64",
+          "type": "integer",
+          "x-go-name": "VID"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-clients-update-client-resp-schema.json",
+  "title": "clientsUpdateClientResp",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-clientsservice-api-openapi.yml#/components/schemas/clientsUpdateClientResp",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/clientsClient"
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "clientsClient": {
+      "properties": {
+        "access_token_strategy": {
+          "type": "string"
+        },
+        "allowed_cors_origins": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "audience": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "authorization_code_grant_access_token_lifespan": {
+          "type": "string"
+        },
+        "authorization_code_grant_id_token_lifespan": {
+          "type": "string"
+        },
+        "authorization_code_grant_refresh_token_lifespan": {
+          "type": "string"
+        },
+        "backchannel_logout_session_required": {
+          "type": "boolean"
+        },
+        "backchannel_logout_uri": {
+          "type": "string"
+        },
+        "client_credentials_grant_access_token_lifespan": {
+          "type": "string"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_name": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        },
+        "client_secret_expires_at": {
+          "format": "int64",
+          "type": "string"
+        },
+        "client_uri": {
+          "type": "string"
+        },
+        "contacts": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "frontchannel_logout_session_required": {
+          "type": "boolean"
+        },
+        "frontchannel_logout_uri": {
+          "type": "string"
+        },
+        "grant_types": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "implicit_grant_access_token_lifespan": {
+          "type": "string"
+        },
+        "implicit_grant_id_token_lifespan": {
+          "type": "string"
+        },
+        "jwks": {
+          "type": "object"
+        },
+        "jwks_uri": {
+          "type": "string"
+        },
+        "jwt_bearer_grant_access_token_lifespan": {
+          "type": "string"
+        },
+        "logo_uri": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "policy_uri": {
+          "type": "string"
+        },
+        "post_logout_redirect_uris": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "redirect_uris": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "refresh_token_grant_access_token_lifespan": {
+          "type": "string"
+        },
+        "refresh_token_grant_id_token_lifespan": {
+          "type": "string"
+        },
+        "refresh_token_grant_refresh_token_lifespan": {
+          "type": "string"
+        },
+        "registration_access_token": {
+          "type": "string"
+        },
+        "registration_client_uri": {
+          "type": "string"
+        },
+        "request_object_signing_alg": {
+          "type": "string"
+        },
+        "request_uris": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "response_types": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "sector_identifier_uri": {
+          "type": "string"
+        },
+        "skip_consent": {
+          "type": "boolean"
+        },
+        "subject_type": {
+          "type": "string"
+        },
+        "token_endpoint_auth_method": {
+          "type": "string"
+        },
+        "token_endpoint_auth_signing_alg": {
+          "type": "string"
+        },
+        "tos_uri": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "userinfo_signed_response_alg": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

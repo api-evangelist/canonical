@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-authorization-get-allowed-apps-in-group-resp-schema.json",
+  "title": "authorizationGetAllowedAppsInGroupResp",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationGetAllowedAppsInGroupResp",
+  "properties": {
+    "data": {
+      "items": {
+        "$ref": "#/$defs/authorizationApp"
+      },
+      "type": "array"
+    },
+    "message": {
+      "type": "string"
+    },
+    "status": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "authorizationApp": {
+      "properties": {
+        "client_id": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

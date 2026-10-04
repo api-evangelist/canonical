@@ -182,6 +182,26 @@ components:
                 type: string
                 x-go-name: Type
             type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
     Forbidden:
       description: Forbidden
       content:
@@ -219,26 +239,6 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
                 type: string
                 x-go-name: Type
             type: object

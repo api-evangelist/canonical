@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-notice-schema.json",
+  "title": "Notice",
+  "description": "A notice recorded by snapd, such as a warning or change update.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-notices-api-openapi.yml#/components/schemas/Notice",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique ID of the notice."
+    },
+    "user-id": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "The UID of the user who may view the notice, or null if public."
+    },
+    "type": {
+      "$ref": "#/$defs/NoticeType"
+    },
+    "key": {
+      "type": "string",
+      "description": "An identifier which differentiates notices of this type. Notices recorded\nwith the type and key of an existing notice count as an occurrence of that\nnotice. Notice keys can take the form of the following:\n\n- 63\n- '-'\n- 'libreoffice'\n- 'ABCDABCDABCDABCD'"
+    },
+    "first-occurred": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp of the first time this notice occurred (RFC3339 UTC format)."
+    },
+    "last-occurred": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp of the last time this notice occurred (RFC3339 UTC format)."
+    },
+    "last-repeated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The timestamp of the last time this notice was repeated (RFC3339 UTC\nformat)."
+    },
+    "occurrences": {
+      "type": "integer",
+      "description": "The number of times this notice has occurred."
+    },
+    "last-data": {
+      "type": "object",
+      "description": "Additional data captured from the last occurrence.",
+      "additionalProperties": true
+    },
+    "repeat-after": {
+      "type": "string",
+      "description": "A duration string after which the notice may be repeated (optional)."
+    },
+    "expire-after": {
+      "type": "string",
+      "description": "A duration string after which the notice may be deleted."
+    }
+  },
+  "$defs": {
+    "NoticeType": {
+      "type": "string",
+      "description": "The type of the notice.",
+      "enum": [
+        "change-update",
+        "warning",
+        "refresh-inhibit",
+        "snap-run-inhibit",
+        "interfaces-requests-prompt",
+        "interfaces-requests-rule-update"
+      ]
+    }
+  }
+}

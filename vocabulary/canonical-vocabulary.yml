@@ -1,0 +1,418 @@
+generated: '2026-10-04'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/canonical-add-ons-api-openapi.yml
+- openapi/canonical-agents-api-openapi.yml
+- openapi/canonical-appauthorizationservice-api-openapi.yml
+- openapi/canonical-application-api-openapi.yml
+- openapi/canonical-applications-api-openapi.yml
+vocabulary:
+  name: Canonical Domain Vocabulary
+  description: 'Terms declared by Canonical''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-04'
+  terms:
+  - term: Asynchronous
+    definition: Return the reference to a change that will occur in the background.
+    tags:
+    - Resource Group
+    source: openapi/canonical-asynchronous-api-openapi.yml
+  - term: AuthenticationRequired
+    definition: Access is restricted to the root user.
+    tags:
+    - Resource Group
+    source: openapi/canonical-authenticationrequired-api-openapi.yml
+  - term: Experimental
+    definition: Interact with experimental features.
+    tags:
+    - Resource Group
+    source: openapi/canonical-experimental-api-openapi.yml
+  - term: Interfaces
+    definition: Display and manage interactions between snaps.
+    tags:
+    - Resource Group
+    source: openapi/canonical-interfaces-api-openapi.yml
+  - term: LocalService
+    definition: Manages local repositories.
+    tags:
+    - Resource Group
+    source: openapi/canonical-localservice-api-openapi.yml
+  - term: MirrorService
+    definition: Methods for managing repository mirrors.
+    tags:
+    - Resource Group
+    source: openapi/canonical-mirrorservice-api-openapi.yml
+  - term: Open Access
+    definition: Do not require the user to authenticate.
+    tags:
+    - Resource Group
+    source: openapi/canonical-open-access-api-openapi.yml
+  - term: OperationService
+    definition: Manages long-running operations.
+    tags:
+    - Resource Group
+    source: openapi/canonical-operationservice-api-openapi.yml
+  - term: PublicationService
+    definition: Manages the publication of Debian artifacts.
+    tags:
+    - Resource Group
+    source: openapi/canonical-publicationservice-api-openapi.yml
+  - term: PublicationTargetService
+    definition: Manages the storage destinations for publishing Debian archives.
+    tags:
+    - Resource Group
+    source: openapi/canonical-publicationtargetservice-api-openapi.yml
+  - term: Root
+    definition: Requires the user to authenticate with root access.
+    tags:
+    - Resource Group
+    source: openapi/canonical-root-api-openapi.yml
+  - term: StatusCode
+    definition: StatusCode represents a valid REST operation
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/StatusCode
+  - term: Operation
+    definition: Operation represents a background operation
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/Operation
+  - term: NoMetaSyncResponse
+    definition: Swagger Synchronous response without metadata field
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/NoMetaSyncResponse
+  - term: Addon
+    definition: Addon describes a package with additional functionality to be added to containers
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/Addon
+  - term: CollectionResponse
+    definition: Collection Response
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/CollectionResponse
+  - term: OperationResponse
+    definition: Operation
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/OperationResponse
+  - term: AddonVersion
+    definition: AddonVersion describes a single version of an addon
+    tags:
+    - Object
+    source: openapi/canonical-add-ons-api-openapi.yml#/components/schemas/AddonVersion
+  - term: AgentJob
+    definition: 'Object declared by the contract with fields: job_id, submitted_by, created_at, started_at, job_queue, job_state, job_priority,
+      tags.'
+    tags:
+    - Object
+    source: openapi/canonical-agents-api-openapi.yml#/components/schemas/AgentJob
+  - term: ProvisionLogsIn
+    definition: 'Object declared by the contract with fields: job_id, exit_code, detail.'
+    tags:
+    - Object
+    source: openapi/canonical-agents-api-openapi.yml#/components/schemas/ProvisionLogsIn
+  - term: AgentOut
+    definition: 'Object declared by the contract with fields: name, job_id, state, queues, location, provision_type, comment, restricted_to, job.'
+    tags:
+    - Object
+    source: openapi/canonical-agents-api-openapi.yml#/components/schemas/AgentOut
+  - term: HTTPError
+    definition: 'Object declared by the contract with fields: detail, message.'
+    tags:
+    - Object
+    source: openapi/canonical-agents-api-openapi.yml#/components/schemas/HTTPError
+  - term: AgentIn
+    definition: 'Object declared by the contract with fields: identifier, job_id, location, log, provision_type, queues, state, comment.'
+    tags:
+    - Object
+    source: openapi/canonical-agents-api-openapi.yml#/components/schemas/AgentIn
+  - term: ValidationError
+    definition: 'Object declared by the contract with fields: detail, message.'
+    tags:
+    - Object
+    source: openapi/canonical-agents-api-openapi.yml#/components/schemas/ValidationError
+  - term: authorizationRemoveAllowedAppFromGroupResp
+    definition: 'Object declared by the contract with fields: message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationRemoveAllowedAppFromGroupResp
+  - term: apiauthorizationGroup
+    definition: 'Object declared by the contract with fields: group_id.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/apiauthorizationGroup
+  - term: authorizationRemoveAllowedAppsFromGroupResp
+    definition: 'Object declared by the contract with fields: message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationRemoveAllowedAppsFromGroupResp
+  - term: authorizationGetAllowedGroupsForAppResp
+    definition: 'Object declared by the contract with fields: data, message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationGetAllowedGroupsForAppResp
+  - term: typesErrorResponse
+    definition: 'Object declared by the contract with fields: message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/typesErrorResponse
+  - term: authorizationApp
+    definition: 'Object declared by the contract with fields: client_id.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationApp
+  - term: authorizationRemoveAllowedGroupsForAppResp
+    definition: 'Object declared by the contract with fields: message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationRemoveAllowedGroupsForAppResp
+  - term: authorizationGetAllowedAppsInGroupResp
+    definition: 'Object declared by the contract with fields: data, message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationGetAllowedAppsInGroupResp
+  - term: authorizationAddAllowedAppToGroupResp
+    definition: 'Object declared by the contract with fields: message, status.'
+    tags:
+    - Object
+    source: openapi/canonical-appauthorizationservice-api-openapi.yml#/components/schemas/authorizationAddAllowedAppToGroupResp
+  - term: api_gateway.ResponseStatus
+    definition: 'Enumeration declared by the contract with values: success, failed, unknown.'
+    tags:
+    - Enumeration
+    source: openapi/canonical-application-api-openapi.yml#/components/schemas/api_gateway.ResponseStatus
+  - term: api_gateway.Application
+    definition: 'Object declared by the contract with fields: name.'
+    tags:
+    - Object
+    source: openapi/canonical-application-api-openapi.yml#/components/schemas/api_gateway.Application
+  - term: api_gateway.ResponseType
+    definition: 'Enumeration declared by the contract with values: sync, async, error.'
+    tags:
+    - Enumeration
+    source: openapi/canonical-application-api-openapi.yml#/components/schemas/api_gateway.ResponseType
+  - term: api.ApplicationsGetResponse
+    definition: 'Object declared by the contract with fields: error, metadata, status, status_code, type.'
+    tags:
+    - Object
+    source: openapi/canonical-application-api-openapi.yml#/components/schemas/api.ApplicationsGetResponse
+  - term: NetworkServiceSpec
+    definition: NetworkServiceSpec is used to define the user defined network services that should be opened on a container
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/NetworkServiceSpec
+  - term: VideoEncoderType
+    definition: VideoEncoderType describes the type of a video encoder is used by an application
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/VideoEncoderType
+  - term: ApplicationAddon
+    definition: ApplicationAddon describes a specific version of an addon an application version uses
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationAddon
+  - term: ImageStatus
+    definition: ImageStatus represents the status of an image
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ImageStatus
+  - term: ApplicationBootstrap
+    definition: ApplicationBootstrap describes the fields used to configure the application bootstrap
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationBootstrap
+  - term: ApplicationVersionPatch
+    definition: ApplicationVersionPatch represents the fields used to update an application version
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationVersionPatch
+  - term: ApplicationResourcesPost
+    definition: ApplicationResourcesPost represents the fields used to update an application resource
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationResourcesPost
+  - term: ApplicationHooks
+    definition: ApplicationHooks describes the fields used to configure the hooks of an application
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationHooks
+  - term: ApplicationsDelete
+    definition: ApplicationsDelete represents a list of application to delete together
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationsDelete
+  - term: ApplicationPatch
+    definition: ApplicationPatch represents the fields a user can modify
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationPatch
+  - term: ApplicationVersionDelete
+    definition: ApplicationVersionDelete represents the fields used to delete an application version
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationVersionDelete
+  - term: Application
+    definition: Application represents an AMS application
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/Application
+  - term: NetworkProtocol
+    definition: NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/NetworkProtocol
+  - term: ApplicationVersion
+    definition: ApplicationVersion describes a single version of an application
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationVersion
+  - term: ApplicationWatchdog
+    definition: ApplicationWatchdog describes the fields used to update an application watchdog
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationWatchdog
+  - term: ApplicationResources
+    definition: ApplicationResources describes resources allocated for an application
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationResources
+  - term: ApplicationExtraData
+    definition: ApplicationExtraData represents an extra application data
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationExtraData
+  - term: ApplicationStatus
+    definition: ApplicationStatus represents the status an application can be in
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationStatus
+  - term: PatchedFoxgloveDashboard
+    definition: Foxglove Dashboard Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/PatchedFoxgloveDashboard
+  - term: PatchedLokiAlertRuleFile
+    definition: Loki Alert Rule Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/PatchedLokiAlertRuleFile
+  - term: PrometheusAlertRuleFile
+    definition: Prometheus Alert Rule Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/PrometheusAlertRuleFile
+  - term: FoxgloveDashboard
+    definition: Foxglove Dashboard Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/FoxgloveDashboard
+  - term: PatchedGrafanaDashboard
+    definition: Grafana Dashboard Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/PatchedGrafanaDashboard
+  - term: GrafanaDashboard
+    definition: Grafana Dashboard Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/GrafanaDashboard
+  - term: LokiAlertRuleFile
+    definition: Loki Alert Rule Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/LokiAlertRuleFile
+  - term: PatchedPrometheusAlertRuleFile
+    definition: Prometheus Alert Rule Serializer class.
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/PatchedPrometheusAlertRuleFile
+  - term: Permission
+    definition: 'Enumeration declared by the contract with values: view_user, change_user, view_team, change_team, add_application, change_application,
+      view_application, view_permission, view_issue, change_issue, change_issue_attachment, change_issue_attachment_bulk. (19 more)'
+    tags:
+    - Enumeration
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/Permission
+  - term: HTTPValidationError
+    definition: 'Object declared by the contract with fields: detail.'
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/HTTPValidationError
+  - term: ApplicationPatch
+    definition: 'Object declared by the contract with fields: permissions.'
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationPatch_2
+  - term: ApplicationResponse
+    definition: 'Object declared by the contract with fields: id, name, permissions, api_key.'
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationResponse
+  - term: ApplicationPost
+    definition: 'Object declared by the contract with fields: name, permissions.'
+    tags:
+    - Object
+    source: openapi/canonical-applications-api-openapi.yml#/components/schemas/ApplicationPost
+  - term: ConflictError
+    definition: 'Object declared by the contract with fields: message, kind, value.'
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/ConflictError
+  - term: NotFoundError
+    definition: 'Object declared by the contract with fields: message.'
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/NotFoundError
+  - term: Activator
+    definition: Details about a single service activator. Note that uppercase field names exist to maintain backward compatibility with the non-conformant
+      previous implementation, and are thus not documented here.
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/Activator
+  - term: UserNotFoundError
+    definition: 'Object declared by the contract with fields: message.'
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/UserNotFoundError
+  - term: AppActionBase
+    definition: 'Object declared by the contract with fields: action, names, scope, users.'
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/AppActionBase
+  - term: SnapNotInstalledError
+    definition: The snap does not exist on the system.
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/SnapNotInstalledError
+  - term: ConfdbError
+    definition: An error occured while interacting with confdb.
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/ConfdbError
+  - term: AppActionRestart
+    definition: Restarts one or more services.
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/AppActionRestart
+  - term: AppActionStop
+    definition: Stops one or more services.
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/AppActionStop
+  - term: AppActionStart
+    definition: Starts one or more services.
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/AppActionStart
+  - term: NoSSHKeysError
+    definition: 'Object declared by the contract with fields: message.'
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/NoSSHKeysError
+  - term: MalformedRequestError
+    definition: 'Object declared by the contract with fields: message.'
+    tags:
+    - Object
+    source: openapi/canonical-apps-api-openapi.yml#/components/schemas/MalformedRequestError

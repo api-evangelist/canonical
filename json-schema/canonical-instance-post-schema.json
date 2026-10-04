@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-instance-post-schema.json",
+  "title": "InstancePost represents the fields required to rename/move a LXD instance.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-instances-api-openapi.yml#/components/schemas/InstancePost",
+  "properties": {
+    "Config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Instance configuration file.\n\nAPI extension: instance_move_config",
+      "type": "object"
+    },
+    "Devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Instance devices.\n\nAPI extension: instance_move_config",
+      "type": "object"
+    },
+    "Profiles": {
+      "description": "List of profiles applied to the instance.\n\nAPI extension: instance_move_config",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "allow_inconsistent": {
+      "description": "AllowInconsistent allow inconsistent copies when migrating.\n\nAPI extension: instance_allow_inconsistent_copy",
+      "type": "boolean",
+      "x-go-name": "AllowInconsistent"
+    },
+    "container_only": {
+      "description": "Whether snapshots should be discarded (migration only, deprecated, use instance_only)\n\nDeprecated: use InstanceOnly.",
+      "type": "boolean",
+      "x-deprecated": true,
+      "x-go-name": "ContainerOnly"
+    },
+    "instance_only": {
+      "description": "Whether snapshots should be discarded (migration only)",
+      "type": "boolean",
+      "x-go-name": "InstanceOnly"
+    },
+    "live": {
+      "description": "Whether to perform a live migration (migration only)",
+      "type": "boolean",
+      "x-go-name": "Live"
+    },
+    "migration": {
+      "description": "Whether the instance is being migrated to another server",
+      "type": "boolean",
+      "x-go-name": "Migration"
+    },
+    "name": {
+      "description": "New name for the instance",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "override_snapshot_profiles": {
+      "description": "Whether the instances's snapshot should receive target instances profile on copy\n\nAPI extension: override_snapshot_profiles_on_copy",
+      "type": "boolean",
+      "x-go-name": "OverrideSnapshotProfiles"
+    },
+    "pool": {
+      "description": "Target pool for local cross-pool move\n\nAPI extension: instance_pool_move",
+      "type": "string",
+      "x-go-name": "Pool"
+    },
+    "project": {
+      "description": "Target project for local cross-project move\n\nAPI extension: instance_project_move",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "target": {
+      "$ref": "#/$defs/InstancePostTarget"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "InstancePostTarget": {
+      "properties": {
+        "certificate": {
+          "description": "The certificate of the migration target",
+          "type": "string",
+          "x-go-name": "Certificate"
+        },
+        "operation": {
+          "description": "The operation URL on the remote target",
+          "type": "string",
+          "x-go-name": "Operation"
+        },
+        "secrets": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Migration websockets credentials",
+          "type": "object",
+          "x-go-name": "Websockets"
+        }
+      },
+      "title": "InstancePostTarget represents the migration target host and operation.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

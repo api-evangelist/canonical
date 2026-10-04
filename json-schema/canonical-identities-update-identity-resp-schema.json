@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identities-update-identity-resp-schema.json",
+  "title": "identitiesUpdateIdentityResp",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identitiesservice-api-openapi.yml#/components/schemas/identitiesUpdateIdentityResp",
+  "properties": {
+    "data": {
+      "items": {
+        "$ref": "#/$defs/identitiesIdentity"
+      },
+      "type": "array"
+    },
+    "message": {
+      "type": "string"
+    },
+    "meta": {
+      "$ref": "#/$defs/typesPagination"
+    },
+    "status": {
+      "format": "int32",
+      "type": "integer"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "identitiesIdentity": {
+      "properties": {
+        "additional_properties": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "credentials": {
+          "additionalProperties": {
+            "$ref": "#/$defs/identitiesIdentityCredentials"
+          },
+          "type": "object"
+        },
+        "id": {
+          "type": "string"
+        },
+        "metadata_admin": {
+          "type": "object"
+        },
+        "metadata_public": {
+          "type": "object"
+        },
+        "organization_id": {
+          "$ref": "#/$defs/identitiesNullableString"
+        },
+        "recovery_addresses": {
+          "items": {
+            "$ref": "#/$defs/identitiesRecoveryIdentityAddress"
+          },
+          "type": "array"
+        },
+        "schema_id": {
+          "type": "string"
+        },
+        "schema_url": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "state_changed_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "traits": {
+          "type": "object"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "verifiable_addresses": {
+          "items": {
+            "$ref": "#/$defs/identitiesVerifiableIdentityAddress"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "identitiesIdentityCredentials": {
+      "properties": {
+        "additional_properties": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "config": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "identifiers": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "version": {
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "identitiesNullableString": {
+      "properties": {
+        "isSet": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "identitiesRecoveryIdentityAddress": {
+      "properties": {
+        "additional_properties": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "via": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "identitiesVerifiableIdentityAddress": {
+      "properties": {
+        "additional_properties": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "verified_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "via": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "typesPagination": {
+      "properties": {
+        "next": {
+          "type": "string"
+        },
+        "pageToken": {
+          "type": "string"
+        },
+        "prev": {
+          "type": "string"
+        },
+        "size": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

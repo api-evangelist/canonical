@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-environments-response-schema.json",
+  "title": "EnvironmentsResponse",
+  "description": "Response model for environments endpoint",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-environments-api-openapi.yml#/components/schemas/EnvironmentsResponse",
+  "properties": {
+    "environments": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Environments"
+    },
+    "count": {
+      "type": "integer",
+      "title": "Count"
+    },
+    "limit": {
+      "type": "integer",
+      "title": "Limit"
+    },
+    "offset": {
+      "type": "integer",
+      "title": "Offset"
+    }
+  },
+  "type": "object",
+  "required": [
+    "environments",
+    "count",
+    "limit",
+    "offset"
+  ]
+}

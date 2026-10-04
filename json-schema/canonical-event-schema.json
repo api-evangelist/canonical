@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-event-schema.json",
+  "title": "Event",
+  "description": "Event defines the structure of an event sent on the events API endpoint",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-events-api-openapi.yml#/components/schemas/Event",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "description": "Metadata represents the actual event data"
+    },
+    "timestamp": {
+      "description": "Timestamp (in ISO8601 format) is filled when sending the event if empty"
+    },
+    "type": {
+      "description": "Type defines the type of event. Listeners can watch specific\nevent types",
+      "type": "string",
+      "enum": [
+        "operation",
+        "lifecycle"
+      ]
+    }
+  }
+}

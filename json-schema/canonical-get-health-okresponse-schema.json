@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-get-health-okresponse-schema.json",
+  "title": "GetHealthOKResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-health-api-openapi.yml#/components/schemas/GetHealthOKResponse",
+  "allOf": [
+    {
+      "$ref": "#/$defs/BaseResponse"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "object",
+          "properties": {
+            "healthy": {
+              "type": "boolean",
+              "description": "True if the check is healthy, false otherwise.",
+              "const": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "BaseResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Response type, \"sync\"."
+        },
+        "status-code": {
+          "type": "integer",
+          "description": "HTTP response status code."
+        },
+        "status": {
+          "type": "string",
+          "description": "The description of the HTTP status code.\n\nSee the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).\n"
+        }
+      }
+    }
+  }
+}

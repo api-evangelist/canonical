@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identities-tlspost-schema.json",
+  "title": "IdentitiesTLSPost contains required information for the creation of a TLS identity.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identities-api-openapi.yml#/components/schemas/IdentitiesTLSPost",
+  "properties": {
+    "certificate": {
+      "description": "The PEM encoded x509 certificate of the identity",
+      "type": "string",
+      "x-go-name": "Certificate"
+    },
+    "groups": {
+      "description": "Groups is the list of groups for which the identity is a member.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "name": {
+      "description": "Name associated with the identity",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "token": {
+      "description": "Whether to create a certificate add token",
+      "type": "boolean",
+      "x-go-name": "Token"
+    },
+    "trust_token": {
+      "description": "Trust token (used to add an untrusted client)",
+      "type": "string",
+      "x-go-name": "TrustToken"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-containers-post-schema.json",
+  "title": "ContainersPost",
+  "description": "ContainersPost represents the fields required to launch a new container for\na specific application",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-containers-api-openapi.yml#/components/schemas/ContainersPost",
+  "type": "object",
+  "properties": {
+    "addons": {
+      "description": "Addons to enable for the container",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "app_id": {
+      "description": "ID of the application to use. Can be empty if an image ID is specified instead",
+      "type": "string"
+    },
+    "app_version": {
+      "description": "Version of the application to use. If not specified, the latest version is used.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "boot_activity": {
+          "description": "BootActivity specifies the Android activity which is started by default",
+          "type": "string"
+        },
+        "boot_package": {
+          "description": "BootPackage specifies the Android application package name which is started by default",
+          "type": "string"
+        },
+        "devmode": {
+          "description": "DevMode specifies if development mode has been turned on for the container",
+          "type": "boolean"
+        },
+        "disable_watchdog": {
+          "description": "DisableWatchdog defines whether the watchdog is disabled",
+          "type": "boolean"
+        },
+        "features": {
+          "description": "Feature flags to enable for the container.",
+          "type": "string"
+        },
+        "metrics_server": {
+          "description": "MetricsServer specifies a metrics server the container will use",
+          "type": "string"
+        },
+        "platform": {
+          "description": "Platform specifies the Anbox platform the container is running with",
+          "type": "string"
+        }
+      }
+    },
+    "cpus": {
+      "description": "Number of CPU cores the container should get assigned.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "disk_size": {
+      "description": "Disk size the container should get allocated in bytes",
+      "type": "integer",
+      "format": "int64"
+    },
+    "gpu-slots": {
+      "description": "Number of GPU slots the container should get assigned.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "image_id": {
+      "description": "ID of the image to use. Can be empty if an application ID is specified instead.",
+      "type": "string"
+    },
+    "image_version": {
+      "description": "Version of the image to use. If not specified, the latest version is used.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "instance_type": {
+      "description": "Instance type to use for the container.\nExample a2.3",
+      "type": "string"
+    },
+    "memory": {
+      "description": "Memory the container should get assigned in bytes.",
+      "type": "integer",
+      "format": "int64"
+    },
+    "no_start": {
+      "description": "Do not start the container after creation.",
+      "type": "boolean"
+    },
+    "node": {
+      "description": "Node to start the container on. If empty node will be automatically selected.",
+      "type": "string"
+    },
+    "services": {
+      "description": "Services to enable for the container",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/NetworkServiceSpec"
+      }
+    },
+    "tags": {
+      "description": "Tags which will be assigned to the container",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "user_data": {
+      "description": "User data to pass to the container.",
+      "type": "string"
+    },
+    "vpu-slots": {
+      "description": "Number of VPU slots the container should get assigned",
+      "type": "integer",
+      "format": "int64"
+    }
+  },
+  "$defs": {
+    "NetworkProtocol": {
+      "description": "NetworkProtocol describes a specific network protocol like TCP or UDP a ContainerService can use",
+      "type": "string"
+    },
+    "NetworkServiceSpec": {
+      "description": "NetworkServiceSpec is used to define the user defined network services that should be opened on a container",
+      "type": "object",
+      "properties": {
+        "expose": {
+          "description": "Expose defines wether the service is exposed on the public endpoint of the node\nor if it is only available on the private endpoint. To expose the service set to\ntrue and to false otherwise.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name gives the container a hint what the exposed port is being used for. This\nallows further tweaks inside the container to expose the service correctly.\nExampe: ssh",
+          "type": "string"
+        },
+        "port": {
+          "description": "Port is the port the container provides a service on",
+          "type": "integer",
+          "format": "int64"
+        },
+        "port_end": {
+          "description": "PortEnd is the end of the port range set for a service. If empty, only a\nsingle port is opened",
+          "type": "integer",
+          "format": "int64"
+        },
+        "protocols": {
+          "description": "List of network protocols (tcp, udp) the port should be exposed for",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/NetworkProtocol"
+          }
+        }
+      }
+    }
+  }
+}

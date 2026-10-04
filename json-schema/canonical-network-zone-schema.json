@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-zone-schema.json",
+  "title": "NetworkZone represents a network zone (DNS).",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-zones-api-openapi.yml#/components/schemas/NetworkZone",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Zone configuration map (refer to doc/network-zones.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the network zone",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "name": {
+      "description": "The name of the zone (DNS domain name)",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "project": {
+      "description": "Project name\n\nAPI extension: network_zones_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "used_by": {
+      "description": "List of URLs of objects using this network zone",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true,
+      "type": "array",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

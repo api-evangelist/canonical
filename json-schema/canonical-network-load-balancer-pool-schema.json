@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-load-balancer-pool-schema.json",
+  "title": "NetworkLoadBalancerPool used for displaying a network load balancer pool.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-load-balancer-pools-api-openapi.yml#/components/schemas/NetworkLoadBalancerPool",
+  "properties": {
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Load balancer pool configuration map (refer to doc/howto/network_load_balancers.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the load balancer pool.",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "instances": {
+      "description": "Instances included in the pool.",
+      "items": {
+        "$ref": "#/$defs/NetworkLoadBalancerPoolInstance"
+      },
+      "type": "array",
+      "x-go-name": "Instances"
+    },
+    "name": {
+      "description": "The name of the load balancer pool.",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "used_by": {
+      "description": "UsedBy is a list of LXD entity URLs that reference this load balancer pool.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "NetworkLoadBalancerPoolInstance": {
+      "description": "An instance can have multiple targets depending on how many addresses it has in the pool's network.",
+      "properties": {
+        "name": {
+          "description": "The name of the instance in the pool.",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "target_port": {
+          "description": "Optional target port to override the pool's default target port.",
+          "type": "string",
+          "x-go-name": "TargetPort"
+        }
+      },
+      "title": "NetworkLoadBalancerPoolInstance represents an instance in a load balancer pool.",
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

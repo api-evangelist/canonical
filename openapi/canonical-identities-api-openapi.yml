@@ -858,6 +858,49 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    IdentityBearerToken:
+      description: 'IdentityBearerToken contains a token issued for an identity whose authentication method is
+
+        api.AuthenticationMethodBearer.'
+      properties:
+        token:
+          type: string
+          x-go-name: Token
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentitiesTLSPost:
+      properties:
+        certificate:
+          description: The PEM encoded x509 certificate of the identity
+          type: string
+          x-go-name: Certificate
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        name:
+          description: Name associated with the identity
+          example: foo
+          type: string
+          x-go-name: Name
+        token:
+          description: Whether to create a certificate add token
+          example: true
+          type: boolean
+          x-go-name: Token
+        trust_token:
+          description: Trust token (used to add an untrusted client)
+          example: blah
+          type: string
+          x-go-name: TrustToken
+      title: IdentitiesTLSPost contains required information for the creation of a TLS identity.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     Permission:
       properties:
         entitlement:
@@ -876,6 +919,127 @@ components:
           type: string
           x-go-name: EntityReference
       title: Permission represents a permission that may be granted to a group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    Identity:
+      properties:
+        access_entitlements:
+          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
+          example:
+          - can_view
+          - can_edit
+          items:
+            type: string
+          type: array
+          x-go-name: AccessEntitlements
+        authentication_method:
+          description: 'AuthenticationMethod is the authentication method that the identity
+
+            authenticates to LXD with.'
+          example: tls
+          type: string
+          x-go-name: AuthenticationMethod
+        expires_at:
+          description: 'ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the
+
+            expiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.
+
+            It is unset for identities whose credential has no expiry, that have no credential yet (pending identities),
+
+            or whose token has been revoked.
+
+
+            API extension: access_management_expiry.'
+          format: date-time
+          type: string
+          x-go-name: ExpiresAt
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        id:
+          description: Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Identifier
+        name:
+          description: 'Name is the Name claim of the identity if authenticated via OIDC, or the name
+
+            of the certificate if authenticated with TLS.'
+          example: Jane Doe
+          type: string
+          x-go-name: Name
+        tls_certificate:
+          description: 'TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.
+
+
+            API extension: access_management_tls.'
+          type: string
+          x-go-name: TLSCertificate
+        type:
+          description: Type is the type of identity.
+          example: oidc-service-account
+          type: string
+          x-go-name: Type
+      title: Identity is the type for an authenticated party that can make requests to the HTTPS API.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityBearerTokenPost:
+      properties:
+        expiry:
+          type: string
+          x-go-name: Expiry
+      title: IdentityBearerTokenPost contains parameters used when issuing a token for a bearer identity.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentityPut:
+      properties:
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        tls_certificate:
+          description: 'TLSCertificate is a base64 encoded x509 certificate. This can only be set if the authentication method of the identity is AuthenticationMethodTLS.
+
+
+            API extension: access_management_tls.'
+          type: string
+          x-go-name: TLSCertificate
+      title: IdentityPut contains the editable fields of an IdentityInfo.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    IdentitiesBearerPost:
+      properties:
+        groups:
+          description: Groups is the list of groups for which the identity is a member.
+          example:
+          - foo
+          - bar
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        name:
+          description: Name associated with the identity
+          example: foo
+          type: string
+          x-go-name: Name
+        type:
+          description: Type of identity
+          example: DevLXD token bearer
+          type: string
+          x-go-name: Type
+      title: IdentitiesBearerPost contains required information for the creation of a token identity.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     IdentityInfo:
@@ -972,170 +1136,6 @@ components:
       title: IdentityInfo expands an Identity to include effective group membership and effective permissions.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    IdentityBearerToken:
-      description: 'IdentityBearerToken contains a token issued for an identity whose authentication method is
-
-        api.AuthenticationMethodBearer.'
-      properties:
-        token:
-          type: string
-          x-go-name: Token
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    IdentitiesTLSPost:
-      properties:
-        certificate:
-          description: The PEM encoded x509 certificate of the identity
-          type: string
-          x-go-name: Certificate
-        groups:
-          description: Groups is the list of groups for which the identity is a member.
-          example:
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Groups
-        name:
-          description: Name associated with the identity
-          example: foo
-          type: string
-          x-go-name: Name
-        token:
-          description: Whether to create a certificate add token
-          example: true
-          type: boolean
-          x-go-name: Token
-        trust_token:
-          description: Trust token (used to add an untrusted client)
-          example: blah
-          type: string
-          x-go-name: TrustToken
-      title: IdentitiesTLSPost contains required information for the creation of a TLS identity.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    IdentityPut:
-      properties:
-        groups:
-          description: Groups is the list of groups for which the identity is a member.
-          example:
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Groups
-        tls_certificate:
-          description: 'TLSCertificate is a base64 encoded x509 certificate. This can only be set if the authentication method of the identity is AuthenticationMethodTLS.
-
-
-            API extension: access_management_tls.'
-          type: string
-          x-go-name: TLSCertificate
-      title: IdentityPut contains the editable fields of an IdentityInfo.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    Identity:
-      properties:
-        access_entitlements:
-          description: AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.
-          example:
-          - can_view
-          - can_edit
-          items:
-            type: string
-          type: array
-          x-go-name: AccessEntitlements
-        authentication_method:
-          description: 'AuthenticationMethod is the authentication method that the identity
-
-            authenticates to LXD with.'
-          example: tls
-          type: string
-          x-go-name: AuthenticationMethod
-        expires_at:
-          description: 'ExpiresAt is the expiration time of the credential belonging to the identity. For TLS identities this is the
-
-            expiry of the certificate, and for bearer identities it is the expiry of the most recently issued token.
-
-            It is unset for identities whose credential has no expiry, that have no credential yet (pending identities),
-
-            or whose token has been revoked.
-
-
-            API extension: access_management_expiry.'
-          format: date-time
-          type: string
-          x-go-name: ExpiresAt
-        groups:
-          description: Groups is the list of groups for which the identity is a member.
-          example:
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Groups
-        id:
-          description: Identifier is a unique identifier for the identity (e.g. certificate fingerprint or email for OIDC).
-          example: jane.doe@example.com
-          type: string
-          x-go-name: Identifier
-        name:
-          description: 'Name is the Name claim of the identity if authenticated via OIDC, or the name
-
-            of the certificate if authenticated with TLS.'
-          example: Jane Doe
-          type: string
-          x-go-name: Name
-        tls_certificate:
-          description: 'TLSCertificate is a PEM encoded x509 certificate. This is only set if the AuthenticationMethod is AuthenticationMethodTLS.
-
-
-            API extension: access_management_tls.'
-          type: string
-          x-go-name: TLSCertificate
-        type:
-          description: Type is the type of identity.
-          example: oidc-service-account
-          type: string
-          x-go-name: Type
-      title: Identity is the type for an authenticated party that can make requests to the HTTPS API.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    IdentityBearerTokenPost:
-      properties:
-        expiry:
-          type: string
-          x-go-name: Expiry
-      title: IdentityBearerTokenPost contains parameters used when issuing a token for a bearer identity.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    IdentitiesBearerPost:
-      properties:
-        groups:
-          description: Groups is the list of groups for which the identity is a member.
-          example:
-          - foo
-          - bar
-          items:
-            type: string
-          type: array
-          x-go-name: Groups
-        name:
-          description: Name associated with the identity
-          example: foo
-          type: string
-          x-go-name: Name
-        type:
-          description: Type of identity
-          example: DevLXD token bearer
-          type: string
-          x-go-name: Type
-      title: IdentitiesBearerPost contains required information for the creation of a token identity.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     BaseResponse:
       type: object
       properties:
@@ -1153,6 +1153,15 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
+    GetIdentitiesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          result:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/identity'
     identity:
       type: object
       properties:
@@ -1172,15 +1181,6 @@ components:
             user-id:
               type: integer
               description: The user ID associated with the local identity.
-    GetIdentitiesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          result:
-            type: object
-            additionalProperties:
-              $ref: '#/components/schemas/identity'
   responses:
     BadRequest:
       description: Bad Request
@@ -1199,6 +1199,26 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
                 type: string
                 x-go-name: Type
             type: object
@@ -1242,26 +1262,6 @@ components:
                 type: string
                 x-go-name: Type
             type: object
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not found
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
     PreconditionFailed:
       description: Precondition Failed
       content:
@@ -1274,6 +1274,26 @@ components:
                 x-go-name: Error
               error_code:
                 example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
                 format: int64
                 type: integer
                 x-go-name: ErrorCode
@@ -1299,26 +1319,6 @@ components:
                 x-go-name: ErrorCode
               type:
                 example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
                 type: string
                 x-go-name: Type
             type: object

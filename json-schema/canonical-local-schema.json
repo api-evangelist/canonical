@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-local-schema.json",
+  "title": "Local",
+  "description": "Represents a local repository.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-localservice-api-openapi.yml#/components/schemas/Local",
+  "required": [
+    "displayName",
+    "defaultDistribution",
+    "defaultComponent"
+  ],
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The resource name of the local repository.\n Format: \"locals/{local}\""
+    },
+    "localId": {
+      "readOnly": true,
+      "type": "string",
+      "description": "The local repository ID is exposed separately for convenience."
+    },
+    "displayName": {
+      "type": "string",
+      "description": "The human-readable name used to reference this local repository."
+    },
+    "comment": {
+      "type": "string",
+      "description": "A user-facing description of the local repository."
+    },
+    "defaultDistribution": {
+      "type": "string",
+      "description": "The default distribution to publish."
+    },
+    "defaultComponent": {
+      "type": "string",
+      "description": "The default component to publish."
+    },
+    "lastOperation": {
+      "readOnly": true,
+      "type": "string",
+      "description": "The last associated LRO with the local"
+    },
+    "lastImportTime": {
+      "readOnly": true,
+      "type": "string",
+      "description": "The timestamp of the last successful package import.",
+      "format": "date-time"
+    }
+  }
+}

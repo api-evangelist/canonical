@@ -64,6 +64,26 @@ paths:
         default:
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: internal server error
+              error_code:
+                type: integer
+                format: int64
+                example: 500
+              metadata:
+                example: '{}'
+              type:
+                type: string
+                example: error
   schemas:
     VersionResponse:
       description: VersionResponse shows the version for the running service
@@ -134,23 +154,3 @@ components:
           description: Type of operation response
           type: string
           example: sync
-  responses:
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: internal server error
-              error_code:
-                type: integer
-                format: int64
-                example: 500
-              metadata:
-                example: '{}'
-              type:
-                type: string
-                example: error

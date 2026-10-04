@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-load-balancer-put-schema.json",
+  "title": "NetworkLoadBalancerPut",
+  "description": "NetworkLoadBalancerPut represents the modifiable fields of a LXD network load balancer",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-load-balancers-api-openapi.yml#/components/schemas/NetworkLoadBalancerPut",
+  "properties": {
+    "backends": {
+      "description": "Backends (optional)",
+      "items": {
+        "$ref": "#/$defs/NetworkLoadBalancerBackend"
+      },
+      "type": "array",
+      "x-go-name": "Backends"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Load balancer configuration map (refer to doc/network-load-balancers.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the load balancer listen IP",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "ports": {
+      "description": "Port forwards (optional)",
+      "items": {
+        "$ref": "#/$defs/NetworkLoadBalancerPort"
+      },
+      "type": "array",
+      "x-go-name": "Ports"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "NetworkLoadBalancerBackend": {
+      "description": "NetworkLoadBalancerBackend represents a target backend specification in a network load balancer",
+      "properties": {
+        "description": {
+          "description": "Description of the load balancer backend",
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "name": {
+          "description": "Name of the load balancer backend",
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "target_address": {
+          "description": "TargetAddress to forward ListenPorts to",
+          "type": "string",
+          "x-go-name": "TargetAddress"
+        },
+        "target_port": {
+          "description": "TargetPort(s) to forward ListenPorts to (allows for many-to-one)",
+          "type": "string",
+          "x-go-name": "TargetPort"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "NetworkLoadBalancerPort": {
+      "description": "NetworkLoadBalancerPort represents a port specification in a network load balancer",
+      "properties": {
+        "description": {
+          "description": "Description of the load balancer port",
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "listen_port": {
+          "description": "ListenPort(s) of load balancer (comma delimited ranges)",
+          "type": "string",
+          "x-go-name": "ListenPort"
+        },
+        "protocol": {
+          "description": "Protocol for load balancer port (either tcp or udp)",
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "target_backend": {
+          "description": "TargetBackend specifies backend names to load balance ListenPorts to",
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "x-go-name": "TargetBackend"
+        },
+        "target_pool": {
+          "description": "TargetPool specifies a pool to load balance ListenPorts to",
+          "type": "string",
+          "x-go-name": "TargetPool"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

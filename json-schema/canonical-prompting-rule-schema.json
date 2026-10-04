@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-prompting-rule-schema.json",
+  "title": "PromptingRule",
+  "description": "An object describing the structure of a rule.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-experimental-api-openapi.yml#/components/schemas/PromptingRule",
+  "type": "object",
+  "required": [
+    "id",
+    "timestamp",
+    "user",
+    "snap",
+    "interface",
+    "constraints"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique rule identifier."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of rule creation/modification."
+    },
+    "user": {
+      "type": "integer",
+      "description": "The UID for which the rule applies."
+    },
+    "snap": {
+      "type": "string",
+      "description": "The name of the snap for which the rule applies."
+    },
+    "interface": {
+      "type": "string",
+      "description": "The interface for which the rule applies.",
+      "enum": [
+        "camera",
+        "home"
+      ]
+    },
+    "constraints": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PromptingRuleConstraintsCamera"
+        },
+        {
+          "$ref": "#/$defs/PromptingRuleConstraintsHome"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "PromptingPermissionRuleEntry": {
+      "type": "object",
+      "required": [
+        "outcome",
+        "lifespan"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        },
+        "lifespan": {
+          "type": "string",
+          "description": "The lifespan for which the permission applies.\n\ntimespan: the permission applies for the given duration specified by the\nduration field or until it is deleted\n\nsession: the permission applies until the user logs out (specifically,\nuntil the systemd user session ends)\n\nforever: the permission applies until it is deleted",
+          "enum": [
+            "timespan",
+            "session",
+            "forever"
+          ]
+        },
+        "expiration": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp at which the permission will expire. Required if lifespan\nis timespan, otherwise must be omitted."
+        },
+        "session-id": {
+          "type": "string",
+          "description": "The opaque session ID used for session-based permissions. Required if\nlifespan is session, otherwise must be omitted."
+        }
+      }
+    },
+    "PromptingRuleConstraintsCamera": {
+      "type": "object",
+      "description": "Details about the applicability of the existing rule to requests.",
+      "required": [
+        "permissions"
+      ],
+      "properties": {
+        "permissions": {
+          "type": "object",
+          "description": "A map linking the permission name to it's respective information.",
+          "additionalProperties": {
+            "$ref": "#/$defs/PromptingPermissionRuleEntry"
+          }
+        }
+      }
+    },
+    "PromptingRuleConstraintsHome": {
+      "type": "object",
+      "description": "Details about the applicability of the existing rule to requests.",
+      "required": [
+        "path-pattern",
+        "permissions"
+      ],
+      "properties": {
+        "path-pattern": {
+          "type": "string",
+          "description": "Path glob matching filepaths for which the rule applies."
+        },
+        "permissions": {
+          "type": "object",
+          "description": "A map linking the permission name to it's respective information.",
+          "additionalProperties": {
+            "$ref": "#/$defs/PromptingPermissionRuleEntry"
+          }
+        }
+      }
+    }
+  }
+}

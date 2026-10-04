@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-get-notices-response-schema.json",
+  "title": "GetNoticesResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-notices-api-openapi.yml#/components/schemas/GetNoticesResponse",
+  "allOf": [
+    {
+      "$ref": "#/$defs/BaseResponse"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/notice"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "BaseResponse": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Response type, \"sync\"."
+        },
+        "status-code": {
+          "type": "integer",
+          "description": "HTTP response status code."
+        },
+        "status": {
+          "type": "string",
+          "description": "The description of the HTTP status code.\n\nSee the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).\n"
+        }
+      }
+    },
+    "notice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Server-generated unique ID for the notice."
+        },
+        "user-id": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "The user ID associated with the notice (null for public notices)."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the notice (e.g., \"custom\").",
+          "enum": [
+            "change-update",
+            "custom",
+            "warning"
+          ]
+        },
+        "key": {
+          "type": "string",
+          "description": "The key that differentiates notices of the same type."
+        },
+        "first-occurred": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The first [time](#time) this notice occurred."
+        },
+        "last-occurred": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The last [time](#time) this notice occurred."
+        },
+        "last-repeated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The last [time](#time) this notice was repeated."
+        },
+        "occurrences": {
+          "type": "integer",
+          "description": "The number of times this notice has occurred."
+        },
+        "last-data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "map"
+          },
+          "description": "Additional data from the last occurrence."
+        },
+        "repeat-after": {
+          "type": "string",
+          "format": "duration",
+          "description": "[Duration](#duration) after last repeat before allowing another repeat."
+        },
+        "expire-after": {
+          "type": "string",
+          "format": "duration",
+          "description": "[Duration](#duration) after last occurrence before the notice expires."
+        }
+      }
+    }
+  }
+}

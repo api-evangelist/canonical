@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-lease-schema.json",
+  "title": "NetworkLease",
+  "description": "NetworkLease represents a DHCP lease",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-networks-api-openapi.yml#/components/schemas/NetworkLease",
+  "properties": {
+    "address": {
+      "description": "The IP address",
+      "type": "string",
+      "x-go-name": "Address"
+    },
+    "hostname": {
+      "description": "The hostname associated with the record",
+      "type": "string",
+      "x-go-name": "Hostname"
+    },
+    "hwaddr": {
+      "description": "The MAC address",
+      "type": "string",
+      "x-go-name": "Hwaddr"
+    },
+    "location": {
+      "description": "What cluster member this record was found on\n\nAPI extension: network_leases_location",
+      "type": "string",
+      "x-go-name": "Location"
+    },
+    "project": {
+      "description": "Name of the project of the entity related to the hostname\n\nAPI extension: network_allocations_ovn_uplink",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "type": {
+      "description": "The type of record (static or dynamic)",
+      "type": "string",
+      "x-go-name": "Type"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

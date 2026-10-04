@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-batch-get-operations-request-schema.json",
+  "title": "BatchGetOperationsRequest",
+  "description": "The request message for retrieving a batch of long-running operations.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-operationservice-api-openapi.yml#/components/schemas/BatchGetOperationsRequest",
+  "required": [
+    "names"
+  ],
+  "type": "object",
+  "properties": {
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The names of the long-running operations to retrieve.\n A maximum of 100 long-running operations can be retrieved in a batch.\n Format: operations/{operation}"
+    },
+    "returnPartialSuccess": {
+      "type": "boolean",
+      "description": "Setting this field to `true` will opt the request into returning the\n operations that are reachable, and into including the names of those that\n were unreachable in the [BatchGetOperationsResponse.unreachable] field."
+    }
+  }
+}

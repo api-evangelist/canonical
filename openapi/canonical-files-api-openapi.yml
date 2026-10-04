@@ -188,32 +188,20 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    makeDirsItem:
+    PostFilesMakeDirsRequest:
       type: object
       properties:
-        path:
+        action:
           type: string
-          description: The directory path to create.
-        make-parents:
-          type: boolean
-          description: Whether to create parent directories as needed.
-        permissions:
-          type: string
-          description: Permissions for the created directory (octal format, e.g., "755").
-        user-id:
-          type: integer
-          description: User ID of the owner.
-        user:
-          type: string
-          description: Username of the owner.
-        group-id:
-          type: integer
-          description: Group ID of the owner.
-        group:
-          type: string
-          description: Group name of the owner.
+          enum:
+          - make-dirs
+        dirs:
+          type: array
+          items:
+            $ref: '#/components/schemas/makeDirsItem'
       required:
-      - path
+      - action
+      - dirs
     ListFilesResponse:
       allOf:
       - $ref: '#/components/schemas/BaseResponse'
@@ -223,28 +211,6 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/FileInfo'
-    errorResult:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Error message.
-        kind:
-          type: string
-          description: Type of error.
-          enum:
-          - daemon-restart
-          - generic-file-error
-          - login-required
-          - no-default-services
-          - not-found
-          - permission-denied
-          - system-restart
-        value:
-          type: object
-          description: Additional error information, if any.
-      required:
-      - message
     ReadFilesResponse:
       type: object
       properties:
@@ -256,6 +222,41 @@ components:
           description: Array of files. Each file part will have its own headers.
         response:
           $ref: '#/components/schemas/PostFilesResponse'
+    PostFilesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        description: JSON metadata about the file read operation.
+        properties:
+          result:
+            type: array
+            items:
+              $ref: '#/components/schemas/fileResult'
+    removePathsItem:
+      type: object
+      properties:
+        path:
+          type: string
+          description: The path to the file or directory to remove.
+        recursive:
+          type: boolean
+          description: Whether to remove recursively (for directories).
+      required:
+      - path
+    PostFilesRemovePathsRequest:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - remove
+        paths:
+          type: array
+          items:
+            $ref: '#/components/schemas/removePathsItem'
+      required:
+      - action
+      - paths
     FileInfo:
       type: object
       properties:
@@ -305,62 +306,32 @@ components:
       - type
       - permissions
       - last-modified
-    removePathsItem:
+    makeDirsItem:
       type: object
       properties:
         path:
           type: string
-          description: The path to the file or directory to remove.
-        recursive:
+          description: The directory path to create.
+        make-parents:
           type: boolean
-          description: Whether to remove recursively (for directories).
+          description: Whether to create parent directories as needed.
+        permissions:
+          type: string
+          description: Permissions for the created directory (octal format, e.g., "755").
+        user-id:
+          type: integer
+          description: User ID of the owner.
+        user:
+          type: string
+          description: Username of the owner.
+        group-id:
+          type: integer
+          description: Group ID of the owner.
+        group:
+          type: string
+          description: Group name of the owner.
       required:
       - path
-    PostFilesResponse:
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        description: JSON metadata about the file read operation.
-        properties:
-          result:
-            type: array
-            items:
-              $ref: '#/components/schemas/fileResult'
-    PostFilesRemovePathsRequest:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - remove
-        paths:
-          type: array
-          items:
-            $ref: '#/components/schemas/removePathsItem'
-      required:
-      - action
-      - paths
-    PostFilesMakeDirsRequest:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - make-dirs
-        dirs:
-          type: array
-          items:
-            $ref: '#/components/schemas/makeDirsItem'
-      required:
-      - action
-      - dirs
-    fileResult:
-      type: object
-      properties:
-        path:
-          type: string
-        error:
-          $ref: '#/components/schemas/errorResult'
     BaseResponse:
       type: object
       properties:
@@ -378,3 +349,32 @@ components:
             See the [IANA list](https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml).
 
             '
+    fileResult:
+      type: object
+      properties:
+        path:
+          type: string
+        error:
+          $ref: '#/components/schemas/errorResult'
+    errorResult:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message.
+        kind:
+          type: string
+          description: Type of error.
+          enum:
+          - daemon-restart
+          - generic-file-error
+          - login-required
+          - no-default-services
+          - not-found
+          - permission-denied
+          - system-restart
+        value:
+          type: object
+          description: Additional error information, if any.
+      required:
+      - message

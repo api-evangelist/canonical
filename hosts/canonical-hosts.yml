@@ -1,0 +1,296 @@
+generated: '2026-10-04'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 25
+  own: 5
+  other_domain: 18
+  platform: 2
+  roles:
+  - api
+  - docs
+  - identity
+  - other
+  - source
+  - status
+  - website
+hosts:
+- host: api.charmhub.io
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  - docs
+  registrable_domain: charmhub.io
+  role: api
+  relation: other-domain
+- host: api.launchpad.net
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  registrable_domain: launchpad.net
+  role: api
+  relation: other-domain
+- host: api.readthedocs-hosted.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: readthedocs-hosted.com
+  role: api
+  relation: other-domain
+- host: api.snapcraft.io
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  - docs
+  registrable_domain: snapcraft.io
+  role: api
+  relation: other-domain
+- host: canonical-charmed-cassandra.readthedocs-hosted.com
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: readthedocs-hosted.com
+  role: other
+  relation: other-domain
+- host: canonical-charmed-opensearch.readthedocs-hosted.com
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: readthedocs-hosted.com
+  role: other
+  relation: other-domain
+- host: canonical-charmed-spark.readthedocs-hosted.com
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: readthedocs-hosted.com
+  role: other
+  relation: other-domain
+- host: canonical-microceph.readthedocs-hosted.com
+  found_by:
+  - apis[]
+  - probed
+  - well-known
+  types: []
+  serves:
+  - docs
+  registrable_domain: readthedocs-hosted.com
+  role: other
+  relation: other-domain
+- host: canonical-openstack.readthedocs-hosted.com
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: readthedocs-hosted.com
+  role: other
+  relation: other-domain
+- host: canonical.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - docs-index
+  - well-known
+  types:
+  - Website
+  - Integrations
+  - Blog
+  serves:
+  - docs
+  registrable_domain: canonical.com
+  role: website
+  relation: own
+- host: charmhub.io
+  found_by:
+  - pointer
+  - probed
+  types:
+  - Charmhub
+  serves: []
+  registrable_domain: charmhub.io
+  role: other
+  relation: other-domain
+- host: cluster-api.sigs.k8s.io
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: k8s.io
+  role: other
+  relation: other-domain
+- host: discourse.ubuntu.com
+  found_by:
+  - pointer
+  - probed
+  types:
+  - DiscourseForum
+  serves: []
+  registrable_domain: ubuntu.com
+  role: other
+  relation: other-domain
+- host: docs.snapcraft.io
+  found_by:
+  - probed
+  - site-links
+  - namespace-probe
+  types: []
+  serves: []
+  title: Snap documentation
+  status: 200
+  registrable_domain: snapcraft.io
+  role: docs
+  relation: other-domain
+- host: documentation.ubuntu.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - docs-index
+  - well-known
+  - vendor-detect
+  types:
+  - Documentation
+  - APIReference
+  serves:
+  - docs
+  - cdn
+  - documentation
+  vendor: cloudflare
+  registrable_domain: ubuntu.com
+  role: docs
+  relation: other-domain
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrg
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: launchpad.net
+  found_by:
+  - pointer
+  - probed
+  types:
+  - Launchpad
+  serves: []
+  registrable_domain: launchpad.net
+  role: other
+  relation: other-domain
+- host: login.ubuntu.com
+  found_by:
+  - pointer
+  - probed
+  types:
+  - Login
+  serves: []
+  registrable_domain: ubuntu.com
+  role: identity
+  relation: other-domain
+- host: portal.canonical.com
+  found_by:
+  - probed
+  - site-links
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: canonical.com
+  role: other
+  relation: own
+- host: snapcraft.io
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  types:
+  - SnapStore
+  serves: []
+  registrable_domain: snapcraft.io
+  role: other
+  relation: other-domain
+- host: status.canonical.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: canonical.com
+  role: status
+  relation: own
+- host: testflinger.ps7.canonical.com
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: canonical.com
+  role: other
+  relation: own
+- host: trust.canonical.com
+  found_by:
+  - probed
+  - site-links
+  types: []
+  serves: []
+  registrable_domain: canonical.com
+  role: other
+  relation: own
+- host: ubuntu.com
+  found_by:
+  - pointer
+  - probed
+  - docs-index
+  - well-known
+  types:
+  - UbuntuWebsite
+  - DataPrivacy
+  - TermsOfService
+  - Pricing
+  - SignUp
+  - Support
+  - PrivacyPolicy
+  - GettingStarted
+  serves:
+  - docs
+  registrable_domain: ubuntu.com
+  role: docs
+  relation: other-domain
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform

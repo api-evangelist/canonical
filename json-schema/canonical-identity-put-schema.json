@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identity-put-schema.json",
+  "title": "IdentityPut contains the editable fields of an IdentityInfo.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identities-api-openapi.yml#/components/schemas/IdentityPut",
+  "properties": {
+    "groups": {
+      "description": "Groups is the list of groups for which the identity is a member.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Groups"
+    },
+    "tls_certificate": {
+      "description": "TLSCertificate is a base64 encoded x509 certificate. This can only be set if the authentication method of the identity is AuthenticationMethodTLS.\n\nAPI extension: access_management_tls.",
+      "type": "string",
+      "x-go-name": "TLSCertificate"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

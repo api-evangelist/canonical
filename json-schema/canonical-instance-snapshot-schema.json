@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-instance-snapshot-schema.json",
+  "title": "InstanceSnapshot represents a LXD instance snapshot.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-instances-api-openapi.yml#/components/schemas/InstanceSnapshot",
+  "properties": {
+    "architecture": {
+      "description": "Architecture name",
+      "type": "string",
+      "x-go-name": "Architecture"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Instance configuration (see doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "created_at": {
+      "description": "Instance creation timestamp",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "CreatedAt"
+    },
+    "devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Instance devices (see doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Devices"
+    },
+    "ephemeral": {
+      "description": "Whether the instance is ephemeral (deleted on shutdown)",
+      "type": "boolean",
+      "x-go-name": "Ephemeral"
+    },
+    "expanded_config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Expanded configuration (all profiles and local config merged)",
+      "type": "object",
+      "x-go-name": "ExpandedConfig"
+    },
+    "expanded_devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "Expanded devices (all profiles and local devices merged)",
+      "type": "object",
+      "x-go-name": "ExpandedDevices"
+    },
+    "expires_at": {
+      "description": "When the snapshot expires (gets auto-deleted)",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "ExpiresAt"
+    },
+    "last_used_at": {
+      "description": "Last start timestamp",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "LastUsedAt"
+    },
+    "name": {
+      "description": "Snapshot name",
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "profiles": {
+      "description": "List of profiles applied to the instance",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Profiles"
+    },
+    "size": {
+      "description": "Size of the snapshot in bytes\n\nAPI extension: snapshot_disk_usage",
+      "format": "int64",
+      "type": "integer",
+      "x-go-name": "Size"
+    },
+    "stateful": {
+      "description": "Whether the instance currently has saved state on disk",
+      "type": "boolean",
+      "x-go-name": "Stateful"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

@@ -310,159 +310,7 @@ paths:
       tags:
       - Projects
 components:
-  responses:
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    NotFound:
-      description: Not found
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not found
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 404
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Operation:
-      description: Operation
-      content:
-        application/json:
-          schema:
-            properties:
-              metadata:
-                $ref: '#/components/schemas/Operation'
-              operation:
-                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-                type: string
-                x-go-name: Operation
-              status:
-                example: Operation created
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 100
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: async
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
   schemas:
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
     Operation:
       description: Operation represents a LXD background operation
       properties:
@@ -570,6 +418,21 @@ components:
           x-go-name: UpdatedAt
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    ProjectStatePut:
+      description: ProjectStatePut represents the fields for updating project replica state
+      properties:
+        replica_mode:
+          description: 'Replica mode to set: "leader", "standby", or "" to clear the replica mode'
+          example: leader
+          type: string
+          x-go-name: ReplicaMode
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
     OperationRequestor:
       description: 'API extension: operation_requestor.'
       properties:
@@ -589,50 +452,6 @@ components:
           type: string
           x-go-name: Username
       title: OperationRequestor represents the initial requestor of an operation
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectPut:
-      description: ProjectPut represents the modifiable fields of a LXD project
-      properties:
-        config:
-          additionalProperties:
-            type: string
-          description: Project configuration map (refer to doc/projects.md)
-          example:
-            features.networks: 'false'
-            features.profiles: 'true'
-          type: object
-          x-go-name: Config
-        description:
-          description: Description of the project
-          example: My new project
-          type: string
-          x-go-name: Description
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectStateResource:
-      description: ProjectStateResource represents the state of a particular resource in a LXD project
-      properties:
-        Limit:
-          description: Limit for the resource (-1 if none)
-          example: 10
-          format: int64
-          type: integer
-        Usage:
-          description: Current usage for the resource
-          example: 4
-          format: int64
-          type: integer
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ProjectPost:
-      description: ProjectPost represents the fields required to rename a LXD project
-      properties:
-        name:
-          description: The new name for the project
-          example: bar
-          type: string
-          x-go-name: Name
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     Project:
@@ -693,16 +512,6 @@ components:
           x-go-name: UsedBy
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    ProjectStatePut:
-      description: ProjectStatePut represents the fields for updating project replica state
-      properties:
-        replica_mode:
-          description: 'Replica mode to set: "leader", "standby", or "" to clear the replica mode'
-          example: leader
-          type: string
-          x-go-name: ReplicaMode
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
     ProjectsPost:
       description: ProjectsPost represents the fields of a new LXD project
       properties:
@@ -737,6 +546,50 @@ components:
           x-go-name: StoragePool
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    ProjectPut:
+      description: ProjectPut represents the modifiable fields of a LXD project
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: Project configuration map (refer to doc/projects.md)
+          example:
+            features.networks: 'false'
+            features.profiles: 'true'
+          type: object
+          x-go-name: Config
+        description:
+          description: Description of the project
+          example: My new project
+          type: string
+          x-go-name: Description
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProjectStateResource:
+      description: ProjectStateResource represents the state of a particular resource in a LXD project
+      properties:
+        Limit:
+          description: Limit for the resource (-1 if none)
+          example: 10
+          format: int64
+          type: integer
+        Usage:
+          description: Current usage for the resource
+          example: 4
+          format: int64
+          type: integer
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ProjectPost:
+      description: ProjectPost represents the fields required to rename a LXD project
+      properties:
+        name:
+          description: The new name for the project
+          example: bar
+          type: string
+          x-go-name: Name
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     ProjectState:
       description: ProjectState represents the current running state of a LXD project
       properties:
@@ -756,3 +609,150 @@ components:
           x-go-name: Resources
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not found
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 404
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-post-schema.json",
+  "title": "NetworkPost",
+  "description": "NetworkPost represents the fields required to rename a LXD network",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-networks-api-openapi.yml#/components/schemas/NetworkPost",
+  "properties": {
+    "name": {
+      "description": "The new name for the network",
+      "type": "string",
+      "x-go-name": "Name"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

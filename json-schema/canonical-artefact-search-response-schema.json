@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-artefact-search-response-schema.json",
+  "title": "ArtefactSearchResponse",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-artefacts-api-openapi.yml#/components/schemas/ArtefactSearchResponse",
+  "properties": {
+    "artefacts": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Artefacts"
+    },
+    "count": {
+      "type": "integer",
+      "title": "Count"
+    },
+    "limit": {
+      "type": "integer",
+      "title": "Limit"
+    },
+    "offset": {
+      "type": "integer",
+      "title": "Offset"
+    }
+  },
+  "type": "object",
+  "required": [
+    "artefacts",
+    "count",
+    "limit",
+    "offset"
+  ]
+}

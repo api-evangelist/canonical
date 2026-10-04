@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-network-allocations-schema.json",
+  "title": "NetworkAllocations",
+  "description": "NetworkAllocations used for displaying network addresses used by a consuming entity\ne.g, instance, network forward, load-balancer, network...",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-network-allocations-api-openapi.yml#/components/schemas/NetworkAllocations",
+  "properties": {
+    "addresses": {
+      "description": "The network address of the allocation (in CIDR format)",
+      "type": "string",
+      "x-go-name": "Address"
+    },
+    "hwaddr": {
+      "description": "Hwaddr is the MAC address of the entity consuming the network address",
+      "type": "string",
+      "x-go-name": "Hwaddr"
+    },
+    "nat": {
+      "description": "Whether the entity comes from a network that LXD performs egress source NAT on",
+      "type": "boolean",
+      "x-go-name": "NAT"
+    },
+    "network": {
+      "description": "Network is the name of the network the allocated address belongs to",
+      "type": "string",
+      "x-go-name": "Network"
+    },
+    "type": {
+      "description": "Type of the entity consuming the network address",
+      "type": "string",
+      "x-go-name": "Type"
+    },
+    "used_by": {
+      "description": "Name of the entity consuming the network address",
+      "type": "string",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

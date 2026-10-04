@@ -401,183 +401,42 @@ paths:
       tags:
       - Cluster
 components:
-  responses:
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: bad request
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 400
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    EmptySyncResponse:
-      description: Empty sync response
-      content:
-        application/json:
-          schema:
-            properties:
-              status:
-                example: Success
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 200
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: sync
-                type: string
-                x-go-name: Type
-            type: object
-    InternalServerError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: internal server error
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 500
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Operation:
-      description: Operation
-      content:
-        application/json:
-          schema:
-            properties:
-              metadata:
-                $ref: '#/components/schemas/Operation'
-              operation:
-                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
-                type: string
-                x-go-name: Operation
-              status:
-                example: Operation created
-                type: string
-                x-go-name: Status
-              status_code:
-                example: 100
-                format: int64
-                type: integer
-                x-go-name: StatusCode
-              type:
-                example: async
-                type: string
-                x-go-name: Type
-            type: object
-    PreconditionFailed:
-      description: Precondition Failed
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: precondition failed
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 412
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
-    Forbidden:
-      description: Forbidden
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: not authorized
-                type: string
-                x-go-name: Error
-              error_code:
-                example: 403
-                format: int64
-                type: integer
-                x-go-name: ErrorCode
-              type:
-                example: error
-                type: string
-                x-go-name: Type
-            type: object
   schemas:
-    ResourcesStoragePoolInodes:
-      description: ResourcesStoragePoolInodes represents the inodes available to a given storage pool
+    ClusterMemberConfigKey:
+      description: 'The Value field is empty when getting clustering information with GET
+
+        1.0/cluster, and should be filled by the joining node when performing a PUT
+
+        1.0/cluster join request.'
       properties:
-        total:
-          description: Total inodes
-          example: 30709993797
-          format: uint64
-          type: integer
-          x-go-name: Total
-        used:
-          description: Used inodes
-          example: 23937695
-          format: uint64
-          type: integer
-          x-go-name: Used
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    StoragePoolState:
-      properties:
-        inodes:
-          $ref: '#/components/schemas/ResourcesStoragePoolInodes'
-        space:
-          $ref: '#/components/schemas/ResourcesStoragePoolSpace'
-      title: StoragePoolState represents the state of a storage pool.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterMemberPost:
-      properties:
-        server_name:
-          description: The new name of the cluster member
-          example: lxd02
+        description:
+          description: A human friendly description key
+          example: '"source" property for storage pool "local"'
           type: string
-          x-go-name: ServerName
-      title: ClusterMemberPost represents the fields required to rename a LXD node.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterCertificatePut:
-      description: ClusterCertificatePut represents the certificate and key pair for all members in a LXD Cluster
-      properties:
-        cluster_certificate:
-          description: The new certificate (X509 PEM encoded) for the cluster
-          example: X509 PEM certificate
+          x-go-name: Description
+        entity:
+          description: The kind of configuration key (network, storage-pool, ...)
+          example: storage-pool
           type: string
-          x-go-name: ClusterCertificate
-        cluster_certificate_key:
-          description: The new certificate key (X509 PEM encoded) for the cluster
-          example: X509 PEM certificate key
+          x-go-name: Entity
+        key:
+          description: The name of the key
+          example: source
           type: string
-          x-go-name: ClusterCertificateKey
+          x-go-name: Key
+        name:
+          description: The name of the object requiring this key
+          example: local
+          type: string
+          x-go-name: Name
+        value:
+          description: The value on the answering cluster member
+          example: /dev/sdb
+          type: string
+          x-go-name: Value
+      title: 'ClusterMemberConfigKey represents a single config key that a new member of
+
+        the cluster is required to provide when joining.'
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     ClusterPut:
@@ -633,6 +492,153 @@ components:
           x-go-name: ServerName
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    ClusterCertificatePut:
+      description: ClusterCertificatePut represents the certificate and key pair for all members in a LXD Cluster
+      properties:
+        cluster_certificate:
+          description: The new certificate (X509 PEM encoded) for the cluster
+          example: X509 PEM certificate
+          type: string
+          x-go-name: ClusterCertificate
+        cluster_certificate_key:
+          description: The new certificate key (X509 PEM encoded) for the cluster
+          example: X509 PEM certificate key
+          type: string
+          x-go-name: ClusterCertificateKey
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterMemberStatePost:
+      properties:
+        action:
+          description: The action to be performed. Valid actions are "evacuate" and "restore".
+          example: evacuate
+          type: string
+          x-go-name: Action
+        force:
+          description: 'Permit evacuation even if it would drop the cluster below the required voter majority.
+
+
+            API extension: clustering_evacuation_force'
+          example: false
+          type: boolean
+          x-go-name: Force
+        mode:
+          description: 'Override the configured evacuation mode.
+
+            Valid modes for the "evacuate" action are "stop", "migrate", and "live-migrate".
+
+            Valid modes for the "restore" action are "skip".
+
+
+            API extension: clustering_evacuation_mode'
+          example: stop
+          type: string
+          x-go-name: Mode
+      title: ClusterMemberStatePost represents the fields required to evacuate a cluster member.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    OperationRequestor:
+      description: 'API extension: operation_requestor.'
+      properties:
+        address:
+          description: Address is the origin address of the request.
+          example: 10.0.2.15
+          type: string
+          x-go-name: Address
+        protocol:
+          description: Protocol represents the method used to authenticate the requestor.
+          example: oidc
+          type: string
+          x-go-name: Protocol
+        username:
+          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
+          example: jane.doe@example.com
+          type: string
+          x-go-name: Username
+      title: OperationRequestor represents the initial requestor of an operation
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterMemberPut:
+      description: ClusterMemberPut represents the modifiable fields of a LXD cluster member
+      properties:
+        config:
+          additionalProperties:
+            type: string
+          description: 'Additional configuration information
+
+
+            API extension: clustering_config'
+          example:
+            scheduler.instance: all
+          type: object
+          x-go-name: Config
+        description:
+          description: 'Cluster member description
+
+
+            API extension: clustering_description'
+          example: AMD Epyc 32c/64t
+          type: string
+          x-go-name: Description
+        failure_domain:
+          description: 'Name of the failure domain for this cluster member
+
+
+            API extension: clustering_failure_domains'
+          example: rack1
+          type: string
+          x-go-name: FailureDomain
+        groups:
+          description: 'List of cluster groups this member belongs to
+
+
+            API extension: clustering_groups'
+          example:
+          - group1
+          - group2
+          items:
+            type: string
+          type: array
+          x-go-name: Groups
+        roles:
+          description: 'List of roles held by this cluster member
+
+
+            API extension: clustering_roles'
+          example:
+          - database
+          items:
+            type: string
+          type: array
+          x-go-name: Roles
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ResourcesStoragePoolInodes:
+      description: ResourcesStoragePoolInodes represents the inodes available to a given storage pool
+      properties:
+        total:
+          description: Total inodes
+          example: 30709993797
+          format: uint64
+          type: integer
+          x-go-name: Total
+        used:
+          description: Used inodes
+          example: 23937695
+          format: uint64
+          type: integer
+          x-go-name: Used
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StoragePoolState:
+      properties:
+        inodes:
+          $ref: '#/components/schemas/ResourcesStoragePoolInodes'
+        space:
+          $ref: '#/components/schemas/ResourcesStoragePoolSpace'
+      title: StoragePoolState represents the state of a storage pool.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
     ClusterMemberSysInfo:
       properties:
         buffered_ram:
@@ -678,269 +684,6 @@ components:
           type: integer
           x-go-name: Uptime
       title: ClusterMemberSysInfo represents the sysinfo of a cluster member.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterMemberState:
-      properties:
-        storage_pools:
-          additionalProperties:
-            $ref: '#/components/schemas/StoragePoolState'
-          type: object
-          x-go-name: StoragePools
-        sysinfo:
-          $ref: '#/components/schemas/ClusterMemberSysInfo'
-      title: ClusterMemberState represents the state of a cluster member.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterMemberConfigKey:
-      description: 'The Value field is empty when getting clustering information with GET
-
-        1.0/cluster, and should be filled by the joining node when performing a PUT
-
-        1.0/cluster join request.'
-      properties:
-        description:
-          description: A human friendly description key
-          example: '"source" property for storage pool "local"'
-          type: string
-          x-go-name: Description
-        entity:
-          description: The kind of configuration key (network, storage-pool, ...)
-          example: storage-pool
-          type: string
-          x-go-name: Entity
-        key:
-          description: The name of the key
-          example: source
-          type: string
-          x-go-name: Key
-        name:
-          description: The name of the object requiring this key
-          example: local
-          type: string
-          x-go-name: Name
-        value:
-          description: The value on the answering cluster member
-          example: /dev/sdb
-          type: string
-          x-go-name: Value
-      title: 'ClusterMemberConfigKey represents a single config key that a new member of
-
-        the cluster is required to provide when joining.'
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterMemberStatePost:
-      properties:
-        action:
-          description: The action to be performed. Valid actions are "evacuate" and "restore".
-          example: evacuate
-          type: string
-          x-go-name: Action
-        force:
-          description: 'Permit evacuation even if it would drop the cluster below the required voter majority.
-
-
-            API extension: clustering_evacuation_force'
-          example: false
-          type: boolean
-          x-go-name: Force
-        mode:
-          description: 'Override the configured evacuation mode.
-
-            Valid modes for the "evacuate" action are "stop", "migrate", and "live-migrate".
-
-            Valid modes for the "restore" action are "skip".
-
-
-            API extension: clustering_evacuation_mode'
-          example: stop
-          type: string
-          x-go-name: Mode
-      title: ClusterMemberStatePost represents the fields required to evacuate a cluster member.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    StatusCode:
-      format: int64
-      title: StatusCode represents a valid LXD operation and container status.
-      type: integer
-      x-go-package: github.com/canonical/lxd/shared/api
-    Operation:
-      description: Operation represents a LXD background operation
-      properties:
-        child_count:
-          description: 'Number of child operations.
-
-
-            API extension: operation_child_count'
-          example: 2
-          format: int64
-          type: integer
-          x-go-name: ChildCount
-        class:
-          description: Type of operation (task, token or websocket)
-          example: websocket
-          type: string
-          x-go-name: Class
-        created_at:
-          description: Operation creation time
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: CreatedAt
-        description:
-          description: Description of the operation
-          example: Executing command
-          type: string
-          x-go-name: Description
-        err:
-          description: Operation error message
-          example: Some error message
-          type: string
-          x-go-name: Err
-        err_code:
-          description: 'Operation error code
-
-
-            API extension: bulk_operations'
-          example: 404
-          format: int64
-          type: integer
-          x-go-name: ErrCode
-        id:
-          description: UUID of the operation
-          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
-          type: string
-          x-go-name: ID
-        location:
-          description: 'Which cluster member this record was found on
-
-
-            API extension: operation_location'
-          example: lxd01
-          type: string
-          x-go-name: Location
-        may_cancel:
-          description: Whether the operation can be canceled
-          example: false
-          type: boolean
-          x-go-name: MayCancel
-        metadata:
-          additionalProperties: {}
-          description: Operation specific metadata
-          example:
-            command:
-            - bash
-            environment:
-              HOME: /root
-              LANG: C.UTF-8
-              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-              TERM: xterm
-              USER: root
-            fds:
-              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
-              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
-            interactive: true
-          type: object
-          x-go-name: Metadata
-        requestor:
-          $ref: '#/components/schemas/OperationRequestor'
-        resources:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          description: Affected resources
-          example:
-            instances:
-            - /1.0/instances/foo
-            - /1.0/instances/bar
-          type: object
-          x-go-name: Resources
-        status:
-          description: Status name
-          example: Running
-          type: string
-          x-go-name: Status
-        status_code:
-          $ref: '#/components/schemas/StatusCode'
-        updated_at:
-          description: Operation last change
-          example: '2021-03-23T17:38:37.753398689-04:00'
-          format: date-time
-          type: string
-          x-go-name: UpdatedAt
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterGroupsPost:
-      properties:
-        description:
-          description: The description of the cluster group
-          example: amd64 servers
-          type: string
-          x-go-name: Description
-        members:
-          description: List of members in this group
-          example:
-          - node1
-          - node3
-          items:
-            type: string
-          type: array
-          x-go-name: Members
-        name:
-          description: The new name of the cluster group
-          example: group1
-          type: string
-          x-go-name: Name
-      title: ClusterGroupsPost represents the fields available for a new cluster group.
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ResourcesStoragePoolSpace:
-      description: ResourcesStoragePoolSpace represents the space available to a given storage pool
-      properties:
-        total:
-          description: Total disk space (bytes)
-          example: 420100937728
-          format: uint64
-          type: integer
-          x-go-name: Total
-        used:
-          description: Used disk space (bytes)
-          example: 343537419776
-          format: uint64
-          type: integer
-          x-go-name: Used
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    OperationRequestor:
-      description: 'API extension: operation_requestor.'
-      properties:
-        address:
-          description: Address is the origin address of the request.
-          example: 10.0.2.15
-          type: string
-          x-go-name: Address
-        protocol:
-          description: Protocol represents the method used to authenticate the requestor.
-          example: oidc
-          type: string
-          x-go-name: Protocol
-        username:
-          description: Username is the username of the requestor. This is the identifier of the identity, or the username if using the unix socket.
-          example: jane.doe@example.com
-          type: string
-          x-go-name: Username
-      title: OperationRequestor represents the initial requestor of an operation
-      type: object
-      x-go-package: github.com/canonical/lxd/shared/api
-    ClusterMembersPost:
-      properties:
-        server_name:
-          description: The name of the new cluster member
-          example: lxd02
-          type: string
-          x-go-name: ServerName
-      title: ClusterMembersPost represents the fields required to request a join token to add a member to the cluster.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
     ClusterMember:
@@ -1056,58 +799,315 @@ components:
       title: Cluster represents high-level information about a LXD cluster.
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
-    ClusterMemberPut:
-      description: ClusterMemberPut represents the modifiable fields of a LXD cluster member
+    ResourcesStoragePoolSpace:
+      description: ResourcesStoragePoolSpace represents the space available to a given storage pool
       properties:
-        config:
-          additionalProperties:
-            type: string
-          description: 'Additional configuration information
-
-
-            API extension: clustering_config'
-          example:
-            scheduler.instance: all
-          type: object
-          x-go-name: Config
-        description:
-          description: 'Cluster member description
-
-
-            API extension: clustering_description'
-          example: AMD Epyc 32c/64t
-          type: string
-          x-go-name: Description
-        failure_domain:
-          description: 'Name of the failure domain for this cluster member
-
-
-            API extension: clustering_failure_domains'
-          example: rack1
-          type: string
-          x-go-name: FailureDomain
-        groups:
-          description: 'List of cluster groups this member belongs to
-
-
-            API extension: clustering_groups'
-          example:
-          - group1
-          - group2
-          items:
-            type: string
-          type: array
-          x-go-name: Groups
-        roles:
-          description: 'List of roles held by this cluster member
-
-
-            API extension: clustering_roles'
-          example:
-          - database
-          items:
-            type: string
-          type: array
-          x-go-name: Roles
+        total:
+          description: Total disk space (bytes)
+          example: 420100937728
+          format: uint64
+          type: integer
+          x-go-name: Total
+        used:
+          description: Used disk space (bytes)
+          example: 343537419776
+          format: uint64
+          type: integer
+          x-go-name: Used
       type: object
       x-go-package: github.com/canonical/lxd/shared/api
+    Operation:
+      description: Operation represents a LXD background operation
+      properties:
+        child_count:
+          description: 'Number of child operations.
+
+
+            API extension: operation_child_count'
+          example: 2
+          format: int64
+          type: integer
+          x-go-name: ChildCount
+        class:
+          description: Type of operation (task, token or websocket)
+          example: websocket
+          type: string
+          x-go-name: Class
+        created_at:
+          description: Operation creation time
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: CreatedAt
+        description:
+          description: Description of the operation
+          example: Executing command
+          type: string
+          x-go-name: Description
+        err:
+          description: Operation error message
+          example: Some error message
+          type: string
+          x-go-name: Err
+        err_code:
+          description: 'Operation error code
+
+
+            API extension: bulk_operations'
+          example: 404
+          format: int64
+          type: integer
+          x-go-name: ErrCode
+        id:
+          description: UUID of the operation
+          example: 6916c8a6-9b7d-4abd-90b3-aedfec7ec7da
+          type: string
+          x-go-name: ID
+        location:
+          description: 'Which cluster member this record was found on
+
+
+            API extension: operation_location'
+          example: lxd01
+          type: string
+          x-go-name: Location
+        may_cancel:
+          description: Whether the operation can be canceled
+          example: false
+          type: boolean
+          x-go-name: MayCancel
+        metadata:
+          additionalProperties: {}
+          description: Operation specific metadata
+          example:
+            command:
+            - bash
+            environment:
+              HOME: /root
+              LANG: C.UTF-8
+              PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              TERM: xterm
+              USER: root
+            fds:
+              '0': da3046cf02c0116febf4ef3fe4eaecdf308e720c05e5a9c730ce1a6f15417f66
+              '1': 05896879d8692607bd6e4a09475667da3b5f6714418ab0ee0e5720b4c57f754b
+            interactive: true
+          type: object
+          x-go-name: Metadata
+        requestor:
+          $ref: '#/components/schemas/OperationRequestor'
+        resources:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          description: Affected resources
+          example:
+            instances:
+            - /1.0/instances/foo
+            - /1.0/instances/bar
+          type: object
+          x-go-name: Resources
+        status:
+          description: Status name
+          example: Running
+          type: string
+          x-go-name: Status
+        status_code:
+          $ref: '#/components/schemas/StatusCode'
+        updated_at:
+          description: Operation last change
+          example: '2021-03-23T17:38:37.753398689-04:00'
+          format: date-time
+          type: string
+          x-go-name: UpdatedAt
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterMemberPost:
+      properties:
+        server_name:
+          description: The new name of the cluster member
+          example: lxd02
+          type: string
+          x-go-name: ServerName
+      title: ClusterMemberPost represents the fields required to rename a LXD node.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterGroupsPost:
+      properties:
+        description:
+          description: The description of the cluster group
+          example: amd64 servers
+          type: string
+          x-go-name: Description
+        members:
+          description: List of members in this group
+          example:
+          - node1
+          - node3
+          items:
+            type: string
+          type: array
+          x-go-name: Members
+        name:
+          description: The new name of the cluster group
+          example: group1
+          type: string
+          x-go-name: Name
+      title: ClusterGroupsPost represents the fields available for a new cluster group.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterMembersPost:
+      properties:
+        server_name:
+          description: The name of the new cluster member
+          example: lxd02
+          type: string
+          x-go-name: ServerName
+      title: ClusterMembersPost represents the fields required to request a join token to add a member to the cluster.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+    StatusCode:
+      format: int64
+      title: StatusCode represents a valid LXD operation and container status.
+      type: integer
+      x-go-package: github.com/canonical/lxd/shared/api
+    ClusterMemberState:
+      properties:
+        storage_pools:
+          additionalProperties:
+            $ref: '#/components/schemas/StoragePoolState'
+          type: object
+          x-go-name: StoragePools
+        sysinfo:
+          $ref: '#/components/schemas/ClusterMemberSysInfo'
+      title: ClusterMemberState represents the state of a cluster member.
+      type: object
+      x-go-package: github.com/canonical/lxd/shared/api
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: bad request
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 400
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: internal server error
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 500
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    PreconditionFailed:
+      description: Precondition Failed
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: precondition failed
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 412
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object
+    Operation:
+      description: Operation
+      content:
+        application/json:
+          schema:
+            properties:
+              metadata:
+                $ref: '#/components/schemas/Operation'
+              operation:
+                example: /1.0/operations/66e83638-9dd7-4a26-aef2-5462814869a1
+                type: string
+                x-go-name: Operation
+              status:
+                example: Operation created
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 100
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: async
+                type: string
+                x-go-name: Type
+            type: object
+    EmptySyncResponse:
+      description: Empty sync response
+      content:
+        application/json:
+          schema:
+            properties:
+              status:
+                example: Success
+                type: string
+                x-go-name: Status
+              status_code:
+                example: 200
+                format: int64
+                type: integer
+                x-go-name: StatusCode
+              type:
+                example: sync
+                type: string
+                x-go-name: Type
+            type: object
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: not authorized
+                type: string
+                x-go-name: Error
+              error_code:
+                example: 403
+                format: int64
+                type: integer
+                x-go-name: ErrorCode
+              type:
+                example: error
+                type: string
+                x-go-name: Type
+            type: object

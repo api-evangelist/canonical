@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-collection-response-schema.json",
+  "title": "CollectionResponse",
+  "description": "Collection Response",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-operations-api-openapi.yml#/components/schemas/CollectionResponse",
+  "allOf": [
+    {
+      "$ref": "#/$defs/NoMetaSyncResponse"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "total_size": {
+          "description": "Total Count of the collection",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "NoMetaSyncResponse": {
+      "description": "Swagger Synchronous response without metadata field",
+      "type": "object",
+      "properties": {
+        "error_code": {
+          "description": "Error code for the operation",
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "description": "Status of requested operation",
+          "type": "string"
+        },
+        "status_code": {
+          "description": "Status code of the request",
+          "type": "integer",
+          "format": "int64"
+        },
+        "type": {
+          "description": "Type of operation response",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

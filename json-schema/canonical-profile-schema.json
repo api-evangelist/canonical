@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-profile-schema.json",
+  "title": "Profile",
+  "description": "Profile represents a LXD profile",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-profiles-api-openapi.yml#/components/schemas/Profile",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "config": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Instance configuration map (refer to doc/instances.md)",
+      "type": "object",
+      "x-go-name": "Config"
+    },
+    "description": {
+      "description": "Description of the profile",
+      "type": "string",
+      "x-go-name": "Description"
+    },
+    "devices": {
+      "additionalProperties": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "description": "List of devices",
+      "type": "object",
+      "x-go-name": "Devices"
+    },
+    "name": {
+      "description": "The profile name",
+      "readOnly": true,
+      "type": "string",
+      "x-go-name": "Name"
+    },
+    "project": {
+      "description": "Project name\n\nAPI extension: profiles_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "used_by": {
+      "description": "List of URLs of objects using this profile\n\nAPI extension: profile_usedby",
+      "items": {
+        "type": "string"
+      },
+      "readOnly": true,
+      "type": "array",
+      "x-go-name": "UsedBy"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api"
+}

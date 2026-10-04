@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-image-2-schema.json",
+  "title": "Image_2",
+  "description": "Image represents a LXD image",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-images-api-openapi.yml#/components/schemas/Image_2",
+  "properties": {
+    "access_entitlements": {
+      "description": "AccessEntitlements represents the entitlements that are granted to the requesting user on the attached entity.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "AccessEntitlements"
+    },
+    "aliases": {
+      "description": "List of aliases",
+      "items": {
+        "$ref": "#/$defs/ImageAlias"
+      },
+      "type": "array",
+      "x-go-name": "Aliases"
+    },
+    "architecture": {
+      "description": "Architecture",
+      "type": "string",
+      "x-go-name": "Architecture"
+    },
+    "auto_update": {
+      "description": "Whether the image should auto-update when a new build is available",
+      "type": "boolean",
+      "x-go-name": "AutoUpdate"
+    },
+    "cached": {
+      "description": "Whether the image is an automatically cached remote image",
+      "type": "boolean",
+      "x-go-name": "Cached"
+    },
+    "created_at": {
+      "description": "When the image was originally created",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "CreatedAt"
+    },
+    "expires_at": {
+      "description": "When the image becomes obsolete\n\nAPI extension: images_expiry",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "ExpiresAt"
+    },
+    "filename": {
+      "description": "Original filename",
+      "type": "string",
+      "x-go-name": "Filename"
+    },
+    "fingerprint": {
+      "description": "Full SHA-256 fingerprint",
+      "type": "string",
+      "x-go-name": "Fingerprint"
+    },
+    "last_used_at": {
+      "description": "Last time the image was used",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "LastUsedAt"
+    },
+    "profiles": {
+      "description": "List of profiles to use when creating from this image (if none provided by user)\n\nAPI extension: image_profiles",
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "x-go-name": "Profiles"
+    },
+    "project": {
+      "description": "Project name\n\nAPI extension: images_all_projects",
+      "type": "string",
+      "x-go-name": "Project"
+    },
+    "properties": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Descriptive properties",
+      "type": "object",
+      "x-go-name": "Properties"
+    },
+    "public": {
+      "description": "Whether the image is available to unauthenticated users",
+      "type": "boolean",
+      "x-go-name": "Public"
+    },
+    "release_codename": {
+      "description": "OS release codename\n\nAPI extension: image_extended_metadata",
+      "type": "string",
+      "x-go-name": "ReleaseCodename"
+    },
+    "release_title": {
+      "description": "OS release title\n\nAPI extension: image_extended_metadata",
+      "type": "string",
+      "x-go-name": "ReleaseTitle"
+    },
+    "size": {
+      "description": "Size of the image in bytes",
+      "format": "int64",
+      "type": "integer",
+      "x-go-name": "Size"
+    },
+    "type": {
+      "description": "Type of image (container or virtual-machine)\n\nAPI extension: image_types",
+      "type": "string",
+      "x-go-name": "Type"
+    },
+    "update_source": {
+      "$ref": "#/$defs/ImageSource"
+    },
+    "uploaded_at": {
+      "description": "When the image was added to this LXD server",
+      "format": "date-time",
+      "type": "string",
+      "x-go-name": "UploadedAt"
+    }
+  },
+  "type": "object",
+  "x-go-package": "github.com/canonical/lxd/shared/api",
+  "$defs": {
+    "ImageAlias": {
+      "description": "ImageAlias represents an alias from the alias list of a LXD image",
+      "properties": {
+        "description": {
+          "description": "Description of the alias",
+          "type": "string",
+          "x-go-name": "Description"
+        },
+        "name": {
+          "description": "Name of the alias",
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    },
+    "ImageSource": {
+      "description": "ImageSource represents the source of a LXD image",
+      "properties": {
+        "alias": {
+          "description": "Source alias to download from",
+          "type": "string",
+          "x-go-name": "Alias"
+        },
+        "certificate": {
+          "description": "Source server certificate (if not trusted by system CA)",
+          "type": "string",
+          "x-go-name": "Certificate"
+        },
+        "image_registry": {
+          "description": "Image registry name\n\nAPI extension: image_registries",
+          "type": "string",
+          "x-go-name": "ImageRegistry"
+        },
+        "image_type": {
+          "description": "Type of image (container or virtual-machine)\n\nAPI extension: image_types",
+          "type": "string",
+          "x-go-name": "ImageType"
+        },
+        "protocol": {
+          "description": "Source server protocol",
+          "type": "string",
+          "x-go-name": "Protocol"
+        },
+        "server": {
+          "description": "URL of the source server",
+          "type": "string",
+          "x-go-name": "Server"
+        }
+      },
+      "type": "object",
+      "x-go-package": "github.com/canonical/lxd/shared/api"
+    }
+  }
+}

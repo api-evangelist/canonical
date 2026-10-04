@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-placement-group-schema.json",
+  "title": "PlacementGroup",
+  "description": "Referenced by this document but never defined in it. API Evangelist added this empty placeholder so the document resolves; the shape is unknown and is NOT a claim about the API.",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-placement-groups-api-openapi.yml#/components/schemas/PlacementGroup",
+  "type": "object",
+  "x-ae-placeholder": true
+}

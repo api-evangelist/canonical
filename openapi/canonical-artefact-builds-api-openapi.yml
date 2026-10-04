@@ -43,70 +43,23 @@ paths:
       - view_artefact
 components:
   schemas:
-    TestExecutionRelevantLinkResponse:
-      properties:
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Url
-        id:
-          type: integer
-          title: Id
-      type: object
-      required:
-      - label
-      - url
-      - id
-      title: TestExecutionRelevantLinkResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ArtefactBuildResponse:
+    EnvironmentResponse:
       properties:
         id:
           type: integer
           title: Id
+        name:
+          type: string
+          title: Name
         architecture:
           type: string
           title: Architecture
-        revision:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Revision
-        test_executions:
-          items:
-            $ref: '#/components/schemas/TestExecutionResponse'
-          type: array
-          title: Test Executions
       type: object
       required:
       - id
+      - name
       - architecture
-      - revision
-      - test_executions
-      title: ArtefactBuildResponse
-    TestExecutionStatus:
-      type: string
-      enum:
-      - NOT_STARTED
-      - IN_PROGRESS
-      - PASSED
-      - FAILED
-      - NOT_TESTED
-      - ENDED_PREMATURELY
-      title: TestExecutionStatus
+      title: EnvironmentResponse
     TestExecutionResponse:
       properties:
         id:
@@ -167,6 +120,45 @@ components:
       - is_rerun_requested
       - rerun_priority
       title: TestExecutionResponse
+    TestExecutionRelevantLinkResponse:
+      properties:
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Url
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+      - label
+      - url
+      - id
+      title: TestExecutionRelevantLinkResponse
+    TestExecutionStatus:
+      type: string
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - PASSED
+      - FAILED
+      - NOT_TESTED
+      - ENDED_PREMATURELY
+      title: TestExecutionStatus
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ExecutionMetadata:
       additionalProperties:
         items:
@@ -214,20 +206,28 @@ components:
       - msg
       - type
       title: ValidationError
-    EnvironmentResponse:
+    ArtefactBuildResponse:
       properties:
         id:
           type: integer
           title: Id
-        name:
-          type: string
-          title: Name
         architecture:
           type: string
           title: Architecture
+        revision:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Revision
+        test_executions:
+          items:
+            $ref: '#/components/schemas/TestExecutionResponse'
+          type: array
+          title: Test Executions
       type: object
       required:
       - id
-      - name
       - architecture
-      title: EnvironmentResponse
+      - revision
+      - test_executions
+      title: ArtefactBuildResponse

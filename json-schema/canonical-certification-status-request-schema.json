@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-certification-status-request-schema.json",
+  "title": "CertificationStatusRequest",
+  "description": "Request body validator for status check endpoint",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-certification-api-openapi.yml#/components/schemas/CertificationStatusRequest",
+  "properties": {
+    "vendor": {
+      "type": "string",
+      "title": "Vendor"
+    },
+    "model": {
+      "type": "string",
+      "title": "Model"
+    },
+    "architecture": {
+      "type": "string",
+      "title": "Architecture"
+    },
+    "board": {
+      "$ref": "#/$defs/BoardValidator"
+    },
+    "os": {
+      "$ref": "#/$defs/OSValidator"
+    },
+    "bios": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BiosValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "chassis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ChassisValidator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "processor": {
+      "$ref": "#/$defs/ProcessorValidator"
+    },
+    "pci_peripherals": {
+      "items": {
+        "$ref": "#/$defs/PCIPeripheralValidator"
+      },
+      "type": "array",
+      "title": "Pci Peripherals",
+      "default": []
+    },
+    "usb_peripherals": {
+      "items": {
+        "$ref": "#/$defs/USBPeripheralValidator"
+      },
+      "type": "array",
+      "title": "Usb Peripherals",
+      "default": []
+    }
+  },
+  "type": "object",
+  "required": [
+    "vendor",
+    "model",
+    "architecture",
+    "board",
+    "os",
+    "processor"
+  ],
+  "$defs": {
+    "BiosValidator": {
+      "properties": {
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Revision"
+        },
+        "firmware_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Firmware Revision"
+        },
+        "release_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Release Date"
+        }
+      },
+      "type": "object",
+      "required": [
+        "vendor",
+        "version",
+        "revision",
+        "firmware_revision",
+        "release_date"
+      ],
+      "title": "BiosValidator"
+    },
+    "BoardValidator": {
+      "properties": {
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "product_name": {
+          "type": "string",
+          "title": "Product Name"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "manufacturer",
+        "product_name",
+        "version"
+      ],
+      "title": "BoardValidator"
+    },
+    "ChassisValidator": {
+      "properties": {
+        "chassis_type": {
+          "type": "string",
+          "title": "Chassis Type"
+        },
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "sku": {
+          "type": "string",
+          "title": "Sku"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "chassis_type",
+        "manufacturer",
+        "sku",
+        "version"
+      ],
+      "title": "ChassisValidator"
+    },
+    "DeviceStatus": {
+      "type": "string",
+      "enum": [
+        "known-working",
+        "known-breaking",
+        "unknown"
+      ],
+      "title": "DeviceStatus"
+    },
+    "KernelPackageValidator": {
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Name"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Signature"
+        },
+        "loaded_modules": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "Loaded Modules",
+          "default": []
+        }
+      },
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "signature"
+      ],
+      "title": "KernelPackageValidator"
+    },
+    "OSValidator": {
+      "properties": {
+        "distributor": {
+          "type": "string",
+          "title": "Distributor"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        },
+        "codename": {
+          "type": "string",
+          "title": "Codename"
+        },
+        "kernel": {
+          "$ref": "#/$defs/KernelPackageValidator"
+        }
+      },
+      "type": "object",
+      "required": [
+        "distributor",
+        "version",
+        "codename",
+        "kernel"
+      ],
+      "title": "OSValidator"
+    },
+    "PCIPeripheralValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pci_id": {
+          "type": "string",
+          "title": "Pci Id"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        }
+      },
+      "type": "object",
+      "required": [
+        "pci_id",
+        "name",
+        "vendor"
+      ],
+      "title": "PCIPeripheralValidator"
+    },
+    "ProcessorValidator": {
+      "properties": {
+        "identifier": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Identifier"
+        },
+        "frequency": {
+          "type": "integer",
+          "title": "Frequency"
+        },
+        "manufacturer": {
+          "type": "string",
+          "title": "Manufacturer"
+        },
+        "version": {
+          "type": "string",
+          "title": "Version"
+        }
+      },
+      "type": "object",
+      "required": [
+        "identifier",
+        "frequency",
+        "manufacturer",
+        "version"
+      ],
+      "title": "ProcessorValidator"
+    },
+    "USBPeripheralValidator": {
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DeviceStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "usb_id": {
+          "type": "string",
+          "title": "Usb Id"
+        },
+        "name": {
+          "type": "string",
+          "title": "Name"
+        },
+        "vendor": {
+          "type": "string",
+          "title": "Vendor"
+        }
+      },
+      "type": "object",
+      "required": [
+        "usb_id",
+        "name",
+        "vendor"
+      ],
+      "title": "USBPeripheralValidator"
+    }
+  }
+}

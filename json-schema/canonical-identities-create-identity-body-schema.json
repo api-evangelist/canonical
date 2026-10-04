@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/canonical/main/json-schema/canonical-identities-create-identity-body-schema.json",
+  "title": "identitiesCreateIdentityBody",
+  "x-generated": "2026-10-04",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/canonical-identitiesservice-api-openapi.yml#/components/schemas/identitiesCreateIdentityBody",
+  "properties": {
+    "additional_properties": {
+      "type": "object"
+    },
+    "credentials": {
+      "type": "object"
+    },
+    "metadata_admin": {
+      "type": "object"
+    },
+    "metadata_public": {
+      "type": "object"
+    },
+    "recovery_addresses": {
+      "items": {
+        "$ref": "#/$defs/identitiesRecoveryIdentityAddress"
+      },
+      "type": "array"
+    },
+    "schema_id": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "traits": {
+      "type": "object"
+    },
+    "verifiable_addresses": {
+      "items": {
+        "$ref": "#/$defs/identitiesVerifiableIdentityAddress"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "identitiesRecoveryIdentityAddress": {
+      "properties": {
+        "additional_properties": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "via": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "identitiesVerifiableIdentityAddress": {
+      "properties": {
+        "additional_properties": {
+          "additionalProperties": {},
+          "type": "object"
+        },
+        "created_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "verified_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "via": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

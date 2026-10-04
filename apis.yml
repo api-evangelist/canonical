@@ -1,7 +1,6 @@
 aid: canonical
 name: Canonical
-url: >-
-  https://raw.githubusercontent.com/api-evangelist/canonical/refs/heads/main/apis.yml
+url: https://raw.githubusercontent.com/api-evangelist/canonical/refs/heads/main/apis.yml
 deliveryModel:
   model: saas
   license_evidence:
@@ -35,45 +34,186 @@ accessModel:
   generated: '2026-07-22'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/canonical.png
+website:
+  url: https://canonical.com
+  method: probed
+  source: homepage
 type: Index
 x-docs-platform: readthedocs
 x-docs-platform-confidence: high
 x-docs-platform-checked: 2026-09-21
 tags:
-  - Canonical
-  - Cloud
-  - Linux
-  - Open Source
-  - Ubuntu
-  - Containers
-  - Bare Metal
-  - Charms
-  - Identity
+- Canonical
+- Cloud
+- Linux
+- Open Source
+- Ubuntu
+- Containers
+- Bare Metal
+- Charms
+- Identity
 tags_raw:
-  - Canonical
-  - Cloud
-  - Linux
-  - Open Source
-  - Ubuntu
-  - Containers
-  - Bare Metal
-  - Charms
-  - Identity
-  - Open-Source
+- Canonical
+- Cloud
+- Linux
+- Open Source
+- Ubuntu
+- Containers
+- Bare Metal
+- Charms
+- Identity
+- Open-Source
 access: Open
 created: '2026-03-16'
 modified: '2026-09-05'
 position: Producing
 specificationVersion: '0.23'
-description: >-
-  Canonical is the company behind Ubuntu, the world's most popular open
-  source operating system for cloud, servers, desktops, IoT, and Kubernetes.
-  Canonical publishes a broad set of developer APIs spanning the Ubuntu and
-  Canonical ecosystem — the Snap Store and Snapcraft, the Charmhub charm
-  marketplace, LXD system containers, MAAS bare-metal provisioning, Juju
-  orchestration, Launchpad project hosting, Ubuntu Pro subscription
-  services, and Landscape systems management — most of which are RESTful,
-  open, and well documented.
+description: Canonical is the company behind Ubuntu, the world's most popular open source operating system for cloud, servers, desktops, IoT,
+  and Kubernetes. Canonical publishes a broad set of developer APIs spanning the Ubuntu and Canonical ecosystem — the Snap Store and Snapcraft,
+  the Charmhub charm marketplace, LXD system containers, MAAS bare-metal provisioning, Juju orchestration, Launchpad project hosting, Ubuntu Pro
+  subscription services, and Landscape systems management — most of which are RESTful, open, and well documented.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+common:
+- type: FinOps
+  url: finops/canonical-finops.yml
+- type: Spectral
+  url: rules/canonical-rules.yml
+- type: JSONLD
+  url: json-ld/canonical-context.jsonld
+- type: Vocabulary
+  url: vocabulary/canonical-vocabulary.yml
+- type: Hosts
+  url: hosts/canonical-hosts.yml
+- type: Vendors
+  url: vendors/canonical-vendors.yml
+- type: AgentSkill
+  url: skills/canonical-snapd-manage-snap.md
+- type: Overlay
+  url: overlays/canonical-lxd-rest-api-overlay.yaml
+- type: AgentSkill
+  url: skills/canonical-lxd-provision-instance.md
+- type: Overlay
+  url: overlays/canonical-ubuntu-security-api-overlay.yaml
+- type: AgentSkill
+  url: skills/canonical-ubuntu-security-cve-lookup.md
+- type: Overlay
+  url: overlays/canonical-pebble-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-testflinger-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-hardware-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-identity-platform-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-test-observer-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-anbox-cloud-ams-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-anbox-stream-gateway-api-overlay.yaml
+- type: Overlay
+  url: overlays/canonical-cos-registration-server-api-overlay.yaml
+- type: OAuthScopes
+  url: scopes/canonical-scopes.yml
+- type: Authentication
+  url: authentication/canonical-authentication.yml
+- type: AgenticAccess
+  url: agentic-access/canonical-agentic-access.yml
+- type: DomainSecurity
+  url: security/canonical-domain-security.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/canonical
+- type: Website
+  url: https://canonical.com/
+- type: UbuntuWebsite
+  url: https://ubuntu.com/
+- type: Documentation
+  url: https://documentation.ubuntu.com/
+- type: GitHubOrg
+  url: https://github.com/canonical
+- type: SnapStore
+  url: https://snapcraft.io/
+- type: Charmhub
+  url: https://charmhub.io/
+- type: Launchpad
+  url: https://launchpad.net/
+- type: DiscourseForum
+  url: https://discourse.ubuntu.com/
+- type: DataPrivacy
+  url: https://ubuntu.com/legal/data-privacy
+- type: TermsOfService
+  url: https://ubuntu.com/legal/terms
+- type: Integrations
+  url: https://canonical.com/partners
+- url: https://canonical.com/blog/feed/
+  type: Blog
+- type: Packages
+  url: packages/canonical-packages.yml
+- type: SDKs
+  url: packages/canonical-packages.yml
+- type: CLI
+  url: cli/canonical-cli.yml
+- type: Components
+  url: components/canonical-components.yml
+- type: Conventions
+  url: conventions/canonical-conventions.yml
+- type: Idempotency
+  url: conventions/canonical-conventions.yml
+- type: ErrorCatalog
+  url: errors/canonical-problem-types.yml
+- type: DataModel
+  url: data-model/canonical-data-model.yml
+- type: Lifecycle
+  url: lifecycle/canonical-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/canonical-lifecycle.yml
+- type: StatusPage
+  url: https://status.canonical.com/
+- type: ChangeLog
+  url: changelog/canonical-changelog.yml
+- type: Conformance
+  url: conformance/canonical-conformance.yml
+- type: Compliance
+  url: security/canonical-trust-center.yml
+- type: TrustCenter
+  url: security/canonical-trust-center.yml
+- type: Security
+  url: security/canonical-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/canonical-vulnerability-disclosure.yml
+- type: WellKnown
+  url: well-known/canonical-well-known.yml
+- type: SecurityTxt
+  url: well-known/canonical-security.txt
+- type: LLMsTxt
+  url: llms/canonical-llms.txt
+- type: Webhooks
+  url: asyncapi/canonical-launchpad-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/canonical-landscape-debarchive-provider-overlay.yaml
+- type: Plans
+  url: plans/canonical-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/canonical-rate-limits.yml
+- type: Pricing
+  url: https://ubuntu.com/pricing/pro
+- type: SignUp
+  url: https://ubuntu.com/pro/subscribe
+- type: Login
+  url: https://login.ubuntu.com/
+- type: Support
+  url: https://ubuntu.com/support
+- type: PrivacyPolicy
+  url: https://ubuntu.com/legal/data-privacy
+- type: APIReference
+  url: https://documentation.ubuntu.com/lxd/latest/rest-api/
+- type: GettingStarted
+  url: https://ubuntu.com/tutorials
+- type: GitHubOrganization
+  url: https://github.com/canonical
 apis:
 - aid: canonical:snap-store-api
   name: Snap Store API
@@ -216,6 +356,8 @@ apis:
     url: https://api.snapcraft.io/docs/
   - type: HowTo
     url: https://snapcraft.io/docs/using-the-api
+  - type: JSONSchema
+    url: json-schema/canonical-assertion-result-schema.json
 - aid: canonical:canonical-search-api
   name: Canonical Search API
   description: The Search API from Canonical — 1 operation(s) for search.
@@ -244,6 +386,14 @@ apis:
     url: https://api.snapcraft.io/docs/
   - type: HowTo
     url: https://snapcraft.io/docs/using-the-api
+  - type: JSONSchema
+    url: json-schema/canonical-refresh-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-snap-info-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-find-results-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-refresh-response-schema.json
 - aid: canonical:microceph-api
   name: MicroCeph REST API
   description: >-
@@ -262,6 +412,8 @@ apis:
     url: overlays/canonical-microceph-api-overlay.yaml
   - type: SourceCode
     url: https://github.com/canonical/microceph
+  - type: JSONSchema
+    url: json-schema/canonical-level-schema.json
 - aid: canonical:canonical-appauthorizationservice-api
   name: Canonical App Authorization Service API
   description: >-
@@ -321,6 +473,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-authorization-get-allowed-groups-for-app-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authorization-get-allowed-apps-in-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authorization-add-allowed-app-to-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authorization-remove-allowed-app-from-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authorization-remove-allowed-apps-from-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authorization-remove-allowed-groups-for-app-resp-schema.json
 - aid: canonical:canonical-application-api
   name: Canonical Application API
   description: The application API from Canonical — 1 operation(s) for application.
@@ -381,6 +545,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-api-applications-get-response-schema.json
 - aid: canonical:canonical-applications-api
   name: Canonical Applications API
   description: The applications API from Canonical — 20 operation(s) for applications.
@@ -441,6 +607,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-application-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-application-patch-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-no-meta-sync-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-applications-delete-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-application-response-schema.json
 - aid: canonical:canonical-apps-api
   name: Canonical Apps API
   description: The Apps API from Canonical — 2 operation(s) for apps.
@@ -501,6 +679,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-app-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-app-action-restart-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-app-action-stop-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-app-action-start-schema.json
 - aid: canonical:canonical-artefact-builds-api
   name: Canonical Artefact Builds API
   description: The artefact-builds API from Canonical — 1 operation(s) for artefact-builds.
@@ -559,6 +745,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-build-response-schema.json
 - aid: canonical:canonical-artefact-matching-rules-api
   name: Canonical Artefact Matching Rules API
   description: >-
@@ -618,6 +806,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-matching-rule-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-matching-rule-patch-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-matching-rule-request-schema.json
 - aid: canonical:canonical-artefacts-api
   name: Canonical Artefacts API
   description: The artefacts API from Canonical — 8 operation(s) for artefacts.
@@ -676,6 +870,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-patch-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-build-environment-review-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-build-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-environment-review-patch-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-search-response-schema.json
 - aid: canonical:canonical-asynchronous-api
   name: Canonical Asynchronous API
   description: Return the reference to a change that will occur in the background.
@@ -734,6 +940,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-quota-group-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-plug-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-slot-schema.json
 - aid: canonical:canonical-auth-groups-api
   name: Canonical Auth Groups API
   description: The auth_groups API from Canonical — 3 operation(s) for auth_groups.
@@ -794,6 +1006,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-auth-group-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-auth-groups-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-auth-group-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-auth-group-post-schema.json
 - aid: canonical:canonical-authentication-api
   name: Canonical Authentication API
   description: The authentication API from Canonical — 4 operation(s) for authentication.
@@ -914,6 +1134,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-system-details-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-snap-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-system-action-install-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-change-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-system-action-create-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-validation-set-schema.json
 - aid: canonical:canonical-authzgroupsservice-api
   name: Canonical Authz Groups Service API
   description: The AuthzGroupsService API from Canonical — 5 operation(s) for authzgroupsservice.
@@ -972,6 +1204,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-apiauthz-groups-list-groups-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authz-groups-list-user-groups-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-authz-groups-list-users-in-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-apiauthz-groups-create-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-apiauthz-groups-get-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-apiauthz-groups-update-group-resp-schema.json
 - aid: canonical:canonical-certificates-api
   name: Canonical Certificates API
   description: The certificates API from Canonical — 4 operation(s) for certificates.
@@ -1032,6 +1276,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-certificates-post-2-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-certificate-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-no-meta-sync-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-certificate-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-certificates-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-response-schema.json
 - aid: canonical:canonical-certification-api
   name: Canonical Certification API
   description: The certification API from Canonical — 1 operation(s) for certification.
@@ -1092,6 +1348,16 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-related-certified-system-exists-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-certification-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-certified-image-exists-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-certified-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-not-certified-response-schema.json
 - aid: canonical:canonical-changes-and-tasks-api
   name: Canonical changes and tasks API
   description: The changes and tasks API from Canonical — 4 operation(s) for changes and tasks.
@@ -1150,6 +1416,10 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-get-changes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-get-change-by-idresponse-schema.json
 - aid: canonical:canonical-checks-api
   name: Canonical Checks API
   description: The checks API from Canonical — 2 operation(s) for checks.
@@ -1210,6 +1480,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-refresh-check-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-check-action-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-get-checks-response-schema.json
 - aid: canonical:canonical-clientsservice-api
   name: Canonical Clients Service API
   description: The ClientsService API from Canonical — 2 operation(s) for clientsservice.
@@ -1268,6 +1544,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-clients-client-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-clients-list-clients-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-clients-create-client-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-clients-get-client-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-clients-update-client-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-clients-remove-client-resp-schema.json
 - aid: canonical:canonical-cluster-api
   name: Canonical Cluster API
   description: The cluster API from Canonical — 7 operation(s) for cluster.
@@ -1328,6 +1616,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-member-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-member-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-member-state-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-groups-post-schema.json
 - aid: canonical:canonical-cluster-groups-api
   name: Canonical Cluster Groups API
   description: The cluster-groups API from Canonical — 3 operation(s) for cluster-groups.
@@ -1388,6 +1688,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-group-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-group-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-group-post-schema.json
 - aid: canonical:canonical-cluster-links-api
   name: Canonical Cluster Links API
   description: The cluster-links API from Canonical — 4 operation(s) for cluster-links.
@@ -1446,6 +1752,16 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-links-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-link-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-link-state-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-link-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-cluster-link-post-schema.json
 - aid: canonical:canonical-config-api
   name: Canonical Config API
   description: The config API from Canonical — 1 operation(s) for config.
@@ -1506,6 +1822,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-no-meta-sync-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-config-post-schema.json
 - aid: canonical:canonical-containers-api
   name: Canonical Containers API
   description: The containers API from Canonical — 6 operation(s) for containers.
@@ -1566,6 +1888,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-container-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-containers-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-container-exec-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-no-meta-sync-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-containers-delete-schema.json
 - aid: canonical:canonical-devices-api
   name: Canonical Devices API
   description: The devices API from Canonical — 3 operation(s) for devices.
@@ -1626,6 +1960,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-device-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-device-certificate-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-patched-device-certificate-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-patched-device-schema.json
 - aid: canonical:canonical-environment-reviews-api
   name: Canonical Environment Reviews API
   description: The environment-reviews API from Canonical — 2 operation(s) for environment-reviews.
@@ -1684,6 +2026,10 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-artefact-build-environment-review-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-environment-review-patch-schema.json
 - aid: canonical:canonical-environments-api
   name: Canonical Environments API
   description: The environments API from Canonical — 3 operation(s) for environments.
@@ -1744,6 +2090,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-environment-reported-issue-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-environment-reported-issue-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-environments-response-schema.json
 - aid: canonical:canonical-events-api
   name: Canonical Events API
   description: The events API from Canonical — 1 operation(s) for events.
@@ -1804,6 +2156,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-event-schema.json
 - aid: canonical:canonical-exec-api
   name: Canonical Exec API
   description: The exec API from Canonical — 1 operation(s) for exec.
@@ -1864,6 +2218,10 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-post-exec-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-post-exec-response-schema.json
 - aid: canonical:canonical-execution-metadata-api
   name: Canonical Execution Metadata API
   description: The execution-metadata API from Canonical — 1 operation(s) for execution-metadata.
@@ -1922,6 +2280,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-execution-metadata-get-response-schema.json
 - aid: canonical:canonical-experimental-api
   name: Canonical Experimental API
   description: Interact with experimental features.
@@ -1980,6 +2340,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-prompting-reply-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-confdb-control-action-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-prompting-rule-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-prompting-prompt-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-prompting-rule-action-add-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-prompting-rule-action-remove-schema.json
 - aid: canonical:canonical-files-api
   name: Canonical Files API
   description: The files API from Canonical — 1 operation(s) for files.
@@ -2040,6 +2412,16 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-read-files-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-post-files-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-post-files-remove-paths-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-post-files-make-dirs-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-list-files-response-schema.json
 - aid: canonical:canonical-groupsservice-api
   name: Canonical Groups Service API
   description: The GroupsService API from Canonical — 8 operation(s) for groupsservice.
@@ -2098,6 +2480,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-apigroups-create-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-apigroups-get-group-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-apigroups-list-groups-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-groups-get-group-identities-resp-schema.json
 - aid: canonical:canonical-hardware-api-hwapi-api
   name: Canonical Hardware API (hwapi) API
   description: The Hardware API (hwapi) API from Canonical — 1 operation(s) for hardware api (hwapi).
@@ -2216,6 +2606,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-get-health-okresponse-schema.json
 - aid: canonical:canonical-identities-api
   name: Canonical Identities API
   description: The identities API from Canonical — 15 operation(s) for identities.
@@ -2276,6 +2668,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-identity-info-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identity-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-tlspost-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identity-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-bearer-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-base-response-schema.json
 - aid: canonical:canonical-identitiesservice-api
   name: Canonical Identities Service API
   description: The IdentitiesService API from Canonical — 2 operation(s) for identitiesservice.
@@ -2334,6 +2738,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-identities-create-identity-body-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-update-identity-body-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-create-identity-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-get-identity-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-list-identities-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identities-update-identity-resp-schema.json
 - aid: canonical:canonical-identity-provider-groups-api
   name: Canonical Identity Provider Groups API
   description: >-
@@ -2394,6 +2810,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-identity-provider-group-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identity-provider-groups-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identity-provider-group-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-identity-provider-group-post-schema.json
 - aid: canonical:canonical-idpsservice-api
   name: Canonical Idps Service API
   description: The IdpsService API from Canonical — 2 operation(s) for idpsservice.
@@ -2452,6 +2876,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-idps-create-idp-body-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-idps-update-idp-body-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-idps-create-idp-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-idps-get-idp-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-idps-list-idps-resp-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-idps-update-idp-resp-schema.json
 - aid: canonical:canonical-images-api
   name: Canonical Images API
   description: The images API from Canonical — 19 operation(s) for images.
@@ -2512,6 +2948,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-image-2-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-images-post-2-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-image-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-image-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-image-export-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-image-aliases-post-schema.json
 - aid: canonical:canonical-instances-api
   name: Canonical Instances API
   description: The instances API from Canonical — 29 operation(s) for instances.
@@ -2572,6 +3020,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-instances-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-instance-full-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-instance-2-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-instance-snapshot-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-instance-post-schema.json
 - aid: canonical:canonical-interfaces-api
   name: Canonical Interfaces API
   description: Display and manage interactions between snaps.
@@ -2630,6 +3090,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-modern-interface-object-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-connection-status-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-legacy-interface-object-schema.json
 - aid: canonical:canonical-internal-api
   name: Canonical Internal API
   description: The internal API from Canonical — 1 operation(s) for internal.
@@ -2690,6 +3156,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-tenant-lookup-tenants-response-schema.json
 - aid: canonical:canonical-issues-api
   name: Canonical Issues API
   description: The issues API from Canonical — 6 operation(s) for issues.
@@ -2750,6 +3218,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-minimal-issue-test-result-attachment-rule-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-issue-test-result-attachment-rule-post-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-issue-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-issue-put-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-issue-attachment-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-issues-get-response-schema.json
 - aid: canonical:canonical-layers-api
   name: Canonical Layers API
   description: The layers API from Canonical — 1 operation(s) for layers.
@@ -2810,6 +3290,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-post-layers-response-schema.json
 - aid: canonical:canonical-localservice-api
   name: Canonical Local Service API
   description: Manages local repositories.
@@ -2868,6 +3350,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-operation-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-local-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-import-local-packages-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-batch-get-locals-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-list-local-packages-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-batch-get-locals-response-schema.json
 - aid: canonical:canonical-logs-api
   name: Canonical Logs API
   description: The logs API from Canonical — 1 operation(s) for logs.
@@ -2928,6 +3422,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-logs-schema.json
 - aid: canonical:canonical-metadata-api
   name: Canonical Metadata API
   description: The Metadata API from Canonical — 1 operation(s) for metadata.
@@ -2986,6 +3482,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-metadata-configuration-schema.json
 - aid: canonical:canonical-metrics-api
   name: Canonical Metrics API
   description: The metrics API from Canonical — 2 operation(s) for metrics.
@@ -3162,6 +3660,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-mirror-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-sync-mirror-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-batch-get-mirrors-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-list-mirror-packages-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-batch-get-mirrors-response-schema.json
 - aid: canonical:canonical-network-acls-api
   name: Canonical Network Acls API
   description: The network-acls API from Canonical — 4 operation(s) for network-acls.
@@ -3222,6 +3732,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-acl-schema.json
 - aid: canonical:canonical-network-allocations-api
   name: Canonical Network Allocations API
   description: The network-allocations API from Canonical — 1 operation(s) for network-allocations.
@@ -3280,6 +3792,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-allocations-schema.json
 - aid: canonical:canonical-network-forwards-api
   name: Canonical Network Forwards API
   description: The network-forwards API from Canonical — 3 operation(s) for network-forwards.
@@ -3338,6 +3852,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-forwards-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-forward-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-forward-put-schema.json
 - aid: canonical:canonical-network-load-balancer-pools-api
   name: Canonical Network Load Balancer Pools API
   description: >-
@@ -3397,6 +3917,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancer-pool-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancer-pools-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancer-pool-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancer-pool-state-schema.json
 - aid: canonical:canonical-network-load-balancers-api
   name: Canonical Network Load Balancers API
   description: >-
@@ -3456,6 +3984,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancer-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancers-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-load-balancer-put-schema.json
 - aid: canonical:canonical-network-peers-api
   name: Canonical Network Peers API
   description: The network-peers API from Canonical — 3 operation(s) for network-peers.
@@ -3514,6 +4048,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-peer-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-peers-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-peer-put-schema.json
 - aid: canonical:canonical-network-zones-api
   name: Canonical Network Zones API
   description: The network-zones API from Canonical — 6 operation(s) for network-zones.
@@ -3574,6 +4114,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-zone-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-zone-records-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-zone-record-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-zone-record-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-zones-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-zone-put-schema.json
 - aid: canonical:canonical-networks-api
   name: Canonical Networks API
   description: The networks API from Canonical — 5 operation(s) for networks.
@@ -3634,6 +4186,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-network-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-state-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-lease-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-networks-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-network-post-schema.json
 - aid: canonical:canonical-nodes-api
   name: Canonical Nodes API
   description: The nodes API from Canonical — 3 operation(s) for nodes.
@@ -3694,6 +4258,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-node-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-nodes-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-node-patch-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-no-meta-sync-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-node-delete-schema.json
 - aid: canonical:canonical-notices-api
   name: Canonical Notices API
   description: The notices API from Canonical — 4 operation(s) for notices.
@@ -3754,6 +4330,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-notice-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-post-notices-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-get-notices-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-get-notice-by-idresponse-schema.json
 - aid: canonical:canonical-notifications-api
   name: Canonical Notifications API
   description: The notifications API from Canonical — 6 operation(s) for notifications.
@@ -3814,6 +4398,10 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-notification-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-notifications-response-schema.json
 - aid: canonical:canonical-oidc-api-api
   name: Canonical Oidc API
   description: The Oidc_Api API from Canonical — 2 operation(s) for oidc_api.
@@ -3931,6 +4519,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-oidcsession-schema.json
 - aid: canonical:canonical-operations-api
   name: Canonical Operations API
   description: The operations API from Canonical — 10 operation(s) for operations.
@@ -3990,6 +4580,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-operation-2-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-operation-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-no-meta-sync-response-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-collection-response-schema.json
 - aid: canonical:canonical-operationservice-api
   name: Canonical Operation Service API
   description: Manages long-running operations.
@@ -4048,6 +4646,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-operation-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-batch-get-operations-request-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-batch-get-operations-response-schema.json
 - aid: canonical:canonical-permissions-api
   name: Canonical Permissions API
   description: The permissions API from Canonical — 3 operation(s) for permissions.
@@ -4108,6 +4712,10 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-permission-info-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-permission-schema.json
 - aid: canonical:canonical-placement-groups-api
   name: Canonical Placement Groups API
   description: The placement-groups API from Canonical — 3 operation(s) for placement-groups.
@@ -4168,6 +4776,12 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-placement-group-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-placement-group-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-placement-groups-post-schema.json
 - aid: canonical:canonical-plan-api
   name: Canonical Plan API
   description: The plan API from Canonical — 1 operation(s) for plan.
@@ -4228,6 +4842,8 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-get-plan-response-schema.json
 - aid: canonical:canonical-profiles-api
   name: Canonical Profiles API
   description: The profiles API from Canonical — 3 operation(s) for profiles.
@@ -4288,6 +4904,14 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-profile-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-profiles-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-profile-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-profile-post-schema.json
 - aid: canonical:canonical-projects-api
   name: Canonical Projects API
   description: The projects API from Canonical — 4 operation(s) for projects.
@@ -4348,6 +4972,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
+  - type: JSONSchema
+    url: json-schema/canonical-project-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-projects-post-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-project-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-project-state-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-project-state-put-schema.json
+  - type: JSONSchema
+    url: json-schema/canonical-project-post-schema.json
 - aid: canonical:canonical-publicationservice-api
   name: Canonical Publication Service API
   description: Manages the publication of Debian artifacts.
@@ -6881,147 +7517,18 @@ apis:
     url: https://canonical.com/anbox-cloud
   - type: SourceCode
     url: https://github.com/canonical/cos-registration-server
-common:
-  - type: AgentSkill
-    url: skills/canonical-snapd-manage-snap.md
-  - type: Overlay
-    url: overlays/canonical-lxd-rest-api-overlay.yaml
-  - type: AgentSkill
-    url: skills/canonical-lxd-provision-instance.md
-  - type: Overlay
-    url: overlays/canonical-ubuntu-security-api-overlay.yaml
-  - type: AgentSkill
-    url: skills/canonical-ubuntu-security-cve-lookup.md
-  - type: Overlay
-    url: overlays/canonical-pebble-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-testflinger-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-hardware-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-identity-platform-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-test-observer-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-anbox-cloud-ams-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-anbox-stream-gateway-api-overlay.yaml
-  - type: Overlay
-    url: overlays/canonical-cos-registration-server-api-overlay.yaml
-  - type: OAuthScopes
-    url: scopes/canonical-scopes.yml
-  - type: Authentication
-    url: authentication/canonical-authentication.yml
-  - type: AgenticAccess
-    url: agentic-access/canonical-agentic-access.yml
-  - type: DomainSecurity
-    url: security/canonical-domain-security.yml
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/canonical
-  - type: Website
-    url: https://canonical.com/
-  - type: UbuntuWebsite
-    url: https://ubuntu.com/
-  - type: Documentation
-    url: https://documentation.ubuntu.com/
-  - type: GitHubOrg
-    url: https://github.com/canonical
-  - type: SnapStore
-    url: https://snapcraft.io/
-  - type: Charmhub
-    url: https://charmhub.io/
-  - type: Launchpad
-    url: https://launchpad.net/
-  - type: DiscourseForum
-    url: https://discourse.ubuntu.com/
-  - type: DataPrivacy
-    url: https://ubuntu.com/legal/data-privacy
-  - type: TermsOfService
-    url: https://ubuntu.com/legal/terms
-  - type: Integrations
-    url: https://canonical.com/partners
-  - url: https://canonical.com/blog/feed/
-    type: Blog
-  - type: Packages
-    url: packages/canonical-packages.yml
-  - type: SDKs
-    url: packages/canonical-packages.yml
-  - type: CLI
-    url: cli/canonical-cli.yml
-  - type: Components
-    url: components/canonical-components.yml
-  - type: Conventions
-    url: conventions/canonical-conventions.yml
-  - type: Idempotency
-    url: conventions/canonical-conventions.yml
-  - type: ErrorCatalog
-    url: errors/canonical-problem-types.yml
-  - type: DataModel
-    url: data-model/canonical-data-model.yml
-  - type: Lifecycle
-    url: lifecycle/canonical-lifecycle.yml
-  - type: Deprecation
-    url: lifecycle/canonical-lifecycle.yml
-  - type: StatusPage
-    url: https://status.canonical.com/
-  - type: ChangeLog
-    url: changelog/canonical-changelog.yml
-  - type: Conformance
-    url: conformance/canonical-conformance.yml
-  - type: Compliance
-    url: security/canonical-trust-center.yml
-  - type: TrustCenter
-    url: security/canonical-trust-center.yml
-  - type: Security
-    url: security/canonical-vulnerability-disclosure.yml
-  - type: VulnerabilityDisclosure
-    url: security/canonical-vulnerability-disclosure.yml
-  - type: WellKnown
-    url: well-known/canonical-well-known.yml
-  - type: SecurityTxt
-    url: well-known/canonical-security.txt
-  - type: LLMsTxt
-    url: llms/canonical-llms.txt
-  - type: Webhooks
-    url: asyncapi/canonical-launchpad-webhooks.yml
-  - type: AgentSkill
-    url: skills/_index.yml
-  - type: Overlay
-    url: overlays/canonical-landscape-debarchive-provider-overlay.yaml
-  - type: Plans
-    url: plans/canonical-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/canonical-rate-limits.yml
-  - type: Pricing
-    url: https://ubuntu.com/pricing/pro
-  - type: SignUp
-    url: https://ubuntu.com/pro/subscribe
-  - type: Login
-    url: https://login.ubuntu.com/
-  - type: Support
-    url: https://ubuntu.com/support
-  - type: PrivacyPolicy
-    url: https://ubuntu.com/legal/data-privacy
-  - type: APIReference
-    url: https://documentation.ubuntu.com/lxd/latest/rest-api/
-  - type: GettingStarted
-    url: https://ubuntu.com/tutorials
-  - type: GitHubOrganization
-    url: https://github.com/canonical
 integrations:
-  - name: Desktop Desktop, laptops and workstations
-  - name: Channel/reseller Partners on every continent
-  - name: IoT devices Robots, edge, development boards
-  - name: IHV/OEM Data centres
-  - name: ISVs Independent Software Vendors
-  - name: GSIs Global Systems Integrators
-  - name: Silicon CPUs, boards and SoCs
-  - name: Become a partner
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- name: Desktop Desktop, laptops and workstations
+- name: Channel/reseller Partners on every continent
+- name: IoT devices Robots, edge, development boards
+- name: IHV/OEM Data centres
+- name: ISVs Independent Software Vendors
+- name: GSIs Global Systems Integrators
+- name: Silicon CPUs, boards and SoCs
+- name: Become a partner
 x-enrichment:
-  date: '2026-09-05'
+  date: '2026-10-04'
   status: enriched
-  artifacts_added: 50
-  pass: local-v3
+  artifacts_added: 184
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local
