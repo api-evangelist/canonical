@@ -6364,6 +6364,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Authentication
+  tags_raw:
   - Oauth2
   properties:
   - type: OpenAPI
@@ -6712,6 +6714,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - Addons
+  tags_raw:
   - Add Ons
   properties:
   - type: OpenAPI
@@ -6771,6 +6775,8 @@ apis:
   humanURL: https://api.snapcraft.io/docs/
   baseURL: https://api.snapcraft.io
   tags:
+  - AuthenticationService
+  tags_raw:
   - Authentication Service
   properties:
   - type: OpenAPI
