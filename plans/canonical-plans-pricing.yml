@@ -120,3 +120,41 @@ sign_up: https://ubuntu.com/pro/subscribe
 pricing_url: https://ubuntu.com/pricing/pro
 probed: '2026-09-05'
 http_status: 200
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: Ubuntu Pro (Personal)
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - year
+  - name: Ubuntu Pro (Community)
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - year
+  - name: Ubuntu Pro — Personal Workstation
+    access: paid
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Ubuntu Pro — Server
+    access: paid
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
