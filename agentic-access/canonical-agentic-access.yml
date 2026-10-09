@@ -1,4 +1,4 @@
-generated: '2026-09-16'
+generated: '2026-09-23'
 method: generated
 source: openapi/canonical-add-ons-api-openapi.yml, openapi/canonical-appauthorizationservice-api-openapi.yml,
   openapi/canonical-application-api-openapi.yml, openapi/canonical-applications-api-openapi.yml,
@@ -54,11 +54,11 @@ description: Recommended x-agentic-access execution contracts, classified heuris
 summary:
   operations: 812
   by_action_class:
-    connected: 398
-    acting: 414
+    connected: 399
+    acting: 413
   by_consequence:
-    read: 398
-    write: 408
+    read: 399
+    write: 407
     safety-critical: 3
     physical: 3
   human_in_the_loop_required: 3
@@ -8709,18 +8709,12 @@ operations:
   method: post
   operationId: postApiV1SnapsAuthRequestId
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /1.0/status
   method: get
   operationId: handle-get-status
