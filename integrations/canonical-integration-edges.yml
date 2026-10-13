@@ -1,0 +1,22 @@
+generated: '2026-10-13'
+method: searched
+checked:
+- https://aws.amazon.com/marketplace/
+marketplace_apps: []
+edges:
+- partner_name: AWS Marketplace
+  partner: amazon-web-services
+  partner_match: aggregator
+  type: marketplace
+  marketplace: aws-marketplace
+  channel: distribution
+  relationship: platform-app
+  direction: provider-built
+  evidence: https://aws.amazon.com/marketplace/seller-profile?id=565feec9-3d43-413e-9760-c651546613f2
+  listing_count: 2
+  apps:
+  - Ubuntu Advantage - Standard
+  - Ubuntu Advantage - Advanced
+  seller_name: Canonical Group Limited
+  detected_by: sweep-cloud-marketplaces.py
+  detected: '2026-10-13'
