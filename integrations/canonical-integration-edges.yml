@@ -2,6 +2,12 @@ generated: '2026-10-13'
 method: searched
 checked:
 - https://aws.amazon.com/marketplace/
+- https://marketplace.odva.org/organizations
+- https://opcfoundation.org/products/
+- https://repo.ros2.org/rosdistro_cache/humble-cache.yaml.gz
+- https://repo.ros2.org/rosdistro_cache/jazzy-cache.yaml.gz
+- https://repo.ros2.org/rosdistro_cache/kilted-cache.yaml.gz
+- https://repo.ros2.org/rosdistro_cache/rolling-cache.yaml.gz
 marketplace_apps: []
 edges:
 - partner_name: AWS Marketplace
@@ -20,3 +26,39 @@ edges:
   seller_name: Canonical Group Limited
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: Open Robotics (ROS package index)
+  partner: null
+  partner_match: register
+  type: register
+  direction: partner-built
+  category: ROS packages
+  evidence: https://github.com/canonical/ros_snapd_interfaces.git
+  channel: standard-directory
+  relationship: standard-participant
+  contract_reference:
+    register: ROS 2 rosdistro (repo.ros2.org/rosdistro_cache)
+    spec_file: null
+    standard: ROS 2
+    role: ros-package-maintainer
+    matched_domain: canonical.com
+    matched_by: domain
+    source_owner: canonical
+    distros:
+    - humble
+    - jazzy
+    - kilted
+    - rolling
+    packages: 4
+    sample_packages:
+    - ros2launch_security
+    - ros2launch_security_examples
+    - ros2plugin
+    - ros_snapd_interfaces
+    signal_note: 'participation only: packages/distros are context, never read'
+    detected_by: sweep-industrial-robotics.py
+    detected: '2026-10-15'
+  detected_by: sweep-industrial-robotics.py
+  first_seen: '2026-10-15'
+source:
+- https://opcfoundation.org/products/
+- https://marketplace.odva.org/organizations
