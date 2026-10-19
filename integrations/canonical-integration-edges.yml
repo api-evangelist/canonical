@@ -1,16 +1,23 @@
 generated: '2026-10-13'
 method: searched
 checked:
+- https://api.nuget.org/v3
 - https://aws.amazon.com/marketplace/
+- https://crates.io/api/v1
 - https://focus.finops.org/data-generators/
 - https://github.com/cncf/k8s-conformance
 - https://github.com/cncf/landscape
 - https://marketplace.odva.org/organizations
 - https://opcfoundation.org/products/
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
 - https://repo.ros2.org/rosdistro_cache/humble-cache.yaml.gz
 - https://repo.ros2.org/rosdistro_cache/jazzy-cache.yaml.gz
 - https://repo.ros2.org/rosdistro_cache/kilted-cache.yaml.gz
 - https://repo.ros2.org/rosdistro_cache/rolling-cache.yaml.gz
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 marketplace_apps: []
 edges:
 - partner_name: AWS Marketplace
@@ -94,6 +101,102 @@ edges:
     detected: '2026-10-15'
   detected_by: sweep-cloud-native.py
   first_seen: '2026-10-15'
+- partner_name: Go module proxy
+  partner: null
+  partner_match: null
+  type: register
+  direction: provider-built
+  category: official SDK (Go)
+  evidence: https://pkg.go.dev/github.com/canonical/gomaasclient
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: Go module proxy (public registry JSON)
+    spec_file: null
+    language: Go
+    packages:
+    - name: github.com/canonical/gomaasclient
+      version: v0.20.0
+      released: '2026-02-18'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/canonical/gomaasclient
+      repo_leg: github-org:canonical
+      publisher_leg: org:canonical
+      matched_by: github-org
+    - name: github.com/canonical/pebble
+      version: v1.33.0
+      released: '2026-09-28'
+      released_field: Time
+      lapsed: false
+      page: https://pkg.go.dev/github.com/canonical/pebble
+      repo_leg: github-org:canonical
+      publisher_leg: org:canonical
+      matched_by: github-org
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@canonical/maas-react-components
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@canonical/maas-react-components'
+      version: 2.8.4
+      released: '2026-09-10'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@canonical/maas-react-components
+      repo_leg: github-org:canonical
+      publisher_leg: email:canonical.com
+      matched_by: domain
+    - name: '@canonical/react-components'
+      version: 4.14.0
+      released: '2026-10-16'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@canonical/react-components
+      repo_leg: github-org:canonical
+      publisher_leg: email:canonical.com
+      matched_by: domain
+    - name: '@canonical/store-components'
+      version: 0.57.1
+      released: '2026-09-25'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@canonical/store-components
+      repo_leg: github-org:canonical
+      publisher_leg: email:canonical.com
+      matched_by: domain
+    - name: vanilla-framework
+      version: 4.61.0
+      released: '2026-10-16'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/vanilla-framework
+      repo_leg: github-org:canonical
+      publisher_leg: email:canonical.com
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 source:
 - https://opcfoundation.org/products/
 - https://marketplace.odva.org/organizations
