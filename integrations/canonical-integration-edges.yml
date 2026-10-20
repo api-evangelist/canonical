@@ -36,71 +36,6 @@ edges:
   seller_name: Canonical Group Limited
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
-- partner_name: Open Robotics (ROS package index)
-  partner: null
-  partner_match: register
-  type: register
-  direction: partner-built
-  category: ROS packages
-  evidence: https://github.com/canonical/ros_snapd_interfaces.git
-  channel: standard-directory
-  relationship: standard-participant
-  contract_reference:
-    register: ROS 2 rosdistro (repo.ros2.org/rosdistro_cache)
-    spec_file: null
-    standard: ROS 2
-    role: ros-package-maintainer
-    matched_domain: canonical.com
-    matched_by: domain
-    source_owner: canonical
-    distros:
-    - humble
-    - jazzy
-    - kilted
-    - rolling
-    packages: 4
-    sample_packages:
-    - ros2launch_security
-    - ros2launch_security_examples
-    - ros2plugin
-    - ros_snapd_interfaces
-    signal_note: 'participation only: packages/distros are context, never read'
-    detected_by: sweep-industrial-robotics.py
-    detected: '2026-10-15'
-  detected_by: sweep-industrial-robotics.py
-  first_seen: '2026-10-15'
-- partner_name: CNCF (Cloud Native Landscape)
-  partner: cncf
-  partner_match: register
-  type: register
-  direction: partner-built
-  category: Cloud native landscape
-  evidence: https://github.com/cncf/landscape/blob/3a7d378b1824b82e729a453bb03fa6f1e37557e1/landscape.yml
-  channel: standard-directory
-  relationship: standard-participant
-  contract_reference:
-    register: CNCF Cloud Native Landscape (github.com/cncf/landscape landscape.yml @3a7d378b18)
-    spec_file: null
-    standard: Cloud Native (CNCF)
-    role: cncf-member (Silver)
-    registered_name: Canonical
-    registered_names:
-    - Canonical
-    website: https://canonical.com/
-    matched_domain: canonical.com
-    matched_by: domain
-    member_tier: Silver
-    joined: '2017-01-01'
-    end_user: false
-    cncf_projects: []
-    landscape_categories: []
-    landscape_entries: 0
-    signal_note: 'participation only: a landscape listing is standard-participant evidence, not depth. Entries,
-      categories, tier and projects are CONTEXT, never read (breadth is not credit)'
-    detected_by: sweep-cloud-native.py
-    detected: '2026-10-15'
-  detected_by: sweep-cloud-native.py
-  first_seen: '2026-10-15'
 - partner_name: Go module proxy
   partner: null
   partner_match: null
@@ -197,6 +132,71 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
+- partner_name: Open Robotics (ROS package index)
+  partner: null
+  partner_match: register
+  type: register
+  direction: partner-built
+  category: ROS packages
+  evidence: https://github.com/canonical/ros_snapd_interfaces.git
+  channel: standard-directory
+  relationship: standard-participant
+  contract_reference:
+    register: ROS 2 rosdistro (repo.ros2.org/rosdistro_cache)
+    spec_file: null
+    standard: ROS 2
+    role: ros-package-maintainer
+    matched_domain: canonical.com
+    matched_by: domain
+    source_owner: canonical
+    distros:
+    - humble
+    - jazzy
+    - kilted
+    - rolling
+    packages: 4
+    sample_packages:
+    - ros2launch_security
+    - ros2launch_security_examples
+    - ros2plugin
+    - ros_snapd_interfaces
+    signal_note: 'participation only: packages/distros are context, never read'
+    detected_by: sweep-industrial-robotics.py
+    detected: '2026-10-19'
+  detected_by: sweep-industrial-robotics.py
+  first_seen: '2026-10-15'
+- partner_name: CNCF (Cloud Native Landscape)
+  partner: cncf
+  partner_match: register
+  type: register
+  direction: partner-built
+  category: Cloud native landscape
+  evidence: https://github.com/cncf/landscape/blob/42dd4cd91dad8ec8558ac02467a43f0805b9957a/landscape.yml
+  channel: standard-directory
+  relationship: standard-participant
+  contract_reference:
+    register: CNCF Cloud Native Landscape (github.com/cncf/landscape landscape.yml @42dd4cd91d)
+    spec_file: null
+    standard: Cloud Native (CNCF)
+    role: cncf-member (Silver)
+    registered_name: Canonical
+    registered_names:
+    - Canonical
+    website: https://canonical.com/
+    matched_domain: canonical.com
+    matched_by: domain
+    member_tier: Silver
+    joined: '2017-01-01'
+    end_user: false
+    cncf_projects: []
+    landscape_categories: []
+    landscape_entries: 0
+    signal_note: 'participation only: a landscape listing is standard-participant evidence, not depth. Entries,
+      categories, tier and projects are CONTEXT, never read (breadth is not credit)'
+    detected_by: sweep-cloud-native.py
+    detected: '2026-10-19'
+  detected_by: sweep-cloud-native.py
+  first_seen: '2026-10-15'
 source:
 - https://opcfoundation.org/products/
 - https://marketplace.odva.org/organizations
