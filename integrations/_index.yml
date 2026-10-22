@@ -230,3 +230,38 @@
     detected: '2026-10-20'
   status: not-a-workflow
   arazzo: null
+- slug: canonical-common-criteria-portal-ccra-certified-products
+  label: Common Criteria Portal (CCRA certified products)
+  partner_name: Common Criteria Portal (CCRA certified products)
+  category: Common Criteria (ISO/IEC 15408) product certification
+  type: register
+  channel: standard-directory
+  evidence: https://www.commoncriteriaportal.org/products/
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Common Criteria Portal certified products + archived certificates (commoncriteriaportal.org/products/certified_products.csv,
+      certified_products-archived.csv)
+    standard: ISO/IEC 15408 Common Criteria for Information Technology Security Evaluation (CCRA)
+    spec_file: null
+    role: cc-certified-manufacturer
+    registered_name: Canonical Group Limited
+    matched_domain: canonical.com
+    matched_by: domain
+    certified_products:
+    - product: Operating Systems
+      product_type: Operating Systems
+      standard: ISO/IEC 15408 Common Criteria for Information Technology Security Evaluation (CCRA)
+      lapsed: true
+      partner_tier: EAL2,ALC_FLR.3
+      schemes:
+      - SE
+    signal_note: 'certified_products = one entry per Common Criteria product CATEGORY held (highest EAL for that
+      category in partner_tier; a category held only among archived certificates is lapsed: true); certificate and
+      product counts are context, never counted'
+    detected_by: sweep-common-criteria-certified-products.py
+    detected: '2026-10-21'
+    identity: wikidata Q39064 'Canonical Ltd.' P856 https://canonical.com
+    identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
+  status: not-a-workflow
+  arazzo: null
