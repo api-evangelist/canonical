@@ -419,7 +419,6 @@ apis:
   description: >-
     The AppAuthorizationService API from Canonical — 3 operation(s) for appauthorizationservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - AppAuthorizationService
   properties:
@@ -551,7 +550,6 @@ apis:
   name: Canonical Applications API
   description: The applications API from Canonical — 20 operation(s) for applications.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Application
   tags_raw:
@@ -623,7 +621,6 @@ apis:
   name: Canonical Apps API
   description: The Apps API from Canonical — 2 operation(s) for apps.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Application
   tags_raw:
@@ -691,7 +688,6 @@ apis:
   name: Canonical Artefact Builds API
   description: The artefact-builds API from Canonical — 1 operation(s) for artefact-builds.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - artefact-builds
   properties:
@@ -752,7 +748,6 @@ apis:
   description: >-
     The artefact-matching-rules API from Canonical — 2 operation(s) for artefact-matching-rules.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - artefact-matching-rules
   properties:
@@ -816,7 +811,6 @@ apis:
   name: Canonical Artefacts API
   description: The artefacts API from Canonical — 8 operation(s) for artefacts.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - artefacts
   properties:
@@ -886,7 +880,6 @@ apis:
   name: Canonical Asynchronous API
   description: Return the reference to a change that will occur in the background.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Asynchronous
   properties:
@@ -950,7 +943,6 @@ apis:
   name: Canonical Auth Groups API
   description: The auth_groups API from Canonical — 3 operation(s) for auth_groups.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Auth Groups
   tags_raw:
@@ -1018,7 +1010,6 @@ apis:
   name: Canonical Authentication API
   description: The authentication API from Canonical — 4 operation(s) for authentication.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Authentication
   tags_raw:
@@ -1078,7 +1069,6 @@ apis:
   name: Canonical Authentication Required API
   description: Access is restricted to the root user.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Authentication Required
   tags_raw:
@@ -1150,7 +1140,6 @@ apis:
   name: Canonical Authz Groups Service API
   description: The AuthzGroupsService API from Canonical — 5 operation(s) for authzgroupsservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - AuthzGroupsService
   properties:
@@ -1220,7 +1209,6 @@ apis:
   name: Canonical Certificates API
   description: The certificates API from Canonical — 4 operation(s) for certificates.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Certificates
   tags_raw:
@@ -1292,7 +1280,6 @@ apis:
   name: Canonical Certification API
   description: The certification API from Canonical — 1 operation(s) for certification.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Certification
   tags_raw:
@@ -1362,7 +1349,6 @@ apis:
   name: Canonical changes and tasks API
   description: The changes and tasks API from Canonical — 4 operation(s) for changes and tasks.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - changes and tasks
   properties:
@@ -1424,7 +1410,6 @@ apis:
   name: Canonical Checks API
   description: The checks API from Canonical — 2 operation(s) for checks.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Checks
   tags_raw:
@@ -1490,7 +1475,6 @@ apis:
   name: Canonical Clients Service API
   description: The ClientsService API from Canonical — 2 operation(s) for clientsservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - ClientsService
   properties:
@@ -1560,7 +1544,6 @@ apis:
   name: Canonical Cluster API
   description: The cluster API from Canonical — 7 operation(s) for cluster.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Cluster
   tags_raw:
@@ -1632,7 +1615,6 @@ apis:
   name: Canonical Cluster Groups API
   description: The cluster-groups API from Canonical — 3 operation(s) for cluster-groups.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - ClusterGroups
   tags_raw:
@@ -1698,7 +1680,6 @@ apis:
   name: Canonical Cluster Links API
   description: The cluster-links API from Canonical — 4 operation(s) for cluster-links.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - cluster-links
   properties:
@@ -1766,7 +1747,6 @@ apis:
   name: Canonical Config API
   description: The config API from Canonical — 1 operation(s) for config.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Config
   tags_raw:
@@ -1832,7 +1812,6 @@ apis:
   name: Canonical Containers API
   description: The containers API from Canonical — 6 operation(s) for containers.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Containers
   tags_raw:
@@ -1904,7 +1883,6 @@ apis:
   name: Canonical Devices API
   description: The devices API from Canonical — 3 operation(s) for devices.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Devices
   tags_raw:
@@ -1972,7 +1950,6 @@ apis:
   name: Canonical Environment Reviews API
   description: The environment-reviews API from Canonical — 2 operation(s) for environment-reviews.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - environment-reviews
   properties:
@@ -2034,7 +2011,6 @@ apis:
   name: Canonical Environments API
   description: The environments API from Canonical — 3 operation(s) for environments.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Environment
   tags_raw:
@@ -2100,7 +2076,6 @@ apis:
   name: Canonical Events API
   description: The events API from Canonical — 1 operation(s) for events.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Event
   tags_raw:
@@ -2162,7 +2137,6 @@ apis:
   name: Canonical Exec API
   description: The exec API from Canonical — 1 operation(s) for exec.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Exec
   tags_raw:
@@ -2226,7 +2200,6 @@ apis:
   name: Canonical Execution Metadata API
   description: The execution-metadata API from Canonical — 1 operation(s) for execution-metadata.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - execution-metadata
   properties:
@@ -2286,7 +2259,6 @@ apis:
   name: Canonical Experimental API
   description: Interact with experimental features.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Experimental
   properties:
@@ -2356,7 +2328,6 @@ apis:
   name: Canonical Files API
   description: The files API from Canonical — 1 operation(s) for files.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - File
   tags_raw:
@@ -2426,7 +2397,6 @@ apis:
   name: Canonical Groups Service API
   description: The GroupsService API from Canonical — 8 operation(s) for groupsservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - GroupsService
   properties:
@@ -2492,7 +2462,6 @@ apis:
   name: Canonical Hardware API (hwapi) API
   description: The Hardware API (hwapi) API from Canonical — 1 operation(s) for hardware api (hwapi).
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Hardware API (hwapi)
   properties:
@@ -2550,7 +2519,6 @@ apis:
   name: Canonical Health API
   description: The health API from Canonical — 4 operation(s) for health.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Health
   tags_raw:
@@ -2612,7 +2580,6 @@ apis:
   name: Canonical Identities API
   description: The identities API from Canonical — 15 operation(s) for identities.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Identities
   tags_raw:
@@ -2684,7 +2651,6 @@ apis:
   name: Canonical Identities Service API
   description: The IdentitiesService API from Canonical — 2 operation(s) for identitiesservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - IdentitiesService
   properties:
@@ -2755,7 +2721,6 @@ apis:
   description: >-
     The identity_provider_groups API from Canonical — 3 operation(s) for identity_provider_groups.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags: []
   tags_raw:
   - identity_provider_groups
@@ -2822,7 +2787,6 @@ apis:
   name: Canonical Idps Service API
   description: The IdpsService API from Canonical — 2 operation(s) for idpsservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - IdpsService
   properties:
@@ -2892,7 +2856,6 @@ apis:
   name: Canonical Images API
   description: The images API from Canonical — 19 operation(s) for images.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Image
   tags_raw:
@@ -2964,7 +2927,6 @@ apis:
   name: Canonical Instances API
   description: The instances API from Canonical — 29 operation(s) for instances.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Instances
   tags_raw:
@@ -3036,7 +2998,6 @@ apis:
   name: Canonical Interfaces API
   description: Display and manage interactions between snaps.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Interfaces
   properties:
@@ -3100,7 +3061,6 @@ apis:
   name: Canonical Internal API
   description: The internal API from Canonical — 1 operation(s) for internal.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Internal
   tags_raw:
@@ -3162,7 +3122,6 @@ apis:
   name: Canonical Issues API
   description: The issues API from Canonical — 6 operation(s) for issues.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Issues
   tags_raw:
@@ -3234,7 +3193,6 @@ apis:
   name: Canonical Layers API
   description: The layers API from Canonical — 1 operation(s) for layers.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Layers
   tags_raw:
@@ -3296,7 +3254,6 @@ apis:
   name: Canonical Local Service API
   description: Manages local repositories.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - LocalService
   properties:
@@ -3366,7 +3323,6 @@ apis:
   name: Canonical Logs API
   description: The logs API from Canonical — 1 operation(s) for logs.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Logs
   tags_raw:
@@ -3428,7 +3384,6 @@ apis:
   name: Canonical Metadata API
   description: The Metadata API from Canonical — 1 operation(s) for metadata.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Metadata
   properties:
@@ -3488,7 +3443,6 @@ apis:
   name: Canonical Metrics API
   description: The metrics API from Canonical — 2 operation(s) for metrics.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Metrics
   tags_raw:
@@ -3548,7 +3502,6 @@ apis:
   name: Canonical Metrics Service API
   description: The MetricsService API from Canonical — 1 operation(s) for metricsservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - MetricsService
   properties:
@@ -3606,7 +3559,6 @@ apis:
   name: Canonical Mirror Service API
   description: Methods for managing repository mirrors.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - MirrorService
   properties:
@@ -3676,7 +3628,6 @@ apis:
   name: Canonical Network Acls API
   description: The network-acls API from Canonical — 4 operation(s) for network-acls.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Network ACLs
   tags_raw:
@@ -3738,7 +3689,6 @@ apis:
   name: Canonical Network Allocations API
   description: The network-allocations API from Canonical — 1 operation(s) for network-allocations.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - network-allocations
   properties:
@@ -3798,7 +3748,6 @@ apis:
   name: Canonical Network Forwards API
   description: The network-forwards API from Canonical — 3 operation(s) for network-forwards.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - network-forwards
   properties:
@@ -3863,7 +3812,6 @@ apis:
   description: >-
     The network-load-balancer-pools API from Canonical — 3 operation(s) for network-load-balancer-pools.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - network-load-balancer-pools
   properties:
@@ -3930,7 +3878,6 @@ apis:
   description: >-
     The network-load-balancers API from Canonical — 3 operation(s) for network-load-balancers.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - network-load-balancers
   properties:
@@ -3994,7 +3941,6 @@ apis:
   name: Canonical Network Peers API
   description: The network-peers API from Canonical — 3 operation(s) for network-peers.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - network-peers
   properties:
@@ -4058,7 +4004,6 @@ apis:
   name: Canonical Network Zones API
   description: The network-zones API from Canonical — 6 operation(s) for network-zones.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Network Zones
   tags_raw:
@@ -4130,7 +4075,6 @@ apis:
   name: Canonical Networks API
   description: The networks API from Canonical — 5 operation(s) for networks.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Networks
   tags_raw:
@@ -4202,7 +4146,6 @@ apis:
   name: Canonical Nodes API
   description: The nodes API from Canonical — 3 operation(s) for nodes.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Node
   tags_raw:
@@ -4274,7 +4217,6 @@ apis:
   name: Canonical Notices API
   description: The notices API from Canonical — 4 operation(s) for notices.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Notices
   tags_raw:
@@ -4342,7 +4284,6 @@ apis:
   name: Canonical Notifications API
   description: The notifications API from Canonical — 6 operation(s) for notifications.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Notification
   tags_raw:
@@ -4406,7 +4347,7 @@ apis:
   name: Canonical Oidc API
   description: The Oidc_Api API from Canonical — 2 operation(s) for oidc_api.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Oidc_Api
   properties:
@@ -4464,7 +4405,6 @@ apis:
   name: Canonical Oidc Sessions API
   description: The oidc_sessions API from Canonical — 3 operation(s) for oidc_sessions.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags: []
   tags_raw:
   - oidc_sessions
@@ -4525,7 +4465,6 @@ apis:
   name: Canonical Operations API
   description: The operations API from Canonical — 10 operation(s) for operations.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags: []
   tags_raw:
   - operations
@@ -4592,7 +4531,6 @@ apis:
   name: Canonical Operation Service API
   description: Manages long-running operations.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - OperationService
   properties:
@@ -4656,7 +4594,6 @@ apis:
   name: Canonical Permissions API
   description: The permissions API from Canonical — 3 operation(s) for permissions.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Permissions
   tags_raw:
@@ -4720,7 +4657,6 @@ apis:
   name: Canonical Placement Groups API
   description: The placement-groups API from Canonical — 3 operation(s) for placement-groups.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Placement Groups
   tags_raw:
@@ -4786,7 +4722,6 @@ apis:
   name: Canonical Plan API
   description: The plan API from Canonical — 1 operation(s) for plan.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Plan
   tags_raw:
@@ -4848,7 +4783,6 @@ apis:
   name: Canonical Profiles API
   description: The profiles API from Canonical — 3 operation(s) for profiles.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Profiles
   tags_raw:
@@ -4916,7 +4850,6 @@ apis:
   name: Canonical Projects API
   description: The projects API from Canonical — 4 operation(s) for projects.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Project
   tags_raw:
@@ -4988,7 +4921,6 @@ apis:
   name: Canonical Publication Service API
   description: Manages the publication of Debian artifacts.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - PublicationService
   properties:
@@ -5046,7 +4978,6 @@ apis:
   name: Canonical Publication Target Service API
   description: Manages the storage destinations for publishing Debian archives.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - PublicationTargetService
   properties:
@@ -5164,7 +5095,6 @@ apis:
   name: Canonical Replicators API
   description: The replicators API from Canonical — 4 operation(s) for replicators.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - replicators
   properties:
@@ -5222,7 +5152,6 @@ apis:
   name: Canonical Reports API
   description: The reports API from Canonical — 2 operation(s) for reports.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Reports
   tags_raw:
@@ -5282,7 +5211,6 @@ apis:
   name: Canonical Roles Service API
   description: The RolesService API from Canonical — 5 operation(s) for rolesservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - RolesService
   properties:
@@ -5340,7 +5268,6 @@ apis:
   name: Canonical Root API
   description: Requires the user to authenticate with root access.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Root
   properties:
@@ -5398,7 +5325,6 @@ apis:
   name: Canonical Schema API
   description: The schema API from Canonical — 1 operation(s) for schema.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Schema
   tags_raw:
@@ -5458,7 +5384,6 @@ apis:
   name: Canonical Schemas Service API
   description: The SchemasService API from Canonical — 3 operation(s) for schemasservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - SchemasService
   properties:
@@ -5516,7 +5441,6 @@ apis:
   name: Canonical Security API
   description: The Security API from Canonical — 15 operation(s) for security.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Security
   properties:
@@ -5574,7 +5498,6 @@ apis:
   name: Canonical Sentry Debug API
   description: The Sentry Debug API from Canonical — 1 operation(s) for sentry debug.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Sentry Debug
   properties:
@@ -5632,7 +5555,6 @@ apis:
   name: Canonical Server API
   description: The server API from Canonical — 5 operation(s) for server.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Servers
   tags_raw:
@@ -5692,7 +5614,6 @@ apis:
   name: Canonical Service API
   description: The service API from Canonical — 2 operation(s) for service.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Services
   tags_raw:
@@ -5752,7 +5673,6 @@ apis:
   name: Canonical Services API
   description: The services API from Canonical — 1 operation(s) for services.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Services
   tags_raw:
@@ -5872,7 +5792,6 @@ apis:
   name: Canonical Signals API
   description: The signals API from Canonical — 1 operation(s) for signals.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Signals
   tags_raw:
@@ -5992,7 +5911,6 @@ apis:
   name: Canonical Status Service API
   description: The StatusService API from Canonical — 2 operation(s) for statusservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - StatusService
   properties:
@@ -6050,7 +5968,6 @@ apis:
   name: Canonical Storage API
   description: The storage API from Canonical — 29 operation(s) for storage.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Storage
   tags_raw:
@@ -6110,7 +6027,6 @@ apis:
   name: Canonical system info API
   description: The system info API from Canonical — 1 operation(s) for system info.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - System Info
   tags_raw:
@@ -6170,7 +6086,6 @@ apis:
   name: Canonical Tasks API
   description: The tasks API from Canonical — 1 operation(s) for tasks.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Task
   tags_raw:
@@ -6230,7 +6145,6 @@ apis:
   name: Canonical Teams API
   description: The teams API from Canonical — 3 operation(s) for teams.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Team
   tags_raw:
@@ -6290,7 +6204,6 @@ apis:
   name: Canonical Tenant Service API
   description: The TenantService API from Canonical — 8 operation(s) for tenantservice.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - TenantService
   properties:
@@ -6348,7 +6261,6 @@ apis:
   name: Canonical Test Cases API
   description: The test-cases API from Canonical — 3 operation(s) for test-cases.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Test Cases
   tags_raw:
@@ -6408,7 +6320,6 @@ apis:
   name: Canonical Test Executions API
   description: The test-executions API from Canonical — 10 operation(s) for test-executions.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Test Executions
   tags_raw:
@@ -6468,7 +6379,6 @@ apis:
   name: Canonical Test Observer API
   description: The Test Observer API from Canonical — 1 operation(s) for test observer.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Test Observer
   properties:
@@ -6526,7 +6436,6 @@ apis:
   name: Canonical Test Plans API
   description: The test-plans API from Canonical — 1 operation(s) for test-plans.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Test Plans
   tags_raw:
@@ -6586,7 +6495,6 @@ apis:
   name: Canonical Test Results API
   description: The test-results API from Canonical — 1 operation(s) for test-results.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Test Results
   tags_raw:
@@ -6646,7 +6554,6 @@ apis:
   name: Canonical Users API
   description: The users API from Canonical — 3 operation(s) for users.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - User
   tags_raw:
@@ -6706,7 +6613,6 @@ apis:
   name: Canonical Version API
   description: The Version API from Canonical — 1 operation(s) for version.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Version
   properties:
@@ -6764,7 +6670,6 @@ apis:
   name: Canonical Warnings API
   description: The warnings API from Canonical — 3 operation(s) for warnings.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Warnings
   tags_raw:
@@ -6824,7 +6729,7 @@ apis:
   name: Canonical Agents API
   description: The Agents API from Canonical — 6 operation(s) for agents.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Agents
   properties:
@@ -6882,7 +6787,7 @@ apis:
   name: Canonical Client Permissions API
   description: The Client Permissions API from Canonical — 2 operation(s) for client permissions.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Client Permissions
   properties:
@@ -6940,7 +6845,7 @@ apis:
   name: Canonical Job API
   description: The Job API from Canonical — 7 operation(s) for job.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Job
   properties:
@@ -6998,7 +6903,7 @@ apis:
   name: Canonical Oauth2 API
   description: The Oauth2 API from Canonical — 3 operation(s) for oauth2.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Authentication
   tags_raw:
@@ -7058,7 +6963,7 @@ apis:
   name: Canonical Queues API
   description: The Queues API from Canonical — 3 operation(s) for queues.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Queues
   properties:
@@ -7116,7 +7021,7 @@ apis:
   name: Canonical Restricted Queues API
   description: The Restricted Queues API from Canonical — 2 operation(s) for restricted queues.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Restricted Queues
   properties:
@@ -7174,7 +7079,7 @@ apis:
   name: Canonical Result API
   description: The Result API from Canonical — 4 operation(s) for result.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Result
   properties:
@@ -7232,7 +7137,7 @@ apis:
   name: Canonical Secrets API
   description: The Secrets API from Canonical — 1 operation(s) for secrets.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Secrets
   properties:
@@ -7290,7 +7195,7 @@ apis:
   name: Canonical Testflinger API
   description: The Testflinger API API from Canonical — 1 operation(s) for testflinger api.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
+  baseURL: https://testflinger.ps7.canonical.com/
   tags:
   - Testflinger API
   properties:
@@ -7348,7 +7253,6 @@ apis:
   name: Canonical Add Ons API
   description: The Add Ons API from Canonical — 4 operation(s) for add ons.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Addons
   tags_raw:
@@ -7409,7 +7313,6 @@ apis:
   description: >-
     The Authentication Service API from Canonical — 4 operation(s) for authentication service.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - AuthenticationService
   tags_raw:
@@ -7469,7 +7372,6 @@ apis:
   name: Canonical Open Access API
   description: Do not require the user to authenticate.
   humanURL: https://api.snapcraft.io/docs/
-  baseURL: https://api.snapcraft.io
   tags:
   - Open Access
   properties:
