@@ -63,127 +63,718 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  hosts/canonical-hosts.yml:
+    method: derived
+    evidence: declared in the artifact
+  integrations/_index.yml:
     method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T125852.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T133943.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T143147.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T154045.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+    evidence: carries an API Evangelist house phrase
+  integrations/canonical-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  json-ld/canonical-context.jsonld:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-api-applications-get-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apiauthz-groups-create-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apiauthz-groups-get-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apiauthz-groups-list-groups-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apiauthz-groups-update-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apigroups-create-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apigroups-get-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-apigroups-list-groups-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-app-action-restart-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-app-action-start-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-app-action-stop-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-app-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-application-patch-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-application-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-application-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-applications-delete-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-build-environment-review-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-build-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-matching-rule-patch-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-matching-rule-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-matching-rule-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-patch-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-artefact-search-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-assertion-result-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-auth-group-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-auth-group-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-auth-group-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-auth-groups-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authorization-add-allowed-app-to-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authorization-get-allowed-apps-in-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authorization-get-allowed-groups-for-app-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authorization-remove-allowed-app-from-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authorization-remove-allowed-apps-from-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authorization-remove-allowed-groups-for-app-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authz-groups-list-user-groups-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-authz-groups-list-users-in-group-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-base-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-batch-get-locals-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-batch-get-locals-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-batch-get-mirrors-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-batch-get-mirrors-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-batch-get-operations-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-batch-get-operations-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certificate-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certificate-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certificates-post-2-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certificates-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certification-status-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certified-image-exists-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-certified-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-change-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-check-action-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-clients-client-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-clients-create-client-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-clients-get-client-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-clients-list-clients-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-clients-remove-client-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-clients-update-client-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-group-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-group-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-group-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-groups-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-link-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-link-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-link-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-link-state-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-links-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-member-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-member-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-member-state-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-cluster-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-collection-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-confdb-control-action-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-config-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-connection-status-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-container-exec-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-container-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-containers-delete-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-containers-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-device-certificate-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-device-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-environment-reported-issue-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-environment-reported-issue-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-environment-review-patch-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-environments-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-event-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-execution-metadata-get-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-find-results-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-change-by-idresponse-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-changes-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-checks-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-health-okresponse-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-notice-by-idresponse-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-notices-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-get-plan-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-groups-get-group-identities-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-bearer-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-create-identity-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-create-identity-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-get-identity-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-list-identities-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-tlspost-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-update-identity-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identities-update-identity-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-info-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-provider-group-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-provider-group-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-provider-group-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-provider-groups-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-identity-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-idps-create-idp-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-idps-create-idp-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-idps-get-idp-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-idps-list-idps-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-idps-update-idp-body-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-idps-update-idp-resp-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-image-2-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-image-aliases-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-image-export-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-image-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-image-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-images-post-2-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-import-local-packages-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-instance-2-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-instance-full-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-instance-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-instance-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-instance-snapshot-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-instances-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-issue-attachment-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-issue-put-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-issue-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-issue-test-result-attachment-rule-post-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-issues-get-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-legacy-interface-object-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-level-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-list-files-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-list-local-packages-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-list-mirror-packages-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-local-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-logs-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-metadata-configuration-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-minimal-issue-test-result-attachment-rule-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-mirror-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-modern-interface-object-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-acl-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-allocations-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-forward-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-forward-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-forwards-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-lease-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancer-pool-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancer-pool-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancer-pool-state-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancer-pools-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancer-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancer-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-load-balancers-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-peer-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-peer-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-peers-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-state-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-zone-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-zone-record-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-zone-record-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-zone-records-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-zone-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-network-zones-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-networks-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-no-meta-sync-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-node-delete-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-node-patch-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-node-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-nodes-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-not-certified-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-notice-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-notification-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-notifications-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-oidcsession-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-operation-2-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-operation-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-operation-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-patched-device-certificate-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-patched-device-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-permission-info-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-permission-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-placement-group-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-placement-group-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-placement-groups-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-plug-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-exec-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-exec-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-files-make-dirs-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-files-remove-paths-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-files-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-layers-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-post-notices-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-profile-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-profile-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-profile-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-profiles-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-project-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-project-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-project-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-project-state-put-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-project-state-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-projects-post-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-prompting-prompt-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-prompting-reply-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-prompting-rule-action-add-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-prompting-rule-action-remove-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-prompting-rule-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-quota-group-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-read-files-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-refresh-check-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-refresh-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-refresh-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-related-certified-system-exists-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-slot-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-snap-info-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-snap-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-sync-mirror-request-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-system-action-create-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-system-action-install-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-system-details-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-tenant-lookup-tenants-response-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  json-schema/canonical-validation-set-schema.json:
+    method: unknown
+    evidence: no authorship recorded
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -267,9 +858,27 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/canonical-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
+  llms/canonical-llms-provenance.yml:
+    method: searched
+    evidence: 'derive-llms-provenance.py: harvested'
   llms/canonical-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
@@ -283,15 +892,7 @@ artifacts:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
-  openapi/_original/canonical-anbox-cloud-ams-api-openapi.json.archived.txt:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
   openapi/_original/canonical-anbox-stream-gateway-api-openapi.json:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/_original/canonical-anbox-stream-gateway-api-openapi.json.archived.txt:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
@@ -300,10 +901,6 @@ artifacts:
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
   openapi/_original/canonical-hardware-api-openapi.json:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/_original/canonical-hardware-api-openapi.json.archived.txt:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
@@ -335,27 +932,18 @@ artifacts:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
-  openapi/_original/canonical-test-observer-api-openapi.json.archived.txt:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
   openapi/_original/canonical-testflinger-api-openapi.json:
     method: derived
     evidence: 'the document itself says it was modelled, not published by the provider: "reconstructed
       from"'
-  openapi/_original/canonical-testflinger-api-openapi.json.archived.txt:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
   openapi/_original/canonical-ubuntu-security-api-openapi.json:
     method: harvested
     evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
       to the provider's source is unverified
-  openapi/_original/canonical-ubuntu-security-api-openapi.json.archived.txt:
-    method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
   openapi/canonical-add-ons-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-agents-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-appauthorizationservice-api-openapi.yml:
@@ -410,6 +998,9 @@ artifacts:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-checks-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-client-permissions-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-clientsservice-api-openapi.yml:
@@ -490,6 +1081,9 @@ artifacts:
   openapi/canonical-issues-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-job-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-layers-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
@@ -547,6 +1141,9 @@ artifacts:
   openapi/canonical-notifications-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-oauth2-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-oidc-api-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
@@ -583,6 +1180,9 @@ artifacts:
   openapi/canonical-publicationtargetservice-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-queues-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-region-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
@@ -590,6 +1190,12 @@ artifacts:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-reports-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-restricted-queues-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-result-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-rolesservice-api-openapi.yml:
@@ -605,6 +1211,9 @@ artifacts:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-search-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/canonical-secrets-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-security-api-openapi.yml:
@@ -667,10 +1276,10 @@ artifacts:
   openapi/canonical-test-results-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/canonical-users-api-openapi.yml:
+  openapi/canonical-testflinger-api-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/canonical-v1-api-openapi.yml:
+  openapi/canonical-users-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/canonical-version-api-openapi.yml:
@@ -679,19 +1288,163 @@ artifacts:
   openapi/canonical-warnings-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/canonical-add-ons-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-agents-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/canonical-anbox-cloud-ams-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-anbox-stream-gateway-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
+  overlays/canonical-appauthorizationservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-application-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-applications-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-apps-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-artefact-builds-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-artefact-matching-rules-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-artefacts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-assertions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-asynchronous-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-auth-groups-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-authentication-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-authentication-service-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-authenticationrequired-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-authzgroupsservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-certificates-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-certification-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-changes-and-tasks-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-checks-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-client-permissions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-clientsservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-cluster-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-cluster-groups-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-cluster-links-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-config-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-containers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/canonical-cos-registration-server-api-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-devices-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-environment-reviews-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-environments-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-events-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-exec-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-execution-metadata-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-experimental-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-files-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-groupsservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-hardware-api-hwapi-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-hardware-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
+  overlays/canonical-health-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-identities-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-identitiesservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/canonical-identity-platform-api-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-identity-provider-groups-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-idpsservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-images-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-instances-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-interfaces-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-internal-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-issues-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-job-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-landscape-debarchive-api-overlay.yaml:
@@ -700,25 +1453,229 @@ artifacts:
   overlays/canonical-landscape-debarchive-provider-overlay.yaml:
     method: unknown
     evidence: no authorship recorded
+  overlays/canonical-layers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-localservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-logs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/canonical-lxd-rest-api-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-metadata-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-metrics-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-metricsservice-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-microceph-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
+  overlays/canonical-microceph-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-mirrorservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-acls-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-allocations-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-forwards-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-load-balancer-pools-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-load-balancers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-peers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-network-zones-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-networks-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-nodes-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-notices-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-notifications-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-oauth2-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-oidc-api-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-oidc-sessions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-open-access-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-operations-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-operationservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/canonical-pebble-api-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-permissions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-placement-groups-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-plan-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-profiles-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-projects-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-publicationservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-publicationtargetservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-queues-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-region-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-replicators-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-reports-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-restricted-queues-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-result-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-rolesservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-root-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-schema-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-schemasservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-search-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-secrets-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-security-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-sentry-debug-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-server-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-service-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-services-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-session-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-signals-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-snapd-rest-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
+  overlays/canonical-snaps-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-status-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-statusservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-storage-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-system-info-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-tasks-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-teams-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-tenantservice-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-test-cases-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-test-executions-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/canonical-test-observer-api-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-test-observer-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-test-plans-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-test-results-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-testflinger-api-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-testflinger-api-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   overlays/canonical-ubuntu-security-api-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-users-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-version-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/canonical-warnings-api-phrasing-overlay.yaml:
     method: generated
     evidence: declared in the artifact
   packages/canonical-packages.yml:
@@ -730,6 +1687,12 @@ artifacts:
   rate-limits/canonical-rate-limits.yml:
     method: unknown
     evidence: no authorship recorded
+  regulatory/canonical-regulatory-posture.yml:
+    method: unknown
+    evidence: no authorship recorded
+  rules/canonical-rules.yml:
+    method: generated
+    evidence: declared in the artifact
   scopes/canonical-scopes.yml:
     method: derived
     evidence: declared in the artifact
@@ -752,7 +1715,13 @@ artifacts:
     method: generated
     evidence: declared in the artifact
   skills/canonical-ubuntu-security-cve-lookup.md:
-    method: generated
+    method: unknown
+    evidence: no authorship recorded
+  vendors/canonical-vendors.yml:
+    method: unknown
+    evidence: no authorship recorded
+  vocabulary/canonical-vocabulary.yml:
+    method: derived
     evidence: declared in the artifact
   well-known/canonical-security.txt:
     method: unknown
