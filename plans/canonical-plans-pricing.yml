@@ -1,0 +1,235 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://ubuntu.com/pricing/pro
+sources:
+- https://ubuntu.com/pricing/pro
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T120612
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: open-core
+  method: page
+  read: '2026-10-28'
+  evidence: Personal For up to 5 machines
+  free_edition: Personal
+  managed_tier: Workstation
+published: true
+note: Per-machine/per-year subscription and support add-on pricing; public cloud Ubuntu Pro described
+  as metered hourly, 'typically between 3–4.5% of the list price', billed by cloud provider. Ceph tiered
+  capacity table also priced.
+plan_count: 14
+currency: USD
+plans:
+- name: Ubuntu Pro - Workstation
+  price_text: $25 per machine per year
+  price: 25
+  currency: USD
+  period: year
+  unit: machine
+  included_quota: Personal for up to 5 machines; Community up to 50 machines for active Ubuntu community
+    members
+- name: Ubuntu Pro - Server with unlimited VMs
+  price_text: $500 per machine per year
+  price: 500
+  currency: USD
+  period: year
+  unit: machine
+- name: Ubuntu Pro with 24/7 Enterprise support - Workstation
+  price_text: $300 full support per machine per year
+  price: 300
+  currency: USD
+  period: year
+  unit: machine
+  included_quota: Weekday support is 50% price of 24/7 support
+- name: Ubuntu Pro with 24/7 Enterprise support - Server infra support
+  price_text: $1,775 infra support per machine per year
+  price: 1775
+  currency: USD
+  period: year
+  unit: machine
+- name: Ubuntu Pro with 24/7 Enterprise support - Server full support
+  price_text: $3,400 full support per machine per year
+  price: 3400
+  currency: USD
+  period: year
+  unit: machine
+- name: Landscape add-on per virtual machine
+  price_text: $3,099 / year
+  price: 3099
+  currency: USD
+  period: year
+  unit: Landscape virtual machine
+- name: Landscape add-on per physical machine
+  price_text: $9,470 / year
+  price: 9470
+  currency: USD
+  period: year
+  unit: Landscape physical machine
+- name: Firefighting full stack
+  price_text: $7,600 / physical server
+  price: 7600
+  currency: USD
+  period: none
+  unit: physical server
+- name: Firefighting apps
+  price_text: $6,235 / physical server
+  price: 6235
+  currency: USD
+  period: none
+  unit: physical server
+- name: Firefighting infra
+  price_text: $3,625/physical server
+  price: 3625
+  currency: USD
+  period: none
+  unit: physical server
+- name: Managed Infra
+  price_text: $5,750 / physical server
+  price: 5750
+  currency: USD
+  period: none
+  unit: physical server
+- name: Managed Apps
+  price_text: $9,470 / physical server
+  price: 9470
+  currency: USD
+  period: none
+  unit: physical server
+- name: Managed Full stack
+  price_text: $11,790 / physical server
+  price: 11790
+  currency: USD
+  period: none
+  unit: physical server
+- name: Ceph 150 - 1,500 TB tier
+  price_text: $5,000
+  price: 5000
+  currency: USD
+  period: none
+  unit: cluster capacity tier
+  included_quota: 576TB included with Ubuntu Pro
+  overage: $25.00 additional per TB
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - subscription
+  units: []
+  plans:
+  - name: Ubuntu Pro - Workstation
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Ubuntu Pro - Server with unlimited VMs
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Ubuntu Pro with 24/7 Enterprise support - Workstation
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Ubuntu Pro with 24/7 Enterprise support - Server infra support
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Ubuntu Pro with 24/7 Enterprise support - Server full support
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Landscape add-on per virtual machine
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Landscape add-on per physical machine
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - year
+  - name: Firefighting full stack
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Firefighting apps
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Firefighting infra
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Managed Infra
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Managed Apps
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Managed Full stack
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
+  - name: Ceph 150 - 1,500 TB tier
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
