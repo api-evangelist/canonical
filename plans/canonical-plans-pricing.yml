@@ -114,12 +114,13 @@ plans:
   included_quota: 576TB included with Ubuntu Pro
   overage: $25.00 additional per TB
 x-canonical:
-  generated: '2026-11-02'
+  generated: '2026-11-06'
   vocabulary: engine/economics/plans-canonical.yml
   models:
   - hybrid
   - subscription
-  units: []
+  units:
+  - period
   plans:
   - name: Ubuntu Pro - Workstation
     access: other
@@ -230,6 +231,6 @@ x-canonical:
     model: hybrid
     model_how: derived
     units:
-    - other
+    - period
     periods:
     - none
