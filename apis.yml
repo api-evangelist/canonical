@@ -34,7 +34,7 @@ accessModel:
   - authentication
   - rate-limits
   - security
-  generated: '2026-11-06'
+  generated: '2026-11-13'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/canonical.png
 website:
@@ -217,6 +217,12 @@ common:
   url: https://ubuntu.com/tutorials
 - type: GitHubOrganization
   url: https://github.com/canonical
+- type: UsageTerms
+  url: terms/canonical-terms-of-service.yml
+- type: DataProcessing
+  url: privacy/canonical-privacy-policy.yml
+- type: DataLicense
+  url: data-license/canonical-data-license.yml
 apis:
 - aid: canonical:snap-store-api
   name: Snap Store API

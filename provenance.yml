@@ -11,6 +11,12 @@ artifacts:
   authentication/canonical-authentication.yml:
     method: searched
     evidence: declared in the artifact
+  certification/observations-2026-11-11.jsonl:
+    method: unknown
+    evidence: no authorship recorded
+  certification/status.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/canonical-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -50,6 +56,9 @@ artifacts:
   conventions/canonical-conventions.yml:
     method: searched
     evidence: declared in the artifact
+  data-license/canonical-data-license.yml:
+    method: harvested
+    evidence: declared in the artifact
   data-model/canonical-data-model.yml:
     method: derived
     evidence: declared in the artifact
@@ -66,6 +75,9 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   heartbeat/2026-11-06.yml:
+    method: unknown
+    evidence: no authorship recorded
+  heartbeat/2026-11-13.yml:
     method: unknown
     evidence: no authorship recorded
   hosts/canonical-hosts.yml:
@@ -782,7 +794,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-11-02T082323.yml:
+  kin/checks-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -846,6 +858,9 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-11-02T082323.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/canonical-lifecycle.yml:
@@ -1662,6 +1677,9 @@ artifacts:
   plans/canonical-price-estimates.yml:
     method: unknown
     evidence: no authorship recorded
+  privacy/canonical-privacy-policy.yml:
+    method: harvested
+    evidence: declared in the artifact
   rate-limits/canonical-rate-limits.yml:
     method: unknown
     evidence: no authorship recorded
@@ -1697,6 +1715,9 @@ artifacts:
     evidence: no authorship recorded
   sla/canonical-sla.yml:
     method: searched
+    evidence: declared in the artifact
+  terms/canonical-terms-of-service.yml:
+    method: harvested
     evidence: declared in the artifact
   vendors/canonical-vendors.yml:
     method: unknown
